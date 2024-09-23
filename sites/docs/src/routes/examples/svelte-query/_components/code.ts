@@ -107,6 +107,26 @@ export const columns = [
     }
 ] satisfies BaseColumn<InventoryDataRow>[]
 `,
+pagejs: `//page.ts
+import { inventoryData } from "$lib/data/inventory"
+import { paginateData } from "$lib/datagrid/fns/paginate-data"
+
+export async function load() {
+
+	// provide initial data to datagrid with fetch	
+	// in this example we will use workaround for an endpoint
+
+    const page = 1
+    const perPage = 10
+    const data = paginateData(inventoryData, page, perPage)
+    const count = inventoryData.length
+    return {
+        data,
+        count,
+        page,
+        perPage
+    }
+}`,
  datagrid: `<script lang="ts">
 	import { setContext } from 'svelte';
 	import { columns } from './columns.svelte';

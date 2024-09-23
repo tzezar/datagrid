@@ -15,6 +15,7 @@
 	<PageTitle title="Svelte query" />
 	<Datagrid initialData={data} />
 	<PageCodeContainer>
+		<Highlight language={typescript} code={code.pagejs} />
 		<Highlight language={typescript} code={code.datagrid} />
 	</PageCodeContainer>
 </PageContainer>
