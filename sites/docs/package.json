@@ -47,7 +47,6 @@
 		"@internationalized/date": "^3.5.5",
 		"@tanstack/svelte-query": "^5.56.2",
 		"@tanstack/svelte-query-devtools": "^5.56.2",
-		"@tanstack/svelte-virtual": "^3.10.8",
 		"bits-ui": "^0.21.13",
 		"clsx": "^2.1.1",
 		"cmdk-sv": "^0.0.18",
