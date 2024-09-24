@@ -31,9 +31,9 @@
 			footer: { display: false },
 			topbar: {
 				display: true,
-				displayCopyDataMenu: true,
+				displayCopyDataMenu: false,
 				displayExportDataMenu: false,
-				displayFullscreenToggle: false,
+				displayFullscreenToggle: true,
 				displayHeadFilterToggle: true,
 				settingsMenu: {
 					display: true
