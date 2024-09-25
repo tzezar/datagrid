@@ -144,7 +144,7 @@
 		<!-- LOADING INDICATOR -->
 		{#if datagrid.options.statusIndicator.display}
 			{#if loadingIndicator}
-				scrollableoadingIndicator()}
+				{@render loadingIndicator()}
 			{:else}
 				<LoadingIndicatorContainer>
 					<LoadingIndicator
