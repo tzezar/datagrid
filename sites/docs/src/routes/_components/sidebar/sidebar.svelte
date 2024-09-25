@@ -27,7 +27,7 @@
 		<Group>
 			<GroupTitle title="fundamentals" />
 			<GroupItem disabled title="Overview" class="normal-case" href={hrefs.fundamentals.overview} />
-			<GroupItem disabled title="typescript" href={hrefs.fundamentals.typescript} />
+			<GroupItem  title="typescript" href={hrefs.fundamentals.typescript} />
 			<GroupItem disabled title="customization" href={hrefs.fundamentals.customization} />
 		</Group>
 		<Group>
