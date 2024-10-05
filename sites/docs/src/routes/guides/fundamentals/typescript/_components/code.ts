@@ -35,21 +35,21 @@ export type BaseColumn<T = unknown> = {
     filterValue?: FilterValue;
     // options used in select filter
     options?: { value: string; label: string }[];
-    // definies if column is sortable
+    // defines if column is sortable
     sortable?: boolean;
-    // definies if column is visible by default
+    // defines if column is visible by default
     visible?: boolean;
-    // definies if column is resizable
+    // defines if column is resizable
     resizable?: boolean;
-    // definies if column is moveable
+    // defines if column is moveable
     moveable?: boolean;
-    // definies if column is pinnable
+    // defines if column is pinnable
     pinnable?: boolean;
-    // definies if column is hideable
+    // defines if column is hideable
     hideable?: boolean;
-    // definies if column is exportable eg. in excel export
+    // defines if column is exportable eg. in excel export
     exportable?: boolean;
-    // definies if column is selectable
+    // defines if column is selectable
     selectable?: boolean;
     // this basically makes add flex-grow: 1; to column, can give nice results when used eg. on most important column, columns in the middle or last column
     // I suggest adding it to one column at least
