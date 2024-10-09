@@ -147,7 +147,7 @@ program
         console.log('Installing dependencies...');
         const dependencies = ['fast-sort', 'papaparse', 'xlsx', 'fast-xml-parser'];
         const installPromises = dependencies.map(dep =>
-          execPromise(`npm i ${dep}`)
+          execPromise(`npm i ${dep} --force`)
             .then(() => console.log(`${dep} installed successfully.`))
             .catch(error => console.error(`Error installing ${dep}:`, error))
         );
