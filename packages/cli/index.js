@@ -46,7 +46,7 @@ program
 
     // Copy component files
     // const sourcePath = path.join(__dirname, 'components', 'datagrid');
-    const sourcePath = "../../sites/docs/src/lib/datagrid"
+    const sourcePath = path.join(__dirname, 'datagrid');
     const destPath = path.resolve(answers.componentPath);
 
     try {
