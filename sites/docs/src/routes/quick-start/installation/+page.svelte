@@ -24,7 +24,7 @@
 		<div class="flex flex-col">
 			<p>To easily install datagrid:</p>
 			<p>Run the CLI</p>
-			<CodeTerminal command="npx tzezars-datagrid init" />
+			<CodeTerminal command="npx tzezars-datagrid@latest init" />
 			<p>You will be asked a few questions to configure installation</p>
 			<CodeTerminal
 				withCopyButton={false}
