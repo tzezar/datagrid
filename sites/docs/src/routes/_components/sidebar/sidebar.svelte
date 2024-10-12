@@ -33,18 +33,15 @@
 		<Group>
 			<GroupTitle title="feature guides" />
 			<GroupItem
-				disabled
 				title="column freezing"
 				href={hrefs.guides.featureGuides.columnFreezing}
 			/>
-			<GroupItem disabled title="column hiding" href={hrefs.guides.featureGuides.columnHiding} />
+			<GroupItem title="column hiding" href={hrefs.guides.featureGuides.columnHiding} />
 			<GroupItem
-				disabled
 				title="column ordering"
 				href={hrefs.guides.featureGuides.columnOrdering}
 			/>
 			<GroupItem
-				disabled
 				title="column resizing"
 				href={hrefs.guides.featureGuides.columnResizing}
 			/>
