@@ -52,7 +52,7 @@
 			/>
 			<GroupItem disabled title="row expanding" href={hrefs.guides.featureGuides.rowExpanding} />
 			<GroupItem disabled title="row selection" href={hrefs.guides.featureGuides.rowSelection} />
-			<GroupItem disabled title="pagination" href={hrefs.guides.featureGuides.pagination} />
+			<GroupItem title="pagination" href={hrefs.guides.featureGuides.pagination} />
 			<GroupItem disabled title="sorting" href={hrefs.guides.featureGuides.sorting} />
 			<GroupItem disabled title="filtering" href={hrefs.guides.featureGuides.filtering} />
 			<GroupItem
