@@ -26,8 +26,10 @@
 						displayResizingMenu: false,
 						displaySortingMenu: false,
                         displayVisibilityMenu: true,
-                        displayMenu: {
-                            enabled: false
+                        adjustmentMenu: {
+                            display: false,
+							displaySpacingMenu: false,
+							displayTextSizeMenu: false
                         }
 					}
 				}
