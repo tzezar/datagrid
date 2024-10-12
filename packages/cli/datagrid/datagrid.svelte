@@ -1,21 +1,20 @@
 <script lang="ts">
-	import { cn } from '$lib/utils';
 	import { getContext, onMount, type Snippet } from 'svelte';
 	import { applyOffset } from './fns/apply-offset';
-	import LoadingIndicator from './loading-indicator.svelte';
-	import { STAY_IN_PLACE } from './CONSTSANTS';
-	import Row from './row.svelte';
-	import StateIndicator from './state-indicator.svelte';
-	import ScrollToTopButton from './scroll-to-top-button.svelte';
-	import Pagination from './shadcn/pagination.svelte';
-	import LoadingIndicatorContainer from './loading-indicator-container.svelte';
 	import type { TzezarDatagrid } from './tzezar-datagrid.svelte';
 	import { paginateData } from './fns/paginate-data';
 	import { sortData } from './fns/sort-data';
 	import { filterData } from './fns/filter-data';
-	import TopBar from './top-bar.svelte';
+	import DatagridPagination from './datagrid-pagination.svelte';
+	import DatagridTopBar from './datagrid-top-bar.svelte';
+	import DatagridFooter from './datagrid-footer.svelte';
+	import DatagridHead from './datagrid-head.svelte';
+	import DatagridLoadingIndicator from './datagrid-loading-indicator.svelte';
+	import DatagridDataIndicator from './datagrid-data-indicator.svelte';
+	import DatagridBody from './datagrid-body.svelte';
+	import DatagridWrapper from './datagrid-wrapper.svelte';
+	import DatagridContent from './datagrid-content.svelte';
 
-	// TODO: this component grew big, need to split it into smaller components
 	let datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
 	type Props = {
@@ -52,6 +51,8 @@
 		}
 	});
 
+	// * Internal logic in client mode is splitted in separate $effects to reduce unnecessary recalculations
+
 	// ! BUG for some reason internal logic, like sorting, filtering and pagination runs after render
 	// ! in theory data is not changing but in practice it is for unknown reason
 	// ! whole chain of logic comes from filterDate() that takes data as parameter
@@ -60,12 +61,14 @@
 	// ? Worth noting the order. On small samples of data, it doesn't change anything but on large ones,
 	// ? it is better to filter first and then sort because the best sorting algorithms are O(n log n) so the less data you have,
 	// ? the faster it is, and filtering shrinks the size of the sample, so filtering first is faster.
+	// Updates filtered data in client mode only
 	$effect(() => {
 		if (datagrid.mode === 'client') {
 			datagrid.internal.filteredData = filterData([...datagrid.data], datagrid.state.filters);
 		}
 	});
 
+	// Updates sorted data in client mode only
 	$effect(() => {
 		if (datagrid.mode === 'client') {
 			datagrid.internal.sortedData = sortData(
@@ -75,6 +78,7 @@
 		}
 	});
 
+	// Updates paginated data in client mode only
 	$effect(() => {
 		if (datagrid.mode === 'client') {
 			datagrid.internal.paginatedData = paginateData(
@@ -85,123 +89,26 @@
 		}
 	});
 
+	// Updates pagination count in client mode only
 	$effect(() => {
 		if (datagrid.mode === 'client') {
 			datagrid.state.pagination.count = datagrid.internal.filteredData.length || 1;
 		}
 	});
 
+	// Fullscreen functionality workaround, we need ref to know where to scroll back after leaving fullscreen mode
 	let end: HTMLElement;
-	$effect.pre(() => {
-		// TODO: this has to be refactored
-		// * there must be easier way to do this
-		// ? maybe add display fixed instead of absolute and disable scrolling
-		// datagrid in fullscreen mode appear on top of the page, so we need to scroll it to the top
-		if (datagrid.state.isFullscreenActive) {
-			document.body.classList.add('overflow-hidden');
-			document.body.scrollIntoView({ behavior: 'smooth', block: 'start' });
-		} else {
-			// if datagrid is not in fullscreen mode, we need to scroll back to it's original position
-			if (!end) {
-				document.body.classList.remove('overflow-hidden');
-				return;
-			}
-			end.scrollIntoView({ behavior: 'smooth', block: 'start' });
-			document.body.classList.remove('overflow-hidden');
-		}
-	});
 </script>
 
-<!-- WRAPPER -->
-<div
-	class={cn(
-		'flex flex-col ',
-		datagrid.state.isFullscreenActive && 'absolute inset-0 z-[20] bg-primary-foreground  p-4'
-	)}
-	style="font-size: {datagrid.options.fontSize.selected.value};"
->
-	{#if datagrid.options.topbar.display}
-		{#if topBar}
-			{@render topBar()}
-		{:else}
-			<TopBar />
-		{/if}
-	{/if}
-	<!-- CONTENT -->
-	<div
-		data-datagrid={datagrid.identifier}
-		class={cn(
-			'relative flex flex-col border',
-			datagrid.options.scrollable ? 'max-h-[70vh]  overflow-auto ' : ''
-		)}
-	>
-		<!-- HEAD -->
-		<div class="w sticky top-0 z-[16] flex min-w-fit" data-datagrid-head={datagrid.identifier}>
-			{#if head}
-				{@render head()}
-			{/if}
-		</div>
-		<!-- LOADING INDICATOR -->
-		{#if datagrid.options.statusIndicator.display}
-			{#if loadingIndicator}
-				{@render loadingIndicator()}
-			{:else}
-				<LoadingIndicatorContainer>
-					<LoadingIndicator
-						isError={datagrid.state.status.isError}
-						isFetching={datagrid.state.status.isFetching}
-						isRefetching={datagrid.state.status.isRefetching}
-					/>
-				</LoadingIndicatorContainer>
-			{/if}
-		{/if}
-		<!-- DATA INDICATOR -->
-		{#if datagrid.options.dataIndicator.display}
-			{#if dataIndicator}
-				{@render dataIndicator()}
-			{:else}
-				<Row class={`${STAY_IN_PLACE}`}>
-					<StateIndicator
-						isLoading={datagrid.state.status.isFetching}
-						isError={datagrid.state.status.isError}
-					/>
-				</Row>
-			{/if}
-		{/if}
-		<!-- BODY -->
-		{#if body}
-			<!-- ? BODY can not be wrapped inside html element, it break sticky and rows -->
-			<!-- ? there is possibility to move other elements like header, topbar etc to ouside of parent container -->
-			<!-- ? but then header and body X axis scroll have to be synced via js -->
-			{@render body()}
-		{/if}
-		<!-- FOOTER -->
-		{#if datagrid.options.footer.display}
-			<Row
-				class="sticky bottom-0 left-0 z-[15] flex w-full min-w-full flex-col  border-b-0 border-t bg-table-primary"
-			>
-				{#if footer}
-					{@render footer()}
-				{:else}
-					<div
-						class="flex items-center justify-between p-2 pl-3"
-						data-datagrid-footer-identifier={datagrid.identifier}
-					>
-						<div class="ml-auto">
-							<ScrollToTopButton />
-						</div>
-					</div>
-				{/if}
-			</Row>
-		{/if}
-	</div>
-	<!-- PAGINATION -->
-	{#if datagrid.options.pagination.display}
-		{#if !pagination}
-			<Pagination />
-		{:else}
-			{@render pagination()}
-		{/if}
-	{/if}
-</div>
+<DatagridWrapper {end}>
+	<DatagridTopBar {topBar} />
+	<DatagridContent>
+		<DatagridHead {head} />
+		<DatagridLoadingIndicator {loadingIndicator} />
+		<DatagridDataIndicator {dataIndicator} />
+		<DatagridBody {body} />
+		<DatagridFooter {footer} />
+	</DatagridContent>
+	<DatagridPagination {pagination} />
+</DatagridWrapper>
 <div bind:this={end} aria-hidden="true" class="hidden"></div>

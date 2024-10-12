@@ -48,7 +48,7 @@
 	<div
 		style="width: {column.width || '100px'}; flex-shrink: 0;"
 		class={cn(
-			'th flex shrink-0 flex-col bg-table-primary hover:bg-table-primary-hover',
+			'th flex shrink-0 flex-col bg-table-primary hover:bg-table-primary-hover border-b',
 			column.sortable && 'cursor-pointer',
 			column.pinned?.position == 'left' && 'offset-left border-r ',
 			column.pinned?.position == 'right' && 'offset-right border-l ',
