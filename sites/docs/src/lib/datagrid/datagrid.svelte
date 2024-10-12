@@ -15,8 +15,10 @@
 	import DatagridWrapper from './datagrid-wrapper.svelte';
 	import DatagridContent from './datagrid-content.svelte';
 
-	let datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
-
+	// Get the datagrid context
+	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
+	
+	// Define prop types
 	type Props = {
 		head?: Snippet;
 		loadingIndicator?: Snippet;
@@ -31,7 +33,8 @@
 		pagination?: Snippet;
 	};
 
-	let {
+	// Destructure props with default values
+	const {
 		pagination,
 		topBar,
 		body,
@@ -45,6 +48,7 @@
 		}
 	}: Props = $props();
 
+	// Apply column offset if any columns are pinned
 	onMount(() => {
 		if (datagrid.columns.some((column) => column.pinned)) {
 			datagrid.columns = applyOffset(datagrid.columns);
