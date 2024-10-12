@@ -147,10 +147,8 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
 
         this.columns = applyOffset(columns) as C[]
         this.data = data;
-        // provide defaults for SSR
-        this.internal.sortedData = sortData([...data], this.state.sortingArray)
-        this.internal.filteredData = filterData([...this.internal.sortedData], this.state.filters)
-        this.internal.paginatedData = paginateData([...this.internal.sortedData], this.state.pagination.page, this.state.pagination.perPage)
+
+        this.state.filters = state?.filters || this.state.filters
 
         this.identifier = identifier || this.identifier;
 
@@ -179,8 +177,6 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
         this.options.topbar.settingsMenu.displayFreezingMenu = options?.topbar?.settingsMenu?.displayFreezingMenu ?? this.options.topbar.settingsMenu.displayFreezingMenu
         this.options.topbar.settingsMenu.displayVisibilityMenu = options?.topbar?.settingsMenu?.displayVisibilityMenu ?? this.options.topbar.settingsMenu.displayVisibilityMenu
 
-
-
         this.options.topbar.settingsMenu.displayResizingMenu = options?.topbar?.settingsMenu?.displayResizingMenu ?? this.options.topbar.settingsMenu.displayResizingMenu
         this.options.topbar.settingsMenu.displayMenu.enabled = options?.topbar?.settingsMenu?.displayMenu?.enabled ?? this.options.topbar.settingsMenu.displayMenu.enabled
         this.options.topbar.settingsMenu.displayMenu.displaySpacingMenu = options?.topbar?.settingsMenu?.displayMenu?.displaySpacingMenu ?? this.options.topbar.settingsMenu.displayMenu.displaySpacingMenu
@@ -206,13 +202,18 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
 
         this.state.isHeadFilterVisible = state?.isHeadFilterVisible || this.state.isHeadFilterVisible
 
-        this.state.filters = state?.filters || this.state.filters
 
         this.internal.paginatedData = internal?.paginatedData || this.internal.paginatedData
 
         this.internal.sortedData = internal?.sortedData || this.internal.sortedData
 
         this.internal.filteredData = internal?.filteredData || this.internal.filteredData
+
+        // provide defaults for SSR
+        this.internal.sortedData = sortData([...data], this.state.sortingArray)
+        this.internal.filteredData = filterData([...this.internal.sortedData], this.state.filters)
+        this.internal.paginatedData = paginateData([...this.internal.filteredData], this.state.pagination.page, this.state.pagination.perPage)
+
 
     }
 }
