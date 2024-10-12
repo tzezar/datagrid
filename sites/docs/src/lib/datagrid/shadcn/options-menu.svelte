@@ -52,9 +52,9 @@
 												</span>
 											{/if}
 											{#if column.sortable === true}
-												{#if datagrid.state.sortingArray.find((s) => s.field === column.id)?.direction === 'asc'}
+												{#if datagrid.state.sortingArray.find((s) => s.columnId === column.id)?.direction === 'asc'}
 													<span class="">▲</span>
-												{:else if datagrid.state.sortingArray.find((s) => s.field === column.id)?.direction === 'desc'}
+												{:else if datagrid.state.sortingArray.find((s) => s.columnId === column.id)?.direction === 'desc'}
 													<span class="">▼</span>
 												{/if}
 											{/if}
@@ -197,7 +197,8 @@
 						<DropdownMenu.Group class="min-w-40">
 							{#each datagrid.columns as column}
 								<DropdownMenu.CheckboxItem
-									checked={column.visible}
+									disabled={column.hideable === false}
+									checked={column.visible !== false}
 									onclick={() =>
 										(datagrid.columns = toggleColumnVisibility(column.id, datagrid.columns))}
 								>
