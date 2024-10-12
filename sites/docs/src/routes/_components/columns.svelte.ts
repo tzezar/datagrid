@@ -94,7 +94,7 @@ export const columns = [
     {
         id: 'receiver',
         title: 'Client name',
-        width: '150px',
+        width: '200px',
         filterType: 'string',
         filterValue: '',
         sortable: true,

@@ -113,8 +113,9 @@ export const clientNames = [
 ];
 
 function getRandomDate(): string {
-    const start = new Date(Date.UTC(2024, 0, 1)); // Start of 2024 in UTC
-    const end = new Date(Date.UTC(2024, 11, 31)); // End of 2024 in UTC
+    const currentYear = new Date().getUTCFullYear(); // Get the current year
+    const start = new Date(Date.UTC(currentYear, 0, 1)); // Start of the current year in UTC
+    const end = new Date(Date.UTC(currentYear, 11, 31)); // End of the current year in UTC
     const randomTime = start.getTime() + Math.random() * (end.getTime() - start.getTime());
     const date = new Date(randomTime);
     // Return in YYYY-MM-DD format
@@ -139,9 +140,10 @@ export function generateData(numEntries: number) {
     const data = [];
     for (let i = 1; i <= numEntries; i++) {
         let date = getRandomDate();
+
         data.push({
             id: i,
-            title: `${date.slice(0, 7).replace(/-/g, '/')}/${i + 1}${i}`,
+            title: `${date.slice(0, 7).replace(/-/g, '/')}/${Math.floor(Math.random() * 1001)}`,
             date: date,
             total: getRandomTotal(),
             netTotal: getRandomTotal(),

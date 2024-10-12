@@ -14,29 +14,36 @@
 	let intervalId: number | undefined;
 	let isRunning = false;
 
-	// Function that runs at an interval
-	function doSomethingAtInterval(task: () => void, interval: number) {
-		intervalId = setInterval(() => {
-			task();
-		}, interval);
-	}
+	// // Function that runs at an interval
+	// function doSomethingAtInterval(task: () => void, interval: number) {
+	// 	intervalId = setInterval(() => {
+	// 		task();
+	// 	}, interval);
+	// }
 
-	// Function to clear the interval
-	function stopInterval() {
-		if (intervalId) {
-			clearInterval(intervalId);
-			intervalId = undefined;
-		}
-	}
+	// // Function to clear the interval
+	// function stopInterval() {
+	// 	if (intervalId) {
+	// 		clearInterval(intervalId);
+	// 		intervalId = undefined;
+	// 	}
+	// }
 
 	// Example task
-	function exampleTask() {
-		datagrid.data = updateTotals(datagrid.data);
-	}
+	// function exampleTask() {
+	// 	datagrid.data = updateTotals(datagrid.data);
+	// }
+
+
+	// let generatedData = $state(generateData(100000))
+
+
+	import data from './data.json'
+
 	let datagrid = setContext(
 		`datagrid`,
 		new TzezarDatagrid({
-			data: generateData(100000),
+			data: data,
 			columns,
 			title: 'The best datagrid ever',
 			options: {
@@ -55,15 +62,17 @@
 		})
 	);
 
+	// console.log($state.snapshot(datagrid.data))
+
 	import * as ContextMenu from '$lib/components/ui/context-menu';
 	import CellWithContextMenu from '../examples/advanced/_components/cell-with-context-menu.svelte';
 	import { getNestedValue } from '$lib/datagrid/fns/get-nested-value';
 
 
-	const toggleData = () => {
-		if (datagrid.internal.paginatedData) {
-			datagrid.internal.paginatedData = [];
-		} else {
+	// const toggleData = () => {
+	// 	if (datagrid.internal.paginatedData) {
+	// 		datagrid.internal.paginatedData = [];
+	// 	} else {
 			// datagrid.internal.paginatedData = applyInternalLogic(
 			// 	datagrid.data,
 			// 	datagrid.state.filters,
@@ -71,18 +80,18 @@
 			// 	datagrid.state.pagination.page,
 			// 	datagrid.state.pagination.perPage
 			// );
-		}
-		return datagrid.internal.paginatedData;
-	};
+		// }
+		// return datagrid.internal.paginatedData;
+	// };
 
-	function toggleInterval() {
-		if (isRunning) {
-			stopInterval();
-		} else {
-			doSomethingAtInterval(exampleTask, 1000); // Runs every 1000 ms
-		}
-		isRunning = !isRunning;
-	}
+	// function toggleInterval() {
+	// 	if (isRunning) {
+	// 		stopInterval();
+	// 	} else {
+	// 		doSomethingAtInterval(exampleTask, 1000); // Runs every 1000 ms
+	// 	}
+	// 	isRunning = !isRunning;
+	// }
 </script>
 
 <Datagrid.Datagrid>
