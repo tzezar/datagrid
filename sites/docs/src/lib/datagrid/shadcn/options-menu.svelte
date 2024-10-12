@@ -115,12 +115,9 @@
 												<input
 													type="checkbox"
 													checked={column.pinned?.position === 'left'}
-													onchange={() =>
-														(datagrid.columns = toggleColumnPin(
-															column.id,
-															'left',
-															datagrid.columns
-														))}
+													onchange={() => {
+														datagrid.columns = toggleColumnPin(column.id, 'left', datagrid.columns);
+													}}
 												/>
 											</div>
 										</div>
