@@ -50,7 +50,7 @@
 				href={hrefs.guides.featureGuides.columnAlignment}
 			/>
 			<GroupItem disabled title="row expanding" href={hrefs.guides.featureGuides.rowExpanding} />
-			<GroupItem disabled title="row selection" href={hrefs.guides.featureGuides.rowSelection} />
+			<GroupItem title="row selection" href={hrefs.guides.featureGuides.rowSelection} />
 			<GroupItem title="pagination" href={hrefs.guides.featureGuides.pagination} />
 			<GroupItem disabled title="sorting" href={hrefs.guides.featureGuides.sorting} />
 			<GroupItem disabled title="filtering" href={hrefs.guides.featureGuides.filtering} />
