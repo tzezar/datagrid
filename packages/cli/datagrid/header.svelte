@@ -6,6 +6,7 @@
 	import type { BaseColumn } from './types';
 	import { toggleSortingState } from './fns/toggle-sorting-state';
 	import { getHeadSize } from './fns/get-header-height';
+	import { Z_INDEX_PINNED_ROW } from './CONSTSANTS';
 
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
@@ -33,7 +34,6 @@
 	function handleContainerClick(e: MouseEvent) {
 		e.stopPropagation();
 		if (column.sortable) {
-	
 			toggleSortingState(column.id, datagrid);
 		}
 	}
@@ -63,10 +63,11 @@
 		style:padding-right={datagrid.options.spacing.selected.horizontal}
 		style:--offset={column.pinned?.offset ? column.pinned.offset : '0px'}
 		style:--offset-right={column.pinned?.offset ? column.pinned.offset : '0px'}
+		style:--z-index={Z_INDEX_PINNED_ROW}
 		onclick={handleContainerClick}
-		style={`${column.align === 'center' ? ' align-items: center;' : column.align === 'end' ? 'align-items: flex-end' : column.align === 'start' ? 'align-items: flex-start' : ''}`}
+		style={`${column.align === 'center' ? 'align-items: center;' : column.align === 'end' ? 'align-items: flex-end' : column.align === 'start' ? 'align-items: flex-start' : ''}`}
 		class={cn(
-			'th flex shrink-0 flex-col gap-2  overflow-hidden text-ellipsis border-r bg-table-primary font-semibold last:border-r-0 hover:bg-table-primary-hover border-b',
+			'th bg-table-primary hover:bg-table-primary-hover flex shrink-0  flex-col gap-2 overflow-hidden text-ellipsis border-b border-r font-semibold last:border-r-0',
 			column.sortable && 'cursor-pointer',
 			column.pinned?.position == 'left' && 'offset-left border-r',
 			column.pinned?.position == 'right' && 'offset-right border-l',

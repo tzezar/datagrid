@@ -2,7 +2,7 @@ import type { BaseColumn, ColumnId } from "../types";
 
 export const getOffsetRight = <T>(id: ColumnId<T>, columns: BaseColumn<T>[]) => {
     // Find index of the column with the specified id and that is pinned to the right
-    const pinnedRightColumns = columns.filter((column)=> column.visible == true).filter((column) => column.pinned?.position === 'right');
+    const pinnedRightColumns = columns.filter((column) => column.visible !== false).filter((column) => column.pinned?.position === 'right');
     const index = pinnedRightColumns.findIndex((column) => column.id === id);
     const lastIndex = pinnedRightColumns.length - 1;
 
