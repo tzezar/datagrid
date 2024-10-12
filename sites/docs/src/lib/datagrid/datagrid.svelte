@@ -15,6 +15,7 @@
 	import { filterData } from './fns/filter-data';
 	import TopBar from './top-bar.svelte';
 	import DatagridPagination from './datagrid-pagination.svelte';
+	import DatagridTopBar from './datagrid-top-bar.svelte';
 
 	// TODO: this component grew big, need to split it into smaller components
 	let datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
@@ -53,9 +54,8 @@
 		}
 	});
 
-
 	// * Internal logic in client mode is splitted in separate $effects to reduce unnecessary recalculations
-	
+
 	// ! BUG for some reason internal logic, like sorting, filtering and pagination runs after render
 	// ! in theory data is not changing but in practice it is for unknown reason
 	// ! whole chain of logic comes from filterDate() that takes data as parameter
@@ -99,8 +99,6 @@
 		}
 	});
 
-
-
 	// Fullscreen functionality
 	let end: HTMLElement;
 	$effect.pre(() => {
@@ -127,16 +125,12 @@
 <div
 	class={cn(
 		'flex flex-col ',
-		datagrid.state.isFullscreenActive && 'absolute inset-0 z-[20] bg-primary-foreground  p-4'
+		datagrid.state.isFullscreenActive && 'bg-primary-foreground absolute inset-0 z-[20]  p-4'
 	)}
 	style="font-size: {datagrid.options.fontSize.selected.value};"
 >
 	{#if datagrid.options.topbar.display}
-		{#if topBar}
-			{@render topBar()}
-		{:else}
-			<TopBar />
-		{/if}
+		<DatagridTopBar {topBar} />
 	{/if}
 	<!-- CONTENT -->
 	<div
@@ -189,7 +183,7 @@
 		<!-- FOOTER -->
 		{#if datagrid.options.footer.display}
 			<Row
-				class="sticky bottom-0 left-0 z-[15] flex w-full min-w-full flex-col  border-b-0 border-t bg-table-primary"
+				class="bg-table-primary sticky bottom-0 left-0 z-[15] flex w-full min-w-full  flex-col border-b-0 border-t"
 			>
 				{#if footer}
 					{@render footer()}
