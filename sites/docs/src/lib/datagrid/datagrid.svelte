@@ -18,6 +18,11 @@
 	import DatagridTopBar from './datagrid-top-bar.svelte';
 	import DatagridFooter from './datagrid-footer.svelte';
 	import DatagridHead from './datagrid-head.svelte';
+	import DatagridLoadingIndicator from './datagrid-loading-indicator.svelte';
+	import DatagridDataIndicator from './datagrid-data-indicator.svelte';
+	import DatagridBody from './datagrid-body.svelte';
+	import DatagridWrapper from './datagrid-wrapper.svelte';
+	import DatagridContent from './datagrid-content.svelte';
 
 	// TODO: this component grew big, need to split it into smaller components
 	let datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
@@ -101,89 +106,19 @@
 		}
 	});
 
-	// Fullscreen functionality
+	// Fullscreen functionality workaround, we need ref to know where to scroll back after leaving fullscreen mode
 	let end: HTMLElement;
-	$effect.pre(() => {
-		// TODO: this has to be refactored
-		// * there must be easier way to do this
-		// ? maybe add display fixed instead of absolute and disable scrolling
-		// datagrid in fullscreen mode appear on top of the page, so we need to scroll it to the top
-		if (datagrid.state.isFullscreenActive) {
-			document.body.classList.add('overflow-hidden');
-			document.body.scrollIntoView({ behavior: 'smooth', block: 'start' });
-		} else {
-			// if datagrid is not in fullscreen mode, we need to scroll back to it's original position
-			if (!end) {
-				document.body.classList.remove('overflow-hidden');
-				return;
-			}
-			end.scrollIntoView({ behavior: 'smooth', block: 'start' });
-			document.body.classList.remove('overflow-hidden');
-		}
-	});
 </script>
 
-<!-- WRAPPER -->
-<div
-	class={cn(
-		'flex flex-col ',
-		datagrid.state.isFullscreenActive && 'bg-primary-foreground absolute inset-0 z-[20]  p-4'
-	)}
-	style="font-size: {datagrid.options.fontSize.selected.value};"
->
-	{#if datagrid.options.topbar.display}
-		<DatagridTopBar {topBar} />
-	{/if}
-	<!-- CONTENT -->
-	<div
-		data-datagrid={datagrid.identifier}
-		class={cn(
-			'relative flex flex-col border',
-			datagrid.options.scrollable ? 'max-h-[70vh]  overflow-auto ' : ''
-		)}
-	>
+<DatagridWrapper {end}>
+	<DatagridTopBar {topBar} />
+	<DatagridContent>
 		<DatagridHead {head} />
-		<!-- LOADING INDICATOR -->
-		{#if datagrid.options.statusIndicator.display}
-			{#if loadingIndicator}
-				{@render loadingIndicator()}
-			{:else}
-				<LoadingIndicatorContainer>
-					<LoadingIndicator
-						isError={datagrid.state.status.isError}
-						isFetching={datagrid.state.status.isFetching}
-						isRefetching={datagrid.state.status.isRefetching}
-					/>
-				</LoadingIndicatorContainer>
-			{/if}
-		{/if}
-		<!-- DATA INDICATOR -->
-		{#if datagrid.options.dataIndicator.display}
-			{#if dataIndicator}
-				{@render dataIndicator()}
-			{:else}
-				<Row class={`${STAY_IN_PLACE} border-b-0`}>
-					<StateIndicator
-						isLoading={datagrid.state.status.isFetching}
-						isError={datagrid.state.status.isError}
-					/>
-				</Row>
-			{/if}
-		{/if}
-		<!-- BODY -->
-		{#if body}
-			<!-- ? BODY can not be wrapped inside html element, it break sticky and rows -->
-			<!-- ? there is possibility to move other elements like header, topbar etc to ouside of parent container -->
-			<!-- ? but then header and body X axis scroll have to be synced via js -->
-			{@render body()}
-		{/if}
-		<!-- FOOTER -->
-		{#if datagrid.options.footer.display}
-			<DatagridFooter {footer} />
-		{/if}
-	</div>
-	{#if datagrid.options.pagination.display}
-		<DatagridPagination {pagination} />
-	{/if}
-</div>
+		<DatagridLoadingIndicator {loadingIndicator} />
+		<DatagridDataIndicator {dataIndicator} />
+		<DatagridBody {body} />
+		<DatagridFooter {footer} />
+	</DatagridContent>
+	<DatagridPagination {pagination} />
+</DatagridWrapper>
 <div bind:this={end} aria-hidden="true" class="hidden"></div>

@@ -8,19 +8,21 @@
 	let datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 </script>
 
-<Row
-	class="bg-table-primary sticky bottom-0 left-0 z-[15] flex w-full min-w-full flex-col border-b-0 border-t"
->
-	{#if footer}
-		{@render footer()}
-	{:else}
-		<div
-			class="flex items-center justify-between p-2 pl-3"
-			data-datagrid-footer-identifier={datagrid.identifier}
-		>
-			<div class="ml-auto">
-				<ScrollToTopButton />
+{#if datagrid.options.footer.display}
+	<Row
+		class="bg-table-primary sticky bottom-0 left-0 z-[15] flex w-full min-w-full flex-col border-b-0 border-t"
+	>
+		{#if footer}
+			{@render footer()}
+		{:else}
+			<div
+				class="flex items-center justify-between p-2 pl-3"
+				data-datagrid-footer-identifier={datagrid.identifier}
+			>
+				<div class="ml-auto">
+					<ScrollToTopButton />
+				</div>
 			</div>
-		</div>
-	{/if}
-</Row>
+		{/if}
+	</Row>
+{/if}
