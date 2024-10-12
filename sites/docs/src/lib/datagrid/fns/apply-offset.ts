@@ -10,5 +10,5 @@ export const applyOffset = <T>(columns: BaseColumn<T>[]) => {
             column.pinned.offset = getOffsetRight(column.id, columns);
         }
     }
-    return columns
+    return columns;
 };
