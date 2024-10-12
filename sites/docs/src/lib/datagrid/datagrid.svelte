@@ -62,14 +62,14 @@
 	// ? it is better to filter first and then sort because the best sorting algorithms are O(n log n) so the less data you have,
 	// ? the faster it is, and filtering shrinks the size of the sample, so filtering first is faster.
 	// Updates filtered data in client mode only
-	$effect(() => {
+	$effect.pre(() => {
 		if (datagrid.mode === 'client') {
 			datagrid.internal.filteredData = filterData([...datagrid.data], datagrid.state.filters);
 		}
 	});
 
 	// Updates sorted data in client mode only
-	$effect(() => {
+	$effect.pre(() => {
 		if (datagrid.mode === 'client') {
 			datagrid.internal.sortedData = sortData(
 				[...datagrid.internal.filteredData],
@@ -79,7 +79,7 @@
 	});
 
 	// Updates paginated data in client mode only
-	$effect(() => {
+	$effect.pre(() => {
 		if (datagrid.mode === 'client') {
 			datagrid.internal.paginatedData = paginateData(
 				datagrid.internal.sortedData,
@@ -90,7 +90,7 @@
 	});
 
 	// Updates pagination count in client mode only
-	$effect(() => {
+	$effect.pre(() => {
 		if (datagrid.mode === 'client') {
 			datagrid.state.pagination.count = datagrid.internal.filteredData.length || 1;
 		}
