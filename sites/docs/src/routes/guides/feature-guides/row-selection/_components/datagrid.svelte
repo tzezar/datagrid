@@ -18,10 +18,6 @@
 			}
 		})
 	);
-
-	$effect(() => {
-		console.log($state.snapshot(datagrid.internal.selectedRowIds))
-	})
 </script>
 
 
