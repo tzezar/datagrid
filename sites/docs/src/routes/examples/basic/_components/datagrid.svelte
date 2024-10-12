@@ -2,20 +2,39 @@
 	import { setContext } from 'svelte';
 	import { columns } from './columns.svelte';
 	import { inventoryData as data } from '$lib/data/inventory';
-	
+
 	import { TzezarDatagrid } from '$lib/datagrid/tzezar-datagrid.svelte';
 	import * as Datagrid from '$lib/datagrid';
 
 	let datagrid = setContext(
 		`datagrid`,
 		new TzezarDatagrid({
-			title:"Inventory",
+			title: 'Inventory',
 			data,
 			columns,
 			options: {
 				pagination: { display: true },
 				rows: { striped: true },
-				topbar: { display: true }
+				topbar: {
+					display: true,
+					displayFullscreenToggle: false,
+					displayExportDataMenu: false,
+					displayCopyDataMenu: false,
+					displayHeadFilterToggle: false,
+					settingsMenu: {
+						display: false,
+						displaySortingMenu: true,
+						displayReoderingMenu: true,
+						displayFreezingMenu: true,
+						displayResizingMenu: true,
+						displayVisibilityMenu: true,
+						adjustmentMenu: {
+							display: true,
+							displaySpacingMenu: true,
+							displayTextSizeMenu: true
+						}
+					}
+				}
 			}
 		})
 	);
@@ -37,4 +56,3 @@
 		{/each}
 	{/snippet}
 </Datagrid.Datagrid>
- 
