@@ -3,7 +3,7 @@
 	import type { TzezarDatagrid } from './tzezar-datagrid.svelte';
 	import { cn } from '$lib/utils';
 
-	let { children }: { children: Snippet } = $props();
+	let { children, class: _class }: { children: Snippet, class: string | undefined } = $props();
 	let datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 </script>
 
@@ -11,7 +11,8 @@
 	data-datagrid={datagrid.identifier}
 	class={cn(
 		'relative flex flex-col border',
-		datagrid.options.scrollable ? 'max-h-[70vh]  overflow-auto ' : ''
+		datagrid.options.scrollable ? 'max-h-[70vh]  overflow-auto ' : '',
+		_class
 	)}
 >
 	{@render children()}
