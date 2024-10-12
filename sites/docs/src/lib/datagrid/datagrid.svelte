@@ -47,7 +47,7 @@
 
 	onMount(() => {
 		if (datagrid.columns.some((column) => column.pinned)) {
-			applyOffset(datagrid.columns);
+			datagrid.columns = applyOffset(datagrid.columns);
 		}
 	});
 
