@@ -2,7 +2,7 @@ import { applyOffset } from "./fns/apply-offset";
 import { filterData } from "./fns/filter-data";
 import { paginateData } from "./fns/paginate-data";
 import { sortData } from "./fns/sort-data";
-import type { BaseColumn, ExpandedRows, Filter, SelectionState, Sorting } from "./types";
+import type { BaseColumn, ExpandedRows, Filter, Pagination, SelectionState, Sorting } from "./types";
 import { SvelteSet } from "svelte/reactivity";
 
 export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
@@ -14,15 +14,15 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
     identifier = $state('1');
 
     // Lifecycle hooks
-    onPageChange = () => {};
-    onPerPageChange = () => {};
-    onSortingChange = () => {};
-    onFiltersChange = () => {};
-    onChange = () => {};
+    onPageChange = () => { };
+    onPerPageChange = () => { };
+    onSortingChange = () => { };
+    onFiltersChange = () => { };
+    onChange = () => { };
 
     // State management
     state = $state({
-        pagination: { page: 1, perPage: 20, count: 1 },
+        pagination: { page: 1, perPage: 20, count: 1 } as Pagination,
         status: { isFetching: false, isError: false, isRefetching: false },
         sortingArray: [] as Sorting[],
         filters: [] as Filter[],
@@ -72,8 +72,8 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
                 displayFreezingMenu: true,
                 displayResizingMenu: true,
                 displayVisibilityMenu: true,
-                displayMenu: {
-                    enabled: false,
+                adjustmentMenu: {
+                    display: true,
                     displaySpacingMenu: true,
                     displayTextSizeMenu: true
                 }
@@ -149,6 +149,44 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
         this.internal.sortedData = sortData([...this.data], this.state.sortingArray);
         this.internal.filteredData = filterData([...this.internal.sortedData], this.state.filters);
         this.internal.paginatedData = paginateData([...this.internal.filteredData], this.state.pagination.page, this.state.pagination.perPage);
+    }
+    // Public methods
+    updateData(newData: T[]) {
+        this.data = newData;
+    }
+
+    updateColumns(newColumns: C[]) {
+        //@ts-expect-error ts(2322)
+        this.columns = applyOffset(newColumns);
+    }
+
+    updatePagination(page: number, perPage: number) {
+        this.state.pagination.page = page;
+        this.state.pagination.perPage = perPage;
+        this.onPageChange();
+        this.onPerPageChange();
+        this.onChange();
+    }
+
+    updateSorting(newSorting: Sorting[]) {
+        this.state.sortingArray = newSorting;
+        this.onSortingChange();
+        this.onChange();
+    }
+
+    updateFilters(newFilters: Filter[]) {
+        this.state.filters = newFilters;
+        this.state.pagination.page = 1;
+        this.onFiltersChange();
+        this.onChange();
+    }
+
+    toggleFullscreen() {
+        this.state.isFullscreenActive = !this.state.isFullscreenActive;
+    }
+
+    toggleHeadFilter() {
+        this.state.isHeadFilterVisible = !this.state.isHeadFilterVisible;
     }
 }
 
