@@ -29,8 +29,7 @@
 			<GroupItem disabled title="Overview" class="normal-case" href={hrefs.fundamentals.overview} />
 			<GroupItem title="typescript" href={hrefs.fundamentals.typescript} />
 			<GroupItem title="customization" href={hrefs.fundamentals.customization} />
-			<GroupItem disabled title="custom cells" href={hrefs.fundamentals.customCells} />
-			<GroupItem disabled title="custom headers" href={hrefs.fundamentals.customHeaders} />
+			<GroupItem title="custom cells & headers" href={hrefs.fundamentals.customCellsAndHeaders} />
 		</Group>
 		<Group>
 			<GroupTitle title="feature guides" />

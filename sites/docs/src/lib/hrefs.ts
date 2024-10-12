@@ -7,8 +7,7 @@ export const hrefs = {
         overview: "/guides/fundamentals/overview",
         typescript: "/guides/fundamentals/typescript",
         customization: "/guides/fundamentals/customization",
-        customCells: "/guides/feature-guides/custom-cells",
-        customHeaders: "/guides/feature-guides/custom-headers",
+        customCellsAndHeaders: "/guides/fundamentals/custom-cells-and-headers",
     },
     quickStart: {
         installation: "/quick-start/installation",
