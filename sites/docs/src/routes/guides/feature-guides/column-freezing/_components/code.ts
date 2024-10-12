@@ -21,18 +21,41 @@ export const columns = [
         id: 'barcode',
         title: 'Barcode',
         width: '200px',
-        pinned: {
-            position: 'left'
-        },
+     
     },
-
     {
         id: 'location',
         title: 'Location',
-        width: '1500px',
+        grow: true,
+        width: '200px',
+        pinned: {
+            position: 'left'
+        },
+
+    },
+    {
+        id: 'category',
+        title: 'Category',
+        pinnable: false,
+        width: '1000px',
+    },
+    {
+        id: 'quantity',
+        title: 'Quantiy',
+        width: '200px',
+        pinned: {
+            position: 'right'
+        },
+    },
+    {
+        id: 'weight',
+        title: 'Weight',
+        width: '200px',
+   
     },
 
-] satisfies BaseColumn<InventoryDataRow>[]`,
+] satisfies BaseColumn<InventoryDataRow>[]
+`,
 
     important1: `satisfies BaseColumn<InventoryDataRow>[]`,
     datagrid: `<script lang="ts">
