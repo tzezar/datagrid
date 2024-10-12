@@ -210,7 +210,7 @@
 				</DropdownMenu.Sub>
 			{/if}
 
-			{#if datagrid.options.topbar.settingsMenu.displayMenu.enabled}
+			{#if datagrid.options.topbar.settingsMenu.adjustmentMenu.display}
 				<DropdownMenu.Label>Display options</DropdownMenu.Label>
 				<DropdownMenu.Sub>
 					<DropdownMenu.SubTrigger>
