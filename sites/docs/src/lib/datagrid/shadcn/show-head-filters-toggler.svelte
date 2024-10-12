@@ -5,7 +5,7 @@
 	import MaterialSymbolsFilterAltOutline from '~icons/material-symbols/filter-alt-outline';
 	import Button from '$lib/components/ui/button/button.svelte';
 
-	const datagrid = getContext<TzezarDatagrid>('datagrid');
+	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
 	let {
 		class: _class,
@@ -21,7 +21,7 @@
 <Button
 	size="sm"
 	class={_class}
-	onclick={() => (datagrid.state.isHeadFilterVisible = !datagrid.state.isHeadFilterVisible)}
+	onclick={() => datagrid.toggleHeadFilter()}
 >
 	{#if datagrid.state.isHeadFilterVisible}
 		{#if iconEnabled}
