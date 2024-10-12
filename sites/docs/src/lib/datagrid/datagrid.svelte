@@ -16,6 +16,7 @@
 	import TopBar from './top-bar.svelte';
 	import DatagridPagination from './datagrid-pagination.svelte';
 	import DatagridTopBar from './datagrid-top-bar.svelte';
+	import DatagridFooter from './datagrid-footer.svelte';
 
 	// TODO: this component grew big, need to split it into smaller components
 	let datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
@@ -182,22 +183,7 @@
 		{/if}
 		<!-- FOOTER -->
 		{#if datagrid.options.footer.display}
-			<Row
-				class="bg-table-primary sticky bottom-0 left-0 z-[15] flex w-full min-w-full  flex-col border-b-0 border-t"
-			>
-				{#if footer}
-					{@render footer()}
-				{:else}
-					<div
-						class="flex items-center justify-between p-2 pl-3"
-						data-datagrid-footer-identifier={datagrid.identifier}
-					>
-						<div class="ml-auto">
-							<ScrollToTopButton />
-						</div>
-					</div>
-				{/if}
-			</Row>
+			<DatagridFooter {footer} />
 		{/if}
 	</div>
 	{#if datagrid.options.pagination.display}
