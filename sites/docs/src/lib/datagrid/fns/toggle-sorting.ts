@@ -1,6 +1,6 @@
 import type { ColumnId, Sorting } from "../types";
 
-export const toggleSorting =({
+export const toggleSorting = ({
     columnId,
     sortings
 }: {
