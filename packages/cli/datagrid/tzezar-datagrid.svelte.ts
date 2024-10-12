@@ -79,6 +79,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
                 displayReoderingMenu: true,
                 displayFreezingMenu: true,
                 displayResizingMenu: true,
+                displayVisibilityMenu: true,
                 displayMenu: {
                     enabled: false,
                     displaySpacingMenu: true,
@@ -176,6 +177,9 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
         this.options.topbar.settingsMenu.displayReoderingMenu = options?.topbar?.settingsMenu?.displayReoderingMenu ?? this.options.topbar.settingsMenu.displayReoderingMenu
 
         this.options.topbar.settingsMenu.displayFreezingMenu = options?.topbar?.settingsMenu?.displayFreezingMenu ?? this.options.topbar.settingsMenu.displayFreezingMenu
+        this.options.topbar.settingsMenu.displayVisibilityMenu = options?.topbar?.settingsMenu?.displayVisibilityMenu ?? this.options.topbar.settingsMenu.displayVisibilityMenu
+
+
 
         this.options.topbar.settingsMenu.displayResizingMenu = options?.topbar?.settingsMenu?.displayResizingMenu ?? this.options.topbar.settingsMenu.displayResizingMenu
         this.options.topbar.settingsMenu.displayMenu.enabled = options?.topbar?.settingsMenu?.displayMenu?.enabled ?? this.options.topbar.settingsMenu.displayMenu.enabled
@@ -279,6 +283,7 @@ export type ConstructorOptions = {
                 displayReoderingMenu?: boolean,
                 displayFreezingMenu?: boolean,
                 displayResizingMenu?: boolean,
+                displayVisibilityMenu?: boolean,
                 displayMenu?: {
                     enabled: boolean,
                     displaySpacingMenu?: boolean,
