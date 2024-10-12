@@ -97,6 +97,7 @@
 	});
 
 	// Fullscreen functionality workaround, we need ref to know where to scroll back after leaving fullscreen mode
+	// svelte-ignore non_reactive_update
 	let end: HTMLElement;
 </script>
 
