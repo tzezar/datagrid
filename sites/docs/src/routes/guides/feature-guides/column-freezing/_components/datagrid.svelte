@@ -8,7 +8,6 @@
 	let datagrid = setContext(
 		`datagrid`,
 		new TzezarDatagrid({
-			title: 'Column freezing',
 			data,
 			columns,
 			options: {
