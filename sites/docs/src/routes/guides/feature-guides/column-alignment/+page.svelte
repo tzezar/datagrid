@@ -10,7 +10,7 @@
 </script>
 
 <PageContainer>
-	<PageTitle title="Column Ordering" />
+	<PageTitle title="Column Aligment" />
 
 	<p>
 		On this page, you'll learn how to align columns and see how it's implemented so you can make
