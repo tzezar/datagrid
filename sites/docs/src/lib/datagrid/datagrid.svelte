@@ -17,6 +17,7 @@
 	import DatagridPagination from './datagrid-pagination.svelte';
 	import DatagridTopBar from './datagrid-top-bar.svelte';
 	import DatagridFooter from './datagrid-footer.svelte';
+	import DatagridHead from './datagrid-head.svelte';
 
 	// TODO: this component grew big, need to split it into smaller components
 	let datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
@@ -141,12 +142,7 @@
 			datagrid.options.scrollable ? 'max-h-[70vh]  overflow-auto ' : ''
 		)}
 	>
-		<!-- HEAD -->
-		<div class="w sticky top-0 z-[16] flex min-w-fit" data-datagrid-head={datagrid.identifier}>
-			{#if head}
-				{@render head()}
-			{/if}
-		</div>
+		<DatagridHead {head} />
 		<!-- LOADING INDICATOR -->
 		{#if datagrid.options.statusIndicator.display}
 			{#if loadingIndicator}

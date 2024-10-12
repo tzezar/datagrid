@@ -1,0 +1,13 @@
+<script lang="ts">
+	import { getContext, type Snippet } from 'svelte';
+	import type { TzezarDatagrid } from './tzezar-datagrid.svelte';
+
+	let { head }: { head: Snippet | undefined } = $props();
+	let datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
+</script>
+
+<div class="w sticky top-0 z-[16] flex min-w-fit" data-datagrid-head={datagrid.identifier}>
+	{#if head}
+		{@render head()}
+	{/if}
+</div>
