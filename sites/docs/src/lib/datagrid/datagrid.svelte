@@ -52,6 +52,9 @@
 		}
 	});
 
+
+	// * Internal logic in client mode is splitted in separate $effects to reduce unnecessary recalculations
+	
 	// ! BUG for some reason internal logic, like sorting, filtering and pagination runs after render
 	// ! in theory data is not changing but in practice it is for unknown reason
 	// ! whole chain of logic comes from filterDate() that takes data as parameter
@@ -60,12 +63,14 @@
 	// ? Worth noting the order. On small samples of data, it doesn't change anything but on large ones,
 	// ? it is better to filter first and then sort because the best sorting algorithms are O(n log n) so the less data you have,
 	// ? the faster it is, and filtering shrinks the size of the sample, so filtering first is faster.
+	// Updates filtered data in client mode only
 	$effect(() => {
 		if (datagrid.mode === 'client') {
 			datagrid.internal.filteredData = filterData([...datagrid.data], datagrid.state.filters);
 		}
 	});
 
+	// Updates sorted data in client mode only
 	$effect(() => {
 		if (datagrid.mode === 'client') {
 			datagrid.internal.sortedData = sortData(
@@ -75,6 +80,7 @@
 		}
 	});
 
+	// Updates paginated data in client mode only
 	$effect(() => {
 		if (datagrid.mode === 'client') {
 			datagrid.internal.paginatedData = paginateData(
@@ -85,12 +91,16 @@
 		}
 	});
 
+	// Updates pagination count in client mode only
 	$effect(() => {
 		if (datagrid.mode === 'client') {
 			datagrid.state.pagination.count = datagrid.internal.filteredData.length || 1;
 		}
 	});
 
+
+
+	// Fullscreen functionality
 	let end: HTMLElement;
 	$effect.pre(() => {
 		// TODO: this has to be refactored
