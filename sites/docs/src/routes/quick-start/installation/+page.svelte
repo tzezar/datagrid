@@ -1,5 +1,6 @@
 <script>
 	import CodeTerminal from '$lib/blocks/code-terminal.svelte';
+	import ImportantInformation from '$lib/blocks/important-information.svelte';
 	import PageContainer from '$lib/blocks/page-container.svelte';
 	import PageNotDone from '$lib/blocks/page-not-done.svelte';
 	import PageTitle from '$lib/blocks/page-title.svelte';
@@ -7,7 +8,7 @@
 	import { typescript } from 'svelte-highlight/languages';
 </script>
 
-<PageContainer class="mx-auto max-w-screen-sm flex">
+<PageContainer class="mx-auto flex max-w-screen-sm">
 	<PageTitle title="Installation" />
 
 	<p>
@@ -19,7 +20,7 @@
 		and optionally context menu, popover are used.
 	</p>
 
-	<div class='py-10'>
+	<div class="py-10">
 		<h2 class="text-lg font-semibold">Automatic installation</h2>
 		<div class="flex flex-col">
 			<p>To easily install datagrid:</p>
@@ -33,7 +34,12 @@
 3 Where is your tailwind.config.[cjs|js|ts] located? ... ./tailwind.config.ts
 4 Do you want to install dependencies? ... yes"
 			/>
-			<p>Thats it!</p>
+			<p class="pb-4">Thats it!</p>
+			<ImportantInformation>
+				If you experience an error during installation of dependencies, please let me know by
+				opening an issue in github. It happens randomly. As a workaround, install the package
+				manually.
+			</ImportantInformation>
 		</div>
 	</div>
 	<div>
