@@ -1,19 +1,10 @@
 <script lang="ts">
-	import { cn } from '$lib/utils';
 	import { getContext, onMount, type Snippet } from 'svelte';
 	import { applyOffset } from './fns/apply-offset';
-	import LoadingIndicator from './loading-indicator.svelte';
-	import { STAY_IN_PLACE } from './CONSTSANTS';
-	import Row from './row.svelte';
-	import StateIndicator from './state-indicator.svelte';
-	import ScrollToTopButton from './scroll-to-top-button.svelte';
-	import Pagination from './shadcn/pagination.svelte';
-	import LoadingIndicatorContainer from './loading-indicator-container.svelte';
 	import type { TzezarDatagrid } from './tzezar-datagrid.svelte';
 	import { paginateData } from './fns/paginate-data';
 	import { sortData } from './fns/sort-data';
 	import { filterData } from './fns/filter-data';
-	import TopBar from './top-bar.svelte';
 	import DatagridPagination from './datagrid-pagination.svelte';
 	import DatagridTopBar from './datagrid-top-bar.svelte';
 	import DatagridFooter from './datagrid-footer.svelte';
@@ -24,7 +15,6 @@
 	import DatagridWrapper from './datagrid-wrapper.svelte';
 	import DatagridContent from './datagrid-content.svelte';
 
-	// TODO: this component grew big, need to split it into smaller components
 	let datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
 	type Props = {
