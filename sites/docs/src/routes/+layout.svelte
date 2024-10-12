@@ -24,11 +24,7 @@
 		}
 	});
 
-	$effect(()=> {
-		console.log($mode)
-	})
-
-	let schema = $state($mode || 'dark')
+	let schema = $derived($mode || 'dark')
 </script>
 
 <svelte:head>
