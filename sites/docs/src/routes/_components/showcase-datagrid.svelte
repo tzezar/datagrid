@@ -67,6 +67,7 @@
 	import * as ContextMenu from '$lib/components/ui/context-menu';
 	import CellWithContextMenu from '../examples/advanced/_components/cell-with-context-menu.svelte';
 	import { getNestedValue } from '$lib/datagrid/fns/get-nested-value';
+	import type { Filter } from '$lib/datagrid/types';
 
 
 	// const toggleData = () => {
