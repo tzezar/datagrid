@@ -46,7 +46,6 @@
 				href={hrefs.guides.featureGuides.columnResizing}
 			/>
 			<GroupItem
-				disabled
 				title="column aligment"
 				href={hrefs.guides.featureGuides.columnAlignment}
 			/>
