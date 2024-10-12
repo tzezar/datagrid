@@ -8,7 +8,7 @@
 	let datagrid = setContext(
 		`datagrid`,
 		new TzezarDatagrid({
-			data,
+			data: data.slice(0, 50),
 			columns,
 			options: {
 				pagination: { display: false },
@@ -25,10 +25,10 @@
 						displayReoderingMenu: false,
 						displayResizingMenu: false,
 						displaySortingMenu: false,
-                        displayVisibilityMenu: false,
-                        displayMenu: {
-                            enabled: false
-                        }
+						displayVisibilityMenu: false,
+						displayMenu: {
+							enabled: false
+						}
 					}
 				}
 			}

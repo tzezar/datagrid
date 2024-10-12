@@ -17,6 +17,7 @@
 		On this page, you'll learn how to enable column pinning and see how it's implemented so you can
 		make your own enhancements.
 	</p>
+	<Datagrid />
 	<p>
 		When defining columns, there are two key properties to consider:
 		<CH>pinnable</CH>
@@ -29,19 +30,20 @@
 	</PageCodeContainer>
 
 	<p>
-		<CH>pinnable</CH> – as the name suggests, this defines whether a column can
-		be pinned by default.
+		<CH>pinnable</CH> – as the name suggests, this defines whether a column can be pinned by default.
 	</p>
 	<p>
 		<CH>pinned</CH> – this is an object containing two keys: <CH>position</CH> and <CH>offset</CH>.
-		The <CH>position</CH> specifies which side of the table the column is pinned to, while the <CH>offset</CH> is a
-		value calculated internally by the functions <CH>getOffsetLeft()</CH> and <CH>getOffsetRight()</CH>, and applied through
-		the <CH>applyOffset()</CH> function whenever the pinned state of the column changes.
+		The <CH>position</CH> specifies which side of the table the column is pinned to, while the <CH
+			>offset</CH
+		> is a value calculated internally by the functions <CH>getOffsetLeft()</CH> and <CH
+			>getOffsetRight()</CH
+		>, and applied through the <CH>applyOffset()</CH> function whenever the pinned state of the column
+		changes.
 	</p>
 
 	<ImportantInformation>
-		<CH>{`offset`}</CH> is calculated automatically. Do not set it manually as
-		it will be overwritten.
+		<CH>{`offset`}</CH> is calculated automatically. Do not set it manually as it will be overwritten.
 	</ImportantInformation>
 
 	<p>
@@ -51,8 +53,7 @@
 	<PageCodeContainer>
 		<Highlight language={typescript} code={code.simpleColumn} />
 	</PageCodeContainer>
-	<p>Example</p>
-	<Datagrid />
+
 	<PageCodeContainer>
 		<Highlight language={typescript} code={code.columns} />
 	</PageCodeContainer>
