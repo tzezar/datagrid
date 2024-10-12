@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import Pagination from './shadcn/pagination.svelte';
 
 	export let pagination: Snippet | undefined;
