@@ -2,7 +2,8 @@
 	import type { Snippet } from 'svelte';
 	import TopBar from './top-bar.svelte';
 
-	export let topBar: Snippet | undefined;
+	let { topBar }: { topBar: Snippet | undefined } = $props();
+
 </script>
 
 {#if topBar}

@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import Pagination from './shadcn/pagination.svelte';
 
-	export let pagination: Snippet | undefined;
+	let { pagination }: { pagination: Snippet | undefined } = $props();
 </script>
 
 {#if !pagination}
