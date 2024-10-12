@@ -21,17 +21,17 @@
 	</p>
 
 	<div>
-		<Datagrid />
-		<Accordion.Root>
-			<Accordion.Item value="item-1">
-				<Accordion.Trigger>Code</Accordion.Trigger>
-				<Accordion.Content>
-					<PageCodeContainer>
-						<Highlight language={typescript} code={code.grid} />
-					</PageCodeContainer>
-				</Accordion.Content>
-			</Accordion.Item>
-		</Accordion.Root>
+			<Datagrid />
+	<Accordion.Root>
+		<Accordion.Item value="item-1">
+			<Accordion.Trigger>Code</Accordion.Trigger>
+			<Accordion.Content>
+				<PageCodeContainer>
+					<Highlight language={typescript} code={code.grid} />
+				</PageCodeContainer>
+			</Accordion.Content>
+		</Accordion.Item>
+	</Accordion.Root>
 	</div>
 	<p>
 		To provide more flexibility, I decided against a simple "allow row selection" option. Instead, 
