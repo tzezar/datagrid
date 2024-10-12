@@ -14,6 +14,7 @@
 	import { sortData } from './fns/sort-data';
 	import { filterData } from './fns/filter-data';
 	import TopBar from './top-bar.svelte';
+	import DatagridPagination from './datagrid-pagination.svelte';
 
 	// TODO: this component grew big, need to split it into smaller components
 	let datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
@@ -205,13 +206,8 @@
 			</Row>
 		{/if}
 	</div>
-	<!-- PAGINATION -->
 	{#if datagrid.options.pagination.display}
-		{#if !pagination}
-			<Pagination />
-		{:else}
-			{@render pagination()}
-		{/if}
+		<DatagridPagination {pagination} />
 	{/if}
 </div>
 <div bind:this={end} aria-hidden="true" class="hidden"></div>
