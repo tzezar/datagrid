@@ -3,6 +3,7 @@
 	import GroupItem from './group-item.svelte';
 	import Group from './group.svelte';
 	import { hrefs } from '$lib/hrefs';
+
 </script>
 
 <div class="flex w-full flex-col">

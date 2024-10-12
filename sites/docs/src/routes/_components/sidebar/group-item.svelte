@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
-	import type { Snippet } from 'svelte';
+	import { getContext, type Snippet } from 'svelte';
+
+
+	let closeSidebarOnClick = getContext('mobile-sidebar') as () => void
+
 
 	let {
 		children,
@@ -19,6 +23,7 @@
 </script>
 
 <a
+	onclick={()=> closeSidebarOnClick()}
 	{href}
 	class={cn(
 		'capitalize',

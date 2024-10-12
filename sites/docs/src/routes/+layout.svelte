@@ -10,12 +10,11 @@
 	import logoWhite from '$lib/assets/img/tzezar-logo-white.png';
 	import ThemeSwitcher from './_components/theme-switcher.svelte';
 	import { Toaster } from '$lib/components/ui/sonner';
-	import * as Sheet from '$lib/components/ui/sheet';
-	import Button from '$lib/components/ui/button/button.svelte';
 
 	import { browser } from '$app/environment';
 	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
 	import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
+	import SidebarMobile from './_components/sidebar/sidebar-mobile.svelte';
 
 	const queryClient = new QueryClient({
 		defaultOptions: {
@@ -86,25 +85,8 @@
 								<p class="text-right">Beta</p>
 							</div>
 						</a>
-
-						<div>
-							<Sheet.Root>
-								<Sheet.Trigger asChild let:builder>
-									<Button builders={[builder]}>Menu</Button>
-								</Sheet.Trigger>
-								<Sheet.Content
-									class="z-[2000] flex h-full  flex-col justify-between overflow-auto p-0"
-								>
-									<Sidebar />
-									<div class="bg-primary-foreground sticky bottom-0 mt-auto border-t px-8 py-4">
-										<div class="flex items-center justify-between gap-4">
-											<a href="https://github.com/tzezar/datagrid" class="font-semibold">GITHUB</a>
-											<ThemeSwitcher />
-										</div>
-									</div>
-								</Sheet.Content>
-							</Sheet.Root>
-						</div>
+						<SidebarMobile/>
+					
 					</div>
 				</div>
 				<div class="grow p-8">
