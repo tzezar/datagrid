@@ -28,17 +28,11 @@ export type BaseColumn<T = unknown> = {
     align?: 'start' | 'center' | 'end';
 };
 
-
-
-
-
 export type ExpandedRows = (number | string)[];
 export type Sorting = {
     columnId: ColumnId;
     direction: string;
 }
-
-
 
 export type Page = number
 export type PerPage = number

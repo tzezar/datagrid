@@ -44,7 +44,6 @@
 		style:padding-bottom={datagrid.options.spacing.selected.vertical}
 		style:padding-left={datagrid.options.spacing.selected.horizontal}
 		style:padding-right={datagrid.options.spacing.selected.horizontal}
-		style={`${column.align === 'start' ? 'justify-content: flex-start;' : column.align === 'center' ? 'justify-content: center;' : column.align === 'end' ? 'justify-content: flex-end;' : ''}`}
 		class={cn(
 			'flex min-h-fit items-center border-r  leading-none last:border-r-0 ',
 			column.pinned?.position == 'left' && 'offset-left border-r',
@@ -56,6 +55,9 @@
 				rowIndex % 2 === 0 &&
 				'bg-table-row-even group-hover/row:bg-table-row-even-hover',
 			column.grow && 'grow',
+			column.align == 'center' && 'justify-center',
+			column.align == 'end' && 'justify-end',
+			column.align == 'start' && 'justify-start',
 			_class?.cell
 		)}
 	>
