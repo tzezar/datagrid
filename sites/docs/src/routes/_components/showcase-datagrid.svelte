@@ -34,11 +34,9 @@
 	// 	datagrid.data = updateTotals(datagrid.data);
 	// }
 
-
 	// let generatedData = $state(generateData(100000))
 
-
-	import data from './data.json'
+	import data from './data.json';
 
 	let datagrid = setContext(
 		`datagrid`,
@@ -56,7 +54,19 @@
 					displayExportDataMenu: true,
 					displayFullscreenToggle: true,
 					displayHeadFilterToggle: true,
-					settingsMenu: { display: true }
+					settingsMenu: {
+						display: true,
+						displaySortingMenu: true,
+						displayFreezingMenu: true,
+						displayReoderingMenu: true,
+						displayVisibilityMenu: true,
+						displayResizingMenu: true,
+						adjustmentMenu: {
+							display: true,
+							displaySpacingMenu: true,
+							displayTextSizeMenu: true
+						}
+					}
 				}
 			}
 		})
@@ -69,20 +79,19 @@
 	import { getNestedValue } from '$lib/datagrid/fns/get-nested-value';
 	import type { Filter } from '$lib/datagrid/types';
 
-
 	// const toggleData = () => {
 	// 	if (datagrid.internal.paginatedData) {
 	// 		datagrid.internal.paginatedData = [];
 	// 	} else {
-			// datagrid.internal.paginatedData = applyInternalLogic(
-			// 	datagrid.data,
-			// 	datagrid.state.filters,
-			// 	datagrid.state.sortingArray,
-			// 	datagrid.state.pagination.page,
-			// 	datagrid.state.pagination.perPage
-			// );
-		// }
-		// return datagrid.internal.paginatedData;
+	// datagrid.internal.paginatedData = applyInternalLogic(
+	// 	datagrid.data,
+	// 	datagrid.state.filters,
+	// 	datagrid.state.sortingArray,
+	// 	datagrid.state.pagination.page,
+	// 	datagrid.state.pagination.perPage
+	// );
+	// }
+	// return datagrid.internal.paginatedData;
 	// };
 
 	// function toggleInterval() {
@@ -135,54 +144,52 @@
 							{/snippet}
 						</Datagrid.CellWithoutSpacing>
 					{:else if column.id === 'actions'}
-					<Datagrid.Cell {row} {column} {columnIndex} {rowIndex}>
-						{#snippet custom()}
-							<div class={cn('flex flex-row gap-2')}>
-								<Button
-									size="sm"
-									variant="destructive"
-									onclick={() => {
-										removeRow(row.id, datagrid);
-										toast.success('Row removed');
-									}}
-								>
-									<MaterialSymbolsDeleteOutline />
-								</Button>
-								<EditForm />
-							</div>
-						{/snippet}
-					</Datagrid.Cell>
+						<Datagrid.Cell {row} {column} {columnIndex} {rowIndex}>
+							{#snippet custom()}
+								<div class={cn('flex flex-row gap-2')}>
+									<Button
+										size="sm"
+										variant="destructive"
+										onclick={() => {
+											removeRow(row.id, datagrid);
+											toast.success('Row removed');
+										}}
+									>
+										<MaterialSymbolsDeleteOutline />
+									</Button>
+									<EditForm />
+								</div>
+							{/snippet}
+						</Datagrid.Cell>
 					{:else}
-					<ContextMenu.Root>
-						<ContextMenu.Trigger asChild let:builder>
-							<CellWithContextMenu
-								{builder}
-								{columnIndex}
-								{rowIndex}
-								{column}
-								{row}
-								class={{
-									data: cn('overflow-hidden text-nowrap text-ellipsis'),
-									cell: cn(
-										'overflow-hidden text-nowrap',
-										column.id === 'total' && row['total'] < 2000 && 'text-red-400',
-										column.id === 'total' && row['total'] > 6000 && 'text-green-400',
-										column.id === 'profit' && row['profit'] < 200 && 'text-red-400',
-										column.id === 'profit' && row['profit'] > 5000 && 'text-green-400',
-										row['status'] === 'canceled' && 'text-primary/40 line-through',
-										column.id === 'receiver' &&
-											row['receiver'] === 'Sebastian "Tzezar" Drozd' &&
-											'font-bold text-orange-500'
-									)
-								}}
-							/>
-						</ContextMenu.Trigger>
-						<ContextMenu.Content>
-							<ContextMenu.Item>{getNestedValue(row, column.id)}</ContextMenu.Item>
-						</ContextMenu.Content>
-					</ContextMenu.Root>
-					
-				
+						<ContextMenu.Root>
+							<ContextMenu.Trigger asChild let:builder>
+								<CellWithContextMenu
+									{builder}
+									{columnIndex}
+									{rowIndex}
+									{column}
+									{row}
+									class={{
+										data: cn('overflow-hidden text-ellipsis text-nowrap'),
+										cell: cn(
+											'overflow-hidden text-nowrap',
+											column.id === 'total' && row['total'] < 2000 && 'text-red-400',
+											column.id === 'total' && row['total'] > 6000 && 'text-green-400',
+											column.id === 'profit' && row['profit'] < 200 && 'text-red-400',
+											column.id === 'profit' && row['profit'] > 5000 && 'text-green-400',
+											row['status'] === 'canceled' && 'text-primary/40 line-through',
+											column.id === 'receiver' &&
+												row['receiver'] === 'Sebastian "Tzezar" Drozd' &&
+												'font-bold text-orange-500'
+										)
+									}}
+								/>
+							</ContextMenu.Trigger>
+							<ContextMenu.Content>
+								<ContextMenu.Item>{getNestedValue(row, column.id)}</ContextMenu.Item>
+							</ContextMenu.Content>
+						</ContextMenu.Root>
 					{/if}
 				{/each}
 			</Datagrid.Row>
