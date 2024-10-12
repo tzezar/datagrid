@@ -18,13 +18,10 @@ export const updateFilter = (
     }
 
     // Remove filters with no value
-    datagrid.state.filters = tempFilters.filter(f => {
+    const filteredFilters = tempFilters.filter(f => {
         if (f.value === "") return false;
         if (Array.isArray(f.value) && f.value.length === 2) return !(f.value[0] === -99999999999 && f.value[1] === 9999999999);
         return true;
     });
-
-    datagrid.state.pagination.page = 1;
-    datagrid.onFiltersChange();
-    datagrid.onChange()
+    datagrid.updateFilters(filteredFilters)
 };
