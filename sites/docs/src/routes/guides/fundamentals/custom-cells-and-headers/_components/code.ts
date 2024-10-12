@@ -21,9 +21,6 @@ export const code = {
 </script>
 
 <Datagrid.Datagrid>
-	{#snippet topBar()}
-		<Datagrid.TopBar />
-	{/snippet}
 	{#snippet head()}
 		{#each datagrid.columns as column, i (column.id)}
 			{#if column.id === 'customCell'}
