@@ -9,7 +9,6 @@
 
 	let closeSidebarOnClick = () => {
 		open = false;
-		console.log(321);
 	};
 
 	setContext('mobile-sidebar', closeSidebarOnClick);
