@@ -160,7 +160,7 @@
 			{#if dataIndicator}
 				{@render dataIndicator()}
 			{:else}
-				<Row class={`${STAY_IN_PLACE}`}>
+				<Row class={`${STAY_IN_PLACE} border-b-0`}>
 					<StateIndicator
 						isLoading={datagrid.state.status.isFetching}
 						isError={datagrid.state.status.isError}

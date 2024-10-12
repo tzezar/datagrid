@@ -66,7 +66,7 @@
 		onclick={handleContainerClick}
 		style={`${column.align === 'center' ? ' align-items: center;' : column.align === 'end' ? 'align-items: flex-end' : column.align === 'start' ? 'align-items: flex-start' : ''}`}
 		class={cn(
-			'th flex shrink-0 flex-col gap-2  overflow-hidden text-ellipsis border-r bg-table-primary font-semibold last:border-r-0 hover:bg-table-primary-hover',
+			'th flex shrink-0 flex-col gap-2  overflow-hidden text-ellipsis border-r bg-table-primary font-semibold last:border-r-0 hover:bg-table-primary-hover border-b',
 			column.sortable && 'cursor-pointer',
 			column.pinned?.position == 'left' && 'offset-left border-r',
 			column.pinned?.position == 'right' && 'offset-right border-l',
