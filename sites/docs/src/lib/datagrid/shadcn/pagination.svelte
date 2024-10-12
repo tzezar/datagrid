@@ -29,11 +29,7 @@
 		perPage={datagrid.state.pagination.perPage}
 		page={datagrid.state.pagination.page}
 		let:range
-		onPageChange={(v) => {
-			datagrid.state.pagination.page = v;
-			datagrid.onPageChange();
-			datagrid.onChange();
-		}}
+		onPageChange={(v) => datagrid.updatePagination(v, datagrid.state.pagination.perPage)}
 	>
 		<div class="flex items-center gap-2">
 			<Pagination.PrevButton
@@ -47,11 +43,7 @@
 						value: datagrid.state.pagination.page,
 						label: `Page ${datagrid.state.pagination.page}`
 					}}
-					onSelectedChange={(selected) => {
-						datagrid.state.pagination.page = Number(selected?.value);
-						datagrid.onPageChange();
-						datagrid.onChange();
-					}}
+					onSelectedChange={(selected) => datagrid.updatePagination(selected?.value || 1, datagrid.state.pagination.perPage)}
 				>
 					<Select.Trigger class="h-8">
 						<Select.Value />
@@ -75,12 +67,7 @@
 	</Pagination.Root>
 	<div class="flex flex-row gap-1 text-nowrap text-xs">
 		<Select.Root
-			onSelectedChange={(selected) => {
-				datagrid.state.pagination.page = 1;
-				datagrid.state.pagination.perPage = Number(selected?.value);
-				datagrid.onPerPageChange();
-				datagrid.onChange();
-			}}
+			onSelectedChange={(selected) => datagrid.updatePagination(datagrid.state.pagination.page, selected?.value || 10)}
 			selected={{
 				value: datagrid.state.pagination.perPage,
 				label: `Per page: ${datagrid.state.pagination.perPage}`
