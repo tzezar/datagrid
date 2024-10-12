@@ -26,7 +26,7 @@
 		footer?: Snippet;
 		class?: {
 			wrapper?: string;
-			table?: string;
+			content?: string;
 		};
 		pagination?: Snippet;
 	};
@@ -41,7 +41,7 @@
 		footer,
 		class: _class = {
 			wrapper: '',
-			table: ''
+			content: ''
 		}
 	}: Props = $props();
 
@@ -100,9 +100,9 @@
 	let end: HTMLElement;
 </script>
 
-<DatagridWrapper {end}>
+<DatagridWrapper {end} class={_class.wrapper}>
 	<DatagridTopBar {topBar} />
-	<DatagridContent>
+	<DatagridContent class={_class.content}>
 		<DatagridHead {head} />
 		<DatagridLoadingIndicator {loadingIndicator} />
 		<DatagridDataIndicator {dataIndicator} />

@@ -4,7 +4,7 @@
 	import type { TzezarDatagrid } from './tzezar-datagrid.svelte';
 	let datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
-	let { children, end }: { children: Snippet; end: HTMLElement | undefined } = $props();
+	let { children, end, class: _class }: { children: Snippet; end: HTMLElement | undefined, class?: string } = $props();
 
 	$effect.pre(() => {
 		// TODO: this has to be refactored
@@ -29,7 +29,8 @@
 <div
 	class={cn(
 		'flex flex-col ',
-		datagrid.state.isFullscreenActive && 'bg-primary-foreground absolute inset-0 z-[20]  p-4'
+		datagrid.state.isFullscreenActive && 'bg-primary-foreground absolute inset-0 z-[20]  p-4',
+		_class
 	)}
 	style="font-size: {datagrid.options.fontSize.selected.value};"
 >
