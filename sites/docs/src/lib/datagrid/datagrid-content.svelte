@@ -3,7 +3,7 @@
 	import type { TzezarDatagrid } from './tzezar-datagrid.svelte';
 	import { cn } from '$lib/utils';
 
-	let { children, class: _class }: { children: Snippet, class } = $props();
+	let { children, class: _class }: { children: Snippet, class: string | undefined } = $props();
 	let datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 </script>
 
