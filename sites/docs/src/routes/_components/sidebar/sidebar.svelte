@@ -29,26 +29,16 @@
 			<GroupItem disabled title="Overview" class="normal-case" href={hrefs.fundamentals.overview} />
 			<GroupItem title="typescript" href={hrefs.fundamentals.typescript} />
 			<GroupItem title="customization" href={hrefs.fundamentals.customization} />
+			<GroupItem disabled title="custom cells" href={hrefs.fundamentals.customCells} />
+			<GroupItem disabled title="custom headers" href={hrefs.fundamentals.customHeaders} />
 		</Group>
 		<Group>
 			<GroupTitle title="feature guides" />
-			<GroupItem
-				title="column freezing"
-				href={hrefs.guides.featureGuides.columnFreezing}
-			/>
+			<GroupItem title="column freezing" href={hrefs.guides.featureGuides.columnFreezing} />
 			<GroupItem title="column hiding" href={hrefs.guides.featureGuides.columnHiding} />
-			<GroupItem
-				title="column ordering"
-				href={hrefs.guides.featureGuides.columnOrdering}
-			/>
-			<GroupItem
-				title="column resizing"
-				href={hrefs.guides.featureGuides.columnResizing}
-			/>
-			<GroupItem
-				title="column aligment"
-				href={hrefs.guides.featureGuides.columnAlignment}
-			/>
+			<GroupItem title="column ordering" href={hrefs.guides.featureGuides.columnOrdering} />
+			<GroupItem title="column resizing" href={hrefs.guides.featureGuides.columnResizing} />
+			<GroupItem title="column aligment" href={hrefs.guides.featureGuides.columnAlignment} />
 			<GroupItem disabled title="row expanding" href={hrefs.guides.featureGuides.rowExpanding} />
 			<GroupItem title="row selection" href={hrefs.guides.featureGuides.rowSelection} />
 			<GroupItem title="pagination" href={hrefs.guides.featureGuides.pagination} />
@@ -86,8 +76,6 @@
 				title="header filter toggle"
 				href={hrefs.guides.featureGuides.headerFilterToggle}
 			/>
-			<GroupItem disabled title="custom cells" href={hrefs.guides.featureGuides.customCells} />
-			<GroupItem disabled title="custom headers" href={hrefs.guides.featureGuides.customHeaders} />
 			<GroupItem
 				disabled
 				title="custom header filters"

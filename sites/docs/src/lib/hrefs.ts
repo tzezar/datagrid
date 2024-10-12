@@ -7,6 +7,8 @@ export const hrefs = {
         overview: "/guides/fundamentals/overview",
         typescript: "/guides/fundamentals/typescript",
         customization: "/guides/fundamentals/customization",
+        customCells: "/guides/feature-guides/custom-cells",
+        customHeaders: "/guides/feature-guides/custom-headers",
     },
     quickStart: {
         installation: "/quick-start/installation",
@@ -40,8 +42,6 @@ export const hrefs = {
             statusIndicator: "/guides/feature-guides/status-indicator",
             dataIndicator: "/guides/feature-guides/data-indicator",
             headerFilterToggle: "/guides/feature-guides/header-filter-toggle",
-            customCells: "/guides/feature-guides/custom-cells",
-            customHeaders: "/guides/feature-guides/custom-headers",
             customHeaderFilters: "/guides/feature-guides/custom-header-filters",
         },
         fundamentals: {
