@@ -8,8 +8,6 @@
 
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
-	let {}: {} = $props();
-
 	const getPageOptions = (count: number, perPage: number) => {
 		let res = [];
 		for (let i = 1; i <= Math.ceil(count / perPage); i++) {
