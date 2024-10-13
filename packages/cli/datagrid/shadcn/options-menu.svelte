@@ -35,7 +35,7 @@
 						<DropdownMenu.Group>
 							{#each datagrid.columns as column}
 								<DropdownMenu.Item
-									disabled={column.sortable === false}
+									disabled={column.sortable !== true}
 									onclick={() => {
 										if (column.sortable) {
 											toggleSortingState(column.id, datagrid);
@@ -70,7 +70,7 @@
 					</DropdownMenu.SubContent>
 				</DropdownMenu.Sub>
 			{/if}
-			{#if datagrid.options.topbar.settingsMenu.displayReoderingMenu}
+			{#if datagrid.options.topbar.settingsMenu.displayReorderingMenu}
 				<DropdownMenu.Sub>
 					<DropdownMenu.SubTrigger>
 						<span>Reordering</span>
