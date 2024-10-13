@@ -33,7 +33,17 @@
 					displayFullscreenToggle: true,
 					displayHeadFilterToggle: true,
 					settingsMenu: {
-						display: true
+						adjustmentMenu: {
+							display: true,
+							displaySpacingMenu: true,
+							displayTextSizeMenu: true
+						},
+						displayFreezingMenu: true,
+						displayReorderingMenu: true,
+						displayResizingMenu: true,
+						displaySortingMenu: true,
+						displayVisibilityMenu: true,
+						display: true,
 					}
 				}
 			}
@@ -88,7 +98,8 @@
 										size="sm"
 										variant="destructive"
 										onclick={() => {
-											removeRow(row.id, datagrid);
+											datagrid.updateData(removeRow(row.id, datagrid))
+
 											toast.success('Row removed');
 										}}
 									>

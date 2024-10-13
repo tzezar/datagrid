@@ -1,5 +1,8 @@
 import type { TzezarDatagrid } from "../tzezar-datagrid.svelte";
 
+// Define a type that includes the id property
+type WithId = { id: number | string };
+
 /**
  * Removes a row from the datagrid based on the specified ID.
  *
@@ -7,9 +10,9 @@ import type { TzezarDatagrid } from "../tzezar-datagrid.svelte";
  * @param datagrid - The datagrid instance from which to remove the row.
  * @returns A new instance of the data array without the specified row.
  */
-export const removeRow = (
+export const removeRow = <T extends WithId>(
     id: number | string,
-    datagrid: TzezarDatagrid<{ id: number | string }>
+    datagrid: TzezarDatagrid<T>
 ) => {
     if (id === undefined || id === null) {
         throw new Error("ID must not be undefined or null.");

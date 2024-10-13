@@ -151,7 +151,7 @@
 										size="sm"
 										variant="destructive"
 										onclick={() => {
-											removeRow(row.id, datagrid);
+											datagrid.updateData(removeRow(row.id, datagrid))
 											toast.success('Row removed');
 										}}
 									>
