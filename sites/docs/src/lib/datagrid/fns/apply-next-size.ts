@@ -9,21 +9,19 @@ import type { TzezarDatagrid } from "../tzezar-datagrid.svelte";
  *
  * @param {TzezarDatagrid<unknown>} datagrid - The datagrid instance containing spacing options.
  */
-export const apllyNextSpacing = (datagrid: TzezarDatagrid<unknown>) => {
+export const applyNextSpacing = (datagrid: TzezarDatagrid<unknown>) => {
     // Retrieve the keys of the spacing options available
-    const sizeKeys = Object.keys(datagrid.options.spacing.options);
+    const sizeKeys = Object.keys(datagrid.options.spacing.options) as Array<keyof typeof datagrid.options.spacing.options>;
 
     // Find the index of the currently selected size based on the label
     const currentIndex = sizeKeys.indexOf(datagrid.options.spacing.selected.label);
 
     // Calculate the index of the next size, wrapping around if necessary
     const nextIndex = (currentIndex + 1) % sizeKeys.length;
-    const nextSizeKey = sizeKeys[nextIndex];
+    const nextSizeKey = sizeKeys[nextIndex] as keyof typeof datagrid.options.spacing.options; // Ensure proper typing
 
     // Update the selected spacing properties with the next size values
     datagrid.options.spacing.selected.label = nextSizeKey; // Update the label to the next size
-    // @ts-expect-error ts(7053): TypeScript error suppression due to dynamic property access
     datagrid.options.spacing.selected.vertical = datagrid.options.spacing.options[nextSizeKey].vertical; // Update vertical spacing
-    // @ts-expect-error ts(7053): TypeScript error suppression due to dynamic property access
     datagrid.options.spacing.selected.horizontal = datagrid.options.spacing.options[nextSizeKey].horizontal; // Update horizontal spacing
 };
