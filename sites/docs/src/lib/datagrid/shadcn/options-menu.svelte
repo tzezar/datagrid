@@ -35,7 +35,7 @@
 						<DropdownMenu.Group>
 							{#each datagrid.columns as column}
 								<DropdownMenu.Item
-									disabled={column.sortable === false}
+									disabled={column.sortable !== true}
 									onclick={() => {
 										if (column.sortable) {
 											toggleSortingState(column.id, datagrid);
