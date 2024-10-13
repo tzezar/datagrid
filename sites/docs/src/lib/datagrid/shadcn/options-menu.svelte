@@ -13,6 +13,7 @@
 	import { changeFontSize } from '../fns/change-font-size';
 	import type { TzezarDatagrid } from '../tzezar-datagrid.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { type FontSizeOptions, type SpacingOptions } from '../types';
 
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 </script>
@@ -221,7 +222,7 @@
 							{#each Object.keys(datagrid.options.spacing.options) as key}
 								<DropdownMenu.CheckboxItem
 									checked={datagrid.options.spacing.selected.label == key}
-									onclick={() => changeSpacingSize(key, datagrid)}
+									onclick={() => changeSpacingSize(key as keyof SpacingOptions, datagrid)}
 								>
 									<p>{key}</p>
 								</DropdownMenu.CheckboxItem>
@@ -239,7 +240,7 @@
 							{#each Object.keys(datagrid.options.fontSize.options) as key}
 								<DropdownMenu.CheckboxItem
 									checked={datagrid.options.fontSize.selected.label == key}
-									onclick={() => changeFontSize(key, datagrid)}
+									onclick={() => changeFontSize(key as keyof FontSizeOptions, datagrid)}
 								>
 									<p>{key}</p>
 								</DropdownMenu.CheckboxItem>
