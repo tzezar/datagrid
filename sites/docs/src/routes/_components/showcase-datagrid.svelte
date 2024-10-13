@@ -36,12 +36,12 @@
 
 	// let generatedData = $state(generateData(100000))
 
-	import data from './data.json';
+	// import data from './data.json';
 
 	let datagrid = setContext(
 		`datagrid`,
 		new TzezarDatagrid({
-			data: data,
+			data: generateData(100000),
 			columns,
 			title: 'The best datagrid ever',
 			options: {
@@ -58,7 +58,7 @@
 						display: true,
 						displaySortingMenu: true,
 						displayFreezingMenu: true,
-						displayReoderingMenu: true,
+						displayReorderingMenu: true,
 						displayVisibilityMenu: true,
 						displayResizingMenu: true,
 						adjustmentMenu: {
