@@ -74,3 +74,18 @@ export type SelectionState = {
 
 }
 
+export interface FontSizeOptions {
+    xs: string;
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
+}
+
+export interface FontSize {
+    options: FontSizeOptions;
+    selected: {
+        label: keyof FontSizeOptions; // Change to accept keys from FontSizeOptions
+        value: string;
+    };
+}

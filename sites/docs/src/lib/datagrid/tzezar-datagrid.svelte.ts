@@ -2,7 +2,7 @@ import { applyOffset } from "./fns/apply-offset";
 import { filterData } from "./fns/filter-data";
 import { paginateData } from "./fns/paginate-data";
 import { sortData } from "./fns/sort-data";
-import type { BaseColumn, ExpandedRows, Filter, Pagination, SelectionState, Sorting } from "./types";
+import type { BaseColumn, ExpandedRows, Filter, FontSize, Pagination, SelectionState, Sorting } from "./types";
 import { SvelteSet } from "svelte/reactivity";
 
 export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
@@ -96,7 +96,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
                 xs: '0.75rem', sm: '0.875rem', md: '1rem', lg: '1.25rem', xl: '1.5rem',
             },
             selected: { label: 'md', value: '1rem' }
-        },
+        } as FontSize
     });
 
     constructor(config: TzezarDatagridConfig<T, C>) {
