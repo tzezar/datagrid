@@ -119,6 +119,7 @@
 			<div class="flex-grow">
 				<h2 class=" title-font text-lg font-medium leading-relaxed">Virtualization</h2>
 				<p class="text-base leading-relaxed">Planned: display all data at once on one page</p>
+				<p class="text-base leading-relaxed">Will be implemented as soon as some virtualization library comes out to support svelte 5. Probably @tanstack-virtual.</p>
 			</div>
 		</div>
 		<div class=" flex flex-col text-muted-foreground">
