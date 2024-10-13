@@ -7,7 +7,7 @@
 </script>
 
 <PageContainer>
-	<section class="py-24">
+	<section class="lg:py-24 pb-12">
 		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div class="mb-14 text-center">
 				<h2 class="py-5 text-center text-4xl font-bold">Powerfull datagrid with all features</h2>
@@ -144,10 +144,10 @@
 			</div>
 		</div>
 	</section>
-	<ShowcaseDatagrid />
+		<ShowcaseDatagrid />
 
 	<section class="body-font">
-		<div class="container mx-auto flex flex-wrap items-center px-5 py-24">
+		<div class="container mx-auto flex flex-wrap items-center px-5 lg:py-24 py-12">
 			<div
 				class="mb-10 border-b border-gray-200 pb-10 md:mb-0 md:w-1/2 md:border-b-0 md:border-r md:py-8 md:pr-12"
 			>

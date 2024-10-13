@@ -42,16 +42,16 @@
 					<div
 						class="bg-primary-foreground sticky top-0 flex items-center justify-center gap-1 py-4"
 					>
-						<div class="flex h-10 flex-row items-center justify-center align-middle">
+						<div class="flex h-10 flex-row items-center justify-center align-middle ">
 							{#if schema == 'dark'}
-								<img src={logoWhite} alt="" srcset="" class="h-[64px] w-[64px]" />
+								<img src={logoWhite} alt="" srcset=""  class="h-[52px] w-[52px]" />
 							{:else}
-								<img src={logoBlack} alt="" srcset="" class="h-[64px] w-[64px]" />
+								<img src={logoBlack} alt="" srcset=""  class="h-[52px] w-[52px]" />
 							{/if}
 						</div>
 						<div>
 							<h1 class="text-lg font-semibold">Tzezar's Datagrid</h1>
-							<p class="text-right">Beta</p>
+							<p class="text-right text-orange-400">Beta</p>
 						</div>
 					</div>
 				</a>
@@ -66,26 +66,26 @@
 			<div class="flex w-full flex-col overflow-auto">
 				<div class="bg-primary-foreground sticky top-0 z-[19] flex w-full lg:hidden">
 					<div
-						class="bg-primary-foreground sticky top-0 flex w-full flex-row items-center justify-between gap-1 px-6 py-4"
+						class="bg-primary-foreground sticky top-0 flex w-full flex-row items-center justify-between gap-1 px-4 lg:px-6 py-4"
 					>
 						<a href="/" class="flex items-center justify-center gap-1">
 							<div class="flex h-10 flex-row items-center justify-between align-middle">
 								{#if schema == 'dark'}
-									<img src={logoWhite} alt="" srcset="" class="h-[64px] w-[64px]" />
+									<img src={logoWhite} alt="" srcset="" class="h-[52px] w-[52px]" />
 								{:else}
-									<img src={logoBlack} alt="" srcset="" class="h-[64px] w-[64px]" />
+									<img src={logoBlack} alt="" srcset="" class="h-[52px] w-[52px]" />
 								{/if}
 							</div>
 							<div>
 								<h1 class="text-lg font-semibold">Tzezar's Datagrid</h1>
-								<p class="text-right">Beta</p>
+								<p class="text-right text-orange-400">Beta</p>
 							</div>
 						</a>
 						<SidebarMobile/>
 					
 					</div>
 				</div>
-				<div class="grow p-8">
+				<div class="grow lg:p-8 p-2 py-6">
 					{@render children()}
 				</div>
 			</div>

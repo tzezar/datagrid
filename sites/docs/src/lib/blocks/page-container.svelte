@@ -5,7 +5,7 @@
 	let { children, class: _class, description }: { children: Snippet, class?: string, description?: Snippet } = $props();
 </script>
 
-<div class={cn("flex flex-col gap-8", _class)}>
+<div class={cn("flex flex-col lg:gap-8 gap-2", _class)}>
 	{@render children()}
 	
 </div>
