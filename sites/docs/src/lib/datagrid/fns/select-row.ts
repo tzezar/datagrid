@@ -1,15 +1,23 @@
 import type { TzezarDatagrid } from "../tzezar-datagrid.svelte";
 
-
-// dirty function
+/**
+ * Toggles the selection state of a row in the datagrid.
+ *
+ * @param row - The row object to select or deselect, which must contain an id property.
+ * @param datagrid - The datagrid instance containing the current selection state.
+ */
 export const selectRow = <T extends { id: number }>(row: T, datagrid: TzezarDatagrid<T>) => {
-    if (datagrid.state.selectedRows.some(r => r.id === row.id)) {
-        // Remove the row
-        datagrid.state.selectedRows = datagrid.state.selectedRows.filter(r => r.id !== row.id);
-        datagrid.internal.selectedRowIds.delete(row.id);
+    const { id } = row;
+    
+    if (datagrid.state.selectedRows.some(r => r.id === id)) {
+        // Remove the row from selectedRows
+        const updatedSelectedRows = datagrid.state.selectedRows.filter(r => r.id !== id);
+        datagrid.state.selectedRows = updatedSelectedRows;
+        datagrid.internal.selectedRowIds.delete(id);
     } else {
-        // Add the row
-        datagrid.state.selectedRows = [...datagrid.state.selectedRows, row];
-        datagrid.internal.selectedRowIds.add(row.id);
+        // Add the row to selectedRows
+        const updatedSelectedRows = [...datagrid.state.selectedRows, row];
+        datagrid.state.selectedRows = updatedSelectedRows;
+        datagrid.internal.selectedRowIds.add(id);
     }
 };
