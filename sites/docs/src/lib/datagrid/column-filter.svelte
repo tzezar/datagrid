@@ -1,9 +1,9 @@
 <script lang="ts">
-	import DateFilter from './filters/date-filter.svelte';
-	import NumberFilter from './filters/number-filter.svelte';
-	import RangeFilter from './filters/range-filter.svelte';
-	import SelectFilter from './filters/select-filter.svelte';
-	import TextFilter from './filters/text-filter.svelte';
+	import DateFilter from './native/date-filter.svelte';
+	import NumberFilter from './native/number-filter.svelte';
+	import RangeFilter from './native/range-filter.svelte';
+	import SelectFilter from './native/select-filter.svelte';
+	import TextFilter from './native/text-filter.svelte';
 	import type { BaseColumn } from './types';
 
 	let {
@@ -18,10 +18,10 @@
 	<TextFilter columnId={column.id}  />
 {/if}
 {#if column.filterType === 'date'}
-	<DateFilter field={column.id} />
+	<DateFilter columnId={column.id} />
 {/if}
 {#if column.filterType === 'select' && column.options}
-	<SelectFilter field={column.id}  options={column.options} />
+	<SelectFilter columnId={column.id}  options={column.options} />
 {/if}
 {#if column.filterType === 'range'}
 	<RangeFilter columnId={column.id}  {column} />
