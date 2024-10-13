@@ -1,27 +1,51 @@
 import type { ColumnId, Sorting } from "../types";
 
-export const toggleSorting =({
+/**
+ * Toggles the sorting state for a specified column.
+ *
+ * @param {Object} params - The parameters object.
+ * @param {ColumnId} params.columnId - The ID of the column to toggle sorting for.
+ * @param {Sorting[]} params.sortings - The current array of sorting states.
+ * @returns {Sorting[]} A new array of sorting states with the updated sorting for the specified column.
+ */
+export const toggleSorting = ({
     columnId,
     sortings
 }: {
     columnId: ColumnId;
     sortings: Sorting[];
-}) => {
+}): Sorting[] => {
+    // Find the index of the current sorting for the specified column
     const index = sortings.findIndex(s => s.columnId === columnId);
+    let newSortings: Sorting[];
 
     if (index !== -1) {
-        // Toggle sorting direction for the existing column
+        // Column is already sorted; toggle its direction
         const currentSorting = sortings[index];
+        
+        // Determine the new sorting direction based on the current direction
         if (currentSorting.direction === 'asc') {
-            sortings[index] = { columnId: columnId, direction: 'desc' };
+            // Change direction to 'desc'
+            newSortings = [
+                ...sortings.slice(0, index), // Keep all previous sortings
+                { columnId: columnId, direction: 'desc' }, // Update direction
+                ...sortings.slice(index + 1) // Keep all subsequent sortings
+            ];
         } else {
-            sortings.splice(index, 1); // Remove sorting if direction is 'desc'
+            // Remove sorting entry if current direction is 'desc'
+            newSortings = [
+                ...sortings.slice(0, index), // Keep all previous sortings
+                ...sortings.slice(index + 1) // Exclude the current sorting
+            ];
         }
     } else {
-        // Add new sorting
-        sortings.push({ columnId: columnId, direction: 'asc' });
+        // Column is not currently sorted; add it to the sorting array
+        newSortings = [
+            ...sortings, // Keep existing sortings
+            { columnId: columnId, direction: 'asc' } // Add new sorting in 'asc' order
+        ];
     }
 
-
-    return [...sortings];
+    // Return the new sorting array to maintain immutability
+    return newSortings;
 };

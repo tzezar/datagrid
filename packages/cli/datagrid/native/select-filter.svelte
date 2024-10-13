@@ -1,29 +1,30 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import { updateFilter } from '../fns/update-filter';
+	import type { ColumnId } from '../types';
 	import type { TzezarDatagrid } from '../tzezar-datagrid.svelte';
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
 	let {
-		field = ''
+		options,
+		columnId = ''
 	}: {
-		field?: string;
+		options: {
+			value: string;
+			label: string;
+		}[];
+		columnId?: ColumnId;
 	} = $props();
 </script>
 
-<input
-	type="date"
-	oninput={(e) =>
-		( updateFilter(
-			field,
-			e.currentTarget.value,
-			'date',
-			datagrid
-		))}
-/>
+<select onchange={(e) => updateFilter(columnId, e.currentTarget.value, 'string', datagrid)}>
+	{#each options as option}
+		<option value={option.value}>{option.label}</option>
+	{/each}
+</select>
 
 <style>
-	input {
+	select {
 		border-width: 1px;
 		padding-left: 8px;
 		width: 100%;

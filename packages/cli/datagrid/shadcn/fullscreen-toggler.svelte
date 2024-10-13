@@ -18,22 +18,16 @@
 	} = $props();
 </script>
 
-<Button
-	size="sm"
-	class={_class}
-	onclick={() => (datagrid.state.isFullscreenActive = !datagrid.state.isFullscreenActive)}
->
+<Button size="sm" class={_class} onclick={() => datagrid.toggleFullscreen()}>
 	{#if datagrid.state.isFullscreenActive}
 		{#if disabledIcon}
 			{@render disabledIcon()}
 		{:else}
 			<MaterialSymbolsFullscreenExit />
 		{/if}
+	{:else if enabledIcon}
+		{@render enabledIcon()}
 	{:else}
-		{#if enabledIcon}
-			{@render enabledIcon()}
-		{:else}
-			<MaterialSymbolsFullscreen />
-		{/if}
+		<MaterialSymbolsFullscreen />
 	{/if}
 </Button>
