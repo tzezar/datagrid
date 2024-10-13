@@ -10,7 +10,7 @@
 
 <!-- <PageNotDone /> -->
 
-<PageContainer class="mx-auto flex max-w-screen-2xl flex-col gap-20 lg:pt-14 pt-6">
+<PageContainer class="mx-auto flex max-w-screen-2xl flex-col gap-20 lg:pt-14 py-6 pb-14">
 	<section class="">
 		<div class="container mx-auto flex flex-col px-5">
 			<div class="mx-auto lg:w-4/6">

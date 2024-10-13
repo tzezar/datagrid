@@ -103,7 +103,7 @@
 	];
 </script>
 
-<PageContainer class='max-w-screen-2xl mx-auto'>
+<PageContainer class='max-w-screen-2xl mx-auto p-4'>
 	<PageTitle title="Features" />
 	<div class=" flex flex-col flex-wrap gap-4">
 		{#each features as feature}

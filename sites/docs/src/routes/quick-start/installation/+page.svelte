@@ -8,7 +8,7 @@
 	import { typescript } from 'svelte-highlight/languages';
 </script>
 
-<PageContainer class="mx-auto flex max-w-screen-sm">
+<PageContainer class="mx-auto flex max-w-screen-sm p-4">
 	<PageTitle title="Installation" />
 
 	<p>

@@ -85,7 +85,7 @@
 					
 					</div>
 				</div>
-				<div class="grow lg:p-8 p-2 py-6">
+				<div class="grow lg:p-8 p-4 py-6">
 					{@render children()}
 				</div>
 			</div>
