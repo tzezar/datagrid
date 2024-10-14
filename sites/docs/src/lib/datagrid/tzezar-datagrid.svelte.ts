@@ -5,6 +5,27 @@ import { sortData } from "./fns/sort-data"; // Function to sort the data based o
 import type { BaseColumn, ExpandedRows, Filter, FontSize, Pagination, SelectionState, Sorting, SpacingConfig } from "./types"; // Importing relevant types for TypeScript type checking
 import { SvelteSet } from "svelte/reactivity"; // Svelte's reactive set implementation
 
+
+// Recursive Partial type
+type DeepPartial<T> = {
+    [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+  };
+  
+  // Helper function to perform a deep merge of objects
+  function deepMerge<T extends object>(target: T, source: DeepPartial<T>): T {
+    const output = { ...target };
+    for (const key in source) {
+      if (source.hasOwnProperty(key)) {
+        if (source[key] instanceof Object && !Array.isArray(source[key])) {
+          output[key] = deepMerge(output[key] as any, source[key] as any);
+        } else {
+          output[key] = source[key] as any;
+        }
+      }
+    }
+    return output;
+  }
+
 /**
  * TzezarDatagrid is a generic class representing a configurable data grid component.
  * It supports various features including sorting, filtering, pagination, and selection of data rows.
@@ -20,7 +41,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
     title = $state(''); // Allows for a user-defined title for the data grid
     identifier = $state('1'); // Unique identifier for this grid instance, useful for state management
 
-    paginate = $state(false); // Allows pagination
+    paginate = $state(true); // Allows pagination
 
     // Lifecycle hooks for event handling
     onPageChange = () => { }; // Callback triggered on page changes, allows for custom logic to be applied
@@ -61,52 +82,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
     });
 
     // Configuration options for additional features
-    options = $state({
-        scrollable: true, // Enables scrolling functionality for large data sets
-        fullscreenMode: { enabled: true }, // Fullscreen mode configurations
-        pagination: { display: false }, // Optionally display pagination controls
-        dataIndicator: { display: true }, // Controls for displaying loading indicators during data fetch
-        statusIndicator: { display: true }, // Controls for displaying status indicators
-        rows: { striped: false }, // Option for enabling striped row styles for better visual differentiation
-        topbar: { // Configuration for the top bar of the grid, where various controls can be placed
-            display: false,
-            displayFullscreenToggle: false,
-            displayExportDataMenu: false,
-            displayCopyDataMenu: false,
-            displayHeadFilterToggle: false,
-            settingsMenu: {
-                display: false,
-                displaySortingMenu: true,
-                displayReorderingMenu: true,
-                displayFreezingMenu: true,
-                displayResizingMenu: true,
-                displayVisibilityMenu: true,
-                adjustmentMenu: {
-                    display: true,
-                    displaySpacingMenu: true,
-                    displayTextSizeMenu: true
-                }
-            }
-        },
-        footer: { display: false }, // Optionally display a footer in the grid
-        spacing: { // Configuration for various spacing options
-            options: {
-                none: { vertical: '0px', horizontal: '0px' },
-                xs: { vertical: '3px', horizontal: '3px' },
-                sm: { vertical: '5px', horizontal: '5px' },
-                md: { vertical: '10px', horizontal: '10px' },
-                lg: { vertical: '20px', horizontal: '20px' },
-                xl: { vertical: '30px', horizontal: '30px' },
-            },
-            selected: { label: 'md', vertical: '10px', horizontal: '10px' } // Currently selected spacing configuration
-        } as SpacingConfig,
-        fontSize: { // Configuration for font size options
-            options: {
-                xs: '0.75rem', sm: '0.875rem', md: '1rem', lg: '1.25rem', xl: '1.5rem',
-            },
-            selected: { label: 'md', value: '1rem' } // Currently selected font size configuration
-        } as FontSize
-    });
+    options = $state(this.getDefaultOptions());
 
     /**
      * Constructs a new TzezarDatagrid instance and initializes it with the provided configuration.
@@ -117,6 +93,55 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
         this.initializeFromConfig(config); // Initialize core properties and event handlers
         this.initializeData(); // Process the initial data set for display
     }
+
+    private getDefaultOptions() {
+        return {
+          scrollable: true,
+          fullscreenMode: { enabled: true },
+          pagination: { display: false },
+          dataIndicator: { display: true },
+          statusIndicator: { display: true },
+          rows: { striped: false },
+          topbar: {
+            display: false,
+            displayFullscreenToggle: false,
+            displayExportDataMenu: false,
+            displayCopyDataMenu: false,
+            displayHeadFilterToggle: false,
+            settingsMenu: {
+              display: false,
+              displaySortingMenu: true,
+              displayReorderingMenu: true,
+              displayFreezingMenu: true,
+              displayResizingMenu: true,
+              displayVisibilityMenu: true,
+              adjustmentMenu: {
+                display: true,
+                displaySpacingMenu: true,
+                displayTextSizeMenu: true
+              }
+            }
+          },
+          footer: { display: false },
+          spacing: {
+            options: {
+              none: { vertical: '0px', horizontal: '0px' },
+              xs: { vertical: '3px', horizontal: '3px' },
+              sm: { vertical: '5px', horizontal: '5px' },
+              md: { vertical: '10px', horizontal: '10px' },
+              lg: { vertical: '20px', horizontal: '20px' },
+              xl: { vertical: '30px', horizontal: '30px' },
+            },
+            selected: { label: 'md', vertical: '10px', horizontal: '10px' }
+          } as SpacingConfig,
+          fontSize: {
+            options: {
+              xs: '0.75rem', sm: '0.875rem', md: '1rem', lg: '1.25rem', xl: '1.5rem',
+            },
+            selected: { label: 'md', value: '1rem' }
+          } as FontSize
+        };
+      }
 
     // Initialize the datagrid with the provided configuration
     private initializeFromConfig(config: TzezarDatagridConfig<T, C>) {
@@ -142,9 +167,14 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
         this.initializeState(state);
 
         // Initialize additional options as specified
-        this.initializeOptions(options);
+        if (options) {
+            this.updateOptions(options);
+          }
     }
-
+    updateOptions(newOptions: DeepPartial<ReturnType<TzezarDatagrid<T, C>['getDefaultOptions']>>) {
+        this.options = deepMerge(this.options, newOptions);
+        this.onChange();
+      }
     // Initialize state with provided values or defaults
     private initializeState(state?: Partial<typeof this.state>) {
         if (state) {
@@ -226,11 +256,11 @@ type TzezarDatagridConfig<T, C extends BaseColumn<T>> = {
     data: T[];
     identifier?: string;
     title?: string;
-    options?: Partial<TzezarDatagrid<T, C>['options']>;
+    options?: DeepPartial<ReturnType<TzezarDatagrid<T, C>['getDefaultOptions']>>;
     state?: Partial<TzezarDatagrid<T, C>['state']>;
     onPageChange?: () => void;
     onPerPageChange?: () => void;
     onSortingChange?: () => void;
     onFiltersChange?: () => void;
     onChange?: () => void;
-};
+  };
