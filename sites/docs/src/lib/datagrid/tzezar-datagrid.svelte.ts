@@ -20,6 +20,8 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
     title = $state(''); // Allows for a user-defined title for the data grid
     identifier = $state('1'); // Unique identifier for this grid instance, useful for state management
 
+    paginate = $state(false); // Allows pagination
+
     // Lifecycle hooks for event handling
     onPageChange = () => { }; // Callback triggered on page changes, allows for custom logic to be applied
     onPerPageChange = () => { }; // Callback triggered when the number of items per page is modified
@@ -164,7 +166,13 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
         // Filter sorted data based on active filters
         this.internal.filteredData = filterData([...this.internal.sortedData], this.state.filters);
         // Paginate filtered data based on current page and items per page
-        this.internal.paginatedData = paginateData([...this.internal.filteredData], this.state.pagination.page, this.state.pagination.perPage);
+        
+        if (this.paginate) {
+            this.internal.paginatedData = paginateData([...this.internal.filteredData], this.state.pagination.page, this.state.pagination.perPage);
+        } else {
+            this.internal.paginatedData = [...this.internal.filteredData];
+        }
+
     }
 
     // Public methods for external interaction
