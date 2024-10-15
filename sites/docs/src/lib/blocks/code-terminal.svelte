@@ -23,9 +23,9 @@
 	});
 </script>
 
-<div class="my-4 rounded-lg bg-secondary p-4">
+<div class="bg-secondary rounded-lg p-4">
 	<div class="flex items-center justify-between">
-		<pre class="overflow-x-auto font-mono text-sm text-orange-400">{command}</pre>
+		<pre class="overflow-x-auto font-mono text-sm text-orange-400 m-0 ">{command}</pre>
 		{#if withCopyButton}
 			<button
 				onclick={copyToClipboard}
