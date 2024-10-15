@@ -20,7 +20,7 @@ You will be asked a few questions to configure installation
 
 <CodeTerminal
 	withCopyButton={false}
-	command="1 Where do you want to install the component? ... ./src/lib/components/datagrid
+	command="1 Where do you want to install the component? ... ./src/lib/datagrid
 2 Where is your global CSS file? ... ./src/app.css
 3 Where is your tailwind.config.[cjs|js|ts] located? ... ./tailwind.config.ts
 4 Do you want to install dependencies? ... yes"

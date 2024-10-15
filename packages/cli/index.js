@@ -20,7 +20,7 @@ program
         type: 'text',
         name: 'componentPath',
         message: 'Where do you want to install the component?',
-        initial: './src/lib/components/datagrid'
+        initial: './src/lib/datagrid'
       },
       {
         type: 'text',
