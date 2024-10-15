@@ -47,7 +47,7 @@
 			options: {
 				pagination: { display: true },
 				rows: { striped: true },
-				footer: { display: true },
+				footer: { display: false },
 				topbar: {
 					display: true,
 					displayCopyDataMenu: true,

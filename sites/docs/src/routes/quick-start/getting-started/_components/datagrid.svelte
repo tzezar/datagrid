@@ -5,6 +5,7 @@
 	import { TzezarDatagrid } from '$lib/datagrid/tzezar-datagrid.svelte';
 	import { inventoryData as data } from '$lib/data/inventory';
 	import * as Datagrid from '$lib/datagrid';
+
 	export const columns = [
 		{
 			id: 'product.name',
@@ -18,10 +19,13 @@
 	] satisfies BaseColumn<Row>[];
 
 	let datagrid = setContext(
-		`datagrid`,
+		"datagrid",
 		new TzezarDatagrid({
-			data,
-			columns
+			data: data.splice(0, 100),
+			columns,
+			options: {
+				defaultColumnWidth: '200px',
+			}
 		})
 	);
 </script>
@@ -33,7 +37,7 @@
 		{/each}
 	{/snippet}
 	{#snippet body()}
-		{#each datagrid.data as row, rowIndex}
+		{#each datagrid.internal.paginatedData as row, rowIndex}
 			<Datagrid.Row {rowIndex}>
 				{#each datagrid.columns as column, columnIndex}
 					<Datagrid.Cell {columnIndex} {rowIndex} {column} {row} />

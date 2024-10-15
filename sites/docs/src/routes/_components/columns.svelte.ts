@@ -183,8 +183,8 @@ export const columns = [
     {
         id: 'actions',
         title: 'Actions',
-        width: '110px',
         visible: true,
+        width: '130px',
         resizable: false,
         sortable: false,
         exportable: false,
@@ -193,6 +193,6 @@ export const columns = [
         pinned: {
             position: 'right'
         },
-        align: 'start'
+        align: 'center'
     }
 ] satisfies BaseColumn<DataRow>[]
