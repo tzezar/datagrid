@@ -17,7 +17,7 @@
 
 	// Get the datagrid context
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
-	
+
 	// Define prop types
 	type Props = {
 		head?: Snippet;
@@ -85,11 +85,13 @@
 	// Updates paginated data in client mode only
 	$effect.pre(() => {
 		if (datagrid.mode === 'client') {
-			datagrid.internal.paginatedData = paginateData(
-				datagrid.internal.sortedData,
-				datagrid.state.pagination.page,
-				datagrid.state.pagination.perPage
-			);
+			if (datagrid.paginate) {
+				datagrid.internal.paginatedData = paginateData(
+					datagrid.internal.sortedData,
+					datagrid.state.pagination.page,
+					datagrid.state.pagination.perPage
+				);
+			}
 		}
 	});
 
