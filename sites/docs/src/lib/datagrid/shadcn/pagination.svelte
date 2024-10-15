@@ -27,9 +27,12 @@
 	style:padding-bottom={datagrid.options.spacing.selected.vertical}
 	style:padding-left={datagrid.options.spacing.selected.horizontal}
 	style:padding-right={datagrid.options.spacing.selected.horizontal}
-	class={cn('bg-primary-foreground grid  grid-cols-3 justify-center gap-4 items-center border border-t-0', ``)}
+	class={cn(
+		'bg-primary-foreground grid  grid-cols-3 items-center justify-center gap-4 border border-t-0',
+		``
+	)}
 >
-	<span class="text-muted-foreground w-full text-left text-xs ">
+	<span class="text-muted-foreground w-full text-left text-xs">
 		Showing {datagrid.internal.paginatedData.length * datagrid.state.pagination.page -
 			datagrid.state.pagination.perPage}
 		:
@@ -79,8 +82,9 @@
 	</Pagination.Root>
 	<div class="flex w-full flex-row justify-end gap-1 text-nowrap text-xs">
 		<Select.Root
-			onSelectedChange={(selected) =>
-				datagrid.updatePagination(datagrid.state.pagination.page, selected?.value || 10)}
+			onSelectedChange={(selected) => {
+				datagrid.updatePagination(1, selected?.value || 10);
+			}}
 			selected={{
 				value: datagrid.state.pagination.perPage,
 				label: `Per page: ${datagrid.state.pagination.perPage}`
