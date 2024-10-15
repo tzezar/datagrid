@@ -19,7 +19,19 @@
 				}
 			},
 			options: {
-				pagination: { display: true }
+				pagination: { display: true },
+				topbar: {
+					display: true,
+					displayCopyDataMenu: true,
+					displayExportDataMenu: true,
+					displayFullscreenToggle: true,
+					displayHeadFilterToggle: false,
+					settingsMenu: {
+						display: true,
+						displayResizingMenu: false,
+						displayFreezingMenu: false
+					}
+				}
 			}
 		})
 	);
