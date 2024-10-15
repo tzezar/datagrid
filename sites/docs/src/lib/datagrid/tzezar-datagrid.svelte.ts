@@ -99,7 +99,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
       sortable: true,
       scrollable: true,
       fullscreenMode: { enabled: true },
-      pagination: { display: false },
+      pagination: { display: true },
       dataIndicator: { display: true },
       statusIndicator: { display: true },
       rows: { striped: false },
