@@ -8,7 +8,7 @@
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
 	let {
-		custom,
+		children,
 		class: _class,
 		columnIndex,
 		rowIndex,
@@ -19,7 +19,7 @@
 		rowIndex: number;
 		column: BaseColumn;
 		row: any;
-		custom?: Snippet;
+		children?: Snippet;
 		class?: {
 			cell?: string;
 			data?: string;
@@ -61,8 +61,8 @@
 			_class?.cell
 		)}
 	>
-		{#if custom}
-			{@render custom()}
+		{#if children}
+			{@render children()}
 		{:else}
 			<span class={cn(_class?.data)}>
 				{getNestedValue(row, column.id)}

@@ -12,7 +12,7 @@
 		column: BaseColumn;
 		title: string;
 		filter?: Snippet;
-		custom?: Snippet;
+		children?: Snippet;
 		class?: {
 			container: string;
 		};
@@ -21,7 +21,7 @@
 	let {
 		column,
 		title,
-		custom,
+		children,
 		filter,
 		class: _class = {
 			container: ''
@@ -60,8 +60,8 @@
 		onclick={handleContainerClick}
 	>
 		<div class="flex grow flex-col justify-center">
-			{#if custom}
-				{@render custom()}
+			{#if children}
+				{@render children()}
 			{:else}
 				<div class="flex justify-between gap-1">
 					<span class=" overflow-hidden text-ellipsis">

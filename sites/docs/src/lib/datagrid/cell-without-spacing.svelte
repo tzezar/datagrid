@@ -10,7 +10,7 @@
 		columnIndex,
 		rowIndex,
 		column,
-		custom,
+		children,
 		row,
 		class: _class
 	}: {
@@ -18,7 +18,7 @@
 		rowIndex: number;
 		column: BaseColumn;
 		row: any;
-		custom?: Snippet;
+		children?: Snippet;
 		class?: string;
 	} = $props();
 </script>
@@ -44,8 +44,8 @@
 		class:grow={column.grow}
 		style={`${column.align === 'start' ? 'justify-content: flex-start;' : column.align === 'center' ? 'justify-content: center;' : column.align === 'end' ? 'justify-content: flex-end;' : ''}`}
 	>
-		{#if custom}
-			{@render custom()}
+		{#if children}
+			{@render children()}
 		{:else}
 			<span class="overflow-hidden text-ellipsis text-nowrap">{row[column.id]}</span>
 		{/if}
