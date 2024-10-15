@@ -6,7 +6,7 @@
 	import { moveColumn } from '../fns/move-column';
 	import { toggleColumnPin } from '../fns/toggle-column-pin';
 	import { toggleColumnVisibility } from '../fns/toggle-column-visibility';
-	import MaterialSymbolsSettings from '~icons/material-symbols/settings';
+	import IcSharpSettings from '../icones/IcSharpSettings.svelte'; 
 	import { toggleSortingState } from '../fns/toggle-sorting-state';
 	import { getSortingPosition } from '../fns/get-sorting-position';
 	import { changeSpacingSize } from '../fns/change-spacing-size';
@@ -20,7 +20,7 @@
 
 <DropdownMenu.Root closeOnItemClick={false}>
 	<DropdownMenu.Trigger asChild let:builder>
-		<Button builders={[builder]} size="sm"><MaterialSymbolsSettings /></Button>
+		<Button builders={[builder]} size="sm"><IcSharpSettings /></Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="">
 		<DropdownMenu.Label>Column settings</DropdownMenu.Label>

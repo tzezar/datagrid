@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { getContext } from 'svelte';
-	import MaterialSymbolsContentCopyOutline from '~icons/material-symbols/content-copy-outline';
+	import MaterialSymbolsContentCopyOutline from '../icones/MaterialSymbolsContentCopyOutline.svelte'; 
 	import { copyToClipboardSelectedCells } from '../fns/cell-selection/copy-to-clipboard';
 	import { copyToClipboard } from '../fns/copy-to-clipboard';
 	import type { TzezarDatagrid } from '../tzezar-datagrid.svelte';
@@ -9,7 +9,7 @@
 
 	let {}: {} = $props();
 
-	const datagrid = getContext<TzezarDatagrid>('datagrid');
+	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
 	const exportableColumns = $derived(datagrid.columns.filter((c) => c.exportable !== false));
 </script>

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import MaterialSymbolsLightFolderOpenOutline from '~icons/material-symbols-light/folder-open-outline';
-	import MaterialSymbolsLightCastWarningOutline from '~icons/material-symbols-light/cast-warning-outline';
-	import MaterialSymbolsLightHourglassOutline from '~icons/material-symbols-light/hourglass-outline';
+	import MaterialSymbolsLightFolderOpenOutline from './icones/MaterialSymbolsLightFolderOpenOutline.svelte';
+	import MaterialSymbolsLightCastWarningOutline from './icones/MaterialSymbolsLightCastWarningOutline.svelte'; 
+	import MaterialSymbolsLightHourglassOutline from './icones/MaterialSymbolsLightHourglassOutline.svelte'; 
 	import { getContext, type Snippet } from 'svelte';
 	import type { TzezarDatagrid } from './tzezar-datagrid.svelte';
 	import { cn } from '$lib/utils';

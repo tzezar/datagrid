@@ -1,11 +1,11 @@
 <script lang="ts">
-	import MaterialSymbolsFullscreen from '~icons/material-symbols/fullscreen';
-	import MaterialSymbolsFullscreenExit from '~icons/material-symbols/fullscreen-exit';
+	import MaterialSymbolsFullscreen from '../icones/MaterialSymbolsFullscreen.svelte'; 
+	import MaterialSymbolsFullscreenExit from '../icones/MaterialSymbolsFullscreenExit.svelte'; 
 	import { getContext, type Snippet } from 'svelte';
 	import type { TzezarDatagrid } from '../tzezar-datagrid.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 
-	const datagrid = getContext<TzezarDatagrid>('datagrid');
+	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
 	let {
 		enabledIcon,

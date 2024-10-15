@@ -3,13 +3,13 @@
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
-	import MaterialSymbolsEditSquareOutlineRounded from '~icons/material-symbols/edit-square-outline-rounded';
+	import MaterialSymbolsLightEditSquareOutline from '$lib/datagrid/icones/MaterialSymbolsLightEditSquareOutline.svelte'; 
 </script>
 
 <Dialog.Root>
 	<Dialog.Trigger asChild let:builder>
 		<Button size="sm" variant="default" builders={[builder]}>
-			<MaterialSymbolsEditSquareOutlineRounded />
+			<MaterialSymbolsLightEditSquareOutline />
 		</Button>
 	</Dialog.Trigger>
 	<Dialog.Content class="sm:max-w-[425px]">

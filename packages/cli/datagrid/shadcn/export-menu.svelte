@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { getContext } from 'svelte';
-	import MingcuteFileExportLine from '~icons/mingcute/file-export-line';
+	import TablerFileExport from '../icones/TablerFileExport.svelte'; 
 	import { exportToExcel } from '../fns/export-to-xlsx';
 	import { exportToCSV } from '../fns/export-to-csv';
 	import { exportToXML } from '../fns/export-to-xml';
@@ -14,7 +14,7 @@
 
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger asChild let:builder>
-		<Button builders={[builder]} size="sm"><MingcuteFileExportLine /></Button>
+		<Button builders={[builder]} size="sm"><TablerFileExport /></Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
 		<DropdownMenu.Label>Export data on page to:</DropdownMenu.Label>

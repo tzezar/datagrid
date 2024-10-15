@@ -2,7 +2,7 @@
 	import { setContext } from 'svelte';
 	import { columns } from './columns.svelte';
 	import { inventoryData as data } from '$lib/data/inventory';
-	import MaterialSymbolsDeleteOutline from '~icons/material-symbols/delete-outline';
+	import MaterialSymbolsLightDeleteOutline from '$lib/datagrid/icones/MaterialSymbolsLightDeleteOutline.svelte'; 
 	import { TzezarDatagrid } from '$lib/datagrid/tzezar-datagrid.svelte';
 	import * as Datagrid from '$lib/datagrid';
 	import Button from '$lib/components/ui/button/button.svelte';
@@ -97,7 +97,7 @@
 										toast.success('Row removed');
 									}}
 								>
-									<MaterialSymbolsDeleteOutline />
+									<MaterialSymbolsLightDeleteOutline />
 								</Button>
 								<EditForm />
 							</div>

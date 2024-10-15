@@ -3,8 +3,8 @@
 	import type { TzezarDatagrid } from '$lib/datagrid/tzezar-datagrid.svelte';
 	import { Pagination } from 'bits-ui';
 	import { getContext } from 'svelte';
-	import MaterialSymbolsChevronLeft from '~icons/material-symbols/chevron-left';
-	import MaterialSymbolsChevronRight from '~icons/material-symbols/chevron-right';
+	import MaterialSymbolsLightChevronLeft from '$lib/datagrid/icones/MaterialSymbolsLightChevronLeft.svelte'; 
+	import MaterialSymbolsLightChevronRight from '$lib/datagrid/icones/MaterialSymbolsLightChevronRight.svelte'; 
 
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
@@ -35,13 +35,13 @@
 			<Pagination.PrevButton
 				class="hover:bg-dark-10 active:scale-98 h-8 items-center justify-center  rounded-[9px] border bg-primary  disabled:cursor-not-allowed disabled:text-muted-foreground disabled:bg-muted"
 			>
-				<MaterialSymbolsChevronLeft class="mx-2 h-8 text-primary-foreground" />
+				<MaterialSymbolsLightChevronLeft class="mx-2 h-8 text-primary-foreground" />
 			</Pagination.PrevButton>
 
 			<Pagination.NextButton
 				class="hover:bg-dark-10 active:scale-98 h-8 items-center  justify-center  rounded-[9px]   border bg-primary  disabled:cursor-not-allowed disabled:text-muted-foreground disabled:bg-muted"
 			>
-				<MaterialSymbolsChevronRight class="mx-2 h-8 text-primary-foreground" />
+				<MaterialSymbolsLightChevronRight class="mx-2 h-8 text-primary-foreground" />
 			</Pagination.NextButton>
 		</div>
 	</Pagination.Root>

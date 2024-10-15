@@ -2,8 +2,8 @@
 	import * as Select from '$lib/components/ui/select';
 	import { Pagination } from 'bits-ui';
 	import { getContext } from 'svelte';
-	import MaterialSymbolsChevronLeft from '~icons/material-symbols/chevron-left';
-	import MaterialSymbolsChevronRight from '~icons/material-symbols/chevron-right';
+	import MaterialSymbolsLightChevronLeft from '../icones/MaterialSymbolsLightChevronLeft.svelte'; 
+	import MaterialSymbolsLightChevronRight from '../icones/MaterialSymbolsLightChevronRight.svelte';
 	import type { TzezarDatagrid } from '../tzezar-datagrid.svelte';
 	import { cn } from '$lib/utils';
 
@@ -51,7 +51,7 @@
 				<Pagination.PrevButton
 					class="hover:bg-dark-10 active:scale-98 disabled:text-muted-foreground h-8 items-center   justify-center rounded-[9px] border  bg-transparent disabled:cursor-not-allowed hover:disabled:bg-transparent"
 				>
-					<MaterialSymbolsChevronLeft class="mx-2 h-8" />
+					<MaterialSymbolsLightChevronLeft class="mx-2 h-8" />
 				</Pagination.PrevButton>
 				<div class="flex items-center">
 					<Select.Root
@@ -75,7 +75,7 @@
 				<Pagination.NextButton
 					class=" hover:bg-dark-10 active:scale-98 disabled:text-muted-foreground h-8 items-center   justify-center rounded-[9px] border  bg-transparent disabled:cursor-not-allowed hover:disabled:bg-transparent"
 				>
-					<MaterialSymbolsChevronRight class="mx-2 h-8" />
+					<MaterialSymbolsLightChevronRight class="mx-2 h-8" />
 				</Pagination.NextButton>
 			</div>
 		</div>

@@ -3,21 +3,19 @@
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
-	import MaterialSymbolsEditSquareOutlineRounded from '~icons/material-symbols/edit-square-outline-rounded';
+	import MaterialSymbolsEditSquareOutline from '$lib/datagrid/icones/MaterialSymbolsEditSquareOutline.svelte';
 </script>
 
 <Dialog.Root>
 	<Dialog.Trigger asChild let:builder>
 		<Button size="sm" variant="default" builders={[builder]}>
-			<MaterialSymbolsEditSquareOutlineRounded />
+			<MaterialSymbolsEditSquareOutline />
 		</Button>
 	</Dialog.Trigger>
 	<Dialog.Content class="sm:max-w-[425px]">
 		<Dialog.Header>
 			<Dialog.Title>Edit position</Dialog.Title>
-			<Dialog.Description>
-                Sample form, not implemented in this demo
-            </Dialog.Description>
+			<Dialog.Description>Sample form, not implemented in this demo</Dialog.Description>
 		</Dialog.Header>
 		<div class="grid gap-4 py-4">
 			<div class="grid grid-cols-4 items-center gap-4">

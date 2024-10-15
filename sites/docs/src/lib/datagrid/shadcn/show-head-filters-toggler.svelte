@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { getContext, type Snippet } from 'svelte';
 	import type { TzezarDatagrid } from '../tzezar-datagrid.svelte';
-	import MaterialSymbolsFilterAltOffOutline from '~icons/material-symbols/filter-alt-off-outline';
-	import MaterialSymbolsFilterAltOutline from '~icons/material-symbols/filter-alt-outline';
+	import MaterialSymbolsLightFilterAltOffOutline from '../icones/MaterialSymbolsLightFilterAltOffOutline.svelte'; 
+	import MaterialSymbolsLightFilterAltOutline from '../icones/MaterialSymbolsLightFilterAltOutline.svelte'; 
 	import Button from '$lib/components/ui/button/button.svelte';
 
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
@@ -27,11 +27,11 @@
 		{#if iconEnabled}
 			{@render iconEnabled()}
 		{:else}
-			<MaterialSymbolsFilterAltOutline />
+			<MaterialSymbolsLightFilterAltOutline />
 		{/if}
 	{:else if iconDisabled}
 		{@render iconDisabled()}
 	{:else}
-		<MaterialSymbolsFilterAltOffOutline />
+		<MaterialSymbolsLightFilterAltOffOutline />
 	{/if}
 </Button>
