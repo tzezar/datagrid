@@ -41,8 +41,6 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
   title = $state(''); // Allows for a user-defined title for the data grid
   identifier = $state('1'); // Unique identifier for this grid instance, useful for state management
 
-  paginate = $state(true); // Allows pagination
-
   // Lifecycle hooks for event handling
   onPageChange = () => { }; // Callback triggered on page changes, allows for custom logic to be applied
   onPerPageChange = () => { }; // Callback triggered when the number of items per page is modified
@@ -96,6 +94,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
 
   private getDefaultOptions() {
     return {
+      paginate: true,
       scrollable: true,
       fullscreenMode: { enabled: true },
       pagination: { display: false },
@@ -145,7 +144,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
 
   // Initialize the datagrid with the provided configuration
   private initializeFromConfig(config: TzezarDatagridConfig<T, C>) {
-    const { mode, columns, data, identifier, title, options, state, paginate, onPageChange, onPerPageChange, onSortingChange, onFiltersChange, onChange } = config;
+    const { mode, columns, data, identifier, title, options, state, onPageChange, onPerPageChange, onSortingChange, onFiltersChange, onChange } = config;
 
     // Set core properties, ensuring defaults are respected
     this.mode = mode || this.mode; // Fallback to default mode if not provided
@@ -155,8 +154,6 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
     this.data = data; // Set the data for the grid
     this.identifier = identifier || this.identifier; // Use provided identifier or fallback to default
     this.title = title || this.title; // Set the title of the grid
-
-    this.paginate = paginate ? true : false;
 
     // Set event handlers, allowing for extensibility
     this.onPageChange = onPageChange || this.onPageChange;
@@ -198,10 +195,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
     // Filter sorted data based on active filters
     this.internal.filteredData = filterData([...this.internal.sortedData], this.state.filters);
     // Paginate filtered data based on current page and items per page
-
-    console.log(this.paginate)
-
-    if (this.paginate) {
+    if (this.options.paginate) {
       this.internal.paginatedData = paginateData([...this.internal.filteredData], this.state.pagination.page, this.state.pagination.perPage);
     } else {
       this.internal.paginatedData = [...this.internal.filteredData];
@@ -262,7 +256,6 @@ type TzezarDatagridConfig<T, C extends BaseColumn<T>> = {
   title?: string;
   options?: DeepPartial<ReturnType<TzezarDatagrid<T, C>['getDefaultOptions']>>;
   state?: Partial<TzezarDatagrid<T, C>['state']>;
-  paginate?: boolean;
   onPageChange?: () => void;
   onPerPageChange?: () => void;
   onSortingChange?: () => void;

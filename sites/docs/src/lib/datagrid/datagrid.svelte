@@ -84,14 +84,12 @@
 
 	// Updates paginated data in client mode only
 	$effect.pre(() => {
-		if (datagrid.mode === 'client') {
-			if (datagrid.paginate) {
-				datagrid.internal.paginatedData = paginateData(
-					datagrid.internal.sortedData,
-					datagrid.state.pagination.page,
-					datagrid.state.pagination.perPage
-				);
-			}
+		if (datagrid.mode === 'client' && datagrid.options.paginate) {
+			datagrid.internal.paginatedData = paginateData(
+				datagrid.internal.sortedData,
+				datagrid.state.pagination.page,
+				datagrid.state.pagination.perPage
+			);
 		}
 	});
 
