@@ -7,33 +7,14 @@
 	import * as Datagrid from '$lib/datagrid';
 
 	let datagrid = setContext(
-		`datagrid`,
+		"datagrid",
 		new TzezarDatagrid({
 			title: 'Inventory',
 			data,
 			columns,
 			options: {
-				pagination: { display: true },
-				rows: { striped: true },
 				topbar: {
 					display: true,
-					displayFullscreenToggle: false,
-					displayExportDataMenu: false,
-					displayCopyDataMenu: false,
-					displayHeadFilterToggle: false,
-					settingsMenu: {
-						display: false,
-						displaySortingMenu: true,
-						displayReorderingMenu: true,
-						displayFreezingMenu: true,
-						displayResizingMenu: true,
-						displayVisibilityMenu: true,
-						adjustmentMenu: {
-							display: true,
-							displaySpacingMenu: true,
-							displayTextSizeMenu: true
-						}
-					}
 				}
 			}
 		})
