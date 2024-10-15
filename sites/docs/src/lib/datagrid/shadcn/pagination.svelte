@@ -21,7 +21,7 @@
 	);
 </script>
 
-<div class="flex flex-row flex-wrap justify-center gap-4 pt-2 sm:justify-between">
+<div class="flex flex-row flex-wrap justify-center gap-4 pt-2 sm:justify-between ">
 	<Pagination.Root
 		count={datagrid.state.pagination.count}
 		perPage={datagrid.state.pagination.perPage}
@@ -29,14 +29,14 @@
 		let:range
 		onPageChange={(v) => datagrid.updatePagination(v, datagrid.state.pagination.perPage)}
 	>
-		<div class="flex flex-col items-center gap-2">
-			<div class="flex">
+		<div class="flex flex-col items-center gap-1">
+			<div class="flex gap-2">
 				<Pagination.PrevButton
 					class="hover:bg-dark-10 active:scale-98 disabled:text-muted-foreground h-8 items-center   justify-center rounded-[9px] border  bg-transparent disabled:cursor-not-allowed hover:disabled:bg-transparent"
 				>
 					<MaterialSymbolsChevronLeft class="mx-2 h-8" />
 				</Pagination.PrevButton>
-				<div class="flex items-center">
+				<div class="flex items-center ">
 					<Select.Root
 						selected={{
 							value: datagrid.state.pagination.page,
@@ -61,7 +61,7 @@
 					<MaterialSymbolsChevronRight class="mx-2 h-8" />
 				</Pagination.NextButton>
 			</div>
-			<span class="text-muted-foreground w-full pt-1 text-center text-xs">
+			<span class="text-muted-foreground w-full  text-center text-xs">
 				{range.start} : {range.end} / {datagrid.state.pagination.count}
 			</span>
 		</div>
