@@ -27,6 +27,7 @@
 		body?: Snippet;
 		topBar?: Snippet;
 		footer?: Snippet;
+		children?: Snippet;
 		class?: {
 			wrapper?: string;
 			content?: string;
@@ -43,6 +44,7 @@
 		dataIndicator,
 		head,
 		footer,
+		children,
 		class: _class = {
 			wrapper: '',
 			content: ''
@@ -120,6 +122,7 @@
 		<DatagridBody {body} />
 		<DatagridFooter {footer} />
 	</DatagridContent>
+	{@render children()}
 	<DatagridPagination {pagination} />
 </DatagridWrapper>
 <div bind:this={end} aria-hidden="true" class="hidden"></div>
