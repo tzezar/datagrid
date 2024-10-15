@@ -62,9 +62,102 @@
 					<Datagrid.HeaderRowSelectionDropdown />
 				</Datagrid.HeaderWithoutSpacing>
 			{:else if column.id === 'expand'}
-				<Datagrid.HeaderWithoutSpacing {column} title="" />
+				<Datagrid.HeaderWithoutSpacing {column} title="" class={{ container: '' }} />
 			{:else}
-				<Datagrid.Header {column}>
+				<Datagrid.Header {column} class={{ header: '' }}>
+					{#snippet filter()}
+						<Datagrid.ColumnFilter {column} />
+					{/snippet}
+				</Datagrid.Header>
+			{/if}
+		{/each}
+	{/snippet}
+	{#snippet body()}
+		{#each datagrid.internal.paginatedData as row, rowIndex}
+			<Datagrid.Row rowId={row.id} {rowIndex}>
+				{#each datagrid.columns as column, columnIndex}
+					{@const props = { row, rowIndex, column, columnIndex }}
+
+					{#if column.id === 'checkbox'}
+						<Datagrid.CellWithoutSpacing {row} {column} {columnIndex} {rowIndex}>
+							<Datagrid.CellRowSelectionCheckbox {row} />
+						</Datagrid.CellWithoutSpacing>
+					{:else if column.id === 'expand'}
+						<Datagrid.CellWithoutSpacing {row} {column} {columnIndex} {rowIndex}>
+							<Datagrid.ExpandRowToggler rowId={row.id} />
+						</Datagrid.CellWithoutSpacing>
+					{:else if column.id === 'actions'}
+						<Datagrid.Cell {row} {column} {columnIndex} {rowIndex}>
+							<div class={cn('flex flex-row gap-2')}>
+								<Button
+									size="sm"
+									variant="destructive"
+									onclick={() => {
+										datagrid.updateData(removeRow(row.id, datagrid));
+										toast.success('Row removed');
+									}}
+								>
+									<MaterialSymbolsDeleteOutline />
+								</Button>
+								<EditForm />
+							</div>
+						</Datagrid.Cell>
+					{:else}
+					<ContextMenu.Root>
+						<ContextMenu.Trigger asChild let:builder>
+							<CellWithContextMenu
+								{builder}
+								{columnIndex}
+								{rowIndex}
+								{column}
+								{row}
+								class={{ data: 'overflow-hidden text-ellipsis text-nowrap' }}
+							/>
+						</ContextMenu.Trigger>
+						<ContextMenu.Content>
+							<ContextMenu.Item>{getNestedValue(row, column.id)}</ContextMenu.Item>
+						</ContextMenu.Content>
+					</ContextMenu.Root>
+					{/if}
+				{/each}
+			</Datagrid.Row>
+			{#if Datagrid.isRowExpanded(datagrid, row.id)}
+				<Datagrid.Row
+					class={`border-b ${Datagrid.STAY_IN_PLACE} ${Datagrid.HIDE_BEHIND_PARENT_ROW}`}
+					{rowIndex}
+				>
+					<div class="p-2 pl-3">
+						Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum deserunt tenetur debitis
+						praesentium aliquam error quibusdam explicabo nam voluptates, dignissimos minima quasi
+						aliquid. Repellat, voluptatibus. Natus cumque temporibus nostrum quos. Assumenda
+						laboriosam nostrum laborum impedit dolorem consectetur praesentium doloribus iusto
+						accusamus recusandae! Sint, natus dolorem perferendis nesciunt similique nihil optio
+						repellat adipisci ad expedita numquam quaerat incidunt cum consectetur praesentium.
+						Pariatur tempore delectus sunt necessitatibus at voluptatum beatae molestias ratione
+						modi nostrum a neque dolor illo magnam vero, natus dolorem, corporis eum aspernatur
+						quaerat? Quibusdam ab velit neque rerum excepturi.
+					</div>
+				</Datagrid.Row>
+			{/if}
+		{/each}
+	{/snippet}
+</Datagrid.Datagrid>
+
+
+<!-- <Datagrid.Datagrid>
+	{#snippet topBar()}
+		<Datagrid.TopBar />
+	{/snippet}
+	{#snippet head()}
+		{#each datagrid.columns as column, i (column.id)}
+			{#if column.id === 'checkbox'}
+				<Datagrid.HeaderWithoutSpacing {column} title={column.title}>
+					<Datagrid.HeaderRowSelectionDropdown />
+				</Datagrid.HeaderWithoutSpacing>
+			{:else if column.id === 'expand'}
+				<Datagrid.HeaderWithoutSpacing {column} title="" class={{ container: '' }} />
+			{:else}
+				<Datagrid.Header {column} class={{ header: '' }}>
 					{#snippet filter()}
 						<Datagrid.ColumnFilter {column} />
 					{/snippet}
@@ -169,4 +262,4 @@
 			<span class="flex justify-end">Page {datagrid.state.pagination.page}</span>
 		</div>
 	{/snippet}
-</Datagrid.Datagrid>
+</Datagrid.Datagrid> -->
