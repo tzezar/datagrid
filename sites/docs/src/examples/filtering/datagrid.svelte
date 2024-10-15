@@ -51,3 +51,4 @@
 		{/each}
 	{/snippet}
 </Datagrid.Datagrid>
+<pre>{JSON.stringify(datagrid.state.filters, null, 2)}</pre>
