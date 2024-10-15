@@ -9,9 +9,10 @@ import type { BaseColumn } from '../types';
  *
  * @param {T[]} data - The array of data objects to be exported.
  * @param {BaseColumn<T>[]} columns - The array of column definitions that include the id and other properties.
+ * @param {string} title - The title to include in the XML file.
  * @template T - The type of data items being processed.
  */
-export const exportToXML = <T>(data: T[], columns: BaseColumn<T>[]): void => {
+export const exportToXML = <T>(data: T[], columns: BaseColumn<T>[], title: string = 'data'): void => {
   // Initialize XML builder with specified options
   const builder = new XMLBuilder({
     ignoreAttributes: false, // Include attributes in XML
@@ -29,13 +30,18 @@ export const exportToXML = <T>(data: T[], columns: BaseColumn<T>[]): void => {
     return rowData; // Return the constructed row data object
   });
 
-  // Build the XML structure
-  const xml = builder.build({ rows: { row: rows } });
+  // Build the XML structure with a title and the rows
+  const xml = builder.build({
+    export: {
+      title, 
+      rows: { row: rows }
+    }
+  });
 
   // Create a Blob with the XML data
   const blob = new Blob([xml], { type: 'application/xml;charset=utf-8;' });
   const link = document.createElement('a');
-  
+
   if (link.download !== undefined) { // Feature detection
     const url = URL.createObjectURL(blob); // Create a URL for the Blob
     link.setAttribute('href', url);

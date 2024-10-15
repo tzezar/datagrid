@@ -25,6 +25,7 @@
 
 		<DropdownMenu.Group>
 			<DropdownMenu.Item
+				disabled
 				onclick={() =>
 					copyToClipboardSelectedCells({
 						selectionRange: datagrid.internal.selectionState.range,

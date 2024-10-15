@@ -8,13 +8,7 @@
 	import type { TzezarDatagrid } from '../tzezar-datagrid.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 
-	let {
-		title
-	}: {
-		title: string;
-	} = $props();
-
-	const datagrid = getContext<TzezarDatagrid>('datagrid');
+	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 	const exportableColumns = $derived(datagrid.columns.filter((c) => c.exportable !== false));
 </script>
 
@@ -27,16 +21,33 @@
 
 		<DropdownMenu.Group>
 			<DropdownMenu.Item
-				onclick={() => exportToExcel(datagrid.internal.paginatedData, exportableColumns, title)}
+				onclick={() =>
+					exportToExcel(
+						datagrid.internal.paginatedData,
+						exportableColumns,
+						datagrid.options.exportFileName
+					)}
 			>
 				excel
 			</DropdownMenu.Item>
 			<DropdownMenu.Item
-				onclick={() => exportToCSV(datagrid.internal.paginatedData, exportableColumns, title)}
+				onclick={() =>
+					exportToCSV(
+						datagrid.internal.paginatedData,
+						exportableColumns,
+						datagrid.options.exportFileName
+					)}
 			>
 				csv
 			</DropdownMenu.Item>
-			<DropdownMenu.Item onclick={() => exportToXML(datagrid.internal.paginatedData, exportableColumns)}>
+			<DropdownMenu.Item
+				onclick={() =>
+					exportToXML(
+						datagrid.internal.paginatedData,
+						exportableColumns,
+						datagrid.options.exportFileName
+					)}
+			>
 				xml
 			</DropdownMenu.Item>
 		</DropdownMenu.Group>
