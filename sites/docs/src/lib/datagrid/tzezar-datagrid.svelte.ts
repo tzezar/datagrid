@@ -8,23 +8,23 @@ import { SvelteSet } from "svelte/reactivity"; // Svelte's reactive set implemen
 
 // Recursive Partial type
 type DeepPartial<T> = {
-    [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
-  };
-  
-  // Helper function to perform a deep merge of objects
-  function deepMerge<T extends object>(target: T, source: DeepPartial<T>): T {
-    const output = { ...target };
-    for (const key in source) {
-      if (source.hasOwnProperty(key)) {
-        if (source[key] instanceof Object && !Array.isArray(source[key])) {
-          output[key] = deepMerge(output[key] as any, source[key] as any);
-        } else {
-          output[key] = source[key] as any;
-        }
+  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+};
+
+// Helper function to perform a deep merge of objects
+function deepMerge<T extends object>(target: T, source: DeepPartial<T>): T {
+  const output = { ...target };
+  for (const key in source) {
+    if (source.hasOwnProperty(key)) {
+      if (source[key] instanceof Object && !Array.isArray(source[key])) {
+        output[key] = deepMerge(output[key] as any, source[key] as any);
+      } else {
+        output[key] = source[key] as any;
       }
     }
-    return output;
   }
+  return output;
+}
 
 /**
  * TzezarDatagrid is a generic class representing a configurable data grid component.
@@ -34,234 +34,238 @@ type DeepPartial<T> = {
  * @template C - The type of column configuration extending from BaseColumn.
  */
 export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
-    // Public properties
-    mode = $state('client'); // Default mode set to client-side; allows for flexibility in data handling
-    columns = $state<C[]>([]); // Stores the configuration for the grid columns
-    data = $state<T[]>([]); // Holds the actual data items displayed in the grid
-    title = $state(''); // Allows for a user-defined title for the data grid
-    identifier = $state('1'); // Unique identifier for this grid instance, useful for state management
+  // Public properties
+  mode = $state('client'); // Default mode set to client-side; allows for flexibility in data handling
+  columns = $state<C[]>([]); // Stores the configuration for the grid columns
+  data = $state<T[]>([]); // Holds the actual data items displayed in the grid
+  title = $state(''); // Allows for a user-defined title for the data grid
+  identifier = $state('1'); // Unique identifier for this grid instance, useful for state management
 
-    paginate = $state(true); // Allows pagination
+  paginate = $state(true); // Allows pagination
 
-    // Lifecycle hooks for event handling
-    onPageChange = () => { }; // Callback triggered on page changes, allows for custom logic to be applied
-    onPerPageChange = () => { }; // Callback triggered when the number of items per page is modified
-    onSortingChange = () => { }; // Callback for when sorting criteria are altered
-    onFiltersChange = () => { }; // Callback for when filters are updated
-    onChange = () => { }; // General callback for any state changes
+  // Lifecycle hooks for event handling
+  onPageChange = () => { }; // Callback triggered on page changes, allows for custom logic to be applied
+  onPerPageChange = () => { }; // Callback triggered when the number of items per page is modified
+  onSortingChange = () => { }; // Callback for when sorting criteria are altered
+  onFiltersChange = () => { }; // Callback for when filters are updated
+  onChange = () => { }; // General callback for any state changes
 
-    // State management
-    state = $state({
-        pagination: { page: 1, perPage: 20, count: 1 } as Pagination, // Initializes pagination settings, enabling straightforward data navigation
-        status: { isFetching: false, isError: false, isRefetching: false }, // Tracks data fetching status for user feedback
-        sortingArray: [] as Sorting[], // Stores current sorting criteria for easy reference
-        filters: [] as Filter[], // Holds active filters to apply to the data
-        expandedRows: [] as ExpandedRows, // Manages which rows are expanded for better user experience
-        selectedRows: [] as T[], // Keeps track of user-selected rows for operations
-        isFullscreenActive: false, // State for tracking fullscreen mode status
-        isHeadFilterVisible: false // State for managing visibility of header filters
-    });
+  // State management
+  state = $state({
+    pagination: { page: 1, perPage: 20, count: 1 } as Pagination, // Initializes pagination settings, enabling straightforward data navigation
+    status: { isFetching: false, isError: false, isRefetching: false }, // Tracks data fetching status for user feedback
+    sortingArray: [] as Sorting[], // Stores current sorting criteria for easy reference
+    filters: [] as Filter[], // Holds active filters to apply to the data
+    expandedRows: [] as ExpandedRows, // Manages which rows are expanded for better user experience
+    selectedRows: [] as T[], // Keeps track of user-selected rows for operations
+    isFullscreenActive: false, // State for tracking fullscreen mode status
+    isHeadFilterVisible: false // State for managing visibility of header filters
+  });
 
-    // Internal state management
-    internal = $state({
-        paginatedData: [] as T[], // Data post-pagination, ready for display
-        sortedData: [] as T[], // Data sorted according to user preferences
-        filteredData: [] as T[], // Data filtered by active filters
-        selectionState: {
-            start: null, // Starting index for selection, allowing for range selection
-            end: null, // Ending index for selection
-            range: new SvelteSet(), // Set to manage unique selections
-            activeRange: new SvelteSet(), // Set for the currently active selection range
-            isSelecting: false, // Indicates if the user is in the process of selecting
-            isRemoving: false, // Indicates if selection is being removed
-            isMouseDown: false // Tracks mouse state during selection actions
-        } as SelectionState,
-        keyboardNavigation: { focusedRowIndex: 0, focusedColumnIndex: 0 }, // Supports keyboard navigation, enhancing accessibility
-        selectedRowIds: new SvelteSet<number>(), // Stores IDs of selected rows for quick reference
-        headSize: -1, // Allows for header size adjustments as necessary
-    });
+  // Internal state management
+  internal = $state({
+    paginatedData: [] as T[], // Data post-pagination, ready for display
+    sortedData: [] as T[], // Data sorted according to user preferences
+    filteredData: [] as T[], // Data filtered by active filters
+    selectionState: {
+      start: null, // Starting index for selection, allowing for range selection
+      end: null, // Ending index for selection
+      range: new SvelteSet(), // Set to manage unique selections
+      activeRange: new SvelteSet(), // Set for the currently active selection range
+      isSelecting: false, // Indicates if the user is in the process of selecting
+      isRemoving: false, // Indicates if selection is being removed
+      isMouseDown: false // Tracks mouse state during selection actions
+    } as SelectionState,
+    keyboardNavigation: { focusedRowIndex: 0, focusedColumnIndex: 0 }, // Supports keyboard navigation, enhancing accessibility
+    selectedRowIds: new SvelteSet<number>(), // Stores IDs of selected rows for quick reference
+    headSize: -1, // Allows for header size adjustments as necessary
+  });
 
-    // Configuration options for additional features
-    options = $state(this.getDefaultOptions());
+  // Configuration options for additional features
+  options = $state(this.getDefaultOptions());
 
-    /**
-     * Constructs a new TzezarDatagrid instance and initializes it with the provided configuration.
-     * 
-     * @param config - Configuration object for initializing the datagrid.
-     */
-    constructor(config: TzezarDatagridConfig<T, C>) {
-        this.initializeFromConfig(config); // Initialize core properties and event handlers
-        this.initializeData(); // Process the initial data set for display
-    }
+  /**
+   * Constructs a new TzezarDatagrid instance and initializes it with the provided configuration.
+   * 
+   * @param config - Configuration object for initializing the datagrid.
+   */
+  constructor(config: TzezarDatagridConfig<T, C>) {
+    this.initializeFromConfig(config); // Initialize core properties and event handlers
+    this.initializeData(); // Process the initial data set for display
+  }
 
-    private getDefaultOptions() {
-        return {
-          scrollable: true,
-          fullscreenMode: { enabled: true },
-          pagination: { display: false },
-          dataIndicator: { display: true },
-          statusIndicator: { display: true },
-          rows: { striped: false },
-          topbar: {
-            display: false,
-            displayFullscreenToggle: false,
-            displayExportDataMenu: false,
-            displayCopyDataMenu: false,
-            displayHeadFilterToggle: false,
-            settingsMenu: {
-              display: false,
-              displaySortingMenu: true,
-              displayReorderingMenu: true,
-              displayFreezingMenu: true,
-              displayResizingMenu: true,
-              displayVisibilityMenu: true,
-              adjustmentMenu: {
-                display: true,
-                displaySpacingMenu: true,
-                displayTextSizeMenu: true
-              }
-            }
-          },
-          footer: { display: false },
-          spacing: {
-            options: {
-              none: { vertical: '0px', horizontal: '0px' },
-              xs: { vertical: '3px', horizontal: '3px' },
-              sm: { vertical: '5px', horizontal: '5px' },
-              md: { vertical: '10px', horizontal: '10px' },
-              lg: { vertical: '20px', horizontal: '20px' },
-              xl: { vertical: '30px', horizontal: '30px' },
-            },
-            selected: { label: 'md', vertical: '10px', horizontal: '10px' }
-          } as SpacingConfig,
-          fontSize: {
-            options: {
-              xs: '0.75rem', sm: '0.875rem', md: '1rem', lg: '1.25rem', xl: '1.5rem',
-            },
-            selected: { label: 'md', value: '1rem' }
-          } as FontSize
-        };
-      }
-
-    // Initialize the datagrid with the provided configuration
-    private initializeFromConfig(config: TzezarDatagridConfig<T, C>) {
-        const { mode, columns, data, identifier, title, options, state, paginate, onPageChange, onPerPageChange, onSortingChange, onFiltersChange, onChange } = config;
-
-        // Set core properties, ensuring defaults are respected
-        this.mode = mode || this.mode; // Fallback to default mode if not provided
-        // Apply offsets to columns for proper alignment
-        // @ts-expect-error ts(2322) 
-        this.columns = applyOffset(columns); // Ensure columns are properly aligned before display
-        this.data = data; // Set the data for the grid
-        this.identifier = identifier || this.identifier; // Use provided identifier or fallback to default
-        this.title = title || this.title; // Set the title of the grid
-        this.paginate = paginate || this.paginate;
-        // Set event handlers, allowing for extensibility
-        this.onPageChange = onPageChange || this.onPageChange;
-        this.onPerPageChange = onPerPageChange || this.onPerPageChange;
-        this.onSortingChange = onSortingChange || this.onSortingChange;
-        this.onFiltersChange = onFiltersChange || this.onFiltersChange;
-        this.onChange = onChange || this.onChange;
-
-        // Initialize state from the provided configuration
-        this.initializeState(state);
-
-        // Initialize additional options as specified
-        if (options) {
-            this.updateOptions(options);
+  private getDefaultOptions() {
+    return {
+      scrollable: true,
+      fullscreenMode: { enabled: true },
+      pagination: { display: false },
+      dataIndicator: { display: true },
+      statusIndicator: { display: true },
+      rows: { striped: false },
+      topbar: {
+        display: false,
+        displayFullscreenToggle: false,
+        displayExportDataMenu: false,
+        displayCopyDataMenu: false,
+        displayHeadFilterToggle: false,
+        settingsMenu: {
+          display: false,
+          displaySortingMenu: true,
+          displayReorderingMenu: true,
+          displayFreezingMenu: true,
+          displayResizingMenu: true,
+          displayVisibilityMenu: true,
+          adjustmentMenu: {
+            display: true,
+            displaySpacingMenu: true,
+            displayTextSizeMenu: true
           }
-    }
-    updateOptions(newOptions: DeepPartial<ReturnType<TzezarDatagrid<T, C>['getDefaultOptions']>>) {
-        this.options = deepMerge(this.options, newOptions);
-        this.onChange();
-      }
-    // Initialize state with provided values or defaults
-    private initializeState(state?: Partial<typeof this.state>) {
-        if (state) {
-            Object.assign(this.state, state); // Merge provided state values with existing state
         }
+      },
+      footer: { display: false },
+      spacing: {
+        options: {
+          none: { vertical: '0px', horizontal: '0px' },
+          xs: { vertical: '3px', horizontal: '3px' },
+          sm: { vertical: '5px', horizontal: '5px' },
+          md: { vertical: '10px', horizontal: '10px' },
+          lg: { vertical: '20px', horizontal: '20px' },
+          xl: { vertical: '30px', horizontal: '30px' },
+        },
+        selected: { label: 'md', vertical: '10px', horizontal: '10px' }
+      } as SpacingConfig,
+      fontSize: {
+        options: {
+          xs: '0.75rem', sm: '0.875rem', md: '1rem', lg: '1.25rem', xl: '1.5rem',
+        },
+        selected: { label: 'md', value: '1rem' }
+      } as FontSize
+    };
+  }
+
+  // Initialize the datagrid with the provided configuration
+  private initializeFromConfig(config: TzezarDatagridConfig<T, C>) {
+    const { mode, columns, data, identifier, title, options, state, paginate, onPageChange, onPerPageChange, onSortingChange, onFiltersChange, onChange } = config;
+
+    // Set core properties, ensuring defaults are respected
+    this.mode = mode || this.mode; // Fallback to default mode if not provided
+    // Apply offsets to columns for proper alignment
+    // @ts-expect-error ts(2322) 
+    this.columns = applyOffset(columns); // Ensure columns are properly aligned before display
+    this.data = data; // Set the data for the grid
+    this.identifier = identifier || this.identifier; // Use provided identifier or fallback to default
+    this.title = title || this.title; // Set the title of the grid
+
+    this.paginate = paginate ? true : false;
+
+    // Set event handlers, allowing for extensibility
+    this.onPageChange = onPageChange || this.onPageChange;
+    this.onPerPageChange = onPerPageChange || this.onPerPageChange;
+    this.onSortingChange = onSortingChange || this.onSortingChange;
+    this.onFiltersChange = onFiltersChange || this.onFiltersChange;
+    this.onChange = onChange || this.onChange;
+
+    // Initialize state from the provided configuration
+    this.initializeState(state);
+
+    // Initialize additional options as specified
+    if (options) {
+      this.updateOptions(options);
+    }
+  }
+  updateOptions(newOptions: DeepPartial<ReturnType<TzezarDatagrid<T, C>['getDefaultOptions']>>) {
+    this.options = deepMerge(this.options, newOptions);
+    this.onChange();
+  }
+  // Initialize state with provided values or defaults
+  private initializeState(state?: Partial<typeof this.state>) {
+    if (state) {
+      Object.assign(this.state, state); // Merge provided state values with existing state
+    }
+  }
+
+  // Initialize options with provided values or defaults
+  private initializeOptions(options?: Partial<typeof this.options>) {
+    if (options) {
+      Object.assign(this.options, options); // Merge provided options with existing configuration
+    }
+  }
+
+  // Initialize data by sorting, filtering, and paginating it as per current state
+  private initializeData() {
+    // Sort data based on the current sorting criteria
+    this.internal.sortedData = sortData([...this.data], this.state.sortingArray);
+    // Filter sorted data based on active filters
+    this.internal.filteredData = filterData([...this.internal.sortedData], this.state.filters);
+    // Paginate filtered data based on current page and items per page
+
+    console.log(this.paginate)
+
+    if (this.paginate) {
+      this.internal.paginatedData = paginateData([...this.internal.filteredData], this.state.pagination.page, this.state.pagination.perPage);
+    } else {
+      this.internal.paginatedData = [...this.internal.filteredData];
     }
 
-    // Initialize options with provided values or defaults
-    private initializeOptions(options?: Partial<typeof this.options>) {
-        if (options) {
-            Object.assign(this.options, options); // Merge provided options with existing configuration
-        }
-    }
+  }
 
-    // Initialize data by sorting, filtering, and paginating it as per current state
-    private initializeData() {
-        // Sort data based on the current sorting criteria
-        this.internal.sortedData = sortData([...this.data], this.state.sortingArray);
-        // Filter sorted data based on active filters
-        this.internal.filteredData = filterData([...this.internal.sortedData], this.state.filters);
-        // Paginate filtered data based on current page and items per page
-        
-        if (this.paginate) {
-            this.internal.paginatedData = paginateData([...this.internal.filteredData], this.state.pagination.page, this.state.pagination.perPage);
-        } else {
-            this.internal.paginatedData = [...this.internal.filteredData];
-        }
+  // Public methods for external interaction
+  updateData(newData: T[]) {
+    this.data = newData; // Update the data displayed in the grid
+    this.initializeData(); // Re-initialize data processing after updating
+    this.onChange(); // Trigger any change handlers to notify observers
+  }
 
-    }
+  updateColumns(newColumns: C[]) {
+    //@ts-expect-error ts(2322)
+    this.columns = applyOffset(newColumns); // Update columns with offsets applied.
+  }
 
-    // Public methods for external interaction
-    updateData(newData: T[]) {
-        this.data = newData; // Update the data displayed in the grid
-        this.initializeData(); // Re-initialize data processing after updating
-        this.onChange(); // Trigger any change handlers to notify observers
-    }
+  updatePagination(page: number, perPage: number) {
+    // Update pagination state and trigger callbacks
+    this.state.pagination.page = page;
+    this.state.pagination.perPage = perPage;
+    this.onPageChange();
+    this.onPerPageChange();
+    this.onChange();
+  }
 
-    updateColumns(newColumns: C[]) {
-        //@ts-expect-error ts(2322)
-        this.columns = applyOffset(newColumns); // Update columns with offsets applied.
-    }
+  updateSorting(newSorting: Sorting[]) {
+    // Update sorting state and trigger callbacks
+    this.state.sortingArray = newSorting;
+    this.onSortingChange();
+    this.onChange();
+  }
 
-    updatePagination(page: number, perPage: number) {
-        // Update pagination state and trigger callbacks
-        this.state.pagination.page = page;
-        this.state.pagination.perPage = perPage;
-        this.onPageChange();
-        this.onPerPageChange();
-        this.onChange();
-    }
+  updateFilters(newFilters: Filter[]) {
+    this.state.filters = newFilters;
+    this.state.pagination.page = 1;
+    this.onFiltersChange();
+    this.onChange();
+  }
 
-    updateSorting(newSorting: Sorting[]) {
-        // Update sorting state and trigger callbacks
-        this.state.sortingArray = newSorting;
-        this.onSortingChange();
-        this.onChange();
-    }
+  toggleFullscreen() {
+    this.state.isFullscreenActive = !this.state.isFullscreenActive;
+  }
 
-    updateFilters(newFilters: Filter[]) {
-        this.state.filters = newFilters;
-        this.state.pagination.page = 1;
-        this.onFiltersChange();
-        this.onChange();
-    }
-
-    toggleFullscreen() {
-        this.state.isFullscreenActive = !this.state.isFullscreenActive;
-    }
-
-    toggleHeadFilter() {
-        this.state.isHeadFilterVisible = !this.state.isHeadFilterVisible;
-    }
+  toggleHeadFilter() {
+    this.state.isHeadFilterVisible = !this.state.isHeadFilterVisible;
+  }
 }
 
 // Configuration type for the TzezarDatagrid constructor
 type TzezarDatagridConfig<T, C extends BaseColumn<T>> = {
-    mode?: 'client' | 'server';
-    columns: C[];
-    data: T[];
-    identifier?: string;
-    title?: string;
-    options?: DeepPartial<ReturnType<TzezarDatagrid<T, C>['getDefaultOptions']>>;
-    state?: Partial<TzezarDatagrid<T, C>['state']>;
-    paginate?: boolean;
-    onPageChange?: () => void;
-    onPerPageChange?: () => void;
-    onSortingChange?: () => void;
-    onFiltersChange?: () => void;
-    onChange?: () => void;
-  };
+  mode?: 'client' | 'server';
+  columns: C[];
+  data: T[];
+  identifier?: string;
+  title?: string;
+  options?: DeepPartial<ReturnType<TzezarDatagrid<T, C>['getDefaultOptions']>>;
+  state?: Partial<TzezarDatagrid<T, C>['state']>;
+  paginate?: boolean;
+  onPageChange?: () => void;
+  onPerPageChange?: () => void;
+  onSortingChange?: () => void;
+  onFiltersChange?: () => void;
+  onChange?: () => void;
+};
