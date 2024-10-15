@@ -103,6 +103,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
       dataIndicator: { display: true },
       statusIndicator: { display: true },
       rows: { striped: true },
+      exportFileName: 'data',
       topbar: {
         display: false,
         displayFullscreenToggle: false,

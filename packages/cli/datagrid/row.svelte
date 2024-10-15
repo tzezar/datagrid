@@ -10,7 +10,7 @@
 		class: _class,
 		rowIndex
 	}: {
-		rowId?: number;
+		rowId?: number | string;
 		children: Snippet;
 		class?: string;
 		rowIndex?: number;

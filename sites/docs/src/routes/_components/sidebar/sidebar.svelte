@@ -43,7 +43,7 @@
 			<GroupItem title="row selection" href={hrefs.guides.featureGuides.rowSelection} />
 			<GroupItem title="pagination" href={hrefs.guides.featureGuides.pagination} />
 			<GroupItem title="sorting" href={hrefs.guides.featureGuides.sorting} />
-			<GroupItem disabled title="filtering" href={hrefs.guides.featureGuides.filtering} />
+			<GroupItem  title="filtering" href={hrefs.guides.featureGuides.filtering} />
 			<GroupItem
 				disabled
 				title="adjusting spacing"
@@ -54,8 +54,8 @@
 				title="adjusting text size"
 				href={hrefs.guides.featureGuides.adjustingTextSize}
 			/>
-			<GroupItem disabled title="data copying" href={hrefs.guides.featureGuides.dataCopying} />
-			<GroupItem disabled title="data exporting" href={hrefs.guides.featureGuides.dataExporting} />
+			<GroupItem  title="data copying" href={hrefs.guides.featureGuides.dataCopying} />
+			<GroupItem  title="data exporting" href={hrefs.guides.featureGuides.dataExporting} />
 			<GroupItem title="context menu" href={hrefs.guides.featureGuides.contextMenu} />
 			<GroupItem title="fullscreen mode" href={hrefs.guides.featureGuides.fullscreenToggle} />
 			<GroupItem title="status indicator" href={hrefs.guides.featureGuides.statusIndicator} />
