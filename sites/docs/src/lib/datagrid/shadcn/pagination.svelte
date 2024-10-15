@@ -29,43 +29,47 @@
 		let:range
 		onPageChange={(v) => datagrid.updatePagination(v, datagrid.state.pagination.perPage)}
 	>
-		<div class="flex items-center gap-2">
-			<Pagination.PrevButton
-				class="hover:bg-dark-10 active:scale-98 h-8 items-center justify-center   rounded-[9px] border bg-transparent  disabled:cursor-not-allowed disabled:text-muted-foreground hover:disabled:bg-transparent"
-			>
-				<MaterialSymbolsChevronLeft class="mx-2 h-8" />
-			</Pagination.PrevButton>
-			<div class="flex items-center">
-				<Select.Root
-					selected={{
-						value: datagrid.state.pagination.page,
-						label: `Page ${datagrid.state.pagination.page}`
-					}}
-					onSelectedChange={(selected) => datagrid.updatePagination(selected?.value || 1, datagrid.state.pagination.perPage)}
+		<div class="flex flex-col items-center gap-2">
+			<div class="flex">
+				<Pagination.PrevButton
+					class="hover:bg-dark-10 active:scale-98 disabled:text-muted-foreground h-8 items-center   justify-center rounded-[9px] border  bg-transparent disabled:cursor-not-allowed hover:disabled:bg-transparent"
 				>
-					<Select.Trigger class="h-8">
-						<Select.Value />
-					</Select.Trigger>
-					<Select.Content sameWidth={false} align="start" class="max-h-96 overflow-auto">
-						{#each pageOptions as page (page)}
-							<Select.Item value={page.value}>Page {page.label}</Select.Item>
-						{/each}
-					</Select.Content>
-				</Select.Root>
+					<MaterialSymbolsChevronLeft class="mx-2 h-8" />
+				</Pagination.PrevButton>
+				<div class="flex items-center">
+					<Select.Root
+						selected={{
+							value: datagrid.state.pagination.page,
+							label: `Page ${datagrid.state.pagination.page}`
+						}}
+						onSelectedChange={(selected) =>
+							datagrid.updatePagination(selected?.value || 1, datagrid.state.pagination.perPage)}
+					>
+						<Select.Trigger class="h-8">
+							<Select.Value />
+						</Select.Trigger>
+						<Select.Content sameWidth={false} align="start" class="max-h-96 overflow-auto">
+							{#each pageOptions as page (page)}
+								<Select.Item value={page.value}>Page {page.label}</Select.Item>
+							{/each}
+						</Select.Content>
+					</Select.Root>
+				</div>
+				<Pagination.NextButton
+					class="hover:bg-dark-10 active:scale-98 disabled:text-muted-foreground h-8 items-center   justify-center rounded-[9px] border  bg-transparent disabled:cursor-not-allowed hover:disabled:bg-transparent"
+				>
+					<MaterialSymbolsChevronRight class="mx-2 h-8" />
+				</Pagination.NextButton>
 			</div>
-			<Pagination.NextButton
-				class="hover:bg-dark-10 active:scale-98 h-8 items-center justify-center   rounded-[9px] border bg-transparent  disabled:cursor-not-allowed disabled:text-muted-foreground hover:disabled:bg-transparent"
-			>
-				<MaterialSymbolsChevronRight class="mx-2 h-8" />
-			</Pagination.NextButton>
+			<span class="text-muted-foreground w-full pt-1 text-center text-xs">
+				{range.start} : {range.end} / {datagrid.state.pagination.count}
+			</span>
 		</div>
-		<p class="pt-1 text-center text-xs text-muted-foreground">
-			{range.start} : {range.end} / {datagrid.state.pagination.count}
-		</p>
 	</Pagination.Root>
 	<div class="flex flex-row gap-1 text-nowrap text-xs">
 		<Select.Root
-			onSelectedChange={(selected) => datagrid.updatePagination(datagrid.state.pagination.page, selected?.value || 10)}
+			onSelectedChange={(selected) =>
+				datagrid.updatePagination(datagrid.state.pagination.page, selected?.value || 10)}
 			selected={{
 				value: datagrid.state.pagination.perPage,
 				label: `Per page: ${datagrid.state.pagination.perPage}`
