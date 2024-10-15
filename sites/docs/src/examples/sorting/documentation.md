@@ -23,7 +23,7 @@ options: {
 }
 ```
 
-and sorting for particullar column can be overwritten with setting in <mark>column definition</mark>
+and sorting for particullar column can be overwritten with setting in column definition
 
 ```ts
 {
