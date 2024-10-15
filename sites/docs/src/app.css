@@ -101,3 +101,7 @@
 	--nav-height: 4rem;
 	--100vh-without-nav: calc(100vh - var(--nav-height));
 }
+
+.prose :is(mark) {
+	@apply bg-orange-400 px-1 rounded-sm p-[0.08rem]
+}
