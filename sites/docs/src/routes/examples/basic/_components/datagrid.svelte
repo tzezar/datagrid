@@ -24,7 +24,7 @@
 					settingsMenu: {
 						display: false,
 						displaySortingMenu: true,
-						displayReoderingMenu: true,
+						displayReorderingMenu: true,
 						displayFreezingMenu: true,
 						displayResizingMenu: true,
 						displayVisibilityMenu: true,
