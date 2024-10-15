@@ -56,7 +56,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 {#if column.visible !== false}
 	<div
-		style:width={column.width || '100px'}
+		style:width={column.width || datagrid.options.defaultColumnWidth}
 		style:padding-top={datagrid.options.spacing.selected.vertical}
 		style:padding-bottom={datagrid.options.spacing.selected.vertical}
 		style:padding-left={datagrid.options.spacing.selected.horizontal}

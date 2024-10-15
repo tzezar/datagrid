@@ -30,7 +30,7 @@
 		data-column={columnIndex}
 		tabindex="0"
 		class={cn(
-			'flex flex-shrink-0  border-r leading-none last:border-r-0',
+			'flex flex-shrink-0  border-r leading-none last:border-r-0 overflow-hidden',
 			column.pinned?.position == 'left' && 'offset-left border-r  ',
 			column.pinned?.position == 'right' && 'offset-right  border-l  ',
 			datagrid.options.rows.striped && rowIndex % 2 === 1
@@ -40,7 +40,7 @@
 		)}
 		style:--offset={column.pinned?.offset ? column.pinned.offset : '0px'}
 		style:--offset-right={column.pinned?.offset ? column.pinned.offset : '0px'}
-		style:width={column.width || '100px'}
+		style:width={column.width || datagrid.options.defaultColumnWidth}
 		class:grow={column.grow}
 		style={`${column.align === 'start' ? 'justify-content: flex-start;' : column.align === 'center' ? 'justify-content: center;' : column.align === 'end' ? 'justify-content: flex-end;' : ''}`}
 	>

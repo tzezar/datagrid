@@ -39,13 +39,13 @@
 		}}
 		style:--offset={column.pinned?.offset ? column.pinned.offset : '0px'}
 		style:--offset-right={column.pinned?.offset ? column.pinned.offset : '0px'}
-		style:width={column.width || '100px'}
+		style:width={column.width || datagrid.options.defaultColumnWidth}
 		style:padding-top={datagrid.options.spacing.selected.vertical}
 		style:padding-bottom={datagrid.options.spacing.selected.vertical}
 		style:padding-left={datagrid.options.spacing.selected.horizontal}
 		style:padding-right={datagrid.options.spacing.selected.horizontal}
 		class={cn(
-			'flex min-h-fit items-center border-r  leading-none last:border-r-0 ',
+			'flex min-h-fit items-center border-r  leading-none last:border-r-0 overflow-hidden',
 			column.pinned?.position == 'left' && 'offset-left border-r',
 			column.pinned?.position == 'right' && 'offset-right border-l',
 			datagrid.options.rows.striped &&

@@ -46,7 +46,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 {#if column.visible !== false}
 	<div
-		style="width: {column.width || '100px'}; flex-shrink: 0;"
+		style="width: {column.width || datagrid.options.defaultColumnWidth}; flex-shrink: 0;"
 		class={cn(
 			'th flex shrink-0 flex-col bg-table-primary hover:bg-table-primary-hover border-b',
 			column.sortable && 'cursor-pointer',
