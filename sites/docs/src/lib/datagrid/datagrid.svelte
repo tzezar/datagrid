@@ -122,7 +122,9 @@
 		<DatagridBody {body} />
 		<DatagridFooter {footer} />
 	</DatagridContent>
-	{@render children()}
+	{#if children}
+		{@render children()}
+	{/if}
 	<DatagridPagination {pagination} />
 </DatagridWrapper>
 <div bind:this={end} aria-hidden="true" class="hidden"></div>
