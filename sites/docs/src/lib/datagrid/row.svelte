@@ -21,7 +21,10 @@
 
 <div
 	style={`${rowId && datagrid?.state.expandedRows.includes(rowId as number | string) ? `position: sticky; top: ${datagrid.internal.headSize}px;` : ''}`}
-	class={cn(`group/row z-[${Z_INDEX_ROW}] flex min-w-fit flex-row border-b last:border-b-0`, _class)}
+	class={cn(
+		`group/row z-[${Z_INDEX_ROW}] flex min-w-fit flex-row border-b last:border-b-0`,
+		_class
+	)}
 >
 	{#if children}
 		{@render children()}

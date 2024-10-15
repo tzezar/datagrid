@@ -13,7 +13,7 @@
 	type Props = {
 		column: BaseColumn;
 		filter?: Snippet;
-		custom?: Snippet;
+		children?: Snippet;
 		class?: {
 			header?: string;
 			title?: string;
@@ -24,7 +24,7 @@
 
 	let {
 		column,
-		custom,
+		children,
 		filter,
 		class: _class = {
 			header: ''
@@ -56,7 +56,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 {#if column.visible !== false}
 	<div
-		style:width={column.width || '100px'}
+		style:width={column.width || datagrid.options.defaultColumnWidth}
 		style:padding-top={datagrid.options.spacing.selected.vertical}
 		style:padding-bottom={datagrid.options.spacing.selected.vertical}
 		style:padding-left={datagrid.options.spacing.selected.horizontal}
@@ -75,8 +75,8 @@
 			_class.header
 		)}
 	>
-		{#if custom}
-			{@render custom()}
+		{#if children}
+			{@render children()}
 		{:else}
 			<div class={cn('flex justify-between gap-1 ', _class.topContainer)}>
 				<span class={cn('grow overflow-hidden text-ellipsis', _class.title)}>

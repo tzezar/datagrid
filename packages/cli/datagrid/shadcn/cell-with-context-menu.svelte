@@ -1,20 +1,22 @@
 <script lang="ts">
+	import { getNestedValue } from '$lib/datagrid/fns/get-nested-value';
+	import type { BaseColumn } from '$lib/datagrid/types';
+	import type { TzezarDatagrid } from '$lib/datagrid/tzezar-datagrid.svelte';
 	import { cn } from '$lib/utils';
 	import { getContext, type Snippet } from 'svelte';
-	import type { BaseColumn } from './types';
-	import type { TzezarDatagrid } from './tzezar-datagrid.svelte';
-	import { getNestedValue } from './fns/get-nested-value';
 
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
 	let {
 		children,
+		builder,
 		class: _class,
 		columnIndex,
 		rowIndex,
 		column,
 		row,
 	}: {
+		builder?: any;
 		columnIndex: number;
 		rowIndex: number;
 		column: BaseColumn;
@@ -30,6 +32,8 @@
 {#if column.visible !== false}
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 	<div
+		use:builder.action
+		{...builder}
 		data-row={rowIndex}
 		data-column={columnIndex}
 		tabindex="0"

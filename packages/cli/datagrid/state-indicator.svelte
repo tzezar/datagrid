@@ -6,9 +6,12 @@
 	import type { TzezarDatagrid } from './tzezar-datagrid.svelte';
 	import { cn } from '$lib/utils';
 
-	const datagrid = getContext<TzezarDatagrid>('datagrid');
+	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
-	let isEmpty = $derived(datagrid.internal.paginatedData.length === 0);
+	let isEmpty = $derived(
+		(datagrid.mode === 'clint' && datagrid.internal.paginatedData.length === 0) ||
+			(datagrid.mode === 'server' && datagrid.data.length === 0)
+	);
 
 	let {
 		errorIcon,
@@ -31,12 +34,11 @@
 		loadingIcon?: Snippet;
 		errorIcon?: Snippet;
 	} = $props();
-	
 </script>
 
 <div class={cn('min-h-full w-full', _class?.wrapper)}>
 	{#if isLoading && !isError && isEmpty}
-		<div class={cn('flex flex-col bg-primary-foreground p-4 align-middle', _class?.loading)}>
+		<div class={cn('bg-primary-foreground flex flex-col p-4 align-middle', _class?.loading)}>
 			{#if loadingIcon}
 				{@render loadingIcon()}
 			{:else}
@@ -46,7 +48,7 @@
 		</div>
 	{/if}
 	{#if isEmpty && !isLoading && !isError}
-		<div class={cn('flex flex-col bg-primary-foreground p-4 align-middle', _class?.empty)}>
+		<div class={cn('bg-primary-foreground flex flex-col p-4 align-middle', _class?.empty)}>
 			{#if emptyIcon}
 				{@render emptyIcon()}
 			{:else}
@@ -56,7 +58,7 @@
 		</div>
 	{/if}
 	{#if isError}
-		<div class={cn('flex flex-col bg-primary-foreground p-4 align-middle', _class?.error)}>
+		<div class={cn('bg-primary-foreground flex flex-col p-4 align-middle', _class?.error)}>
 			{#if errorIcon}
 				{@render errorIcon()}
 			{:else}
