@@ -1,5 +1,10 @@
 <script lang="ts">
 	import '../app.css';
+
+	// import 'open-props/style'
+	// import 'open-props/normalize'
+	// import 'open-props/buttons'
+
 	import atomOneDark from 'svelte-highlight/styles/atom-one-dark';
 	import type { Snippet } from 'svelte';
 	import Sidebar from './_components/sidebar/sidebar.svelte';
