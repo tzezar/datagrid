@@ -5,6 +5,7 @@
 	import MaterialSymbolsChevronLeft from '~icons/material-symbols/chevron-left';
 	import MaterialSymbolsChevronRight from '~icons/material-symbols/chevron-right';
 	import type { TzezarDatagrid } from '../tzezar-datagrid.svelte';
+	import { cn } from '$lib/utils';
 
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
@@ -21,12 +22,25 @@
 	);
 </script>
 
-<div class="flex flex-row flex-wrap justify-center gap-4 pt-2 sm:justify-between ">
+<div
+	style:padding-top={datagrid.options.spacing.selected.vertical}
+	style:padding-bottom={datagrid.options.spacing.selected.vertical}
+	style:padding-left={datagrid.options.spacing.selected.horizontal}
+	style:padding-right={datagrid.options.spacing.selected.horizontal}
+	class={cn('bg-primary-foreground grid  grid-cols-3 justify-center gap-4 items-center border border-t-0', ``)}
+>
+	<span class="text-muted-foreground w-full text-left text-xs ">
+		Showing {datagrid.internal.paginatedData.length * datagrid.state.pagination.page -
+			datagrid.state.pagination.perPage}
+		:
+		{datagrid.internal.paginatedData.length * datagrid.state.pagination.page}
+		of
+		{datagrid.state.pagination.count}
+	</span>
 	<Pagination.Root
 		count={datagrid.state.pagination.count}
 		perPage={datagrid.state.pagination.perPage}
 		page={datagrid.state.pagination.page}
-		let:range
 		onPageChange={(v) => datagrid.updatePagination(v, datagrid.state.pagination.perPage)}
 	>
 		<div class="flex flex-col items-center gap-1">
@@ -36,7 +50,7 @@
 				>
 					<MaterialSymbolsChevronLeft class="mx-2 h-8" />
 				</Pagination.PrevButton>
-				<div class="flex items-center ">
+				<div class="flex items-center">
 					<Select.Root
 						selected={{
 							value: datagrid.state.pagination.page,
@@ -45,7 +59,7 @@
 						onSelectedChange={(selected) =>
 							datagrid.updatePagination(selected?.value || 1, datagrid.state.pagination.perPage)}
 					>
-						<Select.Trigger class="h-8">
+						<Select.Trigger class="bg-primary-foreground h-8">
 							<Select.Value />
 						</Select.Trigger>
 						<Select.Content sameWidth={false} align="start" class="max-h-96 overflow-auto">
@@ -56,17 +70,14 @@
 					</Select.Root>
 				</div>
 				<Pagination.NextButton
-					class="hover:bg-dark-10 active:scale-98 disabled:text-muted-foreground h-8 items-center   justify-center rounded-[9px] border  bg-transparent disabled:cursor-not-allowed hover:disabled:bg-transparent"
+					class=" hover:bg-dark-10 active:scale-98 disabled:text-muted-foreground h-8 items-center   justify-center rounded-[9px] border  bg-transparent disabled:cursor-not-allowed hover:disabled:bg-transparent"
 				>
 					<MaterialSymbolsChevronRight class="mx-2 h-8" />
 				</Pagination.NextButton>
 			</div>
-			<span class="text-muted-foreground w-full  text-center text-xs">
-				{range.start} : {range.end} / {datagrid.state.pagination.count}
-			</span>
 		</div>
 	</Pagination.Root>
-	<div class="flex flex-row gap-1 text-nowrap text-xs">
+	<div class="flex w-full flex-row justify-end gap-1 text-nowrap text-xs">
 		<Select.Root
 			onSelectedChange={(selected) =>
 				datagrid.updatePagination(datagrid.state.pagination.page, selected?.value || 10)}
@@ -75,7 +86,7 @@
 				label: `Per page: ${datagrid.state.pagination.perPage}`
 			}}
 		>
-			<Select.Trigger class="h-8">
+			<Select.Trigger class="bg-primary-foreground h-8  w-fit">
 				<Select.Value asChild>{datagrid.state.pagination.perPage}</Select.Value>
 			</Select.Trigger>
 			<Select.Content sameWidth={false} align="start" class="max-h-96 overflow-auto">
