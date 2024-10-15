@@ -79,11 +79,11 @@
 					{@const props = { row, rowIndex, column, columnIndex }}
 
 					{#if column.id === 'checkbox'}
-						<Datagrid.CellWithoutSpacing {row} {column} {columnIndex} {rowIndex}>
+						<Datagrid.CellWithoutSpacing {...props}>
 							<Datagrid.CellRowSelectionCheckbox {row} />
 						</Datagrid.CellWithoutSpacing>
 					{:else if column.id === 'expand'}
-						<Datagrid.CellWithoutSpacing {row} {column} {columnIndex} {rowIndex}>
+						<Datagrid.CellWithoutSpacing {...props}>
 							<Datagrid.ExpandRowToggler rowId={row.id} />
 						</Datagrid.CellWithoutSpacing>
 					{:else if column.id === 'actions'}
@@ -103,21 +103,18 @@
 							</div>
 						</Datagrid.Cell>
 					{:else}
-					<ContextMenu.Root>
-						<ContextMenu.Trigger asChild let:builder>
-							<CellWithContextMenu
-								{builder}
-								{columnIndex}
-								{rowIndex}
-								{column}
-								{row}
-								class={{ data: 'overflow-hidden text-ellipsis text-nowrap' }}
-							/>
-						</ContextMenu.Trigger>
-						<ContextMenu.Content>
-							<ContextMenu.Item>{getNestedValue(row, column.id)}</ContextMenu.Item>
-						</ContextMenu.Content>
-					</ContextMenu.Root>
+						<ContextMenu.Root>
+							<ContextMenu.Trigger asChild let:builder>
+								<CellWithContextMenu
+									{builder}
+									{...props}
+									class={{ data: 'overflow-hidden text-ellipsis text-nowrap' }}
+								/>
+							</ContextMenu.Trigger>
+							<ContextMenu.Content>
+								<ContextMenu.Item>{getNestedValue(row, column.id)}</ContextMenu.Item>
+							</ContextMenu.Content>
+						</ContextMenu.Root>
 					{/if}
 				{/each}
 			</Datagrid.Row>
@@ -141,8 +138,26 @@
 			{/if}
 		{/each}
 	{/snippet}
+	{#snippet footer()}
+		<div
+			class="grid grid-cols-3 items-center p-2 pl-3"
+			data-datagrid-footer-identifier={datagrid.identifier}
+		>
+			<span>
+				Showing {datagrid.internal.paginatedData.length * datagrid.state.pagination.page -
+					datagrid.state.pagination.perPage}
+				:
+				{datagrid.internal.paginatedData.length * datagrid.state.pagination.page}
+				of
+				{datagrid.state.pagination.count}
+			</span>
+			<div class="flex items-center justify-center">
+				<CustomPagination />
+			</div>
+			<span class="flex justify-end">Page {datagrid.state.pagination.page}</span>
+		</div>
+	{/snippet}
 </Datagrid.Datagrid>
-
 
 <!-- <Datagrid.Datagrid>
 	{#snippet topBar()}
