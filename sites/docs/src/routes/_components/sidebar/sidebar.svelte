@@ -3,7 +3,6 @@
 	import GroupItem from './group-item.svelte';
 	import Group from './group.svelte';
 	import { hrefs } from '$lib/hrefs';
-
 </script>
 
 <div class="flex w-full flex-col">
@@ -23,7 +22,7 @@
 			<GroupItem title="basic" href={hrefs.examples.basic} />
 			<GroupItem title="advanced" href={hrefs.examples.advanced} />
 			<!-- <GroupItem title="client data" href={hrefs.examples.clientData} disabled /> -->
-			<GroupItem title="svelte query" href={hrefs.examples.svelteQuery} />
+			<GroupItem disabled title="svelte query" href={hrefs.examples.svelteQuery} />
 		</Group>
 		<Group>
 			<GroupTitle title="fundamentals" />
@@ -39,10 +38,10 @@
 			<GroupItem title="column ordering" href={hrefs.guides.featureGuides.columnOrdering} />
 			<GroupItem title="column resizing" href={hrefs.guides.featureGuides.columnResizing} />
 			<GroupItem title="column aligment" href={hrefs.guides.featureGuides.columnAlignment} />
-			<GroupItem disabled title="row expanding" href={hrefs.guides.featureGuides.rowExpanding} />
+			<GroupItem title="row expanding" href={hrefs.guides.featureGuides.rowExpanding} />
 			<GroupItem title="row selection" href={hrefs.guides.featureGuides.rowSelection} />
 			<GroupItem title="pagination" href={hrefs.guides.featureGuides.pagination} />
-			<GroupItem disabled title="sorting" href={hrefs.guides.featureGuides.sorting} />
+			<GroupItem title="sorting" href={hrefs.guides.featureGuides.sorting} />
 			<GroupItem disabled title="filtering" href={hrefs.guides.featureGuides.filtering} />
 			<GroupItem
 				disabled
@@ -56,21 +55,13 @@
 			/>
 			<GroupItem disabled title="data copying" href={hrefs.guides.featureGuides.dataCopying} />
 			<GroupItem disabled title="data exporting" href={hrefs.guides.featureGuides.dataExporting} />
-			<GroupItem disabled title="context menu" href={hrefs.guides.featureGuides.contextMenu} />
-			<GroupItem
-				disabled
-				title="fullscreen mode"
-				href={hrefs.guides.featureGuides.fullscreenToggle}
-			/>
-			<GroupItem
-				disabled
-				title="status indicator"
-				href={hrefs.guides.featureGuides.statusIndicator}
-			/>
-			<GroupItem disabled title="scroll to top" href={hrefs.guides.featureGuides.scrollToTop} />
+			<GroupItem title="context menu" href={hrefs.guides.featureGuides.contextMenu} />
+			<GroupItem title="fullscreen mode" href={hrefs.guides.featureGuides.fullscreenToggle} />
+			<GroupItem title="status indicator" href={hrefs.guides.featureGuides.statusIndicator} />
+			<GroupItem title="scroll to top" href={hrefs.guides.featureGuides.scrollToTop} />
 			<GroupItem disabled title="sticky header" href={hrefs.guides.featureGuides.stickyHeader} />
-			<GroupItem disabled title="sticky rows" href={hrefs.guides.featureGuides.stickyRows} />
-			<GroupItem disabled title="footer" href={hrefs.guides.featureGuides.footer} />
+			<GroupItem title="sticky rows" href={hrefs.guides.featureGuides.stickyRows} />
+			<GroupItem title="footer" href={hrefs.guides.featureGuides.footer} />
 			<GroupItem
 				disabled
 				title="header filter toggle"

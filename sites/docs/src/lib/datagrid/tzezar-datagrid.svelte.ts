@@ -264,3 +264,5 @@ type TzezarDatagridConfig<T, C extends BaseColumn<T>> = {
   onFiltersChange?: () => void;
   onChange?: () => void;
 };
+
+export type TopBarOptions = DeepPartial<ReturnType<TzezarDatagrid<unknown>['getDefaultOptions']>>['topbar']

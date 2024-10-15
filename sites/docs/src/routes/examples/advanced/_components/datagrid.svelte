@@ -43,7 +43,7 @@
 						displayResizingMenu: true,
 						displaySortingMenu: true,
 						displayVisibilityMenu: true,
-						display: true,
+						display: true
 					}
 				}
 			}
@@ -59,9 +59,7 @@
 		{#each datagrid.columns as column, i (column.id)}
 			{#if column.id === 'checkbox'}
 				<Datagrid.HeaderWithoutSpacing {column} title={column.title}>
-					{#snippet custom()}
-						<Datagrid.HeaderRowSelectionDropdown />
-					{/snippet}
+					<Datagrid.HeaderRowSelectionDropdown />
 				</Datagrid.HeaderWithoutSpacing>
 			{:else if column.id === 'expand'}
 				<Datagrid.HeaderWithoutSpacing {column} title="" />
@@ -80,34 +78,28 @@
 				{#each datagrid.columns as column, columnIndex}
 					{#if column.id === 'checkbox'}
 						<Datagrid.CellWithoutSpacing {row} {column} {columnIndex} {rowIndex}>
-							{#snippet custom()}
-								<Datagrid.CellRowSelectionCheckbox {row} />
-							{/snippet}
+							<Datagrid.CellRowSelectionCheckbox {row} />
 						</Datagrid.CellWithoutSpacing>
 					{:else if column.id === 'expand'}
 						<Datagrid.CellWithoutSpacing {row} {column} {columnIndex} {rowIndex}>
-							{#snippet custom()}
-								<Datagrid.ExpandRowToggler rowId={row.id} />
-							{/snippet}
+							<Datagrid.ExpandRowToggler rowId={row.id} />
 						</Datagrid.CellWithoutSpacing>
 					{:else if column.id === 'actions'}
 						<Datagrid.Cell {row} {column} {columnIndex} {rowIndex}>
-							{#snippet custom()}
-								<div class={cn('flex flex-row gap-2')}>
-									<Button
-										size="sm"
-										variant="destructive"
-										onclick={() => {
-											datagrid.updateData(removeRow(row.id, datagrid))
+							<div class={cn('flex flex-row gap-2')}>
+								<Button
+									size="sm"
+									variant="destructive"
+									onclick={() => {
+										datagrid.updateData(removeRow(row.id, datagrid));
 
-											toast.success('Row removed');
-										}}
-									>
-										<MaterialSymbolsDeleteOutline />
-									</Button>
-									<EditForm />
-								</div>
-							{/snippet}
+										toast.success('Row removed');
+									}}
+								>
+									<MaterialSymbolsDeleteOutline />
+								</Button>
+								<EditForm />
+							</div>
 						</Datagrid.Cell>
 					{:else if column.id === 'quantity'}
 						<Datagrid.Cell
@@ -116,7 +108,17 @@
 							{columnIndex}
 							{rowIndex}
 							class={{
-								cell: cn(row['quantity'] < 200 && 'text-red-500')
+								cell: cn(row['quantity'] < 200 && 'text-red-500 border-red-500')
+							}}
+						/>
+					{:else if column.id === 'price'}
+						<Datagrid.Cell
+							{row}
+							{column}
+							{columnIndex}
+							{rowIndex}
+							class={{
+								cell: cn(row['price'] < 400 && 'text-green-500 border-r-green-500')
 							}}
 						/>
 					{:else}

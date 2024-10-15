@@ -28,7 +28,7 @@ export const hrefs = {
             rowExpanding: "/guides/feature-guides/row-expanding",
             filtering: "/guides/feature-guides/filtering",
             footer: "/guides/feature-guides/footer",
-            fullscreenToggle: "/guides/feature-guides/fullscreen-toggle",
+            fullscreenToggle: "/guides/feature-guides/fullscreen-mode",
             loadingIndicator: "/guides/feature-guides/loading-indicator",
             pagination: "/guides/feature-guides/pagination",
             rowSelection: "/guides/feature-guides/row-selection",

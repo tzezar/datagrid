@@ -112,9 +112,7 @@
 		{#each datagrid.columns as column, i (column.id)}
 			{#if column.id === 'checkbox'}
 				<Datagrid.HeaderWithoutSpacing {column} title={column.title}>
-					{#snippet custom()}
 						<Datagrid.HeaderRowSelectionDropdown />
-					{/snippet}
 				</Datagrid.HeaderWithoutSpacing>
 			{:else if column.id === 'expand'}
 				<Datagrid.HeaderWithoutSpacing {column} title="" class={{ container: '' }} />
@@ -131,21 +129,18 @@
 		{#each datagrid.internal.paginatedData as row, rowIndex}
 			<Datagrid.Row rowId={row.id} {rowIndex}>
 				{#each datagrid.columns as column, columnIndex}
+				{@const props = { row, rowIndex, column, columnIndex }}
+
 					{#if column.id === 'checkbox'}
 						<Datagrid.CellWithoutSpacing {row} {column} {columnIndex} {rowIndex}>
-							{#snippet custom()}
 								<Datagrid.CellRowSelectionCheckbox {row} />
-							{/snippet}
 						</Datagrid.CellWithoutSpacing>
 					{:else if column.id === 'expand'}
 						<Datagrid.CellWithoutSpacing {row} {column} {columnIndex} {rowIndex}>
-							{#snippet custom()}
 								<Datagrid.ExpandRowToggler rowId={row.id} />
-							{/snippet}
 						</Datagrid.CellWithoutSpacing>
 					{:else if column.id === 'actions'}
 						<Datagrid.Cell {row} {column} {columnIndex} {rowIndex}>
-							{#snippet custom()}
 								<div class={cn('flex flex-row gap-2')}>
 									<Button
 										size="sm"
@@ -159,25 +154,23 @@
 									</Button>
 									<EditForm />
 								</div>
-							{/snippet}
 						</Datagrid.Cell>
 					{:else}
 						<ContextMenu.Root>
 							<ContextMenu.Trigger asChild let:builder>
+								{@const props = { row, rowIndex, column, columnIndex }}
+
 								<CellWithContextMenu
 									{builder}
-									{columnIndex}
-									{rowIndex}
-									{column}
-									{row}
+									{...props}
 									class={{
 										data: cn('overflow-hidden text-ellipsis text-nowrap'),
 										cell: cn(
 											'overflow-hidden text-nowrap',
-											column.id === 'total' && row['total'] < 2000 && 'text-red-400',
-											column.id === 'total' && row['total'] > 6000 && 'text-green-400',
-											column.id === 'profit' && row['profit'] < 200 && 'text-red-400',
-											column.id === 'profit' && row['profit'] > 5000 && 'text-green-400',
+											column.id === 'total' && row['total'] < 2000 && 'text-red-400 border-red-400',
+											column.id === 'total' && row['total'] > 6000 && 'text-green-400 border-green-400',
+											column.id === 'profit' && row['profit'] < 200 && 'text-red-400 border-red-400',
+											column.id === 'profit' && row['profit'] > 5000 && 'text-green-400 border-green-400',
 											row['status'] === 'canceled' && 'text-primary/40 line-through',
 											column.id === 'receiver' &&
 												row['receiver'] === 'Sebastian "Tzezar" Drozd' &&

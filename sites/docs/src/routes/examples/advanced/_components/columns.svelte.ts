@@ -50,7 +50,7 @@ export const columns = [
         sortable: true,
         filterType: 'range',
         filterValue: [-99999999999, 9999999999],
-        align: 'end'
+        align: 'end',
     },
     {
         id: 'quantity',
