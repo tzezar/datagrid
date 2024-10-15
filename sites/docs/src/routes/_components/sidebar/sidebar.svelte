@@ -18,6 +18,7 @@
 		</Group>
 		<Group>
 			<GroupTitle title="examples" />
+			<GroupItem title="mobile" href={hrefs.examples.mobile} />
 			<GroupItem title="minimal" href={hrefs.examples.minimal} />
 			<GroupItem title="basic" href={hrefs.examples.basic} />
 			<GroupItem title="advanced" href={hrefs.examples.advanced} />

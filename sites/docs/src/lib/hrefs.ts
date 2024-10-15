@@ -42,6 +42,7 @@ export const hrefs = {
             dataIndicator: "/guides/feature-guides/data-indicator",
             headerFilterToggle: "/guides/feature-guides/header-filter-toggle",
             customHeaderFilters: "/guides/feature-guides/custom-header-filters",
+            mobile: "/guides/feature-guides/mobile",
         },
         fundamentals: {
             default: "/guides/fundamentals",
@@ -63,6 +64,7 @@ export const hrefs = {
     },
     examples: {
         default: "/examples",
+        mobile: "/examples/mobile",
         advanced: "/examples/advanced",
         minimal: "/examples/minimal",
         basic: "/examples/basic",
