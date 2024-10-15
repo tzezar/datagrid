@@ -145,7 +145,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
 
     // Initialize the datagrid with the provided configuration
     private initializeFromConfig(config: TzezarDatagridConfig<T, C>) {
-        const { mode, columns, data, identifier, title, options, state, onPageChange, onPerPageChange, onSortingChange, onFiltersChange, onChange } = config;
+        const { mode, columns, data, identifier, title, options, state, paginate, onPageChange, onPerPageChange, onSortingChange, onFiltersChange, onChange } = config;
 
         // Set core properties, ensuring defaults are respected
         this.mode = mode || this.mode; // Fallback to default mode if not provided
@@ -155,7 +155,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
         this.data = data; // Set the data for the grid
         this.identifier = identifier || this.identifier; // Use provided identifier or fallback to default
         this.title = title || this.title; // Set the title of the grid
-
+        this.paginate = paginate || this.paginate;
         // Set event handlers, allowing for extensibility
         this.onPageChange = onPageChange || this.onPageChange;
         this.onPerPageChange = onPerPageChange || this.onPerPageChange;
@@ -258,6 +258,7 @@ type TzezarDatagridConfig<T, C extends BaseColumn<T>> = {
     title?: string;
     options?: DeepPartial<ReturnType<TzezarDatagrid<T, C>['getDefaultOptions']>>;
     state?: Partial<TzezarDatagrid<T, C>['state']>;
+    paginate?: boolean;
     onPageChange?: () => void;
     onPerPageChange?: () => void;
     onSortingChange?: () => void;
