@@ -96,6 +96,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
     return {
       defaultColumnWidth: '200px',
       paginate: true,
+      sortable: true,
       scrollable: true,
       fullscreenMode: { enabled: true },
       pagination: { display: false },

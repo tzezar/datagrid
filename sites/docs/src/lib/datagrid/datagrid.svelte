@@ -14,6 +14,7 @@
 	import DatagridBody from './datagrid-body.svelte';
 	import DatagridWrapper from './datagrid-wrapper.svelte';
 	import DatagridContent from './datagrid-content.svelte';
+	import { applyInternalLogicToColumns } from './fns/apply-internal-logic-to-columns.svelte';
 
 	// Get the datagrid context
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
@@ -50,9 +51,7 @@
 
 	// Apply column offset if any columns are pinned
 	onMount(() => {
-		if (datagrid.columns.some((column) => column.pinned)) {
-			datagrid.columns = applyOffset(datagrid.columns);
-		}
+		applyInternalLogicToColumns(datagrid);
 	});
 
 	// * Internal logic in client mode is splitted in separate $effects to reduce unnecessary recalculations
@@ -79,6 +78,13 @@
 				[...datagrid.internal.filteredData],
 				datagrid.state.sortingArray
 			);
+		}
+	});
+
+	// If paginate is set to off we need to update paginated data here after sorting and filtering is done
+	$effect.pre(() => {
+		if (!datagrid.options.paginate) {
+			datagrid.internal.paginatedData = datagrid.internal.sortedData;
 		}
 	});
 
