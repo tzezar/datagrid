@@ -16,6 +16,9 @@
 	import DatagridContent from './datagrid-content.svelte';
 	import { applyInternalLogicToColumns } from './fns/apply-internal-logic-to-columns.svelte';
 
+	import * as Datagrid from '$lib/datagrid';
+
+
 	// Get the datagrid context
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
@@ -112,6 +115,8 @@
 	// svelte-ignore non_reactive_update
 	let end: HTMLElement;
 </script>
+
+
 
 <DatagridWrapper {end} class={_class.wrapper}>
 	<DatagridTopBar {topBar} />

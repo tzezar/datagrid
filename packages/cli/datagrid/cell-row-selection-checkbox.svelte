@@ -5,7 +5,7 @@
 	import { isRowIdInSelectedRowsSet } from './fns/is-row-id-in-selected-rows-set';
 	import type { TzezarDatagrid } from './tzezar-datagrid.svelte';
 
-	const datagrid = getContext<TzezarDatagrid>('datagrid');
+	const datagrid = getContext<TzezarDatagrid<T>>('datagrid');
 
 	let {
 		row,
