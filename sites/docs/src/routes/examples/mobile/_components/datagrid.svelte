@@ -87,7 +87,7 @@
 								cell: cn(
 									' bg-table-primary grid min-w-full max-w-fit grid-cols-2 border-b transition-all first:rounded-t-xl last:rounded-b-xl last:border-b-orange-500 last:shadow-lg hover:bg-orange-400/20 group-hover/row:bg-none',
 									isRowIdInSelectedRowsSet(row.id, datagrid.internal.selectedRowIds) &&
-										'bg-orange-400/20'
+										'bg-orange-400/20 border-b-orange-400/60'
 								)
 							}}
 						>
