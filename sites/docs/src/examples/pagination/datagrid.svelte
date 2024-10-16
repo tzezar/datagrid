@@ -154,7 +154,7 @@
 		],
 		page: 1,
 		perPage: 10,
-		count: 10
+		count: 1000
 	};
 
 	let datagrid = setContext(
