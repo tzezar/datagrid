@@ -1,10 +1,5 @@
 <script lang="ts">
 	import '../app.css';
-
-	// import 'open-props/style'
-	// import 'open-props/normalize'
-	// import 'open-props/buttons'
-
 	import atomOneDark from 'svelte-highlight/styles/atom-one-dark';
 	import type { Snippet } from 'svelte';
 	import Sidebar from './_components/sidebar/sidebar.svelte';
@@ -20,6 +15,8 @@
 	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
 	import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
 	import SidebarMobile from './_components/sidebar/sidebar-mobile.svelte';
+	import { onNavigate } from '$app/navigation';
+	import { afterNavigate } from '$app/navigation';
 
 	const queryClient = new QueryClient({
 		defaultOptions: {
@@ -30,6 +27,13 @@
 	});
 
 	let schema = $derived($mode || 'dark')
+
+	let scrollFix
+	afterNavigate(() => {
+		if (browser) {
+			scrollFix.scrollTo({ top: 0, behavior: 'instant' });
+		}
+	});
 </script>
 
 <svelte:head>
@@ -44,9 +48,7 @@
 		<div class="flex w-full">
 			<div class="hidden h-full w-64 shrink-0 flex-col overflow-auto border-r lg:flex">
 				<a href="/" class="">
-					<div
-						class="bg-primary-foreground sticky top-0 flex items-center justify-center gap-1 py-4"
-					>
+					<div class="bg-primary-foreground sticky top-0 flex items-center justify-center gap-1 py-4">
 						<div class="flex h-10 flex-row items-center justify-center align-middle ">
 							{#if schema == 'dark'}
 								<img src={logoWhite} alt="" srcset=""  class="h-[52px] w-[52px]" />
@@ -68,11 +70,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="flex w-full flex-col overflow-auto">
+			<div class="flex w-full flex-col overflow-auto" bind:this={scrollFix}>
 				<div class="bg-primary-foreground sticky top-0 z-[19] flex w-full lg:hidden">
-					<div
-						class="bg-primary-foreground sticky top-0 flex w-full flex-row items-center justify-between gap-1 px-4 lg:px-6 py-4"
-					>
+					<div class="bg-primary-foreground sticky top-0 flex w-full flex-row items-center justify-between gap-1 px-4 lg:px-6 py-4">
 						<a href="/" class="flex items-center justify-center gap-1">
 							<div class="flex h-10 flex-row items-center justify-between align-middle">
 								{#if schema == 'dark'}
@@ -87,7 +87,6 @@
 							</div>
 						</a>
 						<SidebarMobile/>
-					
 					</div>
 				</div>
 				<div class="grow lg:p-8 p-4 py-6">
