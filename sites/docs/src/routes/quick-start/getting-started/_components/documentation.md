@@ -6,6 +6,8 @@ published: true
 
 <script>
   import Datagrid from './datagrid.svelte'
+  import DatagridSimple from './datagrid-simple.svelte'
+  import DatagridExtended from './datagrid-extended.svelte'
 </script>
 
 On this page you will learn how to create a datagrid.
@@ -108,9 +110,63 @@ As you will see typesafety is preserved during the creation of datagrid later in
 
 > context has to be named `datagrid`
 
-## Rendering our datagrid
+## Display datagrid
 
-Now it's time to render our datagrid. Relax, it's easy.
+Import `Datagrid` component and render it
+
+```svelte
+<script lang="ts">
+	import Datagrid from '$lib/datagrid/datagrid.svelte';
+</script>
+
+<Datagrid />
+```
+
+## You are amazing!
+
+You've just built your first datagrid — what an achievement! 🎉
+
+Creating a powerful and flexible grid like this is a huge step forward, and you’ve done a fantastic job bringing it to life.
+
+Keep reading to discover how to create a datagrid in a slightly more comprehensive way that will give you more flexibility.
+
+<DatagridSimple/>
+
+```svelte
+<script lang="ts">
+	import { setContext } from 'svelte';
+	import { inventoryData as data, type InventoryDataRow as Row } from '$lib/data/inventory';
+	import type { BaseColumn } from '$lib/datagrid/types';
+	import { TzezarDatagrid } from '$lib/datagrid/tzezar-datagrid.svelte';
+	import Datagrid from '$lib/datagrid/datagrid.svelte';
+
+	export const columns = [
+		{
+			id: 'product.name',
+			title: 'Product name',
+			grow: true
+		},
+		{
+			id: 'price',
+			title: 'Price'
+		}
+	] satisfies BaseColumn<Row>[];
+
+	setContext(
+		'datagrid',
+		new TzezarDatagrid({
+			data: data.splice(0, 100),
+			columns
+		})
+	);
+</script>
+
+<Datagrid />
+```
+
+## Rendering our custom datagrid
+
+Now it's time to render our custom datagrid. Relax, it's easy.
 
 ```svelte
 <Datagrid.Datagrid>
@@ -170,19 +226,13 @@ about rendering custom cells or how to apply logic and styles to selected cells 
 
 ## Congratulations!
 
-You've just built your first datagrid — what an achievement!
+You've just built your first custom datagrid — what an achievement!
 
-Creating a powerful and flexible
-grid like this is a huge step forward, and you’ve done a fantastic job bringing it to life.
+Creating a powerful and flexible grid like this is a huge step forward, and you’ve done a fantastic job bringing it to life.
 
-But this is just the beginning! There’s so much more you can do to enhance your datagrid.
-The feature guides are packed with tips on how to customize cells, apply unique styles, and
-introduce advanced logic to your rows and columns. The possibilities for fine-tuning and
-optimizing your grid are endless.
+But this is just the beginning! There’s so much more you can do to enhance your datagrid. The feature guides are packed with tips on how to customize cells, apply unique styles, and introduce advanced logic to your rows and columns. The possibilities for fine-tuning and optimizing your grid are endless.
 
-So keep going! Experiment with new ideas, explore the documentation, and continue to build
-upon what you’ve already accomplished. You’re on a great path, and I’m excited to see what
-you’ll create next!
+So keep going! Experiment with new ideas, explore the documentation, and continue to build upon what you’ve already accomplished. You’re on a great path, and I’m excited to see what you’ll create next!
 
 <Datagrid />
 
@@ -229,6 +279,98 @@ you’ll create next!
 			<Datagrid.Row {rowIndex}>
 				{#each datagrid.columns as column, columnIndex}
 					<Datagrid.Cell {columnIndex} {rowIndex} {column} {row} />
+				{/each}
+			</Datagrid.Row>
+		{/each}
+	{/snippet}
+</Datagrid.Datagrid>
+```
+
+## Bonus
+
+As a bonus, I'm including an example to show how simple and intuitive you can style a table and add some cool features
+
+<DatagridExtended/>
+
+```svelte
+<script lang="ts">
+	import type { BaseColumn } from '$lib/datagrid/types';
+	import type { InventoryDataRow as Row } from '$lib/data/inventory';
+	import { setContext } from 'svelte';
+	import { TzezarDatagrid } from '$lib/datagrid/tzezar-datagrid.svelte';
+	import { inventoryData as data } from '$lib/data/inventory';
+	import * as Datagrid from '$lib/datagrid';
+	import { cn } from '$lib/utils';
+	import { getNestedValue } from '$lib/datagrid/fns/get-nested-value';
+
+	export const columns = [
+		{
+			id: 'product.name',
+			title: 'Product name',
+			grow: true
+		},
+		{
+			id: 'price',
+			title: 'Price'
+		}
+	] satisfies BaseColumn<Row>[];
+
+	let datagrid = setContext(
+		'datagrid',
+		new TzezarDatagrid({
+			data: data.splice(0, 100),
+			columns,
+			options: {
+				topbar: {
+					display: true,
+					displayFullscreenToggle: true,
+					displayExportDataMenu: true,
+					displayCopyDataMenu: true,
+					settingsMenu: {
+						display: true
+					}
+				}
+			}
+		})
+	);
+</script>
+
+<Datagrid.Datagrid>
+	{#snippet head()}
+		{#each datagrid.columns as column (column.id)}
+			{#if column.id === 'product.name'}
+				<Datagrid.Header {column} class={{ title: 'text-orange-500 ' }} />
+			{:else}
+				<Datagrid.Header {column} />
+			{/if}
+		{/each}
+	{/snippet}
+	{#snippet body()}
+		{#each datagrid.internal.paginatedData as row, rowIndex}
+			<Datagrid.Row {rowIndex}>
+				{#each datagrid.columns as column, columnIndex}
+					{@const props = { columnIndex, rowIndex, column, row }}
+					{@const value = getNestedValue(row, column.id)}
+					{@const price = getNestedValue(row, 'price')}
+					{#if column.id === 'product.name'}
+						<Datagrid.Cell
+							{...props}
+							class={{
+								cell: cn(price < 200 && 'border-r-red-500', price > 900 && 'border-r-green-500'),
+								data: cn(
+									price > 900 && 'font-bold',
+									price < 200 && 'text-muted-foreground/50 line-through'
+								)
+							}}
+						/>
+					{:else}
+						<Datagrid.Cell
+							{...props}
+							class={{
+								cell: cn(value < 200 && ' text-red-500', value > 900 && ' text-green-500')
+							}}
+						/>
+					{/if}
 				{/each}
 			</Datagrid.Row>
 		{/each}

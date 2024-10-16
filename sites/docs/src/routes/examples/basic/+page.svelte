@@ -1,20 +1,25 @@
-<script lang="ts">
-	import { typescript } from 'svelte-highlight/languages';
-	import Datagrid from './_components/datagrid.svelte';
-	import { code } from './_components/code';
-	import { Highlight } from 'svelte-highlight';
-	import PageTitle from '$lib/blocks/page-title.svelte';
-	import PageContainer from '$lib/blocks/page-container.svelte';
-	import FeaturesImplemented from '$lib/blocks/features-implemented.svelte';
-	import PageCodeContainer from '$lib/blocks/page-code-container.svelte';
-</script>
+<script>
+	import { formatDate } from '$lib/utils';
+    import  Documentation from './_components/documentation.md';
+    import { onMount } from 'svelte';
 
-<PageContainer>
-	<PageTitle title="Basic example" />
-	<Datagrid />
-	<PageCodeContainer>
-		<FeaturesImplemented features={['Sorting', 'Pagination', 'Datagrid title', 'Striped rows']} />
-		<Highlight language={typescript} code={code.columns} />
-		<Highlight language={typescript} code={code.datagrid} />
-	</PageCodeContainer>
-</PageContainer>
+
+    let data
+
+    onMount(async () => {
+        data = await import(`./_components/documentation.md`)
+    })
+
+</script>
+<!-- SEO -->
+ 
+
+
+<article class="flex w-full flex-col">
+	<group>
+		<h1 class="text-3xl font-bold">{data?.metadata?.title}</h1>
+	</group>
+	<div class="prose dark:prose-invert pt-8 min-w-full ">
+		<svelte:component this={data?.default} />
+	</div>
+</article>

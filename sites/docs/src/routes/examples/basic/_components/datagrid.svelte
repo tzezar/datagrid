@@ -21,19 +21,6 @@
 	);
 </script>
 
-<Datagrid.Datagrid>
-	{#snippet head()}
-		{#each datagrid.columns as column (column.id)}
-			<Datagrid.Header {column} />
-		{/each}
-	{/snippet}
-	{#snippet body()}
-		{#each datagrid.internal.paginatedData as row, rowIndex}
-			<Datagrid.Row {rowIndex}>
-				{#each datagrid.columns as column, columnIndex}
-					<Datagrid.Cell {columnIndex} {rowIndex} {column} {row} />
-				{/each}
-			</Datagrid.Row>
-		{/each}
-	{/snippet}
-</Datagrid.Datagrid>
+<Datagrid.Datagrid />
+
+
