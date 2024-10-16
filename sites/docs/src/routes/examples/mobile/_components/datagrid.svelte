@@ -45,13 +45,13 @@
 
 {#snippet head()}{/snippet}
 
-<Datagrid.Datagrid {head} class={{ content: 'grid grid-cols-3 gap-10 border-0', wrapper: cn(datagrid.state.isFullscreenActive && 'bg-background z-60') }}>
+<Datagrid.Datagrid {head} class={{ content: 'grid grid-cols-3 border-0 border-b', }}>
 	{#snippet body()}
 		{#each datagrid.internal.paginatedData as row, rowIndex}
 			<Datagrid.Row
 				disableTailwindGroup
 				onclick={() => selectRow(row, datagrid)}
-				class={` ${Datagrid.STAY_IN_PLACE} ${Datagrid.HIDE_BEHIND_PARENT_ROW} last:pb-10`}
+				class={` ${Datagrid.STAY_IN_PLACE} ${Datagrid.HIDE_BEHIND_PARENT_ROW} last:pb-10 border-0 p-4`}
 				{rowIndex}
 			>
 				<div class="min-w-full">
@@ -61,7 +61,7 @@
 							{...props}
 							class={{
 								cell: cn(
-									'first:rounded-t-xl last:rounded-b-xl last:shadow-lg bg-table-primary grid min-w-full max-w-fit grid-cols-2 border-b last:border-b-orange-500 hover:bg-orange-400/20 group-hover/row:bg-none',
+									' transition-all first:rounded-t-xl last:rounded-b-xl last:shadow-lg bg-table-primary grid min-w-full max-w-fit grid-cols-2 border-b last:border-b-orange-500 hover:bg-orange-400/20 group-hover/row:bg-none',
 									isRowIdInSelectedRowsSet(row.id, datagrid.internal.selectedRowIds) &&
 										'bg-orange-400/20'
 								)
