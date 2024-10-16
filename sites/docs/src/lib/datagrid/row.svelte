@@ -8,21 +8,26 @@
 		rowId,
 		children,
 		class: _class,
-		rowIndex
+		disableTailwindGroup = false,
+		rowIndex,
+		...restProps
 	}: {
 		rowId?: number | string;
 		children: Snippet;
 		class?: string;
 		rowIndex?: number;
+		disableTailwindGroup?: boolean;
 	} = $props();
 
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 </script>
 
 <div
+	{...restProps}
 	style={`${rowId && datagrid?.state.expandedRows.includes(rowId as number | string) ? `position: sticky; top: ${datagrid.internal.headSize}px;` : ''}`}
-	class={cn(
-		`group/row z-[${Z_INDEX_ROW}] flex min-w-fit flex-row border-b last:border-b-0`,
+	class={cn( 
+		!disableTailwindGroup && 'group/row',
+		` z-[${Z_INDEX_ROW}] flex min-w-fit flex-row border-b last:border-b-0`,
 		_class
 	)}
 >

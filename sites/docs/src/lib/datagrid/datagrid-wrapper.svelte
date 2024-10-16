@@ -29,7 +29,7 @@
 <div
 	class={cn(
 		'flex flex-col ',
-		datagrid.state.isFullscreenActive && 'bg-primary-foreground absolute inset-0 z-[20]  p-4',
+		datagrid.state.isFullscreenActive && 'bg-background absolute inset-0 z-[20]  p-4',
 		_class
 	)}
 	style="font-size: {datagrid.options.fontSize.selected.value};"
