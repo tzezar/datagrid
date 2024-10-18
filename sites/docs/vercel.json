@@ -1,5 +1,5 @@
 {
     "redirects": [
-      { "source": "/(.*)", "destination": "https://tzezar.pl", "permanent": true }
+      { "source": "/(.*)", "destination": "https://datagrid.tzezar.pl", "permanent": true }
     ]
   }
