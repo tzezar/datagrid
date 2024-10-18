@@ -1,5 +1,5 @@
 {
     "redirects": [
-      { "source": "*", "destination": "tzezar.pl", "permanent": true }
+      { "source": "/(.*)", "destination": "https://tzezar.pl", "permanent": true }
     ]
   }
