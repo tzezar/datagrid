@@ -33,10 +33,10 @@
 	)}
 >
 	<span class="text-muted-foreground w-full text-left text-xs">
-		Showing {datagrid.internal.paginatedData.length * datagrid.state.pagination.page -
+		<span class='hidden md:inline'>Showing</span> {datagrid.state.pagination.perPage * datagrid.state.pagination.page -
 			datagrid.state.pagination.perPage}
 		:
-		{datagrid.internal.paginatedData.length * datagrid.state.pagination.page}
+		{datagrid.state.pagination.perPage * datagrid.state.pagination.page}
 		of
 		{datagrid.state.pagination.count}
 	</span>

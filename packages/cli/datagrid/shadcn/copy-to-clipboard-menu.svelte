@@ -41,7 +41,7 @@
 				selected rows
 			</DropdownMenu.Item>
 			<DropdownMenu.Item
-				onclick={() => copyToClipboard(datagrid.internal.paginatedData, exportableColumns)}
+				onclick={() => copyToClipboard(datagrid.state.processedData, exportableColumns)}
 			>
 				visible data
 			</DropdownMenu.Item>

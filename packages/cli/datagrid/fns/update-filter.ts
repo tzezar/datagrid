@@ -43,6 +43,5 @@ export const updateFilter = (
         return true;
     });
 
-    // Update the datagrid with the filtered set of filters
     datagrid.updateFilters(filteredFilters);
 };

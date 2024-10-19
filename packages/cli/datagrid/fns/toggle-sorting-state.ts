@@ -1,6 +1,5 @@
 import type { ColumnId, Sorting } from "../types";
 import type { TzezarDatagrid } from "../tzezar-datagrid.svelte";
-
 /**
  * Toggles the sorting state for a given column in the datagrid.
  * If the column is already sorted, its direction is toggled or removed. 
@@ -15,7 +14,7 @@ export function toggleSortingState(columnId: ColumnId, datagrid: TzezarDatagrid<
 
     if (index !== -1) {
         const currentSorting = datagrid.state.sortingArray[index];
-        
+
         if (currentSorting.direction === 'asc') {
             newSortingArray = [
                 ...datagrid.state.sortingArray.slice(0, index),

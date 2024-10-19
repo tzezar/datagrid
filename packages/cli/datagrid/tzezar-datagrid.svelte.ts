@@ -52,19 +52,17 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
   state = $state({
     pagination: { page: 1, perPage: 20, count: 1 } as Pagination, // Initializes pagination settings, enabling straightforward data navigation
     status: { isFetching: false, isError: false, isRefetching: false }, // Tracks data fetching status for user feedback
+    processedData: [] as T[],
     sortingArray: [] as Sorting[], // Stores current sorting criteria for easy reference
     filters: [] as Filter[], // Holds active filters to apply to the data
     expandedRows: [] as ExpandedRows, // Manages which rows are expanded for better user experience
     selectedRows: [] as T[], // Keeps track of user-selected rows for operations
     isFullscreenActive: false, // State for tracking fullscreen mode status
-    isHeadFilterVisible: false // State for managing visibility of header filters
+    isHeadFilterVisible: false, // State for managing visibility of header filters
   });
 
   // Internal state management
   internal = $state({
-    paginatedData: [] as T[], // Data post-pagination, ready for display
-    sortedData: [] as T[], // Data sorted according to user preferences
-    filteredData: [] as T[], // Data filtered by active filters
     selectionState: {
       start: null, // Starting index for selection, allowing for range selection
       end: null, // Ending index for selection
@@ -193,17 +191,21 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
 
   // Initialize data by sorting, filtering, and paginating it as per current state
   private initializeData() {
-    // Sort data based on the current sorting criteria
-    this.internal.sortedData = sortData([...this.data], this.state.sortingArray);
-    // Filter sorted data based on active filters
-    this.internal.filteredData = filterData([...this.internal.sortedData], this.state.filters);
-    // Paginate filtered data based on current page and items per page
-    if (this.options.paginate) {
-      this.internal.paginatedData = paginateData([...this.internal.filteredData], this.state.pagination.page, this.state.pagination.perPage);
-    } else {
-      this.internal.paginatedData = [...this.internal.filteredData];
-    }
+    this.updateProcessedData()
+  }
 
+  updateProcessedData() {
+    if (this.mode === 'client') {
+      const filteredData = filterData([...this.data], this.state.filters);
+      this.updateCount(filteredData)
+      this.state.processedData = paginateData(sortData(filteredData, this.state.sortingArray), this.state.pagination.page, this.state.pagination.perPage);
+    }
+  }
+
+  updateCount(filteredData: T[]) {
+    if (this.mode === 'client') {
+      this.state.pagination.count = filteredData.length || 1;
+    }
   }
 
   // Public methods for external interaction
@@ -222,14 +224,20 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
     // Update pagination state and trigger callbacks
     this.state.pagination.page = page;
     this.state.pagination.perPage = perPage;
+    this.updateProcessedData()
+
     this.onPageChange();
     this.onPerPageChange();
     this.onChange();
   }
 
+
+
   updateSorting(newSorting: Sorting[]) {
     // Update sorting state and trigger callbacks
     this.state.sortingArray = newSorting;
+    this.updateProcessedData()
+
     this.onSortingChange();
     this.onChange();
   }
@@ -237,6 +245,8 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
   updateFilters(newFilters: Filter[]) {
     this.state.filters = newFilters;
     this.state.pagination.page = 1;
+    this.updateProcessedData()
+
     this.onFiltersChange();
     this.onChange();
   }

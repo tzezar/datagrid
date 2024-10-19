@@ -13,7 +13,7 @@ export const keyboardNavigation = (node: HTMLElement, enabled = false) => {
             event: e,
             focusedRowIndex: datagrid.internal.keyboardNavigation.focusedRowIndex,
             focusedColumnIndex: datagrid.internal.keyboardNavigation.focusedColumnIndex,
-            visibleData: datagrid.internal.paginatedData,
+            visibleData: datagrid.state.processedData,
             columns: datagrid.columns,
             identifier: datagrid.identifier,
         });

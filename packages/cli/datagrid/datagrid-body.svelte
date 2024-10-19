@@ -16,7 +16,7 @@
 {#if body}
 	{@render body()}
 {:else}
-	{#each datagrid.internal.paginatedData as row, rowIndex}
+	{#each datagrid.state.processedData as row, rowIndex}
 		<Row {rowIndex}>
 			{#each datagrid.columns as column, columnIndex}
 				<Cell {columnIndex} {rowIndex} {column} {row} />
