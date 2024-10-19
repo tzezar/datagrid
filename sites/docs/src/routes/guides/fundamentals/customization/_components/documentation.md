@@ -121,7 +121,7 @@ For example, you can style`Datagrid.Datagrid` or `Datagrid.Row` like this:
 <Datagrid.Row class="flex-col">
 ```
 
-> Wszystko jest otypowane aby ułatwić Ci pracę
+> Everything is typed to make the work more enjoyable
 
 First, take a brief look at the code to see how it's implemented. I anticipate that the first instinct to style rows will be passing `bg-color` to `<Datagrid.Row>`. However, you should style `<Datagrid.Cell/>` instead. I couldn't achieve a good appearance for the datagrid otherwise.
 
