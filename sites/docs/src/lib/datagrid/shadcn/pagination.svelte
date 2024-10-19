@@ -6,6 +6,7 @@
 	import MaterialSymbolsLightChevronRight from '../icones/MaterialSymbolsLightChevronRight.svelte';
 	import type { TzezarDatagrid } from '../tzezar-datagrid.svelte';
 	import { cn } from '$lib/utils';
+	import Input from '$lib/components/ui/input/input.svelte';
 
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
@@ -54,7 +55,8 @@
 					<MaterialSymbolsLightChevronLeft class="mx-2 h-8" />
 				</Pagination.PrevButton>
 				<div class="flex items-center">
-					<Select.Root
+					<Input value={datagrid.state.pagination.page} oninput={(e) => datagrid.updatePagination(+e.currentTarget.value, datagrid.state.pagination.perPage)} class='w-20 outline-none focus-visible:ring-0 h-8'/>
+					<!-- <Select.Root
 						selected={{
 							value: datagrid.state.pagination.page,
 							label: `Page ${datagrid.state.pagination.page}`
@@ -70,7 +72,7 @@
 								<Select.Item value={page.value}>Page {page.label}</Select.Item>
 							{/each}
 						</Select.Content>
-					</Select.Root>
+					</Select.Root> -->
 				</div>
 				<Pagination.NextButton
 					class=" hover:bg-dark-10 active:scale-98 disabled:text-muted-foreground h-8 items-center   justify-center rounded-[9px] border  bg-transparent disabled:cursor-not-allowed hover:disabled:bg-transparent"
