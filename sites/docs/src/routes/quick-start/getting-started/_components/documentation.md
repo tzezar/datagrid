@@ -176,7 +176,7 @@ Now it's time to render our custom datagrid. Relax, it's easy.
 		{/each}
 	{/snippet}
 	{#snippet body()}
-		{#each datagrid.internal.paginatedData as row, rowIndex}
+		{#each datagrid.state.processedData as row, rowIndex}
 			<Datagrid.Row {rowIndex}>
 				{#each datagrid.columns as column, columnIndex}
 					<Datagrid.Cell {columnIndex} {rowIndex} {column} {row} />
@@ -204,13 +204,7 @@ So, for each header, we render a `<Datagrid.Header>` which contains styling and 
 
 Inside the `body` slot, we display data cells. For each row, we display a `<Datagrid.Row>`.
 
-> Notice that we used `datagrid.internal.paginatedData` and not our own data we provided, because the data logic is applied within the datagrid. At this point, I want you to know that the datagrid provides, among other things:
-
-- `datagrid.internal.sortedData`
-- `datagrid.internal.filteredData`
-- `datagrid.internal.paginatedData`
-
-The first two probably won't be often useful to you, but `datagrid.paginatedData` is used in `client mode` to display rows split into pages, with sorting and filtering logic applied.
+> Notice that we used `datagrid.state.processedData` and not our own data we provided, because the data logic is applied within the datagrid.
 
 Again, `<Datagrid.Row>` includes both styling and logic. Inside each row, we need to display the
 corresponding data cells. Therefore, we iterate over `datagrid.columns`.
@@ -275,7 +269,7 @@ So keep going! Experiment with new ideas, explore the documentation, and continu
 		{/each}
 	{/snippet}
 	{#snippet body()}
-		{#each datagrid.internal.paginatedData as row, rowIndex}
+		{#each datagrid.state.processedData as row, rowIndex}
 			<Datagrid.Row {rowIndex}>
 				{#each datagrid.columns as column, columnIndex}
 					<Datagrid.Cell {columnIndex} {rowIndex} {column} {row} />
@@ -346,7 +340,7 @@ As a bonus, I'm including an example to show how simple and intuitive you can st
 		{/each}
 	{/snippet}
 	{#snippet body()}
-		{#each datagrid.internal.paginatedData as row, rowIndex}
+		{#each datagrid.state.processedData as row, rowIndex}
 			<Datagrid.Row {rowIndex}>
 				{#each datagrid.columns as column, columnIndex}
 					{@const props = { columnIndex, rowIndex, column, row }}

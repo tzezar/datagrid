@@ -39,10 +39,10 @@
 			data-datagrid-footer-identifier={datagrid.identifier}
 		>
 			<span>
-				Showing {datagrid.internal.paginatedData.length * datagrid.state.pagination.page -
+				Showing {datagrid.state.processedData.length * datagrid.state.pagination.page -
 					datagrid.state.pagination.perPage}
 				:
-				{datagrid.internal.paginatedData.length * datagrid.state.pagination.page}
+				{datagrid.state.processedData.length * datagrid.state.pagination.page}
 				of
 				{datagrid.state.pagination.count}
 			</span>

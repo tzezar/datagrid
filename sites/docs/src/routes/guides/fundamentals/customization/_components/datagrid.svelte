@@ -39,7 +39,7 @@
 
 <Datagrid.Datagrid>
 	{#snippet body()}
-		{#each datagrid.internal.paginatedData as row, rowIndex}
+		{#each datagrid.state.processedData as row, rowIndex}
 			<Datagrid.Row
 				class={`${Datagrid.STAY_IN_PLACE} ${Datagrid.HIDE_BEHIND_PARENT_ROW} `}
 				{rowIndex}

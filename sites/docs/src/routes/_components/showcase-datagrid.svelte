@@ -40,7 +40,7 @@
 	let datagrid = setContext(
 		`datagrid`,
 		new TzezarDatagrid({
-			data: generateData(10000),
+			data: generateData(100000),
 			columns,
 			title: 'The best datagrid ever',
 			options: {
@@ -79,10 +79,10 @@
 	import type { Filter } from '$lib/datagrid/types';
 
 	// const toggleData = () => {
-	// 	if (datagrid.internal.paginatedData) {
-	// 		datagrid.internal.paginatedData = [];
+	// 	if (datagrid.state.processedData) {
+	// 		datagrid.state.processedData = [];
 	// 	} else {
-	// datagrid.internal.paginatedData = applyInternalLogic(
+	// datagrid.state.processedData = applyInternalLogic(
 	// 	datagrid.data,
 	// 	datagrid.state.filters,
 	// 	datagrid.state.sortingArray,
@@ -90,7 +90,7 @@
 	// 	datagrid.state.pagination.perPage
 	// );
 	// }
-	// return datagrid.internal.paginatedData;
+	// return datagrid.state.processedData;
 	// };
 
 	// function toggleInterval() {
@@ -125,21 +125,21 @@
 		{/each}
 	{/snippet}
 	{#snippet body()}
-		{#each datagrid.internal.paginatedData as row, rowIndex}
+		{#each datagrid.state.processedData as row, rowIndex}
 			<Datagrid.Row rowId={row.id} {rowIndex}>
 				{#each datagrid.columns as column, columnIndex}
 					{@const props = { row, rowIndex, column, columnIndex }}
 
 					{#if column.id === 'checkbox'}
-						<Datagrid.CellWithoutSpacing {row} {column} {columnIndex} {rowIndex}>
+						<Datagrid.CellWithoutSpacing {...props}>
 							<Datagrid.CellRowSelectionCheckbox {row} />
 						</Datagrid.CellWithoutSpacing>
 					{:else if column.id === 'expand'}
-						<Datagrid.CellWithoutSpacing {row} {column} {columnIndex} {rowIndex}>
+						<Datagrid.CellWithoutSpacing {...props}>
 							<Datagrid.ExpandRowToggler rowId={row.id} />
 						</Datagrid.CellWithoutSpacing>
 					{:else if column.id === 'actions'}
-						<Datagrid.Cell {row} {column} {columnIndex} {rowIndex}>
+						<Datagrid.Cell {...props}>
 							<div class={cn('flex flex-row gap-2')}>
 								<Button
 									size="sm"
@@ -157,8 +157,6 @@
 					{:else}
 						<ContextMenu.Root>
 							<ContextMenu.Trigger asChild let:builder>
-								{@const props = { row, rowIndex, column, columnIndex }}
-
 								<CellWithContextMenu
 									{builder}
 									{...props}

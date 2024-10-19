@@ -23,7 +23,7 @@
 		{/each}
 	{/snippet}
 	{#snippet body()}
-		{#each datagrid.internal.paginatedData as row, rowIndex}
+		{#each datagrid.state.processedData as row, rowIndex}
 			<Datagrid.Row {rowIndex}>
 				{#each datagrid.columns as column, columnIndex}
 					{@const props = { row, rowIndex, column, columnIndex }}

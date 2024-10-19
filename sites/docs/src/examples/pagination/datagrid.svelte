@@ -201,11 +201,9 @@
 		datagrid.state.pagination.count = $query.data?.count;
 		datagrid.state.pagination.page = $query.data?.page;
 		datagrid.state.pagination.perPage = $query.data?.perPage;
-	});
-
-	$effect(() => {
 		datagrid.data = $query.data?.data;
 	});
+
 </script>
 
 <div class="pb-4">

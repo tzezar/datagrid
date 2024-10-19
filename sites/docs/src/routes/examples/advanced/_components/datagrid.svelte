@@ -73,7 +73,7 @@
 		{/each}
 	{/snippet}
 	{#snippet body()}
-		{#each datagrid.internal.paginatedData as row, rowIndex}
+		{#each datagrid.state.processedData as row, rowIndex}
 			<Datagrid.Row rowId={row.id} {rowIndex}>
 				{#each datagrid.columns as column, columnIndex}
 					{@const props = { row, rowIndex, column, columnIndex }}
@@ -144,10 +144,10 @@
 			data-datagrid-footer-identifier={datagrid.identifier}
 		>
 			<span>
-				Showing {datagrid.internal.paginatedData.length * datagrid.state.pagination.page -
+				Showing {datagrid.state.processedData.length * datagrid.state.pagination.page -
 					datagrid.state.pagination.perPage}
 				:
-				{datagrid.internal.paginatedData.length * datagrid.state.pagination.page}
+				{datagrid.state.processedData.length * datagrid.state.pagination.page}
 				of
 				{datagrid.state.pagination.count}
 			</span>
@@ -181,7 +181,7 @@
 		{/each}
 	{/snippet}
 	{#snippet body()}
-		{#each datagrid.internal.paginatedData as row, rowIndex}
+		{#each datagrid.state.processedData as row, rowIndex}
 			<Datagrid.Row {rowIndex}>
 				{#each datagrid.columns as column, columnIndex}
 					{#if column.id === 'checkbox'}
@@ -264,10 +264,10 @@
 			data-datagrid-footer-identifier={datagrid.identifier}
 		>
 			<span>
-				Showing {datagrid.internal.paginatedData.length * datagrid.state.pagination.page -
+				Showing {datagrid.state.processedData.length * datagrid.state.pagination.page -
 					datagrid.state.pagination.perPage}
 				:
-				{datagrid.internal.paginatedData.length * datagrid.state.pagination.page}
+				{datagrid.state.processedData.length * datagrid.state.pagination.page}
 				of
 				{datagrid.state.pagination.count}
 			</span>

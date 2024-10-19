@@ -204,7 +204,7 @@ export async function load() {
 		datagrid.state.status.isError = $query.isError;
 		datagrid.state.status.isRefetching = $query.isRefetching;
 		datagrid.state.status.isFetching = $query.isFetching;
-		datagrid.internal.paginatedData = $query.data?.data;
+		datagrid.state.processedData = $query.data?.data;
 		datagrid.state.pagination.count = $query.data?.count;
 		datagrid.state.pagination.page = $query.data?.page;
 		datagrid.state.pagination.perPage = $query.data?.perPage;
@@ -222,7 +222,7 @@ export async function load() {
 		{/each}
 	{/snippet}
 	{#snippet body()}
-		{#each datagrid.internal.paginatedData as row, rowIndex}
+		{#each datagrid.state.processedData as row, rowIndex}
 			<Datagrid.Row {rowIndex}>
 				{#each datagrid.columns as column, columnIndex}
 					<Datagrid.Cell

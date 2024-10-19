@@ -71,7 +71,7 @@
 
 <Datagrid.Datagrid {head} class={{ content: 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 border-0 border-b' }}>
 	{#snippet body()}
-		{#each datagrid.internal.paginatedData as row, rowIndex}
+		{#each datagrid.state.processedData as row, rowIndex}
 			<Datagrid.Row
 				disableTailwindGroup
 				onclick={() => selectRow(row, datagrid)}

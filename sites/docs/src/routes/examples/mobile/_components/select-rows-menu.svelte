@@ -79,7 +79,7 @@
 							value: 'all',
 							data: datagrid.data,
 							selectedRows: datagrid.state.selectedRows,
-							paginatedData: datagrid.internal.paginatedData
+							paginatedData: datagrid.state.processedData
 						})}
 				>
 					Everything
@@ -90,7 +90,7 @@
 							value: 'none',
 							data: datagrid.data,
 							selectedRows: datagrid.state.selectedRows,
-							paginatedData: datagrid.internal.paginatedData
+							paginatedData: datagrid.state.processedData
 						})}
 				>
 					None
@@ -101,7 +101,7 @@
 							value: 'allOnPage',
 							data: datagrid.data,
 							selectedRows: datagrid.state.selectedRows,
-							paginatedData: datagrid.internal.paginatedData
+							paginatedData: datagrid.state.processedData
 						})}
 				>
 					Everything on page
@@ -112,7 +112,7 @@
 							value: 'noneOnPage',
 							data: datagrid.data,
 							selectedRows: datagrid.state.selectedRows,
-							paginatedData: datagrid.internal.paginatedData
+							paginatedData: datagrid.state.processedData
 						})}
 				>
 					None on page
