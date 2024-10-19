@@ -55,7 +55,7 @@
 					<MaterialSymbolsLightChevronLeft class="mx-2 h-8" />
 				</Pagination.PrevButton>
 				<div class="flex items-center">
-					<Input type="number" value={datagrid.state.pagination.page} oninput={(e) => datagrid.updatePagination(+e.currentTarget.value, datagrid.state.pagination.perPage)} class='w-20 outline-none focus-visible:ring-0 h-8'/>
+					<Input type="number" min={1} max={pageOptions.length} value={datagrid.state.pagination.page} oninput={(e) => datagrid.updatePagination(+e.currentTarget.value, datagrid.state.pagination.perPage)} class='w-20 outline-none focus-visible:ring-0 h-8'/>
 					<!-- <Select.Root
 						selected={{
 							value: datagrid.state.pagination.page,
