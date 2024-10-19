@@ -40,7 +40,7 @@
 	let datagrid = setContext(
 		`datagrid`,
 		new TzezarDatagrid({
-			data: generateData(100000),
+			data: generateData(10000),
 			columns,
 			title: 'The best datagrid ever',
 			options: {
