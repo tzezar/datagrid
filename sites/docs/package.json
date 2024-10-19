@@ -71,6 +71,7 @@
 		"tailwind-merge": "^2.5.2",
 		"tailwind-variants": "^0.2.1",
 		"vaul-svelte": "^0.3.2",
+		"winston": "^3.15.0",
 		"xlsx": "^0.18.5",
 		"zod": "^3.23.8"
 	}

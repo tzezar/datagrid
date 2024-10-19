@@ -11,3 +11,8 @@ declare global {
 }
 
 export {};
+//app.d.ts
+declare global {
+	namespace App {
+	 i
+   }

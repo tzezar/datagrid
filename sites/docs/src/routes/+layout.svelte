@@ -26,9 +26,9 @@
 		}
 	});
 
-	let schema = $derived($mode || 'dark')
+	let schema = $derived($mode || 'dark');
 
-	let scrollFix
+	let scrollFix;
 	afterNavigate(() => {
 		if (browser) {
 			scrollFix.scrollTo({ top: 0, behavior: 'instant' });
@@ -45,15 +45,17 @@
 <QueryClientProvider client={queryClient}>
 	<SvelteQueryDevtools />
 	<div class="flex h-screen w-full">
-		<div class="flex w-full">
+		<div class="flex h-full w-full">
 			<div class="hidden h-full w-64 shrink-0 flex-col overflow-auto border-r lg:flex">
 				<a href="/" class="">
-					<div class="bg-primary-foreground sticky top-0 flex items-center justify-center gap-1 py-4">
-						<div class="flex h-10 flex-row items-center justify-center align-middle ">
+					<div
+						class="bg-primary-foreground sticky top-0 flex items-center justify-center gap-1 py-4"
+					>
+						<div class="flex h-10 flex-row items-center justify-center align-middle">
 							{#if schema == 'dark'}
-								<img src={logoWhite} alt="" srcset=""  class="h-[52px] w-[52px]" />
+								<img src={logoWhite} alt="" srcset="" class="h-[52px] w-[52px]" />
 							{:else}
-								<img src={logoBlack} alt="" srcset=""  class="h-[52px] w-[52px]" />
+								<img src={logoBlack} alt="" srcset="" class="h-[52px] w-[52px]" />
 							{/if}
 						</div>
 						<div>
@@ -70,9 +72,11 @@
 					</div>
 				</div>
 			</div>
-			<div class="flex w-full flex-col overflow-auto" bind:this={scrollFix}>
+			<div class="flex h-screen w-full flex-col overflow-auto" bind:this={scrollFix}>
 				<div class="bg-primary-foreground sticky top-0 z-[19] flex w-full lg:hidden">
-					<div class="bg-primary-foreground sticky top-0 flex w-full flex-row items-center justify-between gap-1 px-4 lg:px-6 py-4">
+					<div
+						class="bg-primary-foreground sticky top-0 flex w-full flex-row items-center justify-between gap-1 px-4 py-4 lg:px-6"
+					>
 						<a href="/" class="flex items-center justify-center gap-1">
 							<div class="flex h-10 flex-row items-center justify-between align-middle">
 								{#if schema == 'dark'}
@@ -86,10 +90,14 @@
 								<p class="text-right text-orange-400">Beta</p>
 							</div>
 						</a>
-						<SidebarMobile/>
+						<SidebarMobile />
 					</div>
 				</div>
-				<div class="grow lg:p-8 p-4 py-6">
+				<p class="text-muted-foreground bg-primary-foreground  p-4 py-2 text-center lg:p-2">
+					I'm testing new hosting method. If the site is running slow then <span class="text-orange-400">please let me know</span> on
+					github! Thanks.
+				</p>
+				<div class="grow p-4 py-6 lg:p-8">
 					{@render children()}
 				</div>
 			</div>
