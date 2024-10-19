@@ -9,7 +9,7 @@
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
 
 	let isEmpty = $derived(
-		(datagrid.mode === 'clint' && datagrid.internal.paginatedData.length === 0) ||
+		(datagrid.mode === 'clint' && datagrid.state.processedData.length === 0) ||
 			(datagrid.mode === 'server' && datagrid.data.length === 0)
 	);
 

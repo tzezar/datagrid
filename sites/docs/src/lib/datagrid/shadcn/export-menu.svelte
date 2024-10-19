@@ -23,7 +23,7 @@
 			<DropdownMenu.Item
 				onclick={() =>
 					exportToExcel(
-						datagrid.internal.paginatedData,
+						datagrid.state.processedData,
 						exportableColumns,
 						datagrid.options.exportFileName
 					)}
@@ -33,7 +33,7 @@
 			<DropdownMenu.Item
 				onclick={() =>
 					exportToCSV(
-						datagrid.internal.paginatedData,
+						datagrid.state.processedData,
 						exportableColumns,
 						datagrid.options.exportFileName
 					)}
@@ -43,7 +43,7 @@
 			<DropdownMenu.Item
 				onclick={() =>
 					exportToXML(
-						datagrid.internal.paginatedData,
+						datagrid.state.processedData,
 						exportableColumns,
 						datagrid.options.exportFileName
 					)}
