@@ -23,7 +23,7 @@
 			<GroupItem title="basic" href={hrefs.examples.basic} />
 			<GroupItem title="advanced" href={hrefs.examples.advanced} />
 			<!-- <GroupItem title="client data" href={hrefs.examples.clientData} disabled /> -->
-			<GroupItem disabled title="svelte query" href={hrefs.examples.svelteQuery} />
+			<!-- <GroupItem disabled title="svelte query" href={hrefs.examples.svelteQuery} /> -->
 		</Group>
 		<Group>
 			<GroupTitle title="fundamentals" />

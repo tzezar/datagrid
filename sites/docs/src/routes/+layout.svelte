@@ -31,7 +31,16 @@
 	let scrollFix;
 	afterNavigate(() => {
 		if (browser) {
-			scrollFix.scrollTo({ top: 0, behavior: 'instant' });
+			// if path # anchor then scroll to anchor
+
+			if (window.location.hash) {
+				const anchor = document.querySelector(window.location.hash);
+				if (anchor) {
+					scrollFix.scrollTo({ top: anchor.offsetTop, behavior: 'smooth' });
+				}
+			} else {
+				scrollFix.scrollTo({ top: 0, behavior: 'instant' });
+			}
 		}
 	});
 </script>
@@ -64,7 +73,9 @@
 						</div>
 					</div>
 				</a>
-				<Sidebar />
+				<div class="sticky left-0 flex grow flex-col">
+					<Sidebar />
+				</div>
 				<div class="bg-primary-foreground sticky bottom-0 mt-auto border-t px-8 py-4">
 					<div class="flex items-center justify-between gap-4">
 						<a href="https://github.com/tzezar/datagrid" class="font-semibold">GITHUB</a>
@@ -93,10 +104,7 @@
 						<SidebarMobile />
 					</div>
 				</div>
-				<p class="text-muted-foreground bg-primary-foreground  p-4 py-2 text-center lg:p-2">
-					I'm testing new hosting method. If the site is running slow then <span class="text-orange-400">please let me know</span> on
-					github! Thanks.
-				</p>
+
 				<div class="grow p-4 py-6 lg:p-8">
 					{@render children()}
 				</div>
