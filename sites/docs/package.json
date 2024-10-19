@@ -46,6 +46,7 @@
 	"type": "module",
 	"dependencies": {
 		"@internationalized/date": "^3.5.5",
+		"@sveltejs/adapter-node": "^5.2.8",
 		"@tanstack/svelte-query": "^5.56.2",
 		"@tanstack/svelte-query-devtools": "^5.56.2",
 		"bits-ui": "^0.21.13",

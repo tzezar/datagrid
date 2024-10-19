@@ -132,3 +132,4 @@ dist
 
 /sites/docs/.svelte-kit
 /sites/docs/.vercel
+/sites/docs/build
