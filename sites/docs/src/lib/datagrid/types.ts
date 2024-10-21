@@ -1,5 +1,18 @@
 
 
+// type GroupBy = ColumnId<T>;
+export type AggregateFunction = 'sum' | 'avg' | 'min' | 'max' | 'count';
+
+export interface AggregateColumn<T> extends BaseColumn<T> {
+    aggregate?: AggregateFunction;
+}
+
+export interface GroupedData<T> {
+    level: number;
+    key: keyof T;
+    groupBy: ColumnId<T>;
+    items: (T | GroupedData<T>)[];
+}
 
 export type Data<T> = T[];
 export type WithIdentifier = { id: number };
@@ -26,6 +39,7 @@ export type BaseColumn<T = unknown> = {
         offset?: string | null;
     };
     align?: 'start' | 'center' | 'end';
+    grouped?: boolean;
 };
 
 export type ExpandedRows = (number | string)[];

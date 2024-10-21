@@ -74,5 +74,9 @@
 				href={hrefs.guides.featureGuides.customHeaderFilters}
 			/> -->
 		</Group>
+		<Group>
+			<GroupTitle title="experimental" />
+			<GroupItem title="grouping & aggregating" href="/experimental/grouping-aggregating-preview" />
+		</Group>
 	</div>
 </div>

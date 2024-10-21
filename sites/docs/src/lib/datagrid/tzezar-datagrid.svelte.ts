@@ -15,7 +15,8 @@ type DeepPartial<T> = {
 function deepMerge<T extends object>(target: T, source: DeepPartial<T>): T {
   const output = { ...target };
   for (const key in source) {
-    if (source.hasOwnProperty(key)) {
+    // Use Object.prototype.hasOwnProperty
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
       if (source[key] instanceof Object && !Array.isArray(source[key])) {
         output[key] = deepMerge(output[key] as any, source[key] as any);
       } else {
@@ -50,6 +51,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
 
   // State management
   state = $state({
+    grouping: [] as (keyof T)[],
     pagination: { page: 1, perPage: 20, count: 1 } as Pagination, // Initializes pagination settings, enabling straightforward data navigation
     status: { isFetching: false, isError: false, isRefetching: false }, // Tracks data fetching status for user feedback
     processedData: [] as T[],
@@ -92,6 +94,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
 
   private getDefaultOptions() {
     return {
+      grouping: false,
       defaultColumnWidth: '200px',
       paginate: true,
       sortable: true,
@@ -151,7 +154,6 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
     this.mode = mode || this.mode; // Fallback to default mode if not provided
     // Apply offsets to columns for proper alignment
     // @ts-expect-error ts(2322) 
-    this.columns = applyOffset(columns); // Ensure columns are properly aligned before display
     this.data = data; // Set the data for the grid
     this.identifier = identifier || this.identifier; // Use provided identifier or fallback to default
     this.title = title || this.title; // Set the title of the grid
@@ -170,6 +172,10 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
     if (options) {
       this.updateOptions(options);
     }
+
+    // has to be set after options are set
+    this.columns = this.updateColumns(columns);
+
   }
   updateOptions(newOptions: DeepPartial<ReturnType<TzezarDatagrid<T, C>['getDefaultOptions']>>) {
     this.options = deepMerge(this.options, newOptions);
@@ -194,17 +200,60 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
     this.updateProcessedData()
   }
 
+
+  private groupData(data: T[], level: number): GroupedData<T>[] {
+    if (level >= this.state.grouping.length) {
+      return data as unknown as GroupedData<T>[];
+    }
+
+    const groupByColumn = this.state.grouping[level];
+    const grouped: Record<string, GroupedData<T>> = {};
+
+    for (const item of data) {
+      const key = item[groupByColumn as keyof T];
+      if (!grouped[key]) {
+        grouped[key] = { key, groupBy: groupByColumn, level, items: [] };
+      }
+      grouped[key].items.push(item);
+    }
+
+    // Recursively group and calculate aggregates
+    for (const group of Object.values(grouped)) {
+      group.items = this.groupData(group.items as T[], level + 1);
+    }
+
+    return Object.values(grouped);
+  }
+
   updateProcessedData() {
     if (this.mode === 'client') {
       const filteredData = filterData([...this.data], this.state.filters);
-      this.updateCount(filteredData)
-      this.state.processedData = paginateData(sortData(filteredData, this.state.sortingArray), this.state.pagination.page, this.state.pagination.perPage);
+      const sortedData = sortData(filteredData, this.state.sortingArray);
+      const paginatedData = paginateData(sortedData, this.state.pagination.page, this.state.pagination.perPage);
+
+      if (this.options.grouping) {
+        const groupedData = this.groupData([...sortedData], 0) as T[]
+        if (this.options.paginate === true) {
+          this.state.processedData = paginateData([...groupedData], this.state.pagination.page, this.state.pagination.perPage);
+
+        } else {
+          this.state.processedData = this.groupData([...sortedData], 0) as T[]
+        }
+        this.updateCount(groupedData)
+      } else {
+        if (this.options.paginate === true) {
+          this.state.processedData = paginatedData;
+        } else {
+          this.state.processedData = sortedData;
+        }
+        this.updateCount(filteredData)
+      }
     }
   }
 
-  updateCount(filteredData: T[]) {
+  updateCount(data: T[]) {
     if (this.mode === 'client') {
-      this.state.pagination.count = filteredData.length || 1;
+      this.state.pagination.count = data.length || 1
     }
   }
 
@@ -215,9 +264,47 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
     this.onChange(); // Trigger any change handlers to notify observers
   }
 
-  updateColumns(newColumns: C[]) {
-    //@ts-expect-error ts(2322)
-    this.columns = applyOffset(newColumns); // Update columns with offsets applied.
+  updateColumns(newColumns: C[]): C[] {
+    // Create a copy of newColumns to avoid mutating the original array
+    let columnsTemp = [...newColumns];
+
+    // Apply offset to columns and cast the result back to C[]
+    columnsTemp = applyOffset(columnsTemp) as C[];
+
+    let lastGroupedIndex = -1; // Track the position for inserting grouped columns
+
+    // If grouping is enabled, reorder the columns
+    if (this.options.grouping) {
+      this.state.grouping.forEach((groupBy) => {
+        // Find the index of the column corresponding to the groupBy key
+        const index = columnsTemp.findIndex((column) => column.id === groupBy);
+        if (index === -1) return; // Skip if the column isn't found
+
+        // Extract the column and mark it as grouped
+        const [column] = columnsTemp.splice(index, 1);
+        column.grouped = true;
+
+        // Insert the grouped column right after the last grouped column
+        lastGroupedIndex++;
+        columnsTemp.splice(lastGroupedIndex, 0, column);
+      });
+
+
+      // Move the 'expand' column after the last grouped column
+      const expandIndex = columnsTemp.findIndex((column) => column.id === 'expand');
+      if (expandIndex !== -1) {
+        // Extract the 'expand' column
+        const [expandColumn] = columnsTemp.splice(expandIndex, 1);
+
+        // Insert the 'expand' column after the last grouped column
+        lastGroupedIndex++;
+        columnsTemp.splice(lastGroupedIndex, 0, expandColumn);
+      }
+    }
+
+
+
+    return columnsTemp;
   }
 
   updatePagination(page: number, perPage: number) {

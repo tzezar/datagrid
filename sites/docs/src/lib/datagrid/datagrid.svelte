@@ -10,7 +10,6 @@
 	import DatagridBody from './datagrid-body.svelte';
 	import DatagridWrapper from './datagrid-wrapper.svelte';
 	import DatagridContent from './datagrid-content.svelte';
-	import { applyInternalLogicToColumns } from './fns/apply-internal-logic-to-columns.svelte';
 
 	// Get the datagrid context
 	const datagrid = getContext<TzezarDatagrid<unknown>>('datagrid');
@@ -46,11 +45,6 @@
 			content: ''
 		}
 	}: Props = $props();
-
-	// Apply column offset if any columns are pinned
-	onMount(() => {
-		applyInternalLogicToColumns(datagrid);
-	});
 
 	// Fullscreen functionality workaround, we need ref to know where to scroll back after leaving fullscreen mode
 	// svelte-ignore non_reactive_update
