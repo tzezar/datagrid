@@ -35,7 +35,7 @@ By default, passing components to `children()` allows you to render whatever you
 
 > See the `mobile` example for more details.
 
-## Customowe komponenty
+## Customow components
 
 You can freely edit components and add your own functionality in a relatively simple way. See how it’s implemented and modify the code to fit your use case.
 
