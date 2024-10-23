@@ -375,7 +375,7 @@ export class TzezarDatagrid<T, C extends BaseColumn<T> = BaseColumn<T>> {
 
   updateCount(data: T[]) {
     if (this.mode === 'client') {
-      this.state.pagination.count = filteredData.length || 1;
+      this.state.pagination.count = data.length || 1;
     }
   }
 
