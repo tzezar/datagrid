@@ -10,6 +10,11 @@ const naturalSort = createNewSortInstance({
 // Function to sort data based on specified sorting criteria
 export function sortData<T>(data: T[], sorting: Sorting[]): T[] {
     // If no sorting criteria are provided, return the original data
+
+    if (data.items) {
+        data = data.items
+    }
+    
     if (sorting.length === 0) {
         return data;
     }
