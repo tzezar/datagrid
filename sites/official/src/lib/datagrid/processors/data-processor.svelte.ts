@@ -32,7 +32,7 @@ export class DataProcessor implements DataProcessorInstance {
     constructor(grid: DatagridInstance) {
         this.grid = grid;
         this.grid.grouping.state.expandedRows = new SvelteSet([]);
-        this.initialize();
+        // this.initialize();
     }
 
     initialize(): Row[] {
@@ -41,18 +41,17 @@ export class DataProcessor implements DataProcessorInstance {
         this.rowsMap.clear();
 
         // Apply filters first
-        console.log(this.grid.filtering.state.conditions)
-        let processedData = this.grid.original.data.filter(item => 
+        let processedData = this.grid.original.data.filter(item =>
             this.grid.filtering.isRowMatching(item)
         );
-        
+
         if (this.grid.grouping.state.groupBy.length > 0) {
             this.allRows = this.createGroupedRows(processedData);
         } else {
             if (this.grid.sorting.sortBy.length > 0) {
                 processedData = this.sortData(processedData);
             }
-            
+
             this.allRows = processedData.map((item, i) => ({
                 index: i,
                 subRows: [],
@@ -63,7 +62,9 @@ export class DataProcessor implements DataProcessorInstance {
             }));
         }
 
-        return this.getVisibleRows(1, 10);
+        const visibleRows = this.getVisibleRows(this.grid.pagination.page, this.grid.pagination.pageSize);
+        this.grid.rows = visibleRows;
+        return visibleRows;
     }
 
     private getSortValue(item: any, accessor: string) {
@@ -84,7 +85,7 @@ export class DataProcessor implements DataProcessorInstance {
 
     private sortGroups(groups: Map<string, any>): [string, any][] {
         const entries = Array.from(groups.entries());
-        
+
         if (this.grid.sorting.sortBy.length === 0) return entries;
 
         return sort(entries).by(
@@ -158,7 +159,7 @@ export class DataProcessor implements DataProcessorInstance {
             if (group.items.length > 0) {
                 group.items = this.sortData(group.items);
             }
-            
+
             // Recursively sort subgroups
             if (group.subgroups.size > 0) {
                 this.applyGroupSorting(group.subgroups, depth + 1);
