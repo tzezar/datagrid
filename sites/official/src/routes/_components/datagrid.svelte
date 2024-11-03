@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import type { SortBy, SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
+	import type { SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
 	import { Datagrid } from '$lib/datagrid/index.svelte';
 	import type { DataItem } from '../utils/generata-data';
 	import { columns } from './columns';
@@ -10,36 +9,23 @@
 	let grid = new Datagrid(data, columns);
 
 	function handleGroupToggle(groupId: string) {
-		grid.dataProcessor.toggleGroupExpansion(groupId);
-		grid.pagination.pageCount = Math.ceil(
-			grid.dataProcessor.getVisibleRowCount() / grid.pagination.pageSize
-		);
-		grid.pagination.page = Math.min(grid.pagination.page, grid.pagination.pageCount);
-		grid.refreshRows();
+		grid.refresh(() => {
+			grid.dataProcessor.toggleGroupExpansion(groupId);
+			grid.pagination.updatePageCount();
+			grid.pagination.goToClosestPage();
+		});
 	}
 
 	function handleGroupByChange(event: Event) {
-		let timeStart = performance.now();
 		const select = event.target as HTMLSelectElement;
 		const selectedOptions = Array.from(select.selectedOptions);
 		const newGroupBy = selectedOptions.map((option) => option.value);
 
-		// Update the grouping state
-		grid.grouping.state.groupBy = newGroupBy;
-		// grid.dataProcessor.state.groupBy = newGroupBy;
-
-		// Reset expanded groups when grouping changes
-		grid.grouping.state.expandedRows.clear();
-
-		// Reinitialize the grid with new grouping
-		grid.rows = grid.dataProcessor.initialize();
-
-		// Update pagination
-		grid.pagination.pageCount = Math.ceil(
-			grid.dataProcessor.getVisibleRowCount() / grid.pagination.pageSize
-		);
-		grid.pagination.page = 1; // Reset to first page when grouping changes
-		console.log(`${grid.grouping.state.groupBy} Time taken: ${performance.now() - timeStart}ms`);
+		grid.reload(() => {
+			grid.pagination.goToFirstPage();
+			grid.grouping.setGroupBy(newGroupBy);
+			grid.pagination.updatePageCount();
+		});
 	}
 </script>
 
@@ -162,21 +148,21 @@
 <div class="pagination">
 	<button
 		disabled={grid.pagination.canPrevPage()}
-		onclick={() => grid.command(() => grid.pagination.goToPrevPage())}
+		onclick={() => grid.refresh(() => grid.pagination.goToPrevPage())}
 	>
 		Previous
 	</button>
 	<span>Page {grid.pagination.page}</span>
 	<button
 		disabled={grid.pagination.canNextPage()}
-		onclick={() => grid.command(() => grid.pagination.goToNextPage())}
+		onclick={() => grid.refresh(() => grid.pagination.goToNextPage())}
 	>
 		Next
 	</button>
 	<select
 		value={grid.pagination.pageSize}
 		onchange={(e) => {
-			grid.command(() => grid.pagination.updatePageSize(Number(e.currentTarget.value)));
+			grid.refresh(() => grid.pagination.updatePageSize(Number(e.currentTarget.value)));
 
 			// setPageSize(Number(e.currentTarget.value));
 		}}

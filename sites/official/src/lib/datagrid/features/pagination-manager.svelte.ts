@@ -17,8 +17,10 @@ export interface PaginationFeature {
     goToPrevPage(): void;
     goToFirstPage(): void;
     goToLastPage(): void;
+    goToClosestPage(): void;
 
     updatePageSize(pageSize: number): void;
+    updatePageCount(): void;
 }
 
 
@@ -29,7 +31,7 @@ export class PaginationManager implements PaginationFeature {
     pageSize = 10;
     count = 0;
     pageSizes = [10, 25, 50, 100];
-    pageCount = 0;
+    pageCount = $state(0)
 
     constructor(grid: DatagridInstance) {
         this.grid = grid;
@@ -65,9 +67,18 @@ export class PaginationManager implements PaginationFeature {
         this.goToPage(this.pageCount);
     }
 
+    goToClosestPage(): void {
+        const closestPage = Math.min(this.page, this.pageCount);
+        this.goToPage(closestPage);
+    }
+
     updatePageSize(pageSize: number): void {
         this.pageSize = pageSize;
         this.pageCount = Math.ceil(this.grid.dataProcessor.getVisibleRowCount() / this.pageSize);
         this.goToPage(1);
+    }
+
+    updatePageCount(): void {
+        this.pageCount = Math.ceil(this.grid.dataProcessor.getVisibleRowCount() / this.pageSize);
     }
 }

@@ -51,7 +51,7 @@ export class FilteringManager implements FilteringFeature {
         // Remove any existing filter for the same column
         this.removeFilter(condition.accessor);
         this.state.conditions.push(condition);
-        this.grid.rows = this.grid.dataProcessor.initialize();
+        this.grid.rows = this.grid.dataProcessor.process();
 
         console.log(this.state.conditions)
     }
@@ -61,12 +61,12 @@ export class FilteringManager implements FilteringFeature {
             condition => condition.accessor !== accessor
         );
         
-        this.grid.rows = this.grid.dataProcessor.initialize();
+        this.grid.rows = this.grid.dataProcessor.process();
     }
 
     clearFilters(): void {
         this.state.conditions = [];
-        this.grid.rows = this.grid.dataProcessor.initialize();
+        this.grid.rows = this.grid.dataProcessor.process();
     }
 
     isRowMatching(row: any): boolean {

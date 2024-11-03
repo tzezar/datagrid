@@ -18,7 +18,7 @@ export interface GroupingState {
 }
 
 export interface DataProcessorInstance {
-    initialize(): Row[];
+    process(): Row[];
     getVisibleRows(page: number, pageSize: number): Row[];
     toggleGroupExpansion(groupId: string): void;
     getVisibleRowCount: () => number;
@@ -36,10 +36,9 @@ export class DataProcessor implements DataProcessorInstance {
     }
 
 
-    // THIS SHOULD PROBABLY BE RENAMED
-    initialize(): Row[] {
+    process(): Row[] {
         console.log('initialize');
-        this.grid.grouping.state.groupedDataCache = null;
+        this.grid.grouping.state._groupedDataCache = null;
         this.rowsMap.clear();
 
         // Apply filters first
@@ -106,10 +105,10 @@ export class DataProcessor implements DataProcessorInstance {
     }
 
     private getGroupedData(): Map<string, any> {
-        if (!this.grid.grouping.state.groupedDataCache) {
-            this.grid.grouping.state.groupedDataCache = this.groupData(this.grid.original.data);
+        if (!this.grid.grouping.state._groupedDataCache) {
+            this.grid.grouping.state._groupedDataCache = this.groupData(this.grid.original.data);
         }
-        return this.grid.grouping.state.groupedDataCache;
+        return this.grid.grouping.state._groupedDataCache;
     }
 
     private groupData(data: Data[]): Map<string, any> {

@@ -73,7 +73,7 @@ export class SortingManager implements SortingFeature {
 
         this.sortBy = [];
         this._sortedDataCache = [];
-        this.grid.rows = this.grid.dataProcessor.initialize();
+        this.grid.rows = this.grid.dataProcessor.process();
     }
 
     public setSortMode(mode: SortMode): void {
@@ -85,7 +85,7 @@ export class SortingManager implements SortingFeature {
         } else if (mode === "single" && this.sortBy.length > 1) {
             this.sortBy = [this.sortBy[0]];
             this._sortedDataCache = [];
-            this.grid.dataProcessor.initialize();
+            this.grid.dataProcessor.process();
         } 
     }
 }

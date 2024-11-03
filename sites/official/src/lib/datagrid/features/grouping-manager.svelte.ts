@@ -9,11 +9,15 @@ import type { DatagridInstance } from "../index.svelte";
 export interface GroupingManagerState {
     groupBy: string[]
     expandedRows: SvelteSet<string>
-    groupedDataCache: Map<string, any> | null
+    _groupedDataCache: Map<string, any> | null
+
 }
 
 export interface GroupingFeature {
     state: GroupingManagerState
+
+
+    setGroupBy(groupBy: string[]): void
 }
 
 
@@ -23,7 +27,7 @@ export class GroupingManager implements GroupingFeature {
     state: GroupingManagerState = {
         groupBy: [],
         expandedRows: new SvelteSet([]),
-        groupedDataCache: null
+        _groupedDataCache: null
 
     }
 
@@ -31,5 +35,10 @@ export class GroupingManager implements GroupingFeature {
         this.grid = grid;
     }
 
-    
+
+
+    setGroupBy(groupBy: string[]): void {
+        this.state.groupBy = groupBy;
+		this.state.expandedRows.clear();
+    }
 }

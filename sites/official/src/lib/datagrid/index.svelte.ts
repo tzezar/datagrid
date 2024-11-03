@@ -53,20 +53,20 @@ export class Datagrid implements DatagridInstance {
 
     constructor(data: Data[], columns: ColumnDef[]) {
         this.original = { data, columns };
-        this.rows = this.dataProcessor.initialize();
+        this.rows = this.dataProcessor.process();
         this.columnsProcessor.initialize();
     }
 
-    refreshRows(): void {
+    refreshVisibleRows(): void {
         this.rows = this.dataProcessor.getVisibleRows(this.pagination.page, this.pagination.pageSize);
     }
 
 
     // Used when the data should be updated eg. pagination
-    command(operation: () => void): void {
+    refresh(operation: () => void): void {
         const timeStart = performance.now();
         operation();
-        this.refreshRows();
+        this.refreshVisibleRows();
         console.log(`Operation took ${performance.now() - timeStart}ms`)
     }
 
@@ -74,7 +74,7 @@ export class Datagrid implements DatagridInstance {
     reload(command: () => void): void {
         const timeStart = performance.now();
         command();
-        this.dataProcessor.initialize()
+        this.dataProcessor.process()
         console.log(`Execution took ${performance.now() - timeStart}ms`)
 
     }
