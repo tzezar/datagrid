@@ -62,7 +62,7 @@ export class Datagrid implements DatagridInstance {
     }
 
 
-
+    // Used when the data should be updated eg. pagination
     command(operation: () => void): void {
         const timeStart = performance.now();
         operation();
@@ -70,7 +70,8 @@ export class Datagrid implements DatagridInstance {
         console.log(`Operation took ${performance.now() - timeStart}ms`)
     }
 
-    execute(command: () => void): void {
+    // Used when the data should be reloaded
+    reload(command: () => void): void {
         const timeStart = performance.now();
         command();
         this.dataProcessor.initialize()

@@ -3,40 +3,11 @@
 	import type { SortBy, SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
 	import { Datagrid } from '$lib/datagrid/index.svelte';
 	import type { DataItem } from '../utils/generata-data';
+	import { columns } from './columns';
 
 	let { data }: { data: DataItem[] } = $props();
 
-	let columns = [
-		{
-			accessorKey: 'id',
-			header: 'ID'
-		},
-		{
-			accessorKey: 'department',
-			header: 'Department'
-		},
-		{
-			accessorKey: 'region',
-			header: 'Region'
-		},
-		{
-			accessorKey: 'sales',
-			header: 'Sales'
-		},
-		{
-			accessorKey: 'profit',
-			header: 'Profit'
-		}
-	];
 	let grid = new Datagrid(data, columns);
-
-	// let totalPages = $state(Math.ceil(grid.dataProcessor.getVisibleRowCount() / grid.pagination.pageSize));
-	// let totalPages = $state(Math.ceil(grid.dataProcessor.getVisibleRowCount() / grid.pagination.pageSize));
-
-	// Update visible rows when page changes
-	// $effect(() => {
-	// 	grid.rows = grid.dataProcessor.getVisibleRows(grid.pagination.page, grid.pagination.pageSize);
-	// });
 
 	function handleGroupToggle(groupId: string) {
 		grid.dataProcessor.toggleGroupExpansion(groupId);
@@ -119,7 +90,7 @@
 								onclick={(e) => {
 									if (e.currentTarget === e.target) {
 										e.stopPropagation();
-										grid.execute(() => grid.sorting.toggleSort(column.accessorKey));
+										grid.reload(() => grid.sorting.toggleSort(column.accessorKey));
 									}
 								}}
 							>
