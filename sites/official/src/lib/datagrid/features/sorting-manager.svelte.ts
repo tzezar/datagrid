@@ -13,7 +13,7 @@ export type SortBy = Sort[];  // Removed readonly to allow mutations
 export interface SortingFeature {
     sortBy: SortBy;
     mode: SortMode;
-    sortedData: any[];
+    _sortedDataCache: any[];
     toggleSort(accessor: string): void;
     clearSort(): void;
     setSortMode(mode: SortMode): void;
@@ -21,9 +21,9 @@ export interface SortingFeature {
 
 export class SortingManager implements SortingFeature {
     protected grid: DatagridInstance;
-    sortBy: SortBy = [];
+    sortBy: SortBy = $state([]);
     mode: SortMode = "single";
-    sortedData: any[] = [];
+    _sortedDataCache: any[] = [];
 
     constructor(
         grid: DatagridInstance,
@@ -63,28 +63,29 @@ export class SortingManager implements SortingFeature {
         }
 
         // Clear the sorted data cache to force re-sorting
-        this.sortedData = [];
+        this._sortedDataCache = [];
         // Trigger grid update
-        this.grid.rows = this.grid.dataProcessor.initialize();
+        // this.grid.dataProcessor.initialize();
     }
+
     public clearSort(): void {
         if (this.sortBy.length === 0) return;
 
         this.sortBy = [];
-        this.sortedData = [];
+        this._sortedDataCache = [];
         this.grid.rows = this.grid.dataProcessor.initialize();
     }
 
     public setSortMode(mode: SortMode): void {
         if (this.mode === mode) return;
-
         this.mode = mode;
+        console.log(this.mode)
         if (mode === "none") {
             this.clearSort();
         } else if (mode === "single" && this.sortBy.length > 1) {
             this.sortBy = [this.sortBy[0]];
-            this.sortedData = [];
+            this._sortedDataCache = [];
             this.grid.dataProcessor.initialize();
-        }
+        } 
     }
 }
