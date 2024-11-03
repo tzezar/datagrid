@@ -30,24 +30,21 @@
 	];
 	let grid = new Datagrid(data, columns);
 
-	let currentPage = $state(1);
-	let pageSize = $state(10);
-	let totalPages = $state(Math.ceil(grid.dataProcessor.getVisibleRowCount() / pageSize));
+	// let totalPages = $state(Math.ceil(grid.dataProcessor.getVisibleRowCount() / grid.pagination.pageSize));
+	// let totalPages = $state(Math.ceil(grid.dataProcessor.getVisibleRowCount() / grid.pagination.pageSize));
 
 	// Update visible rows when page changes
-	$effect(() => {
-		grid.rows = grid.dataProcessor.getVisibleRows(currentPage, pageSize);
-	});
-
-	function handlePageChange(newPage: number) {
-		currentPage = newPage;
-	}
+	// $effect(() => {
+	// 	grid.rows = grid.dataProcessor.getVisibleRows(grid.pagination.page, grid.pagination.pageSize);
+	// });
 
 	function handleGroupToggle(groupId: string) {
 		grid.dataProcessor.toggleGroupExpansion(groupId);
-		totalPages = Math.ceil(grid.dataProcessor.getVisibleRowCount() / pageSize);
-		currentPage = Math.min(currentPage, totalPages);
-		grid.rows = grid.dataProcessor.getVisibleRows(currentPage, pageSize);
+		grid.pagination.pageCount = Math.ceil(
+			grid.dataProcessor.getVisibleRowCount() / grid.pagination.pageSize
+		);
+		grid.pagination.page = Math.min(grid.pagination.page, grid.pagination.pageCount);
+		grid.refreshRows();
 	}
 
 	function handleGroupByChange(event: Event) {
@@ -67,28 +64,17 @@
 		grid.rows = grid.dataProcessor.initialize();
 
 		// Update pagination
-		totalPages = Math.ceil(grid.dataProcessor.getVisibleRowCount() / pageSize);
-		currentPage = 1; // Reset to first page when grouping changes
+		grid.pagination.pageCount = Math.ceil(
+			grid.dataProcessor.getVisibleRowCount() / grid.pagination.pageSize
+		);
+		grid.pagination.page = 1; // Reset to first page when grouping changes
 		console.log(`${grid.grouping.state.groupBy} Time taken: ${performance.now() - timeStart}ms`);
-	}
-
-	let sortBy: SortBy = $state(grid.sorting.sortBy);
-
-	function handleSortByChange(accessorKey: string) {
-		let timeStart = performance.now();
-		// Update the sorting state
-		grid.sorting.sortedData = [];
-		grid.sorting.toggleSort(accessorKey);
-		sortBy = grid.sorting.sortBy;
-		console.log(`${grid.sorting.sortBy} Time taken: ${performance.now() - timeStart}ms`);
-	}
-	function handlerSortModeChange(mode: SortMode) {
-		grid.sorting.mode = mode;
-		grid.sorting.clearSort();
-		sortBy = grid.sorting.sortBy;
 	}
 </script>
 
+{grid.pagination.page}
+{grid.pagination.pageSize}
+{grid.pagination.pageCount}
 <div class="flex flex-col gap-4 pb-4">
 	<div class="flex flex-col">
 		<label for="groupBy">Group by:</label>
@@ -107,7 +93,7 @@
 		<label for="sortBy">Sort mode (single, multi, none):</label>
 		<select
 			value={grid.sorting.mode}
-			onchange={(e) => handlerSortModeChange(e.currentTarget.value as SortMode)}
+			onchange={(e) => grid.sorting.setSortMode(e.currentTarget.value as SortMode)}
 			id="sortBy"
 		>
 			<option value="single">single</option>
@@ -133,15 +119,17 @@
 								onclick={(e) => {
 									if (e.currentTarget === e.target) {
 										e.stopPropagation();
-										handleSortByChange(column.accessorKey);
+										grid.command(() => grid.sorting.toggleSort(column.accessorKey));
 									}
-								}}>{column.header}</span
+								}}
 							>
+								{column.header}
+							</span>
 							<span>
-								{#if sortBy.filter((s) => s.accessor === column.accessorKey).length > 0}
-									{#if sortBy.filter((s) => s.accessor === column.accessorKey)[0]?.direction === 'asc'}
+								{#if column.isSorted()}
+									{#if column.getSortingDirection() === 'asc'}
 										▲
-									{:else if sortBy.filter((s) => s.accessor === column.accessorKey)[0]?.direction === 'desc'}
+									{:else if column.getSortingDirection() === 'desc'}
 										▼
 									{:else}
 										&nbsp;
@@ -201,13 +189,31 @@
 </div>
 <!-- Pagination controls -->
 <div class="pagination">
-	<button disabled={currentPage === 1} onclick={() => handlePageChange(currentPage - 1)}>
+	<button
+		disabled={grid.pagination.canPrevPage()}
+		onclick={() => grid.command(() => grid.pagination.goToPrevPage())}
+	>
 		Previous
 	</button>
-	<span>Page {currentPage}</span>
-	<button disabled={currentPage === totalPages} onclick={() => handlePageChange(currentPage + 1)}>
+	<span>Page {grid.pagination.page}</span>
+	<button
+		disabled={grid.pagination.canNextPage()}
+		onclick={() => grid.command(() => grid.pagination.goToNextPage())}
+	>
 		Next
 	</button>
+	<select
+		value={grid.pagination.pageSize}
+		onchange={(e) => {
+			grid.command(() => grid.pagination.updatePageSize(Number(e.currentTarget.value)));
+
+			// setPageSize(Number(e.currentTarget.value));
+		}}
+	>
+		{#each grid.pagination.pageSizes as pageSize}
+			<option value={pageSize}>{pageSize}</option>
+		{/each}
+	</select>
 </div>
 
 <style>
