@@ -38,7 +38,7 @@ export class Datagrid implements DatagridInstance {
         data: [],
         columns: [],
     }
-    
+
     rows: Row[] = $state([]);
     columns: Column[] = $state([]);
 
@@ -62,10 +62,20 @@ export class Datagrid implements DatagridInstance {
     }
 
 
+
     command(operation: () => void): void {
         const timeStart = performance.now();
         operation();
         this.refreshRows();
         console.log(`Operation took ${performance.now() - timeStart}ms`)
     }
+
+    execute(command: () => void): void {
+        const timeStart = performance.now();
+        command();
+        this.dataProcessor.initialize()
+        console.log(`Execution took ${performance.now() - timeStart}ms`)
+
+    }
+
 }

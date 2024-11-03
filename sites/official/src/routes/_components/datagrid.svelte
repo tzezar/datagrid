@@ -119,7 +119,7 @@
 								onclick={(e) => {
 									if (e.currentTarget === e.target) {
 										e.stopPropagation();
-										grid.command(() => grid.sorting.toggleSort(column.accessorKey));
+										grid.execute(() => grid.sorting.toggleSort(column.accessorKey));
 									}
 								}}
 							>

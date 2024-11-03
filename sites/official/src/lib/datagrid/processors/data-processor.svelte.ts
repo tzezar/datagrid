@@ -35,6 +35,8 @@ export class DataProcessor implements DataProcessorInstance {
         // this.initialize();
     }
 
+
+    // THIS SHOULD PROBABLY BE RENAMED
     initialize(): Row[] {
         console.log('initialize');
         this.grid.grouping.state.groupedDataCache = null;
