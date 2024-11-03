@@ -1,23 +1,24 @@
 # Tzezar's datagrid
 Easy to use. Easy to customize. Made in svelte 5.
 
-![image](https://github.com/user-attachments/assets/3aef0878-0c9c-402b-aca1-99da79548f47)
 
 ## WORK IN PROGRESS
 
-# Headless
+### Headless
 - [ ] Column ordering
 - [ ] Column pinning
 - [ ] Column sizing
 - [ ] Column visibility
-- [ ] Column filtering
+- [x] Column filtering
 - [ ] Global filtering
 - [ ] Fuzzy filtering
 - [ ] Column faceting
-- [ ] Grouping
+- [x] Grouping
 - [ ] Expanding
-- [ ] Pagination
+- [x] Pagination
 - [ ] Row pinning
 - [ ] Row selection
-- [ ] Sorting
+- [x] Sorting
 - [ ] Virtualization
+
+![image](https://github.com/user-attachments/assets/3aef0878-0c9c-402b-aca1-99da79548f47)
