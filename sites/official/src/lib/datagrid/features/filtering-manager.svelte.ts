@@ -60,6 +60,7 @@ export class FilteringManager implements FilteringFeature {
         this.state.conditions = this.state.conditions.filter(
             condition => condition.accessor !== accessor
         );
+        
         this.grid.rows = this.grid.dataProcessor.initialize();
     }
 
