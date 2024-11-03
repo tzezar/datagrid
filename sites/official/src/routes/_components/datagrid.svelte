@@ -29,9 +29,6 @@
 	}
 </script>
 
-{grid.pagination.page}
-{grid.pagination.pageSize}
-{grid.pagination.pageCount}
 <div class="flex flex-col gap-4 pb-4">
 	<div class="flex flex-col">
 		<label for="groupBy">Group by:</label>
@@ -64,13 +61,13 @@
 		<div class="grid-header">
 			<div class="grid-header-row">
 				{#each grid.columns as column}
-					<!-- svelte-ignore a11y_click_events_have_key_events -->
-					<!-- svelte-ignore a11y_no_static_element_interactions -->
 					<div
 						class="grid-header-cell flex cursor-pointer flex-col"
 						style={`--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'}`}
 					>
 						<div class="flex flex-row">
+							<!-- svelte-ignore a11y_click_events_have_key_events -->
+							<!-- svelte-ignore a11y_no_static_element_interactions -->
 							<span
 								class="grow flex-nowrap overflow-hidden text-ellipsis text-nowrap"
 								onclick={(e) => {
