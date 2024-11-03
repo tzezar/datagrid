@@ -2,14 +2,72 @@ import type { DatagridInstance } from "../index.svelte";
 
 
 export interface PaginationFeature {
+    page: number;
+    pageSize: number;
+    count: number;
 
+    pageSizes: number[]
+    pageCount: number;
+
+
+    canPrevPage(): boolean;
+    canNextPage(): boolean;
+    goToPage(page: number): void;
+    goToNextPage(): void;
+    goToPrevPage(): void;
+    goToFirstPage(): void;
+    goToLastPage(): void;
+
+    updatePageSize(pageSize: number): void;
 }
 
 
 export class PaginationManager implements PaginationFeature {
     protected grid: DatagridInstance;
 
+    page = $state(1);
+    pageSize = 10;
+    count = 0;
+    pageSizes = [10, 25, 50, 100];
+    pageCount = 0;
+
     constructor(grid: DatagridInstance) {
         this.grid = grid;
+    }
+
+    canPrevPage(): boolean {
+        return this.page === 1;
+    }
+
+    canNextPage(): boolean {
+        return this.page === this.pageCount;
+    }
+
+    goToPage(page: number): void {
+        this.page = page;
+    }
+
+    goToNextPage(): void {
+        if (this.canNextPage()) return;
+        this.goToPage(this.page + 1);
+    }
+
+    goToPrevPage(): void {
+        if (this.canPrevPage()) return;
+        this.goToPage(this.page - 1);
+    }
+
+    goToFirstPage(): void {
+        this.goToPage(1);
+    }
+
+    goToLastPage(): void {
+        this.goToPage(this.pageCount);
+    }
+
+    updatePageSize(pageSize: number): void {
+        this.pageSize = pageSize;
+        this.pageCount = Math.ceil(this.grid.dataProcessor.getVisibleRowCount() / this.pageSize);
+        this.goToPage(1);
     }
 }
