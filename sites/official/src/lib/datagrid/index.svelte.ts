@@ -57,6 +57,15 @@ export class Datagrid implements DatagridInstance {
         this.columnsProcessor.initialize();
     }
 
+    refreshRows(): void {
+        this.rows = this.dataProcessor.getVisibleRows(this.pagination.page, this.pagination.pageSize);
+    }
 
 
+    command(operation: () => void): void {
+        const timeStart = performance.now();
+        operation();
+        this.refreshRows();
+        console.log(`Operation took ${performance.now() - timeStart}ms`)
+    }
 }
