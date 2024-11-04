@@ -4,7 +4,8 @@ export const columns = [
         header: 'ID'
     },
     {
-        accessorKey: 'department',
+        // accessorKey: 'department.name',
+        accessorFn: (row: any) => row.department.name,
         header: 'Department'
     },
     {

@@ -1,10 +1,11 @@
 import type { DatagridInstance } from "../index.svelte";
+import type { ColumnId } from "../processors/column-processor.svelte";
 
 export type SortDirection = "asc" | "desc";
 export type SortMode = "multi" | "single" | "none";
 
 export interface Sort {
-    readonly accessor: string;
+    readonly columnId: ColumnId;
     direction: SortDirection;
 }
 
@@ -27,7 +28,7 @@ export class SortingManager implements SortingFeature {
 
     constructor(
         grid: DatagridInstance,
-        initialSort: SortBy = [{ accessor: 'department', direction: 'asc' }],
+        initialSort: SortBy = [{ columnId: 'sales', direction: 'asc' }],
         mode: SortMode = "single"
     ) {
         this.grid = grid;
@@ -35,26 +36,26 @@ export class SortingManager implements SortingFeature {
         this.sortBy = initialSort;
     }
 
-    public toggleSort(accessor: string): void {
+    public toggleSort(columnId: ColumnId): void {
         if (this.mode === "none") return;
 
-        const currentSortIndex = this.sortBy.findIndex(sort => sort.accessor === accessor);
+        const currentSortIndex = this.sortBy.findIndex(sort => sort.columnId === columnId);
 
         if (this.mode === "single") {
             if (currentSortIndex !== -1) {
                 // If clicking the same column, toggle direction
                 if (this.sortBy[currentSortIndex].direction === "asc") {
-                    this.sortBy = [{ accessor, direction: "desc" }];
+                    this.sortBy = [{ columnId: columnId, direction: "desc" }];
                 } else {
                     this.sortBy = [];  // Clear sorting if already desc
                 }
             } else {
                 // New column, set to asc
-                this.sortBy = [{ accessor, direction: "asc" }];
+                this.sortBy = [{ columnId: columnId, direction: "asc" }];
             }
         } else {  // multi mode
             if (currentSortIndex === -1) {
-                this.sortBy.push({ accessor, direction: "asc" });
+                this.sortBy.push({ columnId: columnId, direction: "asc" });
             } else if (this.sortBy[currentSortIndex].direction === "asc") {
                 this.sortBy[currentSortIndex].direction = "desc";
             } else {
@@ -86,6 +87,6 @@ export class SortingManager implements SortingFeature {
             this.sortBy = [this.sortBy[0]];
             this._sortedDataCache = [];
             this.grid.dataProcessor.process();
-        } 
+        }
     }
 }

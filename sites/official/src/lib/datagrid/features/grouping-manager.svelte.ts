@@ -3,11 +3,12 @@
 
 import { SvelteSet } from "svelte/reactivity";
 import type { DatagridInstance } from "../index.svelte";
+import type { ColumnId } from "../processors/column-processor.svelte";
 
 
 
 export interface GroupingManagerState {
-    groupBy: string[]
+    groupBy: ColumnId[]
     expandedRows: SvelteSet<string>
     _groupedDataCache: Map<string, any> | null
 

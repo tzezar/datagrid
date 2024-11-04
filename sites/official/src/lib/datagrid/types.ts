@@ -2,7 +2,8 @@
 
 
 export interface ColumnDef {
-    accessorKey: string;
+    accessorKey?: string;
+    accessorFn?: (row: any) => any;
     header: string;
 }
 

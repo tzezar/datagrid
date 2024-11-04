@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
 	import { Datagrid } from '$lib/datagrid/index.svelte';
-	import type { DataItem } from '../utils/generata-data';
+	import type { Data } from '$lib/datagrid/types';
 	import { columns } from './columns';
 
-	let { data }: { data: DataItem[] } = $props();
+	let { data }: { data: Data[] } = $props();
 
 	let grid = new Datagrid(data, columns);
 
@@ -27,6 +27,18 @@
 			grid.pagination.updatePageCount();
 		});
 	}
+
+	$effect(() => {
+			console.log($state.snapshot(grid.sorting.sortBy))
+	})
+
+	$effect(() => {
+			console.log($state.snapshot(grid.columns))
+	})
+
+	$effect(() => {
+		console.log($state.snapshot(grid.rows))
+	})
 </script>
 
 <div class="flex flex-col gap-4 pb-4">
@@ -39,7 +51,7 @@
 			id="groupBy"
 		>
 			{#each grid.columns as column}
-				<option value={column.accessorKey}>{column.header}</option>
+				<option value={column.columnId}>{column.header}</option>
 			{/each}
 		</select>
 	</div>
@@ -73,7 +85,7 @@
 								onclick={(e) => {
 									if (e.currentTarget === e.target) {
 										e.stopPropagation();
-										grid.reload(() => grid.sorting.toggleSort(column.accessorKey));
+										grid.reload(() => grid.sorting.toggleSort(column.columnId));
 									}
 								}}
 							>
@@ -95,7 +107,7 @@
 							type="text"
 							onchange={(e) =>
 								grid.filtering.addFilter({
-									accessor: column.accessorKey,
+									accessor: column.accessor,
 									operator: 'contains',
 									value: e.currentTarget.value
 								})}
@@ -120,7 +132,7 @@
 									<span class="group-toggle">
 										{grid.grouping.state.expandedRows.has(row.groupId) ? '▼' : '▶'}
 									</span>
-									{row.groupId}
+									{row?.groupId}
 								{/if}
 							</div>
 						{/each}
@@ -132,7 +144,7 @@
 								class="grid-cell"
 								style={`--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'}`}
 							>
-								{row.original?.[column.accessorKey]}
+								{column.accessor(row.original)}
 							</div>
 						{/each}
 					</div>

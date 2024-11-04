@@ -2,6 +2,7 @@ import { SvelteSet } from "svelte/reactivity";
 import type { DatagridInstance } from "../index.svelte";
 import type { Data } from "../types";
 import { sort } from 'fast-sort';
+import type { Accessor } from "./column-processor.svelte";
 
 export interface Row {
     index: number;
@@ -37,7 +38,7 @@ export class DataProcessor implements DataProcessorInstance {
 
 
     process(): Row[] {
-        console.log('initialize');
+        console.log('data processing');
         this.grid.grouping.state._groupedDataCache = null;
         this.rowsMap.clear();
 
@@ -47,19 +48,18 @@ export class DataProcessor implements DataProcessorInstance {
         );
 
         if (this.grid.grouping.state.groupBy.length > 0) {
-            this.allRows = this.createGroupedRows(processedData);
+            this.allRows = this.createGroupedRows();
         } else {
             if (this.grid.sorting.sortBy.length > 0) {
                 processedData = this.sortData(processedData);
             }
-
             this.allRows = processedData.map((item, i) => ({
                 index: i,
                 subRows: [],
                 groupId: null,
                 parentId: null,
                 original: item,
-                depth: 0
+                depth: 0,
             }));
         }
 
@@ -68,8 +68,8 @@ export class DataProcessor implements DataProcessorInstance {
         return visibleRows;
     }
 
-    private getSortValue(item: any, accessor: string) {
-        const value = item[accessor];
+    private getSortValue(row: any, accessor: Accessor) {
+        const value = accessor(row)
         // Handle null/undefined values to ensure consistent sorting
         return value === null || value === undefined ? '' : value;
     }
@@ -77,11 +77,12 @@ export class DataProcessor implements DataProcessorInstance {
     private sortData(data: Data[]): Data[] {
         if (this.grid.sorting.sortBy.length === 0) return data;
 
-        const sortInstructions = this.grid.sorting.sortBy.map(({ accessor, direction }) => ({
-            [direction]: (item: Data) => this.getSortValue(item, accessor)
-        }));
+        const sortInstructions = this.grid.sorting.sortBy.map(({ columnId, direction }) => {
+            const accessor = this.grid.columnsProcessor.getAccessor(columnId);
+            return { [direction]: (item: Data) => this.getSortValue(item, accessor) }
+        });
 
-        return sort(data).by(sortInstructions);
+        return sort(data).by(sortInstructions as any);
     }
 
     private sortGroups(groups: Map<string, any>): [string, any][] {
@@ -90,17 +91,23 @@ export class DataProcessor implements DataProcessorInstance {
         if (this.grid.sorting.sortBy.length === 0) return entries;
 
         return sort(entries).by(
-            this.grid.sorting.sortBy.map(({ accessor, direction }) => ({
-                [direction]: ([_, group]) => {
-                    // If the sort column matches the group's key, use the group value
-                    if (group.key === accessor) {
-                        return this.getSortValue({ [accessor]: group.value }, accessor);
+            //@ts-expect-error TS7031
+            this.grid.sorting.sortBy.map(({ columnId, direction }) => {
+                const accessor = this.grid.columnsProcessor.getAccessor(columnId);
+                return {
+                    //@ts-expect-error TS7031
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    [direction]: ([_, group]) => {
+                        // If the sort column matches the group's key, use the group value
+                        if (group.key === accessor) {
+                            return this.getSortValue({ [accessor]: group.value }, accessor);
+                        }
+                        // Otherwise, use the first item's value or a default
+                        const firstItem = group.items[0];
+                        return firstItem ? this.getSortValue(firstItem, accessor) : '';
                     }
-                    // Otherwise, use the first item's value or a default
-                    const firstItem = group.items[0];
-                    return firstItem ? this.getSortValue(firstItem, accessor) : '';
                 }
-            }))
+            })
         );
     }
 
@@ -125,8 +132,11 @@ export class DataProcessor implements DataProcessorInstance {
             let currentLevel = groups;
             let groupPath = '';
 
-            groupBy.forEach((key, depth) => {
-                const groupValue = item[key];
+            groupBy.forEach((columnId, depth) => {
+                // * there is room for improvement here
+                // accessing value by row[columnId] is 50% faster
+                const accessor = this.grid.columnsProcessor.getAccessor(columnId);
+                const groupValue = accessor(item);
                 groupPath = groupPath ? `${groupPath}/${groupValue}` : groupValue;
 
                 if (!currentLevel.has(groupValue)) {
@@ -135,7 +145,7 @@ export class DataProcessor implements DataProcessorInstance {
                         subgroups: new Map(),
                         groupPath,
                         value: groupValue,
-                        key,
+                        key: columnId,
                         depth
                     });
                 }
@@ -173,7 +183,7 @@ export class DataProcessor implements DataProcessorInstance {
         sortedEntries.forEach(([key, value]) => groups.set(key, value));
     }
 
-    private createGroupedRows(data: Data[]): Row[] {
+    private createGroupedRows(): Row[] {
         const rows: Row[] = [];
         this.processGroups(this.getGroupedData(), rows);
         return rows;
@@ -183,6 +193,7 @@ export class DataProcessor implements DataProcessorInstance {
         // Get sorted groups
         const sortedGroups = Array.from(groups.entries());
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         sortedGroups.forEach(([_, group]) => {
             const groupRow: Row = {
                 index: rows.length,
@@ -231,7 +242,7 @@ export class DataProcessor implements DataProcessorInstance {
     private isRowVisible(row: Row): boolean {
         if (!row.parentId) return true;
 
-        let currentParentId = row.parentId;
+        let currentParentId: string | null = row.parentId;
         while (currentParentId) {
             if (!this.grid.grouping.state.expandedRows.has(currentParentId)) {
                 return false;

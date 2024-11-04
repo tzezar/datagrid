@@ -1,4 +1,5 @@
 import type { DatagridInstance } from "../index.svelte";
+import type { Accessor } from "../processors/column-processor.svelte";
 
 export type FilterOperator = 
     | 'equals' 
@@ -18,7 +19,7 @@ export type FilterOperator =
     | 'notEmpty';
 
 export interface FilterCondition {
-    accessor: string;
+    accessor: Accessor;
     operator: FilterOperator;
     value: any;
     valueTo?: any; // For 'between' operator
@@ -31,7 +32,7 @@ export interface FilteringState {
 export interface FilteringFeature {
     state: FilteringState;
     addFilter(condition: FilterCondition): void;
-    removeFilter(accessor: string): void;
+    removeFilter(accessor: Accessor): void;
     clearFilters(): void;
     isRowMatching(row: any): boolean;
 }
@@ -56,7 +57,7 @@ export class FilteringManager implements FilteringFeature {
         console.log(this.state.conditions)
     }
 
-    removeFilter(accessor: string): void {
+    removeFilter(accessor: Accessor): void {
         this.state.conditions = this.state.conditions.filter(
             condition => condition.accessor !== accessor
         );
@@ -71,7 +72,9 @@ export class FilteringManager implements FilteringFeature {
 
     isRowMatching(row: any): boolean {
         return this.state.conditions.every(condition => 
-            this.evaluateCondition(row[condition.accessor], condition)
+            // * There is room for improvemt here
+            // adding cache for value to improve performance
+            this.evaluateCondition(condition.accessor(row), condition)
         );
     }
 
