@@ -1,3 +1,4 @@
+import Fuse from "fuse.js";
 import type { DatagridInstance } from "../index.svelte";
 import type { Accessor } from "../processors/column-processor.svelte";
 
@@ -35,11 +36,27 @@ export interface FilteringFeature {
     removeFilter(accessor: Accessor): void;
     clearFilters(): void;
     isRowMatching(row: any): boolean;
+
+    initializeFuseInstance(items: any[], keys: string[]): Fuse<any>;
+
+    search: SearchState
+}
+
+export interface SearchState {
+    value: string;
+    fuzzy: boolean;
+    delay: number;
 }
 
 export class FilteringManager implements FilteringFeature {
     protected grid: DatagridInstance;
     state: FilteringState
+
+    search: SearchState = {
+        value: '',
+        fuzzy: true,
+        delay: 500
+    }
 
     constructor(grid: DatagridInstance) {
         this.grid = grid;
@@ -141,4 +158,17 @@ export class FilteringManager implements FilteringFeature {
                 return true;
         }
     }
+
+    initializeFuseInstance<T>(items: T[], keys: string[]): Fuse<T> {
+        return new Fuse(items, {
+          keys,
+          threshold: 0.3,
+          location: 0,
+          distance: 100,
+          includeScore: true,
+          useExtendedSearch: true,
+          ignoreLocation: true,
+          findAllMatches: true,
+        });
+      }
 }

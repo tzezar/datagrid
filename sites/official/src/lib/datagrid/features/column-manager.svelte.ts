@@ -20,6 +20,9 @@ interface ColumnManagerInstance {
 
     toggleColumnVisibility(column: Column): void;
     getVisibleColumns(): Column[]
+
+
+    getSearchableColumns(): Column[]
 }
 
 
@@ -100,6 +103,11 @@ export class ColumnManager implements ColumnManagerInstance {
             this.grid.columns[columnIndex + 1] = column;
             this.grid.columns[columnIndex] = nextColumn;
         }
+    }
+
+    // used in global search
+    getSearchableColumns(): Column[] {
+        return this.grid.columns.filter(c => c.includeInSearch && c.visible);
     }
 
 }

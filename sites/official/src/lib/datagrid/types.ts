@@ -24,6 +24,8 @@ export interface ColumnDef {
         style?: (row: any) => any;
     }
     faceting?: NumericFacet | CategoricalFacet;
+    includeInSearch?: boolean;
+    includeInExport?: boolean;
 }
 
 export interface Data<T = any> {

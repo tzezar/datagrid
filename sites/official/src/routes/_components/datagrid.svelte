@@ -2,6 +2,7 @@
 	import type { SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
 	import { Datagrid } from '$lib/datagrid/index.svelte';
 	import type { Data } from '$lib/datagrid/types';
+	import { debounce } from '$lib/datagrid/utils/debounce';
 	import { columns } from './columns';
 	import Collapse from './icons/collapse.svelte';
 	import Expand from './icons/expand.svelte';
@@ -28,6 +29,18 @@
 			grid.grouping.setGroupBy(newGroupBy);
 			grid.pagination.updatePageCount();
 		});
+	}
+	const debouncedSearch = debounce((searchText: string) => {
+		grid.filtering.search.value = searchText;
+		grid.reload(() => {
+			grid.pagination.goToFirstPage();
+		});
+	}, grid.filtering.search.delay);
+
+	function handleSearch(event: Event) {
+		const input = event.currentTarget as HTMLInputElement;
+		const searchText = input.value;
+		debouncedSearch(searchText); 
 	}
 
 	$effect(() => {
@@ -123,6 +136,13 @@
 			{/each}
 		</div>
 	</div>
+	<div class="flex flex-col">
+		<!-- svelte-ignore a11y_label_has_associated_control -->
+		<label>Global search:</label>
+		<div class="flex flex-col gap-2 border p-2">
+			<input type="text" placeholder="Search..." oninput={handleSearch} />
+		</div>
+	</div>
 </div>
 <div class="grid-wrapper overflow-auto">
 	<div class="grid">
@@ -195,7 +215,10 @@
 					</div>
 				{:else}
 					<div class="grid-row">
-						<button onclick={() => grid.rowManager.toggleRowExpansion(String(row.original.id))} class='!px-0 ml-2 !py-0 h-fit my-auto'>
+						<button
+							onclick={() => grid.rowManager.toggleRowExpansion(String(row.original.id))}
+							class="my-auto ml-2 h-fit !px-0 !py-0"
+						>
 							{#if grid.rowManager.isRowExpanded(String(row.original.id))}
 								<Expand />
 							{:else}
@@ -219,10 +242,8 @@
 						{/each}
 					</div>
 					{#if grid.rowManager.isRowExpanded(String(row.original.id))}
-						<div class='grid-row'>
-							<div class='grid-cell'>
-								some content here eg lazy loaded
-							</div>
+						<div class="grid-row">
+							<div class="grid-cell">some content here eg lazy loaded</div>
 						</div>
 					{/if}
 				{/if}

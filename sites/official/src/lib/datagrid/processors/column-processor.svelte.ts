@@ -21,7 +21,11 @@ export type ColumnId = string
 
 export interface Column {
     columnId: ColumnId,
+    // ? I am not sure if keeping accessor as fn is good idea, it makes more problems than getting value
+    // ? with getNestedValue(); or maybe cached value would be better for performance
+    // ? (row) => row.smth comes with performance overhead 200%
     accessor: (row: any) => any
+    accessorKey?: string
     formatter?: (row: any) => any
     header: string
     size: {
@@ -42,7 +46,8 @@ export interface Column {
 
     isSorted: () => boolean
     getSortingDirection: () => SortDirection
-
+    includeInSearch: boolean
+    includeInExport: boolean
 }
 
 export interface ColumnProcessorInstance {
@@ -76,10 +81,13 @@ export class ColumnProcessor implements ColumnProcessorInstance {
 
             const processedColumn = {
                 columnId,
+                accessorKey: col.accessorKey,
                 header: col.header,
                 accessor,
                 isSorted,
                 getSortingDirection,
+                includeInSearch: col.includeInSearch === undefined ? true : col.includeInSearch,
+                includeInExport: col.includeInExport === undefined ? true : col.includeInExport,
                 cell: {
                     component: col?.cell?.component,
                     style: col?.cell?.style

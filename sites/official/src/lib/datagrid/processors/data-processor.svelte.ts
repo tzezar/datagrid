@@ -2,7 +2,8 @@ import { SvelteSet } from "svelte/reactivity";
 import type { DatagridInstance } from "../index.svelte";
 import type { Data } from "../types";
 import { sort } from 'fast-sort';
-import type { Accessor } from "./column-processor.svelte";
+import type { Accessor, Column } from "./column-processor.svelte";
+import type { SearchState } from "../features/filtering-manager.svelte";
 
 export interface Row {
     index: number;
@@ -26,6 +27,9 @@ export interface DataProcessorInstance {
     getVisibleRowCount: () => number;
 }
 
+
+
+
 export class DataProcessor implements DataProcessorInstance {
     private grid: DatagridInstance;
     allRowsCache: Row[] = [];
@@ -42,8 +46,15 @@ export class DataProcessor implements DataProcessorInstance {
         this.grid.grouping.state._groupedDataCache = null;
         this.rowsMap.clear();
 
+        // Apply global search first
+        let processedData: Data[] = [...this.grid.original.data];
+
+        if (this.grid.filtering.search.value) {
+            processedData = this.applyGlobalFilter(processedData);
+        }
+
         // Apply filters first
-        let processedData = this.grid.original.data.filter(item =>
+        processedData = processedData.filter(item =>
             this.grid.filtering.isRowMatching(item)
         );
 
@@ -66,6 +77,33 @@ export class DataProcessor implements DataProcessorInstance {
         const visibleRows = this.getVisibleRows(this.grid.pagination.page, this.grid.pagination.pageSize);
         this.grid.rows = visibleRows;
         return visibleRows;
+    }
+
+    applyGlobalFilter(
+        data: Data[],
+    ) {
+        const search = this.grid.filtering.search;
+
+        if (!search.value) return data;
+
+        const searchableColumns = this.grid.columnManager.getSearchableColumns().map(col => col.accessorKey as string);
+
+        // handle fuzzy search
+        if (search.fuzzy) {
+            const fuse = this.grid.filtering.initializeFuseInstance(data, searchableColumns);
+            const results = fuse.search(search.value);
+            return results.map(result => result.item);
+        }
+
+        // handle column level search
+        const searchValue = search.value.toLowerCase();
+        return data.filter(item =>
+            searchableColumns.some(field => {
+                const column = this.grid.columnManager.getColumn(field);
+                const value = column.accessor(item)
+                return String(value).toLowerCase().includes(searchValue);
+            })
+        );
     }
 
     private getSortValue(row: any, accessor: Accessor) {

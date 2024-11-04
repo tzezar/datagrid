@@ -8,10 +8,11 @@ export const columns = [
         header: 'ID'
     },
     {
-        // accessorKey: 'department.name',
+        accessorKey: 'department.name',
         accessorFn: (row: any) => row.department.name,
-        header: 'Department'
+        header: 'Department',
     },
+
     {
         accessorKey: 'region',
         header: 'Region',
