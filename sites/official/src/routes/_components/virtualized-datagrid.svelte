@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
 	import { Datagrid } from '$lib/datagrid/index.svelte';
+	import { Row } from '$lib/datagrid/processors/data-processor.svelte';
 	import type { Data } from '$lib/datagrid/types';
 	import { columns } from './columns';
 	import { VirtualList } from 'svelte-virtuallists';
@@ -146,7 +147,7 @@
 				</div>
 			{/snippet}
 
-			{#snippet vl_slot({ item, index })}
+			{#snippet vl_slot({ item, index }: { item: Row; index: number })}
 				{#if item.groupId}
 					<div class="grid-row">
 						{#each grid.columns as column, colIndex}
@@ -173,6 +174,7 @@
 								style={`${column.cell && column.cell.style && column.cell.style(item)}; --width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'}`}
 							>
 								{#if column.cell && column.cell.component}
+									<!-- svelte-ignore svelte_component_deprecated -->
 									<svelte:component this={column.cell.component} row={item} />
 								{:else if column.formatter}
 									{column.formatter(item.original)}
