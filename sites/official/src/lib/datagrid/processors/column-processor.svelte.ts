@@ -14,6 +14,14 @@ export interface Column {
         minWidth: number
         maxWidth: number
     },
+    cell?: (row: any) => any
+    cellStyle?: (row: any) => any
+
+    visible: boolean;
+    groupable: boolean;
+    sortable: boolean;
+    filterable: boolean;
+
 
 
     isSorted: () => boolean
@@ -37,7 +45,6 @@ export class ColumnProcessor implements ColumnProcessorInstance {
         const columns: Column[] = [];
         for (let i = 0; i < this.grid.original.columns.length; i++) {
             const col = this.grid.original.columns[i];
-
             const columnId = col.accessorKey || String(i)
 
             let accessor = col.accessorKey || col.accessorFn
@@ -49,19 +56,23 @@ export class ColumnProcessor implements ColumnProcessorInstance {
             const isSorted = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId).length > 0;
             const getSortingDirection = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId)[0]?.direction
 
-            columns.push({
+            const processedColumn = {
                 columnId,
+                header: col.header,
                 accessor,
                 isSorted,
                 getSortingDirection,
-                header: col.header,
+                cell: col.cell,
                 formatter: col.formatter,
-                size: {
-                    width: 100,
-                    minWidth: 50,
-                    maxWidth: 200
-                }
-            });
+                size: col.size || { width: 100, minWidth: 50, maxWidth: 200 },
+                cellStyle: col.cellStyle,
+                visible: col.visible === undefined ? true : col.visible,
+                groupable: col.groupable === undefined ? true : col.groupable,
+                sortable: col.sortable === undefined ? true : col.sortable,
+                filterable: col.filterable === undefined ? true : col.filterable,
+            }
+
+            columns.push(processedColumn);
 
             this.grid.columns = columns;
         }

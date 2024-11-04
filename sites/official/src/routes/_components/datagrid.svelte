@@ -142,9 +142,11 @@
 						{#each grid.columns as column}
 							<div
 								class="grid-cell"
-								style={`--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'}`}
+								style={`${column.cell && column.cell.style && column.cell.style(row)}; --width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'}`}
 							>
-								{#if column.formatter}
+								{#if column.cell && column.cell.component}
+									<svelte:component this={column.cell.component} {row} />
+								{:else if column.formatter}
 									{column.formatter(row.original)}
 								{:else}
 									{column.accessor(row.original)}

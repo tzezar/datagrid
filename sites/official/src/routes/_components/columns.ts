@@ -1,4 +1,6 @@
+import type { Row } from "$lib/datagrid/processors/data-processor.svelte";
 import type { ColumnDef, Data } from "$lib/datagrid/types";
+import Profit from "./cells/profit.svelte";
 
 export const columns = [
     {
@@ -12,7 +14,10 @@ export const columns = [
     },
     {
         accessorKey: 'region',
-        header: 'Region'
+        header: 'Region',
+        cell: {
+            style: (row: Row) => `${row.original.region === 'East' ? 'color: orange' : ''}`
+        }
     },
     {
         accessorKey: 'sales',
@@ -21,6 +26,9 @@ export const columns = [
     },
     {
         accessorKey: 'profit',
-        header: 'Profit'
+        header: 'Profit',
+        cell: {
+            component: Profit
+        }
     }
 ] satisfies ColumnDef[]
