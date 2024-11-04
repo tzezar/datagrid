@@ -14,9 +14,10 @@ export interface Column {
         minWidth: number
         maxWidth: number
     },
-    cell?: (row: any) => any
-    cellStyle?: (row: any) => any
-
+    cell?: {
+        component?: any | undefined
+        style?: (row: any) => any | undefined
+    }
     visible: boolean;
     groupable: boolean;
     sortable: boolean;
@@ -62,10 +63,12 @@ export class ColumnProcessor implements ColumnProcessorInstance {
                 accessor,
                 isSorted,
                 getSortingDirection,
-                cell: col.cell,
+                cell: {
+                    component: col?.cell?.component,
+                    style: col?.cell?.style
+                },
                 formatter: col.formatter,
                 size: col.size || { width: 100, minWidth: 50, maxWidth: 200 },
-                cellStyle: col.cellStyle,
                 visible: col.visible === undefined ? true : col.visible,
                 groupable: col.groupable === undefined ? true : col.groupable,
                 sortable: col.sortable === undefined ? true : col.sortable,
