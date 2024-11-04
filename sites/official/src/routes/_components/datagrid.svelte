@@ -63,16 +63,15 @@
 	<div class="flex flex-col">
 		<!-- svelte-ignore a11y_label_has_associated_control -->
 		<label>Colum visibility:</label>
-		<div class='p-2 border'>
+		<div class="border p-2">
 			{#each grid.columns as column}
-				<div class="flex flex-row gap-2 justify-between max-w-[200px]">
-
+				<div class="flex max-w-[200px] flex-row justify-between gap-2">
 					{column.header}
-				<input
-					type="checkbox"
-					checked={column.visible}
-					onchange={() => grid.columnManager.toggleColumnVisibility(column)}
-				/>
+					<input
+						type="checkbox"
+						checked={column.visible}
+						onchange={() => grid.columnManager.toggleColumnVisibility(column)}
+					/>
 				</div>
 			{/each}
 		</div>
@@ -80,17 +79,42 @@
 	<div class="flex flex-col">
 		<!-- svelte-ignore a11y_label_has_associated_control -->
 		<label>Colum resizing:</label>
-		<div class='p-2 border'>
+		<div class="border p-2">
 			{#each grid.columns as column}
-				<div class="flex flex-row gap-2 justify-between max-w-[300px]">
+				<div class="flex max-w-[300px] flex-row justify-between gap-2">
 					{column.header}
-				<input
-					type="range"
-					min={column.size.minWidth}
-					max={column.size.maxWidth}
-					value={column.size.width}
-					onchange={(e) => grid.columnManager.resizeColumn(column, Number(e.currentTarget.value))}
-				/>
+					<input
+						type="range"
+						min={column.size.minWidth}
+						max={column.size.maxWidth}
+						value={column.size.width}
+						onchange={(e) => grid.columnManager.resizeColumn(column, Number(e.currentTarget.value))}
+					/>
+				</div>
+			{/each}
+		</div>
+	</div>
+	<div class="flex flex-col">
+		<!-- svelte-ignore a11y_label_has_associated_control -->
+		<label>Colum reordering:</label>
+		<div class="border p-2 flex flex-col gap-2">
+			{#each grid.columns as column}
+				<div class="flex max-w-[300px] flex-row justify-between gap-2">
+					{column.header}
+					<div class='flex gap-4'>
+						<button
+							onclick={() => grid.columnManager.moveColumnLeft(column)}
+							disabled={!grid.columnManager.canMoveColumnLeft(column)}
+						>
+							up
+						</button>
+						<button
+							onclick={() => grid.columnManager.moveColumnRight(column)}
+							disabled={!grid.columnManager.canMoveColumnRight(column)}
+						>
+							down
+						</button>
+					</div>
 				</div>
 			{/each}
 		</div>
@@ -253,6 +277,10 @@
 
 	button:disabled {
 		@apply cursor-not-allowed opacity-50;
+	}
+
+	button:hover:not(:disabled) {
+		@apply bg-orange-500;
 	}
 
 	input {
