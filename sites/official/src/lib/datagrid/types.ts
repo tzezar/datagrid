@@ -1,3 +1,4 @@
+import type { CategoricalFacet, NumericFacet } from "./processors/column-processor.svelte";
 
 
 
@@ -22,6 +23,7 @@ export interface ColumnDef {
         component?: any;
         style?: (row: any) => any;
     }
+    faceting?: NumericFacet | CategoricalFacet;
 }
 
 export interface Data<T = any> {

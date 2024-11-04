@@ -19,6 +19,7 @@ export interface GroupingState {
 }
 
 export interface DataProcessorInstance {
+    allRowsCache: Row[]
     process(): Row[];
     getVisibleRows(page: number, pageSize: number): Row[];
     toggleGroupExpansion(groupId: string): void;
@@ -27,13 +28,12 @@ export interface DataProcessorInstance {
 
 export class DataProcessor implements DataProcessorInstance {
     private grid: DatagridInstance;
-    private allRows: Row[] = [];
+    allRowsCache: Row[] = [];
     private rowsMap: Map<string, Row> = new Map();
 
     constructor(grid: DatagridInstance) {
         this.grid = grid;
         this.grid.grouping.state.expandedRows = new SvelteSet([]);
-        // this.initialize();
     }
 
 
@@ -48,12 +48,12 @@ export class DataProcessor implements DataProcessorInstance {
         );
 
         if (this.grid.grouping.state.groupBy.length > 0) {
-            this.allRows = this.createGroupedRows();
+            this.allRowsCache = this.createGroupedRows();
         } else {
             if (this.grid.sorting.sortBy.length > 0) {
                 processedData = this.sortData(processedData);
             }
-            this.allRows = processedData.map((item, i) => ({
+            this.allRowsCache = processedData.map((item, i) => ({
                 index: i,
                 subRows: [],
                 groupId: null,
@@ -229,14 +229,14 @@ export class DataProcessor implements DataProcessorInstance {
     }
 
     getVisibleRows(page: number, pageSize: number): Row[] {
-        const visibleRows = this.allRows.filter(row => this.isRowVisible(row));
+        const visibleRows = this.allRowsCache.filter(row => this.isRowVisible(row));
         const startIndex = (page - 1) * pageSize;
         const endIndex = startIndex + pageSize;
         return visibleRows.slice(startIndex, endIndex);
     }
 
     getVisibleRowCount(): number {
-        return this.allRows.filter(row => this.isRowVisible(row)).length;
+        return this.allRowsCache.filter(row => this.isRowVisible(row)).length;
     }
 
     private isRowVisible(row: Row): boolean {
@@ -261,6 +261,6 @@ export class DataProcessor implements DataProcessorInstance {
             this.grid.grouping.state.expandedRows.add(groupId);
         }
 
-        this.allRows = this.createGroupedRows();
+        this.allRowsCache = this.createGroupedRows();
     }
 }

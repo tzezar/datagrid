@@ -1,5 +1,20 @@
 import type { SortDirection } from "../features/sorting-manager.svelte";
 import type { DatagridInstance } from "../index.svelte";
+import type { Row } from "./data-processor.svelte";
+
+
+export type NumericFacet = {
+    type: 'numeric'
+    min: number
+    max: number
+}
+
+export type CategoricalFacet = {
+    type: 'categorical'
+    uniqueValues: any[]
+    uniqueValuesCount: number
+}
+
 
 export type Accessor = (row: any) => any
 export type ColumnId = string
@@ -23,7 +38,7 @@ export interface Column {
     sortable: boolean;
     filterable: boolean;
 
-
+    faceting: NumericFacet | CategoricalFacet | undefined
 
     isSorted: () => boolean
     getSortingDirection: () => SortDirection
@@ -33,6 +48,8 @@ export interface Column {
 export interface ColumnProcessorInstance {
     initialize(): void
     getAccessor(columnId: ColumnId): Accessor
+
+    calculateFacets(rows: Row[]): void
 }
 
 export class ColumnProcessor implements ColumnProcessorInstance {
@@ -67,6 +84,7 @@ export class ColumnProcessor implements ColumnProcessorInstance {
                     component: col?.cell?.component,
                     style: col?.cell?.style
                 },
+                faceting: col.faceting,
                 formatter: col.formatter,
                 size: col.size || { width: 100, minWidth: 50, maxWidth: 200 },
                 visible: col.visible === undefined ? true : col.visible,
@@ -76,7 +94,6 @@ export class ColumnProcessor implements ColumnProcessorInstance {
             }
 
             columns.push(processedColumn);
-
             this.grid.columns = columns;
         }
     }
@@ -98,4 +115,19 @@ export class ColumnProcessor implements ColumnProcessorInstance {
         return column.accessor
     }
 
+
+    calculateFacets(rows: Row[]) {
+        for (const column of this.grid.columns) {
+            if (!column.faceting) continue
+            if (column.faceting.type === 'numeric') {
+                column.faceting.min = Math.min(...rows.map(row => column.accessor(row.original))) 
+                column.faceting.max = Math.max(...rows.map(row => column.accessor(row.original))) 
+            }
+
+            if (column.faceting.type === 'categorical') {
+                column.faceting.uniqueValuesCount = new Set(rows.map(row => column.accessor(row.original))).size
+                column.faceting.uniqueValues = Array.from(new Set(rows.map(row => column.accessor(row.original))))
+            }
+        }
+    }
 }

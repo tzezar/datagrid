@@ -31,8 +31,9 @@
 	}
 
 	$effect(() => {
-		console.log($state.snapshot(grid.grouping.state.expandedRows));
-		console.log($state.snapshot(grid.rows));
+		// console.log($state.snapshot(grid.grouping.state.expandedRows));
+		// console.log($state.snapshot(grid.rows));
+		// console.log($state.snapshot(grid.columns));
 	});
 </script>
 
