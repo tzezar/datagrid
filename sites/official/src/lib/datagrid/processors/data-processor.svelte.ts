@@ -100,7 +100,7 @@ export class DataProcessor implements DataProcessorInstance {
                     [direction]: ([_, group]) => {
                         // If the sort column matches the group's key, use the group value
                         if (group.key === accessor) {
-                            return this.getSortValue({ [accessor]: group.value }, accessor);
+                            return this.getSortValue({ [columnId]: group.value }, accessor);
                         }
                         // Otherwise, use the first item's value or a default
                         const firstItem = group.items[0];
@@ -261,6 +261,6 @@ export class DataProcessor implements DataProcessorInstance {
             this.grid.grouping.state.expandedRows.add(groupId);
         }
 
-        this.allRows = this.createGroupedRows(this.grid.original.data);
+        this.allRows = this.createGroupedRows();
     }
 }

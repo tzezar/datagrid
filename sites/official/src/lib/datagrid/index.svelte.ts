@@ -1,4 +1,3 @@
-import { browser } from "$app/environment";
 import { FilteringManager, type FilteringFeature } from "./features/filtering-manager.svelte";
 import { GroupingManager, type GroupingFeature } from "./features/grouping-manager.svelte";
 import { PaginationManager, type PaginationFeature } from "./features/pagination-manager.svelte";
