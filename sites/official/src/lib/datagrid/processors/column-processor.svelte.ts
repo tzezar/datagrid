@@ -1,5 +1,7 @@
+import { filterOperators, numberFilterOperators, stringFilterOperators, type FilterOperator } from "../features/filtering-manager.svelte";
 import type { SortDirection } from "../features/sorting-manager.svelte";
 import type { DatagridInstance } from "../index.svelte";
+import type { ColumnDef } from "../types";
 import type { Row } from "./data-processor.svelte";
 
 
@@ -41,13 +43,15 @@ export interface Column {
     groupable: boolean;
     sortable: boolean;
     filterable: boolean;
-
+    type: 'string' | 'number'
     faceting: NumericFacet | CategoricalFacet | undefined
 
     isSorted: () => boolean
     getSortingDirection: () => SortDirection
     includeInSearch: boolean
     includeInExport: boolean
+    allowedSortDirections: SortDirection[]
+    allowedFilterOperators: FilterOperator[]
 }
 
 export interface ColumnProcessorInstance {
@@ -99,12 +103,26 @@ export class ColumnProcessor implements ColumnProcessorInstance {
                 groupable: col.groupable === undefined ? true : col.groupable,
                 sortable: col.sortable === undefined ? true : col.sortable,
                 filterable: col.filterable === undefined ? true : col.filterable,
+                allowedSortDirections: col.allowedSortDirections || ['asc', 'desc'],
+                allowedFilterOperators: this.getAllowedFilterOperators(col),
+                type: col.type || 'string'
             }
 
             columns.push(processedColumn);
             this.grid.columns = columns;
         }
     }
+
+    private getAllowedFilterOperators(column: ColumnDef): FilterOperator[] {
+        if (!column) return []
+        if (column.filterable === false) return []
+        if (!column.type) return []
+        if (column.allowedFilterOperators) return column.allowedFilterOperators
+        if (column.type === 'string') return stringFilterOperators
+        if (column.type === 'number') return numberFilterOperators
+        return []
+    }
+
 
     createAccessorFn<T,>(accessor: string | Accessor) {
         if (typeof accessor === 'string') {
@@ -128,8 +146,8 @@ export class ColumnProcessor implements ColumnProcessorInstance {
         for (const column of this.grid.columns) {
             if (!column.faceting) continue
             if (column.faceting.type === 'numeric') {
-                column.faceting.min = Math.min(...rows.map(row => column.accessor(row.original))) 
-                column.faceting.max = Math.max(...rows.map(row => column.accessor(row.original))) 
+                column.faceting.min = Math.min(...rows.map(row => column.accessor(row.original)))
+                column.faceting.max = Math.max(...rows.map(row => column.accessor(row.original)))
             }
 
             if (column.faceting.type === 'categorical') {

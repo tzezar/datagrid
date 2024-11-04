@@ -40,13 +40,13 @@
 	function handleSearch(event: Event) {
 		const input = event.currentTarget as HTMLInputElement;
 		const searchText = input.value;
-		debouncedSearch(searchText); 
+		debouncedSearch(searchText);
 	}
 
 	$effect(() => {
 		// console.log($state.snapshot(grid.grouping.state.expandedRows));
 		// console.log($state.snapshot(grid.rows));
-		// console.log($state.snapshot(grid.columns));
+		console.log($state.snapshot(grid.filtering.state.conditions));
 	});
 </script>
 
@@ -139,9 +139,31 @@
 	<div class="flex flex-col">
 		<!-- svelte-ignore a11y_label_has_associated_control -->
 		<label>Global search:</label>
-		<div class="flex flex-col gap-2 border p-2">
-			<input type="text" placeholder="Search..." oninput={handleSearch} />
+		<input type="text" placeholder="Search..." oninput={handleSearch} />
+		<div class='flex gap-2 pt-2'>
+			<label for="fuzzy">Fuzzy?</label>
+			<input
+				type="checkbox"
+				checked={grid.filtering.search.fuzzy}
+				onchange={() => {
+					grid.filtering.search.fuzzy = !grid.filtering.search.fuzzy;
+					grid.reload(() => {
+						grid.pagination.goToFirstPage();
+					});
+				}}
+			/>
 		</div>
+	</div>
+	<div class="flex flex-col">
+		<!-- svelte-ignore a11y_label_has_associated_control -->
+		<label>Apply column filters:</label>
+		<button
+			onclick={() => {
+				grid.reload(() => {});
+			}}
+		>
+			Apply
+		</button>
 	</div>
 </div>
 <div class="grid-wrapper overflow-auto">
@@ -167,6 +189,7 @@
 							>
 								{column.header}
 							</span>
+
 							<span>
 								{#if column.isSorted()}
 									{#if column.getSortingDirection() === 'asc'}
@@ -179,15 +202,93 @@
 								{/if}
 							</span>
 						</div>
-						<input
-							type="text"
+						<select
+							class="h-6 text-xs"
+							value={grid.filtering.state.conditions.filter(
+								(c) => c.accessorKey === column.accessorKey
+							)[0]?.operator || 'contains'}
 							onchange={(e) =>
 								grid.filtering.addFilter({
 									accessor: column.accessor,
-									operator: 'contains',
-									value: e.currentTarget.value
+									accessorKey: column.accessorKey,
+									operator: e.currentTarget.value as FilterOperator,
+									value:
+										grid.filtering.state.conditions.filter(
+											(c) => c.accessorKey === column.accessorKey
+										)[0]?.value || ''
 								})}
-						/>
+						>
+							{#each column.allowedFilterOperators as filterOperator}
+								<option value={filterOperator}>
+									{filterOperator}
+								</option>
+							{/each}
+						</select>
+						{#if column.type === 'number'}
+							<input
+								class="h-6 text-xs"
+								placeholder="Search..."
+								type="text"
+								value={grid.filtering.state.conditions.filter(
+									(c) => c.accessorKey === column.accessorKey
+								)[0]?.value || ''}
+								onchange={(e) =>
+									grid.filtering.addFilter({
+										accessor: column.accessor,
+										accessorKey: column.accessorKey,
+										operator:
+											grid.filtering.state.conditions.filter(
+												(c) => c.accessorKey === column.accessorKey
+											)[0]?.operator || 'contains',
+										value: +e.currentTarget.value || ''
+									})}
+							/>
+							{#if grid.filtering.state.conditions.filter((c) => c.accessorKey === column.accessorKey)[0]?.operator === 'between'}
+								<input
+									placeholder="Search..."
+									type="text"
+									class="h-6 text-xs"
+									value={grid.filtering.state.conditions.filter(
+										(c) => c.accessorKey === column.accessorKey
+									)[0]?.value || ''}
+									onchange={(e) =>
+										grid.filtering.addFilter({
+											accessor: column.accessor,
+											accessorKey: column.accessorKey,
+											operator: 'contains',
+											value:
+												grid.filtering.state.conditions.filter(
+													(c) => c.accessorKey === column.accessorKey
+												)[0]?.value || '',
+											valueTo: +e.currentTarget.value
+										})}
+								/>
+							{/if}
+						{:else}
+							<input
+								placeholder="Search..."
+								type="text"
+								class="h-6 text-xs"
+								value={grid.filtering.state.conditions.filter(
+									(c) => c.accessorKey === column.accessorKey
+								)[0]?.value || ''}
+								onchange={(e) =>
+									grid.filtering.addFilter({
+										accessor: column.accessor,
+										accessorKey: column.accessorKey,
+										operator: 'contains',
+										value: e.currentTarget.value
+									})}
+							/>
+						{/if}
+						<div class="flex h-6 gap-2">
+							<button
+								class="w-full !rounded-none !bg-white !py-[2px] text-xs !text-black"
+								onclick={() => grid.filtering.removeFilter(column.accessorKey)}
+							>
+								clear
+							</button>
+						</div>
 					</div>
 				{/each}
 			</div>

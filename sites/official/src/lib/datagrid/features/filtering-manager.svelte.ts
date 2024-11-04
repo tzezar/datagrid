@@ -2,6 +2,47 @@ import Fuse from "fuse.js";
 import type { DatagridInstance } from "../index.svelte";
 import type { Accessor } from "../processors/column-processor.svelte";
 
+export const filterOperators: FilterOperator[] = [
+    'equals',
+    'notEquals',
+    'contains',
+    'notContains',
+    'startsWith',
+    'endsWith',
+    'greaterThan',
+    'lessThan',
+    'greaterThanOrEqual',
+    'lessThanOrEqual',
+    'between',
+    'inList',
+    'notInList',
+    'empty',
+    'notEmpty'
+];
+
+export const numberFilterOperators: FilterOperator[] = [
+    'equals',
+    'notEquals',
+    'greaterThan',
+    'lessThan',
+    'greaterThanOrEqual',
+    'lessThanOrEqual',
+    'between',
+    'empty',
+    'notEmpty'
+]
+
+export const stringFilterOperators: FilterOperator[] = [
+    'equals',
+    'notEquals',
+    'contains',
+    'notContains',
+    'startsWith',
+    'endsWith',
+    'empty',
+    'notEmpty'
+]
+
 export type FilterOperator = 
     | 'equals' 
     | 'notEquals'
@@ -20,6 +61,7 @@ export type FilterOperator =
     | 'notEmpty';
 
 export interface FilterCondition {
+    accessorKey: string;
     accessor: Accessor;
     operator: FilterOperator;
     value: any;
@@ -50,7 +92,9 @@ export interface SearchState {
 
 export class FilteringManager implements FilteringFeature {
     protected grid: DatagridInstance;
-    state: FilteringState
+    state: FilteringState = $state({
+        conditions: []
+    })
 
     search: SearchState = {
         value: '',
@@ -67,19 +111,14 @@ export class FilteringManager implements FilteringFeature {
 
     addFilter(condition: FilterCondition): void {
         // Remove any existing filter for the same column
-        this.removeFilter(condition.accessor);
+        this.removeFilter(condition.accessorKey);
         this.state.conditions.push(condition);
-        this.grid.rows = this.grid.dataProcessor.process();
-
-        console.log(this.state.conditions)
     }
 
-    removeFilter(accessor: Accessor): void {
+    removeFilter(accessorKey: string): void {
         this.state.conditions = this.state.conditions.filter(
-            condition => condition.accessor !== accessor
+            condition => condition.accessorKey !== accessorKey
         );
-        
-        this.grid.rows = this.grid.dataProcessor.process();
     }
 
     clearFilters(): void {

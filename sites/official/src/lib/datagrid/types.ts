@@ -1,3 +1,5 @@
+import type { FilterOperator } from "./features/filtering-manager.svelte";
+import type { SortDirection } from "./features/sorting-manager.svelte";
 import type { CategoricalFacet, NumericFacet } from "./processors/column-processor.svelte";
 
 
@@ -19,6 +21,10 @@ export interface ColumnDef {
     groupable?: boolean;
     sortable?: boolean;
     filterable?: boolean;
+    // type: 'string' | 'number' | 'date' | 'boolean' | 'object' | 'html' | 'image' | 'link' | 'custom' | 'unknown',
+    type: 'string' | 'number',
+    allowedSortDirections?: SortDirection[]
+    allowedFilterOperators?: FilterOperator[]
     cell?: {
         component?: any;
         style?: (row: any) => any;

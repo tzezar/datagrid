@@ -5,12 +5,14 @@ import Profit from "./cells/profit.svelte";
 export const columns = [
     {
         accessorKey: 'id',
-        header: 'ID'
+        header: 'ID',
+        type: 'number',
     },
     {
         accessorKey: 'department.name',
         accessorFn: (row: any) => row.department.name,
         header: 'Department',
+        type: 'string',
     },
 
     {
@@ -23,7 +25,8 @@ export const columns = [
             type: 'categorical',
             uniqueValues: [],
             uniqueValuesCount: 0
-        }
+        },
+        type: 'string',
     },
     {
         accessorKey: 'sales',
@@ -34,6 +37,8 @@ export const columns = [
             max: 0,
             min: 0
         }
+        ,
+        type: 'number',
     },
     {
         accessorKey: 'profit',
@@ -45,6 +50,7 @@ export const columns = [
             type: 'numeric',
             max: 0,
             min: 0
-        }
+        },
+        type: 'number',
     }
 ] satisfies ColumnDef[]
