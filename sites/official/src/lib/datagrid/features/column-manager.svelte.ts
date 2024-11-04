@@ -58,11 +58,11 @@ export class ColumnManager implements ColumnManagerInstance {
     }
 
     pinColumn(column: Column, position: PinningPosition, offset: number): void {
-
+        // TODO
     }
 
     unpinColumn(column: Column): void {
-
+        // TODO
     }
 
     resizeColumn(column: Column, width: number): void {

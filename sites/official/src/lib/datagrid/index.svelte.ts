@@ -2,6 +2,7 @@ import { ColumnManager } from "./features/column-manager.svelte";
 import { FilteringManager, type FilteringFeature } from "./features/filtering-manager.svelte";
 import { GroupingManager, type GroupingFeature } from "./features/grouping-manager.svelte";
 import { PaginationManager, type PaginationFeature } from "./features/pagination-manager.svelte";
+import { RowManager } from "./features/row-manager.svelte";
 import { SortingManager, type SortingFeature } from "./features/sorting-manager.svelte";
 import { ColumnProcessor, type Column, type ColumnProcessorInstance } from "./processors/column-processor.svelte";
 import { DataProcessor, type DataProcessorInstance, type Row } from "./processors/data-processor.svelte";
@@ -49,6 +50,7 @@ export class Datagrid implements DatagridInstance {
     grouping: GroupingFeature = new GroupingManager(this);
     pagination: PaginationFeature = new PaginationManager(this);
     columnManager: ColumnManager = new ColumnManager(this);
+    rowManager: RowManager = new RowManager(this);
 
     dataProcessor: DataProcessorInstance = new DataProcessor(this);
     columnsProcessor: ColumnProcessorInstance = new ColumnProcessor(this);
