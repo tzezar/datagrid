@@ -83,7 +83,6 @@ export class DataProcessor implements DataProcessorInstance {
         });
 
         return sort(data).by(sortInstructions as any);
-        
     }
 
     private sortGroups(groups: Map<string, any>): [string, any][] {

@@ -42,4 +42,6 @@ export class GroupingManager implements GroupingFeature {
         this.state.groupBy = groupBy;
 		this.state.expandedRows.clear();
     }
+
+    
 }

@@ -29,16 +29,10 @@
 	}
 
 	$effect(() => {
-		console.log($state.snapshot(grid.sorting.sortBy));
-	});
+		console.log($state.snapshot(grid.grouping.state.groupBy))
+		console.log($state.snapshot(grid.sorting.sortBy))
+	})
 
-	$effect(() => {
-		console.log($state.snapshot(grid.columns));
-	});
-
-	$effect(() => {
-		console.log($state.snapshot(grid.rows));
-	});
 </script>
 
 <div class="flex flex-col gap-4 pb-4">
