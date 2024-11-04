@@ -29,10 +29,8 @@
 	}
 
 	$effect(() => {
-		console.log($state.snapshot(grid.grouping.state.groupBy))
-		console.log($state.snapshot(grid.sorting.sortBy))
-	})
-
+		console.log($state.snapshot(grid.columns));
+	});
 </script>
 
 <div class="flex flex-col gap-4 pb-4">
@@ -61,12 +59,48 @@
 			<option value="none">none</option>
 		</select>
 	</div>
+
+	<div class="flex flex-col">
+		<!-- svelte-ignore a11y_label_has_associated_control -->
+		<label>Colum visibility:</label>
+		<div class='p-2 border'>
+			{#each grid.columns as column}
+				<div class="flex flex-row gap-2 justify-between max-w-[200px]">
+
+					{column.header}
+				<input
+					type="checkbox"
+					checked={column.visible}
+					onchange={() => grid.columnManager.toggleColumnVisibility(column)}
+				/>
+				</div>
+			{/each}
+		</div>
+	</div>
+	<div class="flex flex-col">
+		<!-- svelte-ignore a11y_label_has_associated_control -->
+		<label>Colum resizing:</label>
+		<div class='p-2 border'>
+			{#each grid.columns as column}
+				<div class="flex flex-row gap-2 justify-between max-w-[300px]">
+					{column.header}
+				<input
+					type="range"
+					min={column.size.minWidth}
+					max={column.size.maxWidth}
+					value={column.size.width}
+					onchange={(e) => grid.columnManager.resizeColumn(column, Number(e.currentTarget.value))}
+				/>
+				</div>
+			{/each}
+		</div>
+	</div>
 </div>
 <div class="grid-wrapper overflow-auto">
 	<div class="grid">
 		<div class="grid-header">
 			<div class="grid-header-row">
-				{#each grid.columns as column}
+				{#each grid.columnManager.getVisibleColumns() as column}
 					<div
 						class="grid-header-cell flex cursor-pointer flex-col"
 						style={`--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'}`}
@@ -133,9 +167,9 @@
 					</div>
 				{:else}
 					<div class="grid-row">
-						{#each grid.columns as column}
+						{#each grid.columnManager.getVisibleColumns() as column}
 							<div
-								class="grid-cell"
+								class="grid-cell overflow-hidden text-ellipsis text-nowrap"
 								style={`${column.cell && column.cell.style && column.cell.style(row)}; --width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'}`}
 							>
 								{#if column.cell && column.cell.component}

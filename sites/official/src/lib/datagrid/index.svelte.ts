@@ -1,3 +1,4 @@
+import { ColumnManager } from "./features/column-manager.svelte";
 import { FilteringManager, type FilteringFeature } from "./features/filtering-manager.svelte";
 import { GroupingManager, type GroupingFeature } from "./features/grouping-manager.svelte";
 import { PaginationManager, type PaginationFeature } from "./features/pagination-manager.svelte";
@@ -26,6 +27,8 @@ export interface DatagridInstance {
     grouping: GroupingFeature
     pagination: PaginationFeature
 
+    columnManager: ColumnManager
+
 
     dataProcessor: DataProcessorInstance
     columnsProcessor: ColumnProcessorInstance
@@ -45,7 +48,7 @@ export class Datagrid implements DatagridInstance {
     filtering: FilteringFeature = new FilteringManager(this);
     grouping: GroupingFeature = new GroupingManager(this);
     pagination: PaginationFeature = new PaginationManager(this);
-
+    columnManager: ColumnManager = new ColumnManager(this);
 
     dataProcessor: DataProcessorInstance = new DataProcessor(this);
     columnsProcessor: ColumnProcessorInstance = new ColumnProcessor(this);
