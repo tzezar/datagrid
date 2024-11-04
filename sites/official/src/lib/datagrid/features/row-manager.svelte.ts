@@ -1,5 +1,6 @@
 import { SvelteSet } from "svelte/reactivity"
 import type { DatagridInstance } from "../index.svelte";
+import type { Row } from "../processors/data-processor.svelte";
 
 
 export interface RowManagerState {
@@ -18,6 +19,15 @@ export interface RowManagerInstance {
     getExpandedRows(): string[]
     setExpandedRows(rows: string[]): void
     isRowExpanded(rowId: string): boolean
+    
+
+
+    isRowSelected(rowId: string): boolean
+    selectRow(rowId: string): void
+    unselectRow(rowId: string): void
+    toggleRowSelection(rowId: string): void
+
+
 }
 
 export class RowManager implements RowManagerInstance {
@@ -60,6 +70,28 @@ export class RowManager implements RowManagerInstance {
 
     isRowExpanded(rowId: string): boolean {
         return this.state.expandedRows.has(rowId);
+    }
+
+
+
+    isRowSelected(rowId: string): boolean {
+        return this.state.selectedRows.has(rowId);
+    }
+
+    selectRow(rowId: string): void {
+        this.state.selectedRows.add(rowId);
+    }
+
+    unselectRow(rowId: string): void {
+        this.state.selectedRows.delete(rowId);
+    }
+
+    toggleRowSelection(rowId: string): void {
+        if (this.state.selectedRows.has(rowId)) {
+            this.unselectRow(rowId);
+        } else {
+            this.selectRow(rowId);
+        }
     }
     
 }

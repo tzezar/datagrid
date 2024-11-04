@@ -3,6 +3,8 @@
 	import { Datagrid } from '$lib/datagrid/index.svelte';
 	import type { Data } from '$lib/datagrid/types';
 	import { columns } from './columns';
+	import Collapse from './icons/collapse.svelte';
+	import Expand from './icons/expand.svelte';
 
 	let { data }: { data: Data[] } = $props();
 
@@ -29,7 +31,8 @@
 	}
 
 	$effect(() => {
-		console.log($state.snapshot(grid.columns));
+		console.log($state.snapshot(grid.grouping.state.expandedRows));
+		console.log($state.snapshot(grid.rows));
 	});
 </script>
 
@@ -97,11 +100,11 @@
 	<div class="flex flex-col">
 		<!-- svelte-ignore a11y_label_has_associated_control -->
 		<label>Colum reordering:</label>
-		<div class="border p-2 flex flex-col gap-2">
+		<div class="flex flex-col gap-2 border p-2">
 			{#each grid.columns as column}
 				<div class="flex max-w-[300px] flex-row justify-between gap-2">
 					{column.header}
-					<div class='flex gap-4'>
+					<div class="flex gap-4">
 						<button
 							onclick={() => grid.columnManager.moveColumnLeft(column)}
 							disabled={!grid.columnManager.canMoveColumnLeft(column)}
@@ -182,7 +185,7 @@
 							>
 								{#if colIndex === 0}
 									<span class="group-toggle">
-										{grid.grouping.state.expandedRows.has(row.groupId) ? '▼' : '▶'}
+										{grid.grouping.isGroupExpanded(row.groupId) ? '▼' : '▶'}
 									</span>
 									{row?.groupId}
 								{/if}
@@ -191,11 +194,19 @@
 					</div>
 				{:else}
 					<div class="grid-row">
+						<button onclick={() => grid.rowManager.toggleRowExpansion(String(row.original.id))} class='!px-0 ml-2 !py-0 h-fit my-auto'>
+							{#if grid.rowManager.isRowExpanded(String(row.original.id))}
+								<Expand />
+							{:else}
+								<Collapse />
+							{/if}
+						</button>
 						{#each grid.columnManager.getVisibleColumns() as column}
 							<div
 								class="grid-cell overflow-hidden text-ellipsis text-nowrap"
 								style={`${column.cell && column.cell.style && column.cell.style(row)}; --width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'}`}
 							>
+								<div></div>
 								{#if column.cell && column.cell.component}
 									<svelte:component this={column.cell.component} {row} />
 								{:else if column.formatter}
@@ -206,6 +217,13 @@
 							</div>
 						{/each}
 					</div>
+					{#if grid.rowManager.isRowExpanded(String(row.original.id))}
+						<div class='grid-row'>
+							<div class='grid-cell'>
+								some content here eg lazy loaded
+							</div>
+						</div>
+					{/if}
 				{/if}
 			{/each}
 		</div>

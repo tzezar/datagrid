@@ -19,6 +19,7 @@ export interface GroupingFeature {
 
 
     setGroupBy(groupBy: string[]): void
+    isGroupExpanded(groupId: string): boolean
 }
 
 
@@ -43,5 +44,9 @@ export class GroupingManager implements GroupingFeature {
 		this.state.expandedRows.clear();
     }
 
+
+    isGroupExpanded(groupId: string): boolean {
+        return this.state.expandedRows.has(groupId);
+    }
     
 }
