@@ -7,6 +7,7 @@ export type ColumnId = string
 export interface Column {
     columnId: ColumnId,
     accessor: (row: any) => any
+    formatter?: (row: any) => any
     header: string
     size: {
         width: number
@@ -21,10 +22,7 @@ export interface Column {
 }
 
 export interface ColumnProcessorInstance {
-
     initialize(): void
-
-
     getAccessor(columnId: ColumnId): Accessor
 }
 
@@ -57,6 +55,7 @@ export class ColumnProcessor implements ColumnProcessorInstance {
                 isSorted,
                 getSortingDirection,
                 header: col.header,
+                formatter: col.formatter,
                 size: {
                     width: 100,
                     minWidth: 50,

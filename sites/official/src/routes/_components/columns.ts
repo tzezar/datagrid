@@ -1,3 +1,5 @@
+import type { ColumnDef, Data } from "$lib/datagrid/types";
+
 export const columns = [
     {
         accessorKey: 'id',
@@ -14,10 +16,11 @@ export const columns = [
     },
     {
         accessorKey: 'sales',
-        header: 'Sales'
+        header: 'Sales',
+        formatter: (row: Data) => row.sales.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
     },
     {
         accessorKey: 'profit',
         header: 'Profit'
     }
-];
+] satisfies ColumnDef[]

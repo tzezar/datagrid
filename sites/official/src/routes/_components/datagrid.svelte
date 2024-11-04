@@ -29,16 +29,16 @@
 	}
 
 	$effect(() => {
-			console.log($state.snapshot(grid.sorting.sortBy))
-	})
+		console.log($state.snapshot(grid.sorting.sortBy));
+	});
 
 	$effect(() => {
-			console.log($state.snapshot(grid.columns))
-	})
+		console.log($state.snapshot(grid.columns));
+	});
 
 	$effect(() => {
-		console.log($state.snapshot(grid.rows))
-	})
+		console.log($state.snapshot(grid.rows));
+	});
 </script>
 
 <div class="flex flex-col gap-4 pb-4">
@@ -144,7 +144,11 @@
 								class="grid-cell"
 								style={`--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'}`}
 							>
-								{column.accessor(row.original)}
+								{#if column.formatter}
+									{column.formatter(row.original)}
+								{:else}
+									{column.accessor(row.original)}
+								{/if}
 							</div>
 						{/each}
 					</div>
