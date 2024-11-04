@@ -3,7 +3,9 @@ import type { DatagridInstance } from "../index.svelte";
 
 
 export interface RowManagerState {
-    expandedRows: SvelteSet<string>
+    expandedRows: SvelteSet<string>,
+    selectedRows: SvelteSet<string>,
+    pinnedRows: SvelteSet<string>
 }
 
 export interface RowManagerInstance {
@@ -22,7 +24,9 @@ export class RowManager implements RowManagerInstance {
     private grid: DatagridInstance;
 
     state: RowManagerState = {
-        expandedRows: new SvelteSet()
+        expandedRows: new SvelteSet(),
+        pinnedRows: new SvelteSet(),
+        selectedRows: new SvelteSet()
     }
 
     constructor(grid: DatagridInstance) {
