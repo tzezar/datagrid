@@ -7,12 +7,18 @@ export const columns = [
         accessorKey: 'id',
         header: 'ID',
         type: 'number',
+        pinning: {
+            position: 'left',
+        }
     },
     {
         accessorKey: 'department.name',
         accessorFn: (row: any) => row.department.name,
         header: 'Department',
         type: 'string',
+        pinning: {
+            position: 'left',
+        }
     },
 
     {

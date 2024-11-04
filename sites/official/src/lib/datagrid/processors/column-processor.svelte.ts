@@ -1,3 +1,4 @@
+import type { PinningPosition } from "../features/column-manager.svelte";
 import { filterOperators, numberFilterOperators, stringFilterOperators, type FilterOperator } from "../features/filtering-manager.svelte";
 import type { SortDirection } from "../features/sorting-manager.svelte";
 import type { DatagridInstance } from "../index.svelte";
@@ -46,6 +47,12 @@ export interface Column {
     type: 'string' | 'number'
     faceting: NumericFacet | CategoricalFacet | undefined
 
+
+    pinning: {
+        position: PinningPosition
+        offset: number
+    }
+
     isSorted: () => boolean
     getSortingDirection: () => SortDirection
     includeInSearch: boolean
@@ -83,7 +90,9 @@ export class ColumnProcessor implements ColumnProcessorInstance {
             const isSorted = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId).length > 0;
             const getSortingDirection = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId)[0]?.direction
 
-            const processedColumn = {
+            const pinningPosition = col.pinning?.position || 'none';
+
+            const processedColumn: Column = {
                 columnId,
                 accessorKey: col.accessorKey,
                 header: col.header,
@@ -105,11 +114,25 @@ export class ColumnProcessor implements ColumnProcessorInstance {
                 filterable: col.filterable === undefined ? true : col.filterable,
                 allowedSortDirections: col.allowedSortDirections || ['asc', 'desc'],
                 allowedFilterOperators: this.getAllowedFilterOperators(col),
-                type: col.type || 'string'
+                type: col.type || 'string',
+                pinning: {
+                    position: pinningPosition,
+                    offset: 0
+                }
             }
 
             columns.push(processedColumn);
-            this.grid.columns = columns;
+        }
+        this.grid.columns = columns;
+
+        // process pinning 
+        for (let i = 0; i < columns.length; i++) {
+            const col = this.grid.columns[i];
+            if (col.pinning?.position !== 'none') {
+                console.log('process pinning', col.columnId, col.pinning.position);
+                col.pinning.offset = this.grid.columnManager.getOffset(col.columnId, col.pinning.position);
+                console.log('offset', col.columnId, col.pinning.offset);
+            }
         }
     }
 

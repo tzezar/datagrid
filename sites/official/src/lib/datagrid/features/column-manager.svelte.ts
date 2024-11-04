@@ -1,14 +1,15 @@
 import type { DatagridInstance } from "../index.svelte";
 import type { Column, ColumnId } from "../processors/column-processor.svelte"
 
-export type PinningPosition = 'left' | 'right';
+export type PinningPosition = 'left' | 'right' | 'none'
 
 
 interface ColumnManagerInstance {
     hideColumn(column: Column): void;
     showColumn(column: Column): void;
-    pinColumn(column: Column, position: PinningPosition, offset: number): void;
-    unpinColumn(column: Column): void;
+
+    changeColumnPinning(column: Column, position: PinningPosition): void;
+
 
     resizeColumn(column: Column, width: number): void;
 
@@ -60,13 +61,52 @@ export class ColumnManager implements ColumnManagerInstance {
         }
     }
 
-    pinColumn(column: Column, position: PinningPosition, offset: number): void {
-        // TODO
+    getOffset = (id: ColumnId, position: 'left' | 'right'): number => {
+        // Filter columns that are visible and pinned to the specified position
+        const pinnedColumns = this.grid.columns.filter(
+            (column) => column.visible !== false && column.pinning.position === position
+        );
+        console.log(pinnedColumns)
+
+        // Find the index of the column with the specified ID
+        const index = pinnedColumns.findIndex((column) => column.columnId === id);
+        console.log(index)
+        // If the column is the first in the pinned list or not found, return '0px'
+        if (index === -1 || index === 0) {
+            return 0
+        }
+
+        // Sum up the widths of all previous columns in the pinned list before the specified column
+        const widthSumOfPreviousIndexes = pinnedColumns
+            .slice(0, index) // Get all columns before the specified column
+            .reduce((sum, column) => {
+                const width = column.size.width || 0 // Parse width; default to 0 if missing
+                return sum + width; // Accumulate the total width
+            }, 0);
+
+        return widthSumOfPreviousIndexes; // Return the total width as a string
+    };
+
+
+    refreshColumnPinningOffsets() {
+        const newColumns: Column[] = [];
+        for (let i = 0; i < this.grid.columns.length; i++) {
+            const col = this.grid.columns[i];
+            if (col.pinning.position === 'none') {
+                col.pinning.offset = 0;
+            } else {
+                col.pinning.offset = this.getOffset(col.columnId, col.pinning.position);
+            }
+
+            newColumns.push(col);
+        }
+        this.grid.columns = newColumns;
+    };
+
+    changeColumnPinning(column: Column, position: PinningPosition): void {
+        column.pinning.position = position
     }
 
-    unpinColumn(column: Column): void {
-        // TODO
-    }
 
     resizeColumn(column: Column, width: number): void {
         if (width <= column.size.minWidth) width = column.size.minWidth

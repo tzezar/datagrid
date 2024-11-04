@@ -15,6 +15,9 @@ export interface ColumnDef {
         width: number;
         minWidth: number;
         maxWidth: number;
+    },
+    pinning?: {
+        position: 'left' | 'right';
     }
 
     visible?: boolean;

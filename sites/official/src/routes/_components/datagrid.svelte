@@ -1,6 +1,8 @@
 <script lang="ts">
+	import type { PinningPosition } from '$lib/datagrid/features/column-manager.svelte';
 	import type { SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
 	import { Datagrid } from '$lib/datagrid/index.svelte';
+	import type { Column } from '$lib/datagrid/processors/column-processor.svelte';
 	import type { Data } from '$lib/datagrid/types';
 	import { debounce } from '$lib/datagrid/utils/debounce';
 	import { columns } from './columns';
@@ -46,8 +48,18 @@
 	$effect(() => {
 		// console.log($state.snapshot(grid.grouping.state.expandedRows));
 		// console.log($state.snapshot(grid.rows));
-		console.log($state.snapshot(grid.filtering.state.conditions));
+		console.log($state.snapshot(grid.columns));
 	});
+
+	const handleColumnPinningChange = (column: Column, position: PinningPosition) => {
+		grid.columnManager.changeColumnPinning(column, position);
+		grid.columnManager.refreshColumnPinningOffsets();
+	};
+
+	const handleColumnResize = (column: Column, width: number) => {
+		grid.columnManager.resizeColumn(column, Number(width));
+		grid.columnManager.refreshColumnPinningOffsets();
+	};
 </script>
 
 <div class="flex flex-col gap-4 pb-4">
@@ -76,7 +88,6 @@
 			<option value="none">none</option>
 		</select>
 	</div>
-
 	<div class="flex flex-col">
 		<!-- svelte-ignore a11y_label_has_associated_control -->
 		<label>Colum visibility:</label>
@@ -95,6 +106,26 @@
 	</div>
 	<div class="flex flex-col">
 		<!-- svelte-ignore a11y_label_has_associated_control -->
+		<label>Colum pinning:</label>
+		<div class="border p-2">
+			{#each grid.columns as column}
+				<div class="flex max-w-[200px] flex-row justify-between gap-2">
+					{column.header}
+					<select
+						value={column.pinning.position}
+						onchange={(e) =>
+							handleColumnPinningChange(column, e.currentTarget.value as PinningPosition)}
+					>
+						<option value="none">none</option>
+						<option value="left">left</option>
+						<option value="right">right</option>
+					</select>
+				</div>
+			{/each}
+		</div>
+	</div>
+	<div class="flex flex-col">
+		<!-- svelte-ignore a11y_label_has_associated_control -->
 		<label>Colum resizing:</label>
 		<div class="border p-2">
 			{#each grid.columns as column}
@@ -105,7 +136,7 @@
 						min={column.size.minWidth}
 						max={column.size.maxWidth}
 						value={column.size.width}
-						onchange={(e) => grid.columnManager.resizeColumn(column, Number(e.currentTarget.value))}
+						onchange={(e) => handleColumnResize(column, +e.currentTarget.value)}
 					/>
 				</div>
 			{/each}
@@ -140,7 +171,7 @@
 		<!-- svelte-ignore a11y_label_has_associated_control -->
 		<label>Global search:</label>
 		<input type="text" placeholder="Search..." oninput={handleSearch} />
-		<div class='flex gap-2 pt-2'>
+		<div class="flex gap-2 pt-2">
 			<label for="fuzzy">Fuzzy?</label>
 			<input
 				type="checkbox"
