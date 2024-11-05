@@ -126,6 +126,12 @@
 	{/if}
 </div>
 
+
+<div class='mx-auto max-w-xl flex justify-center align-middlep py-20'>
+	<a href="https://github.com/tzezar/datagrid">Github repository</a>
+</div>
+
+
 <style>
 	.progress-container {
 		width: 100%;
