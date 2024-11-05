@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PinningPosition } from '$lib/datagrid/features/column-manager.svelte';
+	import { type FilterOperator } from '$lib/datagrid/features/filtering-manager.svelte';
 	import type { SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
 	import { Datagrid } from '$lib/datagrid/index.svelte';
 	import type { Column } from '$lib/datagrid/processors/column-processor.svelte';
@@ -348,10 +349,10 @@
 				{:else}
 					<div class="grid-row">
 						<button
-							onclick={() => grid.rowManager.toggleRowExpansion(String(row.original.id))}
+							onclick={() => grid.rowManager.toggleRowExpansion(String(row?.original?.id))}
 							class="my-auto ml-2 h-fit !px-0 !py-0"
 						>
-							{#if grid.rowManager.isRowExpanded(String(row.original.id))}
+							{#if grid.rowManager.isRowExpanded(String(row?.original?.id))}
 								<Expand />
 							{:else}
 								<Collapse />
@@ -373,7 +374,7 @@
 							</div>
 						{/each}
 					</div>
-					{#if grid.rowManager.isRowExpanded(String(row.original.id))}
+					{#if grid.rowManager.isRowExpanded(String(row?.original?.id))}
 						<div class="grid-row">
 							<div class="grid-cell">some content here eg lazy loaded</div>
 						</div>

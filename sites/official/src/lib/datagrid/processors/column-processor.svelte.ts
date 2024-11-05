@@ -1,5 +1,5 @@
 import type { PinningPosition } from "../features/column-manager.svelte";
-import { filterOperators, numberFilterOperators, stringFilterOperators, type FilterOperator } from "../features/filtering-manager.svelte";
+import { numberFilterOperators, stringFilterOperators, type FilterOperator } from "../features/filtering-manager.svelte";
 import type { SortDirection } from "../features/sorting-manager.svelte";
 import type { DatagridInstance } from "../index.svelte";
 import type { ColumnDef } from "../types";
@@ -28,7 +28,7 @@ export interface Column {
     // ? with getNestedValue(); or maybe cached value would be better for performance
     // ? (row) => row.smth comes with performance overhead 200%
     accessor: (row: any) => any
-    accessorKey?: string
+    accessorKey: string
     formatter?: (row: any) => any
     header: string
     size: {

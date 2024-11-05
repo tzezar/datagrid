@@ -1,6 +1,3 @@
-
-
-
 import { SvelteSet } from "svelte/reactivity";
 import type { DatagridInstance } from "../index.svelte";
 import type { ColumnId } from "../processors/column-processor.svelte";

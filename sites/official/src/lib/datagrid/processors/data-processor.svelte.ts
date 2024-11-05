@@ -2,8 +2,7 @@ import { SvelteSet } from "svelte/reactivity";
 import type { DatagridInstance } from "../index.svelte";
 import type { Data } from "../types";
 import { sort } from 'fast-sort';
-import type { Accessor, Column } from "./column-processor.svelte";
-import type { SearchState } from "../features/filtering-manager.svelte";
+import type { Accessor } from "./column-processor.svelte";
 
 export interface Row {
     index: number;

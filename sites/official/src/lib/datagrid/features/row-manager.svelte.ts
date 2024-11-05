@@ -1,6 +1,5 @@
 import { SvelteSet } from "svelte/reactivity"
 import type { DatagridInstance } from "../index.svelte";
-import type { Row } from "../processors/data-processor.svelte";
 
 
 export interface RowManagerState {

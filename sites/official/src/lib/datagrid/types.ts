@@ -5,7 +5,7 @@ import type { CategoricalFacet, NumericFacet } from "./processors/column-process
 
 
 export interface ColumnDef {
-    accessorKey?: string;
+    accessorKey: string;
     accessorFn?: (row: any) => any;
     formatter?: (row: any) => any;
     header: string;

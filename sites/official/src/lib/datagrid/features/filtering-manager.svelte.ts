@@ -43,8 +43,8 @@ export const stringFilterOperators: FilterOperator[] = [
     'notEmpty'
 ]
 
-export type FilterOperator = 
-    | 'equals' 
+export type FilterOperator =
+    | 'equals'
     | 'notEquals'
     | 'contains'
     | 'notContains'
@@ -75,7 +75,7 @@ export interface FilteringState {
 export interface FilteringFeature {
     state: FilteringState;
     addFilter(condition: FilterCondition): void;
-    removeFilter(accessor: Accessor): void;
+    removeFilter(accessorKey: string): void;
     clearFilters(): void;
     isRowMatching(row: any): boolean;
 
@@ -127,7 +127,7 @@ export class FilteringManager implements FilteringFeature {
     }
 
     isRowMatching(row: any): boolean {
-        return this.state.conditions.every(condition => 
+        return this.state.conditions.every(condition =>
             // * There is room for improvemt here
             // adding cache for value to improve performance
             this.evaluateCondition(condition.accessor(row), condition)
@@ -150,49 +150,49 @@ export class FilteringManager implements FilteringFeature {
         switch (condition.operator) {
             case 'equals':
                 return cellValue === value;
-                
+
             case 'notEquals':
                 return cellValue !== value;
-                
+
             case 'contains':
                 return stringCellValue.includes(stringValue);
-                
+
             case 'notContains':
                 return !stringCellValue.includes(stringValue);
-                
+
             case 'startsWith':
                 return stringCellValue.startsWith(stringValue);
-                
+
             case 'endsWith':
                 return stringCellValue.endsWith(stringValue);
-                
+
             case 'greaterThan':
                 return cellValue > value;
-                
+
             case 'lessThan':
                 return cellValue < value;
-                
+
             case 'greaterThanOrEqual':
                 return cellValue >= value;
-                
+
             case 'lessThanOrEqual':
                 return cellValue <= value;
-                
+
             case 'between':
                 return cellValue >= value && cellValue <= valueTo;
-                
+
             case 'inList':
                 return Array.isArray(value) && value.includes(cellValue);
-                
+
             case 'notInList':
                 return Array.isArray(value) && !value.includes(cellValue);
-                
+
             case 'empty':
                 return cellValue === '' || cellValue === null || cellValue === undefined;
-                
+
             case 'notEmpty':
                 return cellValue !== '' && cellValue !== null && cellValue !== undefined;
-                
+
             default:
                 return true;
         }
@@ -200,14 +200,14 @@ export class FilteringManager implements FilteringFeature {
 
     initializeFuseInstance<T>(items: T[], keys: string[]): Fuse<T> {
         return new Fuse(items, {
-          keys,
-          threshold: 0.3,
-          location: 0,
-          distance: 100,
-          includeScore: true,
-          useExtendedSearch: true,
-          ignoreLocation: true,
-          findAllMatches: true,
+            keys,
+            threshold: 0.3,
+            location: 0,
+            distance: 100,
+            includeScore: true,
+            useExtendedSearch: true,
+            ignoreLocation: true,
+            findAllMatches: true,
         });
-      }
+    }
 }
