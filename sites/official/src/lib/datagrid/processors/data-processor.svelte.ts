@@ -63,11 +63,7 @@ export class DataProcessor implements DataProcessorInstance {
             this.allRowsCache = this.createGroupedRows();
         } else {
             if (this.grid.sorting.sortBy.length > 0) {
-                let timeStart = performance.now();
                 processedData = this.sortData(processedData);
-                // console.log(processedData)
-                console.log('sorting', performance.now() - timeStart);
-                console.log(processedData)
             }
             this.allRowsCache = processedData.map((item, i) => ({
                 index: i,
