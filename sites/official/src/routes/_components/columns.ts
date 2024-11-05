@@ -1,8 +1,20 @@
 import type { Row } from "$lib/datagrid/processors/data-processor.svelte";
 import type { ColumnDef, Data } from "$lib/datagrid/types";
 import Profit from "./cells/profit.svelte";
+import RowSelection from "./cells/row-selection.svelte";
 
 export const columns = [
+    {
+        accessorKey: 'selection',
+        header: 'Selection',
+        type: 'string',
+        filterable: false,
+        sortable: false,
+        groupable: false,
+        cell: {
+            component: RowSelection
+        }
+    },
     {
         accessorKey: 'id',
         header: 'ID',

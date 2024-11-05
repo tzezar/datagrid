@@ -73,6 +73,12 @@
 	$effect(() => {
 		console.log($state.snapshot(grid.grouping.state.groupBy));
 	});
+
+	let selectedRows = $state([])
+
+	$effect(() => {
+		selectedRows = grid.rowManager.getSelectedRows()
+	});
 </script>
 
 <div class="flex flex-col gap-4 pb-4">
@@ -195,6 +201,37 @@
 			/>
 		</div>
 	</div>
+
+	<div class="flex flex-col">
+		<!-- svelte-ignore a11y_label_has_associated_control -->
+		<label>Row selection mode:</label>
+		<select
+			value={grid.rowManager.selectionMode}
+			onchange={(e) => {
+				grid.rowManager.selectionMode = (e.currentTarget.value)
+				grid.rowManager.state.selectedRows.clear()
+			}}
+		>
+			<option value="none">none</option>
+			<option value="single">single</option>
+			<option value="multiple">multiple</option>
+		</select>
+	</div>
+	<div class="flex flex-col">
+		<!-- svelte-ignore a11y_label_has_associated_control -->
+		<label>Row expansion mode:</label>
+		<select
+			value={grid.rowManager.selectionMode}
+			onchange={(e) => {
+				grid.rowManager.expansionMode = (e.currentTarget.value)
+				grid.rowManager.state.expandedRows.clear()
+			}}
+		>
+			<option value="none">none</option>
+			<option value="single">single</option>
+			<option value="multiple">multiple</option>
+		</select>
+	</div>
 	<div class="flex flex-col">
 		<!-- svelte-ignore a11y_label_has_associated_control -->
 		<label>Apply column filters:</label>
@@ -211,13 +248,10 @@
 	<div class="grid">
 		<div class="grid-header">
 			<div class="grid-header-row">
-				<div class='grid-header-cell'>
-					&nbsp;
-					&nbsp;
-				</div>
+				<div class="grid-header-cell">&nbsp; &nbsp;</div>
 				{#each grid.columnManager.getVisibleColumns() as column}
 					<div
-						class={`grid-header-cell flex cursor-pointer flex-col ${column.pinning.position === 'left' && "offset-left bg-orange-500"} ${column.pinning.position === 'right' && "offset-right bg-orange-500"}`}
+						class={`grid-header-cell flex cursor-pointer flex-col ${column.pinning.position === 'left' && 'offset-left bg-orange-500'} ${column.pinning.position === 'right' && 'offset-right bg-orange-500'}`}
 						style:--offset={column.pinning.offset + 'px'}
 						style={`--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'}`}
 					>
@@ -248,45 +282,65 @@
 								{/if}
 							</span>
 						</div>
-						<select
-							class="h-6 text-xs"
-							value={grid.filtering.conditions.filter(
-								(c) => c.accessorKey === column.accessorKey
-							)[0]?.operator || 'contains'}
-							onchange={(e) =>
-								grid.filtering.addFilter({
-									accessor: column.accessor,
-									accessorKey: column.accessorKey,
-									operator: e.currentTarget.value as FilterOperator,
-									value:
-										grid.filtering.conditions.filter((c) => c.accessorKey === column.accessorKey)[0]
-											?.value || ''
-								})}
-						>
-							{#each column.allowedFilterOperators as filterOperator}
-								<option value={filterOperator}>
-									{filterOperator}
-								</option>
-							{/each}
-						</select>
-						{#if column.type === 'number'}
-							<input
+						{#if grid.columnManager.isFilterable(column)}
+							<select
 								class="h-6 text-xs"
-								placeholder="Search..."
-								type="text"
 								value={grid.filtering.conditions.filter(
 									(c) => c.accessorKey === column.accessorKey
-								)[0]?.value || ''}
+								)[0]?.operator || 'contains'}
 								onchange={(e) =>
 									grid.filtering.addFilter({
 										accessor: column.accessor,
 										accessorKey: column.accessorKey,
-										operator: grid.filtering.getConditionOperator(column.accessorKey),
-										value: +e.currentTarget.value || '',
-										valueTo: grid.filtering.getConditionValueTo(column.accessorKey)
+										operator: e.currentTarget.value as FilterOperator,
+										value:
+											grid.filtering.conditions.filter(
+												(c) => c.accessorKey === column.accessorKey
+											)[0]?.value || ''
 									})}
-							/>
-							{#if grid.filtering.conditions.filter((c) => c.accessorKey === column.accessorKey)[0]?.operator === 'between'}
+							>
+								{#each column.allowedFilterOperators as filterOperator}
+									<option value={filterOperator}>
+										{filterOperator}
+									</option>
+								{/each}
+							</select>
+							{#if column.type === 'number'}
+								<input
+									class="h-6 text-xs"
+									placeholder="Search..."
+									type="text"
+									value={grid.filtering.conditions.filter(
+										(c) => c.accessorKey === column.accessorKey
+									)[0]?.value || ''}
+									onchange={(e) =>
+										grid.filtering.addFilter({
+											accessor: column.accessor,
+											accessorKey: column.accessorKey,
+											operator: grid.filtering.getConditionOperator(column.accessorKey),
+											value: +e.currentTarget.value || '',
+											valueTo: grid.filtering.getConditionValueTo(column.accessorKey)
+										})}
+								/>
+								{#if grid.filtering.conditions.filter((c) => c.accessorKey === column.accessorKey)[0]?.operator === 'between'}
+									<input
+										placeholder="Search..."
+										type="text"
+										class="h-6 text-xs"
+										value={grid.filtering.conditions.filter(
+											(c) => c.accessorKey === column.accessorKey
+										)[0]?.value || ''}
+										onchange={(e) =>
+											grid.filtering.addFilter({
+												accessor: column.accessor,
+												accessorKey: column.accessorKey,
+												operator: grid.filtering.getConditionOperator(column.accessorKey),
+												value: grid.filtering.getConditionValue(column.accessorKey),
+												valueTo: +e.currentTarget.value
+											})}
+									/>
+								{/if}
+							{:else}
 								<input
 									placeholder="Search..."
 									type="text"
@@ -299,36 +353,19 @@
 											accessor: column.accessor,
 											accessorKey: column.accessorKey,
 											operator: grid.filtering.getConditionOperator(column.accessorKey),
-											value: grid.filtering.getConditionValue(column.accessorKey),
-											valueTo: +e.currentTarget.value
+											value: e.currentTarget.value
 										})}
 								/>
 							{/if}
-						{:else}
-							<input
-								placeholder="Search..."
-								type="text"
-								class="h-6 text-xs"
-								value={grid.filtering.conditions.filter(
-									(c) => c.accessorKey === column.accessorKey
-								)[0]?.value || ''}
-								onchange={(e) =>
-									grid.filtering.addFilter({
-										accessor: column.accessor,
-										accessorKey: column.accessorKey,
-										operator: grid.filtering.getConditionOperator(column.accessorKey),
-										value: e.currentTarget.value
-									})}
-							/>
+							<div class="flex h-6 gap-2">
+								<button
+									class="w-full !rounded-none !bg-white !py-[2px] text-xs !text-black"
+									onclick={() => grid.filtering.removeFilter(column.accessorKey)}
+								>
+									clear
+								</button>
+							</div>
 						{/if}
-						<div class="flex h-6 gap-2">
-							<button
-								class="w-full !rounded-none !bg-white !py-[2px] text-xs !text-black"
-								onclick={() => grid.filtering.removeFilter(column.accessorKey)}
-							>
-								clear
-							</button>
-						</div>
 					</div>
 				{/each}
 			</div>
@@ -368,12 +405,12 @@
 						</button>
 						{#each grid.columnManager.getVisibleColumns() as column}
 							<div
-								class={`grid-cell overflow-hidden text-ellipsis text-nowrap ${column.pinning.position === 'left' && "offset-left bg-white"} ${column.pinning.position === 'right' && "offset-right bg-white"}`}
+								class={`grid-cell overflow-hidden text-ellipsis text-nowrap ${column.pinning.position === 'left' && 'offset-left bg-white'} ${column.pinning.position === 'right' && 'offset-right bg-white'}`}
 								style:--offset={column.pinning.offset + 'px'}
-								style="{`${column.cell && column.cell.style && column.cell.style(row)}; --width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'};`}"
+								style={`${column.cell && column.cell.style && column.cell.style(row)}; --width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'};`}
 							>
 								{#if column.cell && column.cell.component}
-									<svelte:component this={column.cell.component} {row} />
+									<svelte:component this={column.cell.component} {row} {grid} />
 								{:else if column.formatter}
 									{column.formatter(row.original)}
 								{:else}
@@ -420,6 +457,10 @@
 		{/each}
 	</select>
 </div>
+
+<pre>
+	{JSON.stringify(grid.rowManager.getSelectedRows(), null, 2)}
+</pre>
 
 <style>
 	.grid-header-row {

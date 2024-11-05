@@ -22,6 +22,7 @@ interface ColumnManagerInstance {
     toggleColumnVisibility(column: Column): void;
     getVisibleColumns(): Column[]
 
+    isFilterable(column: Column): boolean
 
     getSearchableColumns(): Column[]
 }
@@ -33,6 +34,10 @@ export class ColumnManager implements ColumnManagerInstance {
 
     constructor(grid: DatagridInstance) {
         this.grid = grid;
+    }
+
+    isFilterable(column: Column): boolean {
+        return column.filterable !== false
     }
 
     getVisibleColumns(): Column[] {

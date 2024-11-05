@@ -6,4 +6,4 @@
 
 </script>
 
-{row?.original?.profit} test
+{row?.original?.profit} custom cell
