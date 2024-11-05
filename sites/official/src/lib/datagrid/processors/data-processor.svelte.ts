@@ -64,9 +64,10 @@ export class DataProcessor implements DataProcessorInstance {
         } else {
             if (this.grid.sorting.sortBy.length > 0) {
                 let timeStart = performance.now();
-                // processedData = this.sortData(processedData);
-                processedData = this.multiSortData(processedData, this.grid.sorting.sortBy);
+                processedData = this.sortData(processedData);
+                // console.log(processedData)
                 console.log('sorting', performance.now() - timeStart);
+                console.log(processedData)
             }
             this.allRowsCache = processedData.map((item, i) => ({
                 index: i,
@@ -155,10 +156,11 @@ export class DataProcessor implements DataProcessorInstance {
 
     private sortData(data: Data[]): Data[] {
         if (this.grid.sorting.sortBy.length === 0) return data;
+        const sortConfigs = this.setupSortingConfig(this.grid.sorting.sortBy);
 
-        const sortInstructions = this.grid.sorting.sortBy.map(({ columnId, direction }) => {
-            const accessor = this.grid.columnsProcessor.getAccessor(columnId);
-            return { [direction]: (item: Data) => this.getSortValue(item, accessor) }
+        const sortInstructions = sortConfigs.map(({ direction, accessor }) => {
+            console.log(direction, accessor)
+            return { [direction]: (item: Data) => accessor(item) }
         });
 
         return sort(data).by(sortInstructions as any);
