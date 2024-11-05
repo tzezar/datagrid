@@ -98,7 +98,7 @@ export class FilteringManager implements FilteringFeature {
     fuse: Fuse<any> | null = null
 
 
-    conditions: FilterCondition[] = []
+    conditions: FilterCondition[] = $state([])
 
     search: SearchState = {
         value: '',

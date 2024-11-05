@@ -74,14 +74,14 @@
 		console.log($state.snapshot(grid.grouping.state.groupBy));
 	});
 
-	let selectedRows = $state([])
+	let selectedRows = $state([]);
 
 	$effect(() => {
-		selectedRows = grid.rowManager.getSelectedRows()
+		selectedRows = grid.rowManager.getSelectedRows();
 	});
 </script>
 
-<div class="flex flex-col gap-4 pb-4">
+<div class="flex flex-row flex-wrap gap-4 pb-4 [&>*]:grow md:[&>*]:w-[calc(50%-8px)]">
 	<div class="flex flex-col">
 		<label for="groupBy">Group by:</label>
 		<select multiple onchange={(e) => handleGroupByChange(e)} id="groupBy">
@@ -92,18 +92,7 @@
 			{/each}
 		</select>
 	</div>
-	<div class="flex flex-col">
-		<label for="sortBy">Sort mode (single, multi, none):</label>
-		<select
-			value={grid.sorting.mode}
-			onchange={(e) => grid.sorting.setSortMode(e.currentTarget.value as SortMode)}
-			id="sortBy"
-		>
-			<option value="single">single</option>
-			<option value="multi">multi</option>
-			<option value="none">none</option>
-		</select>
-	</div>
+
 	<div class="flex flex-col">
 		<!-- svelte-ignore a11y_label_has_associated_control -->
 		<label>Colum visibility:</label>
@@ -120,6 +109,7 @@
 			{/each}
 		</div>
 	</div>
+
 	<div class="flex flex-col">
 		<!-- svelte-ignore a11y_label_has_associated_control -->
 		<label>Colum pinning:</label>
@@ -183,54 +173,68 @@
 			{/each}
 		</div>
 	</div>
-	<div class="flex flex-col">
-		<!-- svelte-ignore a11y_label_has_associated_control -->
-		<label>Global search:</label>
-		<input type="text" placeholder="Search..." oninput={handleSearch} />
-		<div class="flex gap-2 pt-2">
-			<label for="fuzzy">Fuzzy?</label>
-			<input
-				type="checkbox"
-				checked={grid.filtering.search.fuzzy}
-				onchange={() => {
-					grid.filtering.search.fuzzy = !grid.filtering.search.fuzzy;
-					grid.reload(() => {
-						grid.pagination.goToFirstPage();
-					});
-				}}
-			/>
+	<div>
+		<div class="flex flex-col">
+			<label for="sortBy">Sort mode (single, multi, none):</label>
+			<select
+				value={grid.sorting.mode}
+				onchange={(e) => grid.sorting.setSortMode(e.currentTarget.value as SortMode)}
+				id="sortBy"
+			>
+				<option value="single">single</option>
+				<option value="multi">multi</option>
+				<option value="none">none</option>
+			</select>
 		</div>
-	</div>
+		<div class="flex flex-col">
+			<!-- svelte-ignore a11y_label_has_associated_control -->
+			<label>Global search:</label>
+			<input type="text" placeholder="Search..." oninput={handleSearch} />
+			<div class="flex gap-2 pt-2">
+				<label for="fuzzy">Fuzzy?</label>
+				<input
+					type="checkbox"
+					checked={grid.filtering.search.fuzzy}
+					onchange={() => {
+						grid.filtering.search.fuzzy = !grid.filtering.search.fuzzy;
+						grid.reload(() => {
+							grid.pagination.goToFirstPage();
+						});
+					}}
+				/>
+			</div>
+		</div>
 
-	<div class="flex flex-col">
-		<!-- svelte-ignore a11y_label_has_associated_control -->
-		<label>Row selection mode:</label>
-		<select
-			value={grid.rowManager.selectionMode}
-			onchange={(e) => {
-				grid.rowManager.selectionMode = (e.currentTarget.value)
-				grid.rowManager.state.selectedRows.clear()
-			}}
-		>
-			<option value="none">none</option>
-			<option value="single">single</option>
-			<option value="multiple">multiple</option>
-		</select>
-	</div>
-	<div class="flex flex-col">
-		<!-- svelte-ignore a11y_label_has_associated_control -->
-		<label>Row expansion mode:</label>
-		<select
-			value={grid.rowManager.selectionMode}
-			onchange={(e) => {
-				grid.rowManager.expansionMode = (e.currentTarget.value)
-				grid.rowManager.state.expandedRows.clear()
-			}}
-		>
-			<option value="none">none</option>
-			<option value="single">single</option>
-			<option value="multiple">multiple</option>
-		</select>
+		<div class="flex flex-col">
+			<!-- svelte-ignore a11y_label_has_associated_control -->
+			<label>Row selection mode:</label>
+			<select
+				value={grid.rowManager.selectionMode}
+				onchange={(e) => {
+					grid.rowManager.selectionMode = e.currentTarget.value;
+					grid.rowManager.state.selectedRows.clear();
+				}}
+			>
+				<option value="none">none</option>
+				<option value="single">single</option>
+				<option value="multiple">multiple</option>
+			</select>
+		</div>
+		<div class="flex flex-col">
+			<!-- svelte-ignore a11y_label_has_associated_control -->
+			<label>Row expansion mode:</label>
+			<select
+				value={grid.rowManager.selectionMode}
+				onchange={(e) => {
+					grid.rowManager.expansionMode = e.currentTarget.value;
+					grid.rowManager.state.expandedRows.clear();
+				}}
+			>
+				<option value="none">none</option>
+				<option value="single">single</option>
+				<option value="multiple">multiple</option>
+			</select>
+		</div>
 	</div>
 	<div class="flex flex-col">
 		<!-- svelte-ignore a11y_label_has_associated_control -->
@@ -287,16 +291,13 @@
 								class="h-6 text-xs"
 								value={grid.filtering.conditions.filter(
 									(c) => c.accessorKey === column.accessorKey
-								)[0]?.operator || 'contains'}
+								)[0]?.operator}
 								onchange={(e) =>
 									grid.filtering.addFilter({
 										accessor: column.accessor,
 										accessorKey: column.accessorKey,
 										operator: e.currentTarget.value as FilterOperator,
-										value:
-											grid.filtering.conditions.filter(
-												(c) => c.accessorKey === column.accessorKey
-											)[0]?.value || ''
+										value: grid.filtering.getConditionValue(column.accessorKey)
 									})}
 							>
 								{#each column.allowedFilterOperators as filterOperator}
@@ -327,9 +328,7 @@
 										placeholder="Search..."
 										type="text"
 										class="h-6 text-xs"
-										value={grid.filtering.conditions.filter(
-											(c) => c.accessorKey === column.accessorKey
-										)[0]?.value || ''}
+										value={grid.filtering.getConditionValueTo(column.accessorKey)}
 										onchange={(e) =>
 											grid.filtering.addFilter({
 												accessor: column.accessor,
