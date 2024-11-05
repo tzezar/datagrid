@@ -155,7 +155,6 @@ export class DataProcessor implements DataProcessorInstance {
         const sortConfigs = this.setupSortingConfig(this.grid.sorting.sortBy);
 
         const sortInstructions = sortConfigs.map(({ direction, accessor }) => {
-            console.log(direction, accessor)
             return { [direction]: (item: Data) => accessor(item) }
         });
 
