@@ -66,11 +66,9 @@ export class ColumnManager implements ColumnManagerInstance {
         const pinnedColumns = this.grid.columns.filter(
             (column) => column.visible !== false && column.pinning.position === position
         );
-        console.log(pinnedColumns)
 
         // Find the index of the column with the specified ID
         const index = pinnedColumns.findIndex((column) => column.columnId === id);
-        console.log(index)
         // If the column is the first in the pinned list or not found, return '0px'
         if (index === -1 || index === 0) {
             return 0

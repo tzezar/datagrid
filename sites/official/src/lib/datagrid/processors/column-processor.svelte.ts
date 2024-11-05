@@ -129,9 +129,7 @@ export class ColumnProcessor implements ColumnProcessorInstance {
         for (let i = 0; i < columns.length; i++) {
             const col = this.grid.columns[i];
             if (col.pinning?.position !== 'none') {
-                console.log('process pinning', col.columnId, col.pinning.position);
                 col.pinning.offset = this.grid.columnManager.getOffset(col.columnId, col.pinning.position);
-                console.log('offset', col.columnId, col.pinning.offset);
             }
         }
     }
