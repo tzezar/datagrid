@@ -3,6 +3,7 @@ import type { DatagridInstance } from "../index.svelte";
 import type { Data } from "../types";
 import { sort } from 'fast-sort';
 import type { Accessor } from "./column-processor.svelte";
+import type { SortBy } from "../features/sorting-manager.svelte";
 
 export interface Row {
     index: number;
@@ -61,7 +62,9 @@ export class DataProcessor implements DataProcessorInstance {
             this.allRowsCache = this.createGroupedRows();
         } else {
             if (this.grid.sorting.sortBy.length > 0) {
+                let timeStart = performance.now();
                 processedData = this.sortData(processedData);
+                console.log('sorting', performance.now() - timeStart);
             }
             this.allRowsCache = processedData.map((item, i) => ({
                 index: i,
@@ -110,6 +113,19 @@ export class DataProcessor implements DataProcessorInstance {
         // Handle null/undefined values to ensure consistent sorting
         return value === null || value === undefined ? '' : value;
     }
+
+    multiSortData(data: any[], sortingDirections: SortBy) {
+		return data.sort((a, b) => {
+			for (const { accessor, direction } of sortingDirections) {
+				const valueA = accessor(a);
+				const valueB = accessor(b);
+
+				if (valueA < valueB) return direction === 'asc' ? -1 : 1;
+				if (valueA > valueB) return direction === 'asc' ? 1 : -1;
+			}
+			return 0;
+		});
+	};
 
     private sortData(data: Data[]): Data[] {
         if (this.grid.sorting.sortBy.length === 0) return data;

@@ -1,11 +1,12 @@
 import type { DatagridInstance } from "../index.svelte";
-import type { ColumnId } from "../processors/column-processor.svelte";
+import type { Accessor, ColumnId } from "../processors/column-processor.svelte";
 
 export type SortDirection = "asc" | "desc";
 export type SortMode = "multi" | "single" | "none";
 
 export interface Sort {
     readonly columnId: ColumnId;
+    accessor: Accessor,
     direction: SortDirection;
 }
 
@@ -28,7 +29,7 @@ export class SortingManager implements SortingFeature {
 
     constructor(
         grid: DatagridInstance,
-        initialSort: SortBy = [{ columnId: 'sales', direction: 'asc' }],
+        initialSort: SortBy = [{ columnId: 'sales', direction: 'asc', accessor: () => 'sales' }],
         mode: SortMode = "single"
     ) {
         this.grid = grid;
@@ -37,6 +38,8 @@ export class SortingManager implements SortingFeature {
     }
 
     public toggleSort(columnId: ColumnId): void {
+        let column = this.grid.columns.find(col => col.columnId === columnId);
+        
         if (this.mode === "none") return;
 
         const currentSortIndex = this.sortBy.findIndex(sort => sort.columnId === columnId);
@@ -45,17 +48,17 @@ export class SortingManager implements SortingFeature {
             if (currentSortIndex !== -1) {
                 // If clicking the same column, toggle direction
                 if (this.sortBy[currentSortIndex].direction === "asc") {
-                    this.sortBy = [{ columnId: columnId, direction: "desc" }];
+                    this.sortBy = [{ columnId: columnId, direction: "desc", accessor: () => column?.accessor }];
                 } else {
                     this.sortBy = [];  // Clear sorting if already desc
                 }
             } else {
                 // New column, set to asc
-                this.sortBy = [{ columnId: columnId, direction: "asc" }];
+                this.sortBy = [{ columnId: columnId, direction: "asc", accessor: () => column?.accessor }];
             }
         } else {  // multi mode
             if (currentSortIndex === -1) {
-                this.sortBy.push({ columnId: columnId, direction: "asc" });
+                this.sortBy.push({ columnId: columnId, direction: "asc", accessor: () => column?.accessor });
             } else if (this.sortBy[currentSortIndex].direction === "asc") {
                 this.sortBy[currentSortIndex].direction = "desc";
             } else {

@@ -2,8 +2,6 @@ import type { FilterOperator } from "./features/filtering-manager.svelte";
 import type { SortDirection } from "./features/sorting-manager.svelte";
 import type { CategoricalFacet, NumericFacet } from "./processors/column-processor.svelte";
 
-
-
 export interface ColumnDef {
     accessorKey: string;
     accessorFn?: (row: any) => any;

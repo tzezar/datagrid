@@ -27,7 +27,7 @@ export interface Column {
     // ? I am not sure if keeping accessor as fn is good idea, it makes more problems than getting value
     // ? with getNestedValue(); or maybe cached value would be better for performance
     // ? (row) => row.smth comes with performance overhead 200%
-    accessor: (row: any) => any
+    accessor: (obj: any) => any
     accessorKey: string
     formatter?: (row: any) => any
     header: string
@@ -85,7 +85,8 @@ export class ColumnProcessor implements ColumnProcessorInstance {
             if (accessor === undefined) {
                 throw new Error(`Column ${columnId} with header ${col.header} does not have an accessorKey or accessorFn.`);
             }
-            accessor = this.createAccessorFn(accessor)
+            // accessor = this.createAccessorFn(accessor)
+            accessor = this.createAccessor(col.accessorKey)
 
             const isSorted = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId).length > 0;
             const getSortingDirection = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId)[0]?.direction
@@ -133,6 +134,37 @@ export class ColumnProcessor implements ColumnProcessorInstance {
             }
         }
     }
+
+
+    createAccessor = (path: string): ((obj: any) => any) => {
+        const parts = path.split('.');
+
+        // For non-nested properties, use direct access for best performance
+        if (parts.length === 1) {
+            return (obj: any) => obj[path];
+        }
+
+        // For nested properties, create optimized function
+        // This is faster than using reduce() or recursive function calls
+        switch (parts.length) {
+            case 2:
+                return (obj: any) => obj[parts[0]]?.[parts[1]];
+            case 3:
+                return (obj: any) => obj[parts[0]]?.[parts[1]]?.[parts[2]];
+            default:
+                // Fallback for deeply nested properties (rare case)
+                return (obj: any) => {
+                    let value = obj;
+                    for (let i = 0; i < parts.length; i++) {
+                        value = value?.[parts[i]];
+                        if (value === undefined) return undefined;
+                    }
+                    return value;
+                };
+        }
+    };
+
+
 
     private getAllowedFilterOperators(column: ColumnDef): FilterOperator[] {
         if (!column) return []

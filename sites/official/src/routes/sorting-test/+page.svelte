@@ -117,7 +117,7 @@
 	// Example usage:
 	const sortingConfig = setupSorting([
 		{ columnId: 'department.name', direction: 'desc' },
-		{ columnId: 'sales', direction: 'asc' }
+		// { columnId: 'sales', direction: 'asc' }
 	]);
 	const benchmark = (data: DataItem[], sortingDirections: SortingDirection[]) => {
 		const timeStart = performance.now();
