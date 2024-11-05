@@ -80,8 +80,10 @@ export interface FilteringFeature {
     isRowMatching(row: any): boolean;
 
     initializeFuseInstance(items: any[], keys: string[]): Fuse<any>;
+    assignFuseInstance(items: any[]): Fuse<any>;
 
-    search: SearchState
+    search: SearchState,
+    fuse: Fuse<any> | null
 }
 
 export interface SearchState {
@@ -92,6 +94,8 @@ export interface SearchState {
 
 export class FilteringManager implements FilteringFeature {
     protected grid: DatagridInstance;
+    fuse: Fuse<any> | null = null
+
     state: FilteringState = $state({
         conditions: []
     })
@@ -209,5 +213,9 @@ export class FilteringManager implements FilteringFeature {
             ignoreLocation: true,
             findAllMatches: true,
         });
+    }
+
+    assignFuseInstance(items: any[]): void {
+        this.fuse = this.initializeFuseInstance(items, this.grid.columnManager.getSearchableColumns().map(col => col.accessorKey as string))
     }
 }

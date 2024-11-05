@@ -61,6 +61,8 @@ export class Datagrid implements DatagridInstance {
         this.rows = this.dataProcessor.process();
         this.columnsProcessor.calculateFacets(this.dataProcessor.allRowsCache);
 
+
+        this.filtering.assignFuseInstance(this.original.data);
     }
 
     refreshVisibleRows(): void {

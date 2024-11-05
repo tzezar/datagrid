@@ -9,7 +9,8 @@ export const columns = [
         type: 'number',
         pinning: {
             position: 'left',
-        }
+        },
+
     },
     {
         accessorKey: 'department.name',
@@ -32,6 +33,7 @@ export const columns = [
             uniqueValuesCount: 0
         },
         type: 'string',
+
     },
     {
         accessorKey: 'sales',
@@ -44,6 +46,7 @@ export const columns = [
         }
         ,
         type: 'number',
+
     },
     {
         accessorKey: 'profit',

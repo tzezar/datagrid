@@ -84,28 +84,33 @@ export class DataProcessor implements DataProcessorInstance {
         return visibleRows;
     }
 
-    applyGlobalFilter(
-        data: Data[],
-    ) {
-        const search = this.grid.filtering.search;
-
+    applyGlobalFilter(data: Data[]) {
+        const { search } = this.grid.filtering;
         if (!search.value) return data;
 
-        const searchableColumns = this.grid.columnManager.getSearchableColumns().map(col => col.accessorKey as string);
+        const searchValue = search.value.toLowerCase();
+        const searchableColumns = this.grid.columnManager.getSearchableColumns();
 
-        // handle fuzzy search
+        // Fuzzy search
         if (search.fuzzy) {
-            const fuse = this.grid.filtering.initializeFuseInstance(data, searchableColumns);
-            const results = fuse.search(search.value);
-            return results.map(result => result.item);
+            const fuse = this.grid.filtering.fuse
+            if (!fuse) throw new Error('fuse is null')
+            return fuse.search(search.value).map(result => result.item);
         }
 
-        // handle column level search
-        const searchValue = search.value.toLowerCase();
+        // Cache the column accessor functions for searchable columns
+        const accessorCache = new Map<string, (item: Data) => any>();
+        searchableColumns.forEach(col => {
+            accessorCache.set(col.accessorKey as string, col.accessor);
+        });
+
+        // Column-level search
         return data.filter(item =>
-            searchableColumns.some(field => {
-                const column = this.grid.columnManager.getColumn(field);
-                const value = column.accessor(item)
+            searchableColumns.some(col => {
+                const accessor = accessorCache.get(col.accessorKey as string);
+                if (!accessor) return false;
+
+                const value = accessor(item);
                 return String(value).toLowerCase().includes(searchValue);
             })
         );
@@ -133,10 +138,10 @@ export class DataProcessor implements DataProcessorInstance {
 
     private sortGroups(groups: Map<string, GroupData>): [string, GroupData][] {
         const entries = Array.from(groups.entries());
-        
+
         if (this.grid.sorting.sortBy.length === 0) return entries;
         const sortConfigs = this.setupSortingConfig(this.grid.sorting.sortBy);
-    
+
         const sortInstructions = sortConfigs.map(({ columnId, direction, accessor }) => {
             return {
                 [direction]: ([_, group]: [string, GroupData]) => {
@@ -152,7 +157,7 @@ export class DataProcessor implements DataProcessorInstance {
                 }
             };
         });
-    
+
         return sort(entries).by(sortInstructions as any);
     }
 
@@ -177,7 +182,7 @@ export class DataProcessor implements DataProcessorInstance {
             let currentLevel = groups;
             let groupPath = '';
 
-            groupBy.forEach(({columnId, accessor}, depth) => {
+            groupBy.forEach(({ columnId, accessor }, depth) => {
                 const groupValue = accessor(item);
                 groupPath = groupPath ? `${groupPath}/${groupValue}` : groupValue;
 
