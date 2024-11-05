@@ -34,6 +34,7 @@ export class DataProcessor implements DataProcessorInstance {
     private grid: DatagridInstance;
     allRowsCache: Row[] = [];
     private rowsMap: Map<string, Row> = new Map();
+    private compiledSortConfigs: SortBy = [];
 
     constructor(grid: DatagridInstance) {
         this.grid = grid;
@@ -63,7 +64,8 @@ export class DataProcessor implements DataProcessorInstance {
         } else {
             if (this.grid.sorting.sortBy.length > 0) {
                 let timeStart = performance.now();
-                processedData = this.sortData(processedData);
+                // processedData = this.sortData(processedData);
+                processedData = this.multiSortData(processedData, this.grid.sorting.sortBy);
                 console.log('sorting', performance.now() - timeStart);
             }
             this.allRowsCache = processedData.map((item, i) => ({
@@ -108,24 +110,48 @@ export class DataProcessor implements DataProcessorInstance {
         );
     }
 
+    // private getSortValue(row: any, accessor: Accessor) {
+    //     const value = accessor(row)
+    //     // Handle null/undefined values to ensure consistent sorting
+    //     return value === null || value === undefined ? '' : value;
+    // }
+
     private getSortValue(row: any, accessor: Accessor) {
-        const value = accessor(row)
-        // Handle null/undefined values to ensure consistent sorting
-        return value === null || value === undefined ? '' : value;
+        const value = accessor(row);
+        
+        // Handle different types of values
+        if (value === null || value === undefined) return '';
+        
+        // Handle numbers and strings
+        if (typeof value === 'number') return value;
+        if (typeof value === 'string') return value.toLowerCase(); // Case-insensitive string comparison
+        
+        // Convert other types to strings for consistent comparison
+        return String(value);
+    }
+    private setupSortingConfig(sortingDirections: SortBy): SortBy {
+        return sortingDirections.map(config => ({
+            columnId: config.columnId,
+            direction: config.direction,
+            accessor: this.grid.columnsProcessor.getAccessor(config.columnId)
+        }));
     }
 
-    multiSortData(data: any[], sortingDirections: SortBy) {
-		return data.sort((a, b) => {
-			for (const { accessor, direction } of sortingDirections) {
-				const valueA = accessor(a);
-				const valueB = accessor(b);
-
-				if (valueA < valueB) return direction === 'asc' ? -1 : 1;
-				if (valueA > valueB) return direction === 'asc' ? 1 : -1;
-			}
-			return 0;
-		});
-	};
+    multiSortData(data: Data[], sortingDirections: SortBy): Data[] {
+        // Only recompile configs if they've changed
+        const sortConfigs = this.setupSortingConfig(sortingDirections);
+        
+        return data.sort((a, b) => {
+            for (const { accessor, direction } of sortConfigs) {
+                const valueA = accessor(a);
+                const valueB = accessor(b);
+                
+                if (valueA < valueB) return direction === 'asc' ? -1 : 1;
+                if (valueA > valueB) return direction === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+    }
 
     private sortData(data: Data[]): Data[] {
         if (this.grid.sorting.sortBy.length === 0) return data;

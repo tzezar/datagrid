@@ -13,7 +13,6 @@ export const columns = [
     },
     {
         accessorKey: 'department.name',
-        accessorFn: (row: any) => row.department.name,
         header: 'Department',
         type: 'string',
         pinning: {
