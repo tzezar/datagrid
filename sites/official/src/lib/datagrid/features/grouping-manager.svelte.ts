@@ -3,6 +3,15 @@ import type { DatagridInstance } from "../index.svelte";
 import type { ColumnId } from "../processors/column-processor.svelte";
 
 
+export type AggregationFn = 'sum' | 'min' | 'max' | 'extent' | 'mean' | 'median' | 'unique' | 'uniqueCount' | 'count'
+export interface Aggregate {
+    columnId: ColumnId
+    accessor: (row: any) => any,
+    values: {
+        [key in AggregationFn]: number
+    }
+}
+
 export interface GroupData {
     items: any[];
     subgroups: Map<string, any>;
@@ -10,6 +19,7 @@ export interface GroupData {
     value: any;
     key: string;
     depth: number;
+    aggregates: any;
 }
 
 export type Group = {
@@ -27,9 +37,9 @@ export interface GroupingManagerState {
 export interface GroupingFeature {
     state: GroupingManagerState
 
-
     setGroupBy(groupBy: Group[]): void
     isGroupExpanded(groupId: string): boolean
+    isGrouped(): boolean
 }
 
 
@@ -43,20 +53,25 @@ export class GroupingManager implements GroupingFeature {
 
     }
 
+
+    isGrouped(): boolean {
+        return this.state.groupBy.length > 0;
+    }
+
     constructor(grid: DatagridInstance) {
         this.grid = grid;
+
     }
 
 
 
     setGroupBy(groupBy: Group[]): void {
         this.state.groupBy = groupBy;
-		this.state.expandedRows.clear();
+        this.state.expandedRows.clear();
     }
 
 
     isGroupExpanded(groupId: string): boolean {
         return this.state.expandedRows.has(groupId);
     }
-    
 }

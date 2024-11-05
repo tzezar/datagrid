@@ -1,4 +1,5 @@
 import type { FilterOperator } from "./features/filtering-manager.svelte";
+import type { Aggregate, AggregationFn } from "./features/grouping-manager.svelte";
 import type { SortDirection } from "./features/sorting-manager.svelte";
 import type { CategoricalFacet, NumericFacet } from "./processors/column-processor.svelte";
 
@@ -34,6 +35,7 @@ export interface ColumnDef {
     faceting?: NumericFacet | CategoricalFacet;
     includeInSearch?: boolean;
     includeInExport?: boolean;
+    aggregationFn: keyof AggregationFn
 }
 
 export interface Data<T = any> {

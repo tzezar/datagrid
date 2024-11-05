@@ -13,6 +13,15 @@ export interface Row {
     original: Data | null;
     depth: number;
     isExpanded?: boolean;
+    aggregates: {
+        [columnId: string]: {
+            sum?: number;
+            count?: number;
+            min?: number;
+            max?: number;
+            mean?: number;
+        };
+    };
 }
 
 export interface GroupingState {
@@ -20,7 +29,7 @@ export interface GroupingState {
 }
 
 export interface DataProcessorInstance {
-    allRowsCache: Row[]
+    processedRowsCache: Row[]
     process(): Row[];
     getVisibleRows(page: number, pageSize: number): Row[];
     toggleGroupExpansion(groupId: string): void;
@@ -30,7 +39,7 @@ export interface DataProcessorInstance {
 
 export class DataProcessor implements DataProcessorInstance {
     private grid: DatagridInstance;
-    allRowsCache: Row[] = [];
+    processedRowsCache: Row[] = [];
     private rowsMap: Map<string, Row> = new Map();
     private compiledSortConfigs: SortBy = [];
 
@@ -39,6 +48,18 @@ export class DataProcessor implements DataProcessorInstance {
         this.grid.grouping.state.expandedRows = new SvelteSet([]);
     }
 
+
+    createRows(data: Data[]): Row[] {
+        return data.map((item, i) => ({
+            index: i,
+            subRows: [],
+            groupId: null,
+            parentId: null,
+            original: item,
+            depth: 0,
+            aggregates: {}
+        }));
+    }
 
     process(): Row[] {
         console.log('data processing');
@@ -57,22 +78,11 @@ export class DataProcessor implements DataProcessorInstance {
             this.grid.filtering.isRowMatching(item)
         );
 
-        if (this.grid.grouping.state.groupBy.length > 0) {
-            this.allRowsCache = this.createGroupedRows();
+        if (this.grid.grouping.isGrouped()) {
+            this.processedRowsCache = this.createGroupedRows();
         } else {
-            if (this.grid.sorting.sortBy.length > 0) {
-                const timeStart = performance.now();
-                processedData = this.sortData(processedData);
-                console.log('sorting', performance.now() - timeStart);
-            }
-            this.allRowsCache = processedData.map((item, i) => ({
-                index: i,
-                subRows: [],
-                groupId: null,
-                parentId: null,
-                original: item,
-                depth: 0,
-            }));
+            if (this.grid.sorting.sortBy.length > 0) processedData = this.sortData(processedData);
+            this.processedRowsCache = this.createRows(processedData);
         }
 
         const visibleRows = this.getVisibleRows(this.grid.pagination.page, this.grid.pagination.pageSize);
@@ -170,13 +180,13 @@ export class DataProcessor implements DataProcessorInstance {
 
         // First pass: group the filtered data
         data.forEach((item) => {
-            // Only process items that match the filters
             if (!this.grid.filtering.isRowMatching(item)) {
                 return;
             }
 
             let currentLevel = groups;
             let groupPath = '';
+            let currentItems: Data[] = [];
 
             groupBy.forEach(({ columnId, accessor }, depth) => {
                 const groupValue = accessor(item);
@@ -189,32 +199,40 @@ export class DataProcessor implements DataProcessorInstance {
                         groupPath,
                         value: groupValue,
                         key: columnId,
-                        depth
+                        depth,
+                        allItems: [] // Store all nested items for aggregate calculations
                     });
                 }
 
                 const group = currentLevel.get(groupValue);
+                group.allItems.push(item); // Add item to all levels for aggregation
+
                 if (depth === groupBy.length - 1) {
                     group.items.push(item);
                 }
+                
                 currentLevel = group.subgroups;
+                currentItems = group.items;
             });
         });
 
-        // Second pass: sort groups and their contents
+        // Second pass: calculate aggregates and sort
         this.applyGroupSorting(groups, 0);
 
         return groups;
     }
 
     private applyGroupSorting(groups: Map<string, any>, depth: number) {
-        // Sort the items within each group
+        // Calculate aggregates and sort items within each group
         groups.forEach(group => {
+            // Calculate aggregates for the current group
+            group.aggregates = this.calculateGroupAggregates(group);
+
             if (group.items.length > 0) {
                 group.items = this.sortData(group.items);
             }
 
-            // Recursively sort subgroups
+            // Recursively handle subgroups
             if (group.subgroups.size > 0) {
                 this.applyGroupSorting(group.subgroups, depth + 1);
             }
@@ -228,15 +246,62 @@ export class DataProcessor implements DataProcessorInstance {
 
     private createGroupedRows(): Row[] {
         const rows: Row[] = [];
-        this.processGroups(this.getGroupedData(), rows);
+        this.createGroups(this.getGroupedData(), rows);
         return rows;
     }
 
-    private processGroups(groups: Map<string, any>, rows: Row[], depth = 0, parentId: string | null = null) {
-        // Get sorted groups
+    private calculateAggregates(items: Data[], column: any): any {
+        if (!items.length) return null;
+
+        const accessor = this.grid.columnsProcessor.getAccessor(column.accessorKey);
+        const values = items.map(item => accessor(item)).filter(val => val !== null && val !== undefined);
+
+        if (!values.length) return null;
+
+        const aggregates: any = {};
+
+        if (column.aggregationFn === 'sum' || column.aggregationFn === 'all') {
+            aggregates.sum = values.reduce((sum, val) => sum + (Number(val) || 0), 0);
+        }
+
+        if (column.aggregationFn === 'count' || column.aggregationFn === 'all') {
+            aggregates.count = values.length;
+        }
+
+        if (column.aggregationFn === 'min' || column.aggregationFn === 'all') {
+            aggregates.min = Math.min(...values);
+        }
+
+        if (column.aggregationFn === 'max' || column.aggregationFn === 'all') {
+            aggregates.max = Math.max(...values);
+        }
+
+        if (column.aggregationFn === 'mean' || column.aggregationFn === 'all') {
+            aggregates.mean = aggregates.sum / aggregates.count;
+        }
+
+        return aggregates;
+    }
+
+    private calculateGroupAggregates(group: any): any {
+        const aggregates: any = {};
+        
+        // Get all columns that have aggregation functions
+        const columnsWithAggregation = this.grid.columns.filter(
+            col => col.aggregationFn
+        );
+
+        // Calculate aggregates for each column using allItems for complete aggregation
+        columnsWithAggregation.forEach(column => {
+            aggregates[column.accessorKey] = this.calculateAggregates(group.allItems, column);
+        });
+
+        return aggregates;
+    }
+
+    private createGroups(groups: Map<string, any>, rows: Row[], depth = 0, parentId: string | null = null) {
         const sortedGroups = Array.from(groups.entries());
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         sortedGroups.forEach(([_, group]) => {
             const groupRow: Row = {
                 index: rows.length,
@@ -245,7 +310,8 @@ export class DataProcessor implements DataProcessorInstance {
                 parentId,
                 original: null,
                 depth,
-                isExpanded: this.grid.grouping.state.expandedRows.has(group.groupPath)
+                isExpanded: this.grid.grouping.state.expandedRows.has(group.groupPath),
+                aggregates: group.aggregates || {},
             };
 
             rows.push(groupRow);
@@ -253,33 +319,36 @@ export class DataProcessor implements DataProcessorInstance {
 
             if (this.grid.grouping.state.expandedRows.has(group.groupPath)) {
                 // Process nested groups
-                this.processGroups(group.subgroups, rows, depth + 1, group.groupPath);
+                this.createGroups(group.subgroups, rows, depth + 1, group.groupPath);
 
-                // Add sorted items
-                const sortedItems = this.sortData(group.items);
-                sortedItems.forEach((item: Data) => {
-                    rows.push({
-                        index: rows.length,
-                        subRows: [],
-                        groupId: null,
-                        parentId: group.groupPath,
-                        original: item,
-                        depth: depth + 1
+                // Add leaf items
+                if (group.items.length > 0) {
+                    const sortedItems = this.sortData(group.items);
+                    sortedItems.forEach((item: Data) => {
+                        rows.push({
+                            index: rows.length,
+                            subRows: [],
+                            groupId: null,
+                            parentId: group.groupPath,
+                            original: item,
+                            depth: depth + 1,
+                            aggregates: {},
+                        });
                     });
-                });
+                }
             }
         });
     }
 
     getVisibleRows(page: number, pageSize: number): Row[] {
-        const visibleRows = this.allRowsCache.filter(row => this.isRowVisible(row));
+        const visibleRows = this.processedRowsCache.filter(row => this.isRowVisible(row));
         const startIndex = (page - 1) * pageSize;
         const endIndex = startIndex + pageSize;
         return visibleRows.slice(startIndex, endIndex);
     }
 
     getVisibleRowCount(): number {
-        return this.allRowsCache.filter(row => this.isRowVisible(row)).length;
+        return this.processedRowsCache.filter(row => this.isRowVisible(row)).length;
     }
 
     private isRowVisible(row: Row): boolean {
@@ -304,6 +373,6 @@ export class DataProcessor implements DataProcessorInstance {
             this.grid.grouping.state.expandedRows.add(groupId);
         }
 
-        this.allRowsCache = this.createGroupedRows();
+        this.processedRowsCache = this.createGroupedRows();
     }
 }

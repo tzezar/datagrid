@@ -58,8 +58,14 @@ export class Datagrid implements DatagridInstance {
     constructor(data: Data[], columns: ColumnDef[]) {
         this.original = { data, columns };
         this.columnsProcessor.initialize();
+
+        // this.grouping.state.groupBy = [
+        //     { columnId: 'department.name', accessor: this.columnManager.getColumn('department.name').accessor },
+        //     { columnId: 'region', accessor: grid.columnManager.getColumn('region').accessor }
+        // ]
+
         this.rows = this.dataProcessor.process();
-        this.columnsProcessor.calculateFacets(this.dataProcessor.allRowsCache);
+        this.columnsProcessor.calculateFacets(this.dataProcessor.processedRowsCache);
 
 
         this.filtering.assignFuseInstance(this.original.data);

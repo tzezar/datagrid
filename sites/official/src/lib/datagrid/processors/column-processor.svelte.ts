@@ -1,5 +1,6 @@
 import type { PinningPosition } from "../features/column-manager.svelte";
 import { numberFilterOperators, stringFilterOperators, type FilterOperator } from "../features/filtering-manager.svelte";
+import type { AggregationFn } from "../features/grouping-manager.svelte";
 import type { SortDirection } from "../features/sorting-manager.svelte";
 import type { DatagridInstance } from "../index.svelte";
 import type { ColumnDef } from "../types";
@@ -58,7 +59,8 @@ export interface Column {
     includeInSearch: boolean
     includeInExport: boolean
     allowedSortDirections: SortDirection[]
-    allowedFilterOperators: FilterOperator[]
+    allowedFilterOperators: FilterOperator[],
+    aggregationFn: keyof AggregationFn
 }
 
 export interface ColumnProcessorInstance {
@@ -121,7 +123,8 @@ export class ColumnProcessor implements ColumnProcessorInstance {
                 pinning: {
                     position: pinningPosition,
                     offset: 0
-                }
+                },
+                aggregationFn: col.aggregationFn
             }
 
             columns.push(processedColumn);

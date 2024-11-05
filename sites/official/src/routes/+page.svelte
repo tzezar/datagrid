@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Datagrid from './_components/datagrid.svelte';
 	import { onMount } from 'svelte';
+	// @ts-expect-error
 	import Description from './description.md';
 
 	type DataItem = {
@@ -76,16 +77,20 @@
 		}
 	}
 
-
-
-
 	onMount(async () => {
 		await handleGenerate();
 	});
 </script>
 
-<div class="p-4 mx-auto max-w-2xl">
-	<div class="mb-4 flex flex-col justify-center gap-4 ">
+<div class="mx-auto max-w-2xl p-4">
+	<div class='text-xl font-bold pb-4'>
+		<h1>Do you wonder how final project will look like?</h1>
+		<h2>
+			<a href="https://datagrid.tzezar.pl/" class="text-green-400">GIVE IT A TRY: https://datagrid.tzezar.pl/"</a>
+		</h2>
+	</div>
+
+	<div class="mb-4 flex flex-col justify-center gap-4">
 		<div class="flex flex-col">
 			<label for="rowCount" class="mb-1 text-sm font-medium">Number of rows:</label>
 			<input
@@ -127,18 +132,27 @@
 	{/if}
 </div>
 
+<div
+	class="align-middlep mx-auto flex max-w-xl flex-col items-center justify-center py-20 text-xl font-bold uppercase"
+></div>
 
-<div class='mx-auto max-w-xl flex flex-col items-center justify-center align-middlep py-20 text-xl font-bold uppercase'>
-	<a href="https://github.com/tzezar/datagrid">Github repository</a>
-	<p class='text-base'>Stay connected ❤</p>
-</div>
-
-
-<article class="flex w-full flex-col py-10 max-w-lg mx-auto px-4">
-	<div class="prose pt-8 min-w-full ">
+<article class="mx-auto flex w-full max-w-lg flex-col px-4 py-10">
+	<div class="prose min-w-full pt-8">
 		<Description />
 	</div>
 </article>
+
+<!-- <div
+	class="align-middlep sticky bottom-0 mx-auto flex max-w-xl flex-col items-center justify-center bg-white py-2 text-xl font-bold"
+>
+	<a href="https://github.com/tzezar/datagrid" class="uppercase">Github repository</a>
+	<p class="pb-2 text-base uppercase">Stay connected ❤</p>
+	<p class="text-center text-xs">
+		Please remember that this is just a unfinished demo.
+		<br />Documentation will look like in
+		<a href="https://datagrid.tzezar.pl/" class="text-orange-400">beta version</a>
+	</p>
+</div> -->
 
 <style>
 	.progress-container {

@@ -15,6 +15,15 @@
 
 	let grid = new Datagrid(data, columns);
 
+
+	$effect(() => {
+		console.log($state.snapshot(grid.rows))
+	})
+
+	// grid.grouping.setAggregations([
+	// 	{ columnId: 'sales', functions: ['sum', 'min', 'max'] },
+	// 	{ columnId: 'profit', functions: ['sum', 'mean'] }
+	// ]);
 	function handleGroupToggle(groupId: string) {
 		grid.refresh(() => {
 			grid.dataProcessor.toggleGroupExpansion(groupId);
@@ -35,6 +44,8 @@
 				columnId: option.value
 			};
 		});
+
+		console.log(newGroupBy);
 
 		grid.reload(() => {
 			grid.pagination.goToFirstPage();
@@ -72,12 +83,6 @@
 
 	$effect(() => {
 		console.log($state.snapshot(grid.grouping.state.groupBy));
-	});
-
-	let selectedRows = $state([]);
-
-	$effect(() => {
-		selectedRows = grid.rowManager.getSelectedRows();
 	});
 </script>
 
