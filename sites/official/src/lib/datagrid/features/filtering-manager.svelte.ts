@@ -80,7 +80,7 @@ export interface FilteringFeature {
     isRowMatching(row: any): boolean;
 
     initializeFuseInstance(items: any[], keys: string[]): Fuse<any>;
-    assignFuseInstance(items: any[]): Fuse<any>;
+    assignFuseInstance(items: any[]): void;
 
     search: SearchState,
     fuse: Fuse<any> | null

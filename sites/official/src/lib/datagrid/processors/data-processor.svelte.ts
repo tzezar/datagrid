@@ -2,7 +2,6 @@ import { SvelteSet } from "svelte/reactivity";
 import type { DatagridInstance } from "../index.svelte";
 import type { Data } from "../types";
 import { sort } from 'fast-sort';
-import type { Accessor } from "./column-processor.svelte";
 import type { SortBy } from "../features/sorting-manager.svelte";
 import type { GroupData } from "../features/grouping-manager.svelte";
 
@@ -27,8 +26,6 @@ export interface DataProcessorInstance {
     toggleGroupExpansion(groupId: string): void;
     getVisibleRowCount: () => number;
 }
-
-
 
 
 export class DataProcessor implements DataProcessorInstance {
@@ -64,9 +61,8 @@ export class DataProcessor implements DataProcessorInstance {
             this.allRowsCache = this.createGroupedRows();
         } else {
             if (this.grid.sorting.sortBy.length > 0) {
-                let timeStart = performance.now();
+                const timeStart = performance.now();
                 processedData = this.sortData(processedData);
-                // console.log(processedData)
                 console.log('sorting', performance.now() - timeStart);
             }
             this.allRowsCache = processedData.map((item, i) => ({
