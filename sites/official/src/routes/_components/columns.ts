@@ -27,11 +27,11 @@ export const columns = [
         cell: {
             style: (row: Row) => `${row?.original?.region === 'East' ? 'color: orange' : ''}`
         },
-        faceting: {
-            type: 'categorical',
-            uniqueValues: [],
-            uniqueValuesCount: 0
-        },
+        // faceting: {
+        //     type: 'categorical',
+        //     uniqueValues: [],
+        //     uniqueValuesCount: 0
+        // },
         type: 'string',
         filter: 'select'
 
@@ -40,11 +40,11 @@ export const columns = [
         accessorKey: 'sales',
         header: 'Sales',
         formatter: (row: Data) => row.sales.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
-        faceting: {
-            type: 'numeric',
-            max: 0,
-            min: 0
-        },
+        // faceting: {
+        //     type: 'numeric',
+        //     max: 0,
+        //     min: 0
+        // },
         type: 'number',
     },
     {
@@ -53,11 +53,11 @@ export const columns = [
         cell: {
             component: Profit
         },
-        faceting: {
-            type: 'numeric',
-            max: 0,
-            min: 0
-        },
+        // faceting: {
+        //     type: 'numeric',
+        //     max: 0,
+        //     min: 0
+        // },
         type: 'number',
     }
 ] satisfies ColumnDef[]

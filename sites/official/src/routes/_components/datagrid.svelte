@@ -211,9 +211,14 @@
 	<div class="grid">
 		<div class="grid-header">
 			<div class="grid-header-row">
+				<div class='grid-header-cell'>
+					&nbsp;
+					&nbsp;
+				</div>
 				{#each grid.columnManager.getVisibleColumns() as column}
 					<div
-						class="grid-header-cell flex cursor-pointer flex-col"
+						class={`grid-header-cell flex cursor-pointer flex-col ${column.pinning.position === 'left' && "offset-left bg-orange-500"} ${column.pinning.position === 'right' && "offset-right bg-orange-500"}`}
+						style:--offset={column.pinning.offset + 'px'}
 						style={`--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'}`}
 					>
 						<div class="flex flex-row">
@@ -254,9 +259,8 @@
 									accessorKey: column.accessorKey,
 									operator: e.currentTarget.value as FilterOperator,
 									value:
-										grid.filtering.conditions.filter(
-											(c) => c.accessorKey === column.accessorKey
-										)[0]?.value || ''
+										grid.filtering.conditions.filter((c) => c.accessorKey === column.accessorKey)[0]
+											?.value || ''
 								})}
 						>
 							{#each column.allowedFilterOperators as filterOperator}
@@ -364,10 +368,10 @@
 						</button>
 						{#each grid.columnManager.getVisibleColumns() as column}
 							<div
-								class="grid-cell overflow-hidden text-ellipsis text-nowrap"
-								style={`${column.cell && column.cell.style && column.cell.style(row)}; --width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'}`}
+								class={`grid-cell overflow-hidden text-ellipsis text-nowrap ${column.pinning.position === 'left' && "offset-left bg-white"} ${column.pinning.position === 'right' && "offset-right bg-white"}`}
+								style:--offset={column.pinning.offset + 'px'}
+								style="{`${column.cell && column.cell.style && column.cell.style(row)}; --width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'};`}"
 							>
-								<div></div>
 								{#if column.cell && column.cell.component}
 									<svelte:component this={column.cell.component} {row} />
 								{:else if column.formatter}
@@ -438,6 +442,15 @@
 		min-width: var(--min-width);
 		padding: 0.5rem 0.5rem;
 		cursor: pointer;
+	}
+	.offset-left {
+		left: var(--offset);
+		position: sticky;
+	}
+
+	.offset-right {
+		right: var(--offset);
+		position: sticky;
 	}
 
 	.group-toggle {
