@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PinningPosition } from '$lib/datagrid/features/column-manager.svelte';
 	import { type FilterOperator } from '$lib/datagrid/features/filtering-manager.svelte';
+	import type { Group } from '$lib/datagrid/features/grouping-manager.svelte';
 	import type { SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
 	import { Datagrid } from '$lib/datagrid/index.svelte';
 	import type { Column } from '$lib/datagrid/processors/column-processor.svelte';
@@ -23,9 +24,17 @@
 	}
 
 	function handleGroupByChange(event: Event) {
+		let newGroupBy = [];
 		const select = event.target as HTMLSelectElement;
 		const selectedOptions = Array.from(select.selectedOptions);
-		const newGroupBy = selectedOptions.map((option) => option.value);
+
+		newGroupBy = selectedOptions.map((option) => {
+			const column = grid.columnManager.getColumn(option.value);
+			return {
+				accessor: column.accessor,
+				columnId: option.value
+			};
+		});
 
 		grid.reload(() => {
 			grid.pagination.goToFirstPage();
@@ -60,19 +69,20 @@
 		grid.columnManager.resizeColumn(column, Number(width));
 		grid.columnManager.refreshColumnPinningOffsets();
 	};
+
+	$effect(() => {
+		console.log($state.snapshot(grid.grouping.state.groupBy));
+	});
 </script>
 
 <div class="flex flex-col gap-4 pb-4">
 	<div class="flex flex-col">
 		<label for="groupBy">Group by:</label>
-		<select
-			multiple
-			onchange={handleGroupByChange}
-			value={grid.grouping.state.groupBy}
-			id="groupBy"
-		>
+		<select multiple onchange={(e) => handleGroupByChange(e)} id="groupBy">
 			{#each grid.columns as column}
-				<option value={column.columnId}>{column.header}</option>
+				<option value={column.columnId}>
+					{column.header}
+				</option>
 			{/each}
 		</select>
 	</div>

@@ -196,10 +196,7 @@ export class DataProcessor implements DataProcessorInstance {
             let currentLevel = groups;
             let groupPath = '';
 
-            groupBy.forEach((columnId, depth) => {
-                // * there is room for improvement here
-                // accessing value by row[columnId] is 50% faster
-                const accessor = this.grid.columnsProcessor.getAccessor(columnId);
+            groupBy.forEach(({columnId, accessor}, depth) => {
                 const groupValue = accessor(item);
                 groupPath = groupPath ? `${groupPath}/${groupValue}` : groupValue;
 

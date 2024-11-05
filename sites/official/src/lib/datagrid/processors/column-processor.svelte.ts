@@ -65,6 +65,7 @@ export interface ColumnProcessorInstance {
     initialize(): void
     getAccessor(columnId: ColumnId): Accessor
 
+    createAccessor(columnId: ColumnId): Accessor
     calculateFacets(rows: Row[]): void
 }
 

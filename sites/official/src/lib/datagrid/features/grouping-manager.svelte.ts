@@ -12,9 +12,13 @@ export interface GroupData {
     depth: number;
 }
 
+export type Group = {
+    columnId: ColumnId
+    accessor: (row: any) => any
+}
 
 export interface GroupingManagerState {
-    groupBy: ColumnId[]
+    groupBy: Group[]
     expandedRows: SvelteSet<string>
     _groupedDataCache: Map<string, any> | null
 
@@ -24,7 +28,7 @@ export interface GroupingFeature {
     state: GroupingManagerState
 
 
-    setGroupBy(groupBy: string[]): void
+    setGroupBy(groupBy: Group[]): void
     isGroupExpanded(groupId: string): boolean
 }
 
@@ -45,7 +49,7 @@ export class GroupingManager implements GroupingFeature {
 
 
 
-    setGroupBy(groupBy: string[]): void {
+    setGroupBy(groupBy: Group[]): void {
         this.state.groupBy = groupBy;
 		this.state.expandedRows.clear();
     }
