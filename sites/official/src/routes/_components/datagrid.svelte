@@ -459,7 +459,13 @@
 </div>
 
 <pre>
+	<p>Selected Rows</p>
 	{JSON.stringify(grid.rowManager.getSelectedRows(), null, 2)}
+</pre>
+
+<pre>
+	<p>Expanded Rows</p>
+	{JSON.stringify(grid.rowManager.getExpandedRows(), null, 2)}
 </pre>
 
 <style>
