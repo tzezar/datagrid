@@ -111,25 +111,6 @@ export class DataProcessor implements DataProcessorInstance {
         );
     }
 
-    // private getSortValue(row: any, accessor: Accessor) {
-    //     const value = accessor(row)
-    //     // Handle null/undefined values to ensure consistent sorting
-    //     return value === null || value === undefined ? '' : value;
-    // }
-
-    private getSortValue(row: any, accessor: Accessor) {
-        const value = accessor(row);
-
-        // Handle different types of values
-        if (value === null || value === undefined) return '';
-
-        // Handle numbers and strings
-        if (typeof value === 'number') return value;
-        if (typeof value === 'string') return value.toLowerCase(); // Case-insensitive string comparison
-
-        // Convert other types to strings for consistent comparison
-        return String(value);
-    }
     private setupSortingConfig(sortingDirections: SortBy): SortBy {
         return sortingDirections.map(config => ({
             columnId: config.columnId,
