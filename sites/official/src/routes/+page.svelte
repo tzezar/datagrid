@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Datagrid from './_components/datagrid.svelte';
 	import { onMount } from 'svelte';
+	import Description from './description.md';
 
 	type DataItem = {
 		id: number;
@@ -83,8 +84,8 @@
 	});
 </script>
 
-<div class="p-4">
-	<div class="mb-4 flex flex-col justify-center gap-4">
+<div class="p-4 mx-auto max-w-2xl">
+	<div class="mb-4 flex flex-col justify-center gap-4 ">
 		<div class="flex flex-col">
 			<label for="rowCount" class="mb-1 text-sm font-medium">Number of rows:</label>
 			<input
@@ -127,10 +128,17 @@
 </div>
 
 
-<div class='mx-auto max-w-xl flex justify-center align-middlep py-20'>
+<div class='mx-auto max-w-xl flex flex-col items-center justify-center align-middlep py-20 text-xl font-bold uppercase'>
 	<a href="https://github.com/tzezar/datagrid">Github repository</a>
+	<p class='text-base'>Stay connected ❤</p>
 </div>
 
+
+<article class="flex w-full flex-col py-10 max-w-lg mx-auto px-4">
+	<div class="prose pt-8 min-w-full ">
+		<Description />
+	</div>
+</article>
 
 <style>
 	.progress-container {
