@@ -3,6 +3,15 @@ import type { DatagridInstance } from "../index.svelte";
 import type { ColumnId } from "../processors/column-processor.svelte";
 
 
+export interface GroupData {
+    items: any[];
+    subgroups: Map<string, any>;
+    groupPath: string;
+    value: any;
+    key: string;
+    depth: number;
+}
+
 
 export interface GroupingManagerState {
     groupBy: ColumnId[]

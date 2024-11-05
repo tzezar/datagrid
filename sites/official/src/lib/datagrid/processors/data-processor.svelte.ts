@@ -4,6 +4,7 @@ import type { Data } from "../types";
 import { sort } from 'fast-sort';
 import type { Accessor } from "./column-processor.svelte";
 import type { SortBy } from "../features/sorting-manager.svelte";
+import type { GroupData } from "../features/grouping-manager.svelte";
 
 export interface Row {
     index: number;
@@ -63,7 +64,10 @@ export class DataProcessor implements DataProcessorInstance {
             this.allRowsCache = this.createGroupedRows();
         } else {
             if (this.grid.sorting.sortBy.length > 0) {
+                let timeStart = performance.now();
                 processedData = this.sortData(processedData);
+                // console.log(processedData)
+                console.log('sorting', performance.now() - timeStart);
             }
             this.allRowsCache = processedData.map((item, i) => ({
                 index: i,
@@ -115,14 +119,14 @@ export class DataProcessor implements DataProcessorInstance {
 
     private getSortValue(row: any, accessor: Accessor) {
         const value = accessor(row);
-        
+
         // Handle different types of values
         if (value === null || value === undefined) return '';
-        
+
         // Handle numbers and strings
         if (typeof value === 'number') return value;
         if (typeof value === 'string') return value.toLowerCase(); // Case-insensitive string comparison
-        
+
         // Convert other types to strings for consistent comparison
         return String(value);
     }
@@ -134,24 +138,9 @@ export class DataProcessor implements DataProcessorInstance {
         }));
     }
 
-    multiSortData(data: Data[], sortingDirections: SortBy): Data[] {
-        // Only recompile configs if they've changed
-        const sortConfigs = this.setupSortingConfig(sortingDirections);
-        
-        return data.sort((a, b) => {
-            for (const { accessor, direction } of sortConfigs) {
-                const valueA = accessor(a);
-                const valueB = accessor(b);
-                
-                if (valueA < valueB) return direction === 'asc' ? -1 : 1;
-                if (valueA > valueB) return direction === 'asc' ? 1 : -1;
-            }
-            return 0;
-        });
-    }
-
     private sortData(data: Data[]): Data[] {
         if (this.grid.sorting.sortBy.length === 0) return data;
+        // not sure why, but when precompiled, sorting is 70% faster
         const sortConfigs = this.setupSortingConfig(this.grid.sorting.sortBy);
 
         const sortInstructions = sortConfigs.map(({ direction, accessor }) => {
@@ -161,30 +150,29 @@ export class DataProcessor implements DataProcessorInstance {
         return sort(data).by(sortInstructions as any);
     }
 
-    private sortGroups(groups: Map<string, any>): [string, any][] {
+    private sortGroups(groups: Map<string, GroupData>): [string, GroupData][] {
         const entries = Array.from(groups.entries());
-
+        
         if (this.grid.sorting.sortBy.length === 0) return entries;
-
-        return sort(entries).by(
-            //@ts-expect-error TS7031
-            this.grid.sorting.sortBy.map(({ columnId, direction }) => {
-                const accessor = this.grid.columnsProcessor.getAccessor(columnId);
-                return {
-                    //@ts-expect-error TS7031
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    [direction]: ([_, group]) => {
-                        // If the sort column matches the group's key, use the group value
-                        if (group.key === accessor) {
-                            return this.getSortValue({ [columnId]: group.value }, accessor);
-                        }
-                        // Otherwise, use the first item's value or a default
-                        const firstItem = group.items[0];
-                        return firstItem ? this.getSortValue(firstItem, accessor) : '';
+        const sortConfigs = this.setupSortingConfig(this.grid.sorting.sortBy);
+    
+        const sortInstructions = sortConfigs.map(({ columnId, direction, accessor }) => {
+            return {
+                [direction]: ([_, group]: [string, GroupData]) => {
+                    // If sorting by the grouped column, use the group's own value
+                    if (columnId === group.key) {
+                        return group.value;
                     }
+                    // Otherwise sort by the first item's value
+                    if (group.items.length > 0) {
+                        return accessor(group.items[0]);
+                    }
+                    return '';
                 }
-            })
-        );
+            };
+        });
+    
+        return sort(entries).by(sortInstructions as any);
     }
 
     private getGroupedData(): Map<string, any> {
