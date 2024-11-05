@@ -68,12 +68,8 @@ export interface FilterCondition {
     valueTo?: any; // For 'between' operator
 }
 
-export interface FilteringState {
-    conditions: FilterCondition[];
-}
 
 export interface FilteringFeature {
-    state: FilteringState;
     addFilter(condition: FilterCondition): void;
     removeFilter(accessorKey: string): void;
     clearFilters(): void;
@@ -82,7 +78,12 @@ export interface FilteringFeature {
     initializeFuseInstance(items: any[], keys: string[]): Fuse<any>;
     assignFuseInstance(items: any[]): void;
 
+    getConditionOperator(accessorKey: string): FilterOperator;
+    getConditionValue(accessorKey: string): any;
+    getConditionValueTo(accessorKey: string): any;
+
     search: SearchState,
+    conditions: FilterCondition[],
     fuse: Fuse<any> | null
 }
 
@@ -96,9 +97,8 @@ export class FilteringManager implements FilteringFeature {
     protected grid: DatagridInstance;
     fuse: Fuse<any> | null = null
 
-    state: FilteringState = $state({
-        conditions: []
-    })
+
+    conditions: FilterCondition[] = []
 
     search: SearchState = {
         value: '',
@@ -106,32 +106,47 @@ export class FilteringManager implements FilteringFeature {
         delay: 500
     }
 
+    getConditionOperator(accessorKey: string): FilterOperator {
+        const operator = this.conditions.find(condition => condition.accessorKey === accessorKey)?.operator
+        if (!operator) return 'equals'
+        return operator
+    }
+    getConditionValue(accessorKey: string): any {
+        const condition = this.conditions.find(condition => condition.accessorKey === accessorKey)
+        if (!condition) return null
+        return condition.value
+    }
+    getConditionValueTo(accessorKey: string): any {
+        const condition = this.conditions.find(condition => condition.accessorKey === accessorKey)
+        if (!condition) return null
+        return condition.valueTo
+    }
+
+
     constructor(grid: DatagridInstance) {
         this.grid = grid;
-        this.state = {
-            conditions: []
-        };
+        this.conditions = []
     }
 
     addFilter(condition: FilterCondition): void {
         // Remove any existing filter for the same column
         this.removeFilter(condition.accessorKey);
-        this.state.conditions.push(condition);
+        this.conditions.push(condition);
     }
 
     removeFilter(accessorKey: string): void {
-        this.state.conditions = this.state.conditions.filter(
+        this.conditions = this.conditions.filter(
             condition => condition.accessorKey !== accessorKey
         );
     }
 
     clearFilters(): void {
-        this.state.conditions = [];
+        this.conditions = [];
         this.grid.rows = this.grid.dataProcessor.process();
     }
 
     isRowMatching(row: any): boolean {
-        return this.state.conditions.every(condition =>
+        return this.conditions.every(condition =>
             // * There is room for improvemt here
             // adding cache for value to improve performance
             this.evaluateCondition(condition.accessor(row), condition)

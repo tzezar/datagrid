@@ -46,7 +46,7 @@ export interface Column {
     filterable: boolean;
     type: 'string' | 'number'
     faceting: NumericFacet | CategoricalFacet | undefined
-
+    filter: 'string' | 'number' | 'date' | 'boolean' | 'select' | 'custom' | undefined
 
     pinning: {
         position: PinningPosition
@@ -107,6 +107,7 @@ export class ColumnProcessor implements ColumnProcessorInstance {
                     component: col?.cell?.component,
                     style: col?.cell?.style
                 },
+                filter: col.filter || undefined,
                 faceting: col.faceting,
                 formatter: col.formatter,
                 size: col.size || { width: 100, minWidth: 50, maxWidth: 200 },

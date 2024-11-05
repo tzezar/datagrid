@@ -245,7 +245,7 @@
 						</div>
 						<select
 							class="h-6 text-xs"
-							value={grid.filtering.state.conditions.filter(
+							value={grid.filtering.conditions.filter(
 								(c) => c.accessorKey === column.accessorKey
 							)[0]?.operator || 'contains'}
 							onchange={(e) =>
@@ -254,7 +254,7 @@
 									accessorKey: column.accessorKey,
 									operator: e.currentTarget.value as FilterOperator,
 									value:
-										grid.filtering.state.conditions.filter(
+										grid.filtering.conditions.filter(
 											(c) => c.accessorKey === column.accessorKey
 										)[0]?.value || ''
 								})}
@@ -270,37 +270,32 @@
 								class="h-6 text-xs"
 								placeholder="Search..."
 								type="text"
-								value={grid.filtering.state.conditions.filter(
+								value={grid.filtering.conditions.filter(
 									(c) => c.accessorKey === column.accessorKey
 								)[0]?.value || ''}
 								onchange={(e) =>
 									grid.filtering.addFilter({
 										accessor: column.accessor,
 										accessorKey: column.accessorKey,
-										operator:
-											grid.filtering.state.conditions.filter(
-												(c) => c.accessorKey === column.accessorKey
-											)[0]?.operator || 'contains',
-										value: +e.currentTarget.value || ''
+										operator: grid.filtering.getConditionOperator(column.accessorKey),
+										value: +e.currentTarget.value || '',
+										valueTo: grid.filtering.getConditionValueTo(column.accessorKey)
 									})}
 							/>
-							{#if grid.filtering.state.conditions.filter((c) => c.accessorKey === column.accessorKey)[0]?.operator === 'between'}
+							{#if grid.filtering.conditions.filter((c) => c.accessorKey === column.accessorKey)[0]?.operator === 'between'}
 								<input
 									placeholder="Search..."
 									type="text"
 									class="h-6 text-xs"
-									value={grid.filtering.state.conditions.filter(
+									value={grid.filtering.conditions.filter(
 										(c) => c.accessorKey === column.accessorKey
 									)[0]?.value || ''}
 									onchange={(e) =>
 										grid.filtering.addFilter({
 											accessor: column.accessor,
 											accessorKey: column.accessorKey,
-											operator: 'contains',
-											value:
-												grid.filtering.state.conditions.filter(
-													(c) => c.accessorKey === column.accessorKey
-												)[0]?.value || '',
+											operator: grid.filtering.getConditionOperator(column.accessorKey),
+											value: grid.filtering.getConditionValue(column.accessorKey),
 											valueTo: +e.currentTarget.value
 										})}
 								/>
@@ -310,14 +305,14 @@
 								placeholder="Search..."
 								type="text"
 								class="h-6 text-xs"
-								value={grid.filtering.state.conditions.filter(
+								value={grid.filtering.conditions.filter(
 									(c) => c.accessorKey === column.accessorKey
 								)[0]?.value || ''}
 								onchange={(e) =>
 									grid.filtering.addFilter({
 										accessor: column.accessor,
 										accessorKey: column.accessorKey,
-										operator: 'contains',
+										operator: grid.filtering.getConditionOperator(column.accessorKey),
 										value: e.currentTarget.value
 									})}
 							/>

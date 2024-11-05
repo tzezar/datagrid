@@ -24,6 +24,7 @@ export interface ColumnDef {
     filterable?: boolean;
     // type: 'string' | 'number' | 'date' | 'boolean' | 'object' | 'html' | 'image' | 'link' | 'custom' | 'unknown',
     type: 'string' | 'number',
+    filter?: 'string' | 'number' | 'date' | 'boolean' | 'select' | 'custom',
     allowedSortDirections?: SortDirection[]
     allowedFilterOperators?: FilterOperator[]
     cell?: {

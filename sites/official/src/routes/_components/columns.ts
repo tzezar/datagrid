@@ -33,6 +33,7 @@ export const columns = [
             uniqueValuesCount: 0
         },
         type: 'string',
+        filter: 'select'
 
     },
     {
@@ -43,10 +44,8 @@ export const columns = [
             type: 'numeric',
             max: 0,
             min: 0
-        }
-        ,
+        },
         type: 'number',
-
     },
     {
         accessorKey: 'profit',
