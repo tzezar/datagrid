@@ -74,11 +74,11 @@ export class PaginationManager implements PaginationFeature {
 
     updatePageSize(pageSize: number): void {
         this.pageSize = pageSize;
-        this.pageCount = Math.ceil(this.grid.dataProcessor.getVisibleRowCount() / this.pageSize);
+        this.pageCount = Math.ceil(this.grid.getVisibleRowCount() / this.pageSize);
         this.goToPage(1);
     }
 
     updatePageCount(): void {
-        this.pageCount = Math.ceil(this.grid.dataProcessor.getVisibleRowCount() / this.pageSize);
+        this.pageCount = Math.ceil(this.grid.getVisibleRowCount() / this.pageSize);
     }
 }

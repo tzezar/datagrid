@@ -60,7 +60,7 @@ export interface Column {
     includeInExport: boolean
     allowedSortDirections: SortDirection[]
     allowedFilterOperators: FilterOperator[],
-    aggregationFn: keyof AggregationFn
+    aggregationFn: AggregationFn | undefined
 }
 
 export interface ColumnProcessorInstance {

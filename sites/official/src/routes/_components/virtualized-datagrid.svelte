@@ -1,10 +1,11 @@
 <script lang="ts">
 	import type { SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
 	import { Datagrid } from '$lib/datagrid/index.svelte';
-	import { Row } from '$lib/datagrid/processors/data-processor.svelte';
 	import type { Data } from '$lib/datagrid/types';
 	import { columns } from './columns';
 	import { VirtualList } from 'svelte-virtuallists';
+	import Expand from './icons/expand.svelte';
+	import Collapse from './icons/collapse.svelte';
 
 	let { data }: { data: Data[] } = $props();
 
@@ -29,10 +30,6 @@
 			grid.pagination.updatePageCount();
 		});
 	}
-
-	$effect(() => {
-		console.log($state.snapshot(grid.columns));
-	});
 </script>
 
 <div class="flex flex-col gap-4 pb-4">
@@ -133,58 +130,64 @@
 									{/if}
 								</span>
 							</div>
-							<input
-								type="text"
-								onchange={(e) =>
-									grid.filtering.addFilter({
-										accessor: column.accessor,
-										operator: 'contains',
-										value: e.currentTarget.value
-									})}
-							/>
 						</div>
 					{/each}
 				</div>
 			{/snippet}
 
 			{#snippet vl_slot({ item, index }: { item: Row; index: number })}
-				{#if item.groupId}
-					<div class="grid-row">
-						{#each grid.columns as column, colIndex}
-							<!-- svelte-ignore a11y_click_events_have_key_events -->
-							<!-- svelte-ignore a11y_no_static_element_interactions -->
-							<div
-								class="grid-cell"
-								onclick={() => colIndex === 0 && handleGroupToggle(item.groupId as string)}
-							>
-								{#if colIndex === 0}
-									<span class="group-toggle">
-										{grid.grouping.state.expandedRows.has(item.groupId) ? '▼' : '▶'}
-									</span>
-									{item?.groupId}
-								{/if}
-							</div>
-						{/each}
+			{#if item.groupId}
+			<div class="grid-row">
+				{#each grid.columns as column, colIndex}
+					<!-- svelte-ignore a11y_click_events_have_key_events -->
+					<!-- svelte-ignore a11y_no_static_element_interactions -->
+					<div
+						class="grid-cell"
+						onclick={() => colIndex === 0 && handleGroupToggle(item.groupId as string)}
+					>
+						{#if colIndex === 0}
+							<span class="group-toggle">
+								{grid.grouping.isGroupExpanded(item.groupId) ? '▼' : '▶'}
+							</span>
+							{item?.groupId}
+						{/if}
 					</div>
-				{:else}
-					<div class="grid-row">
-						{#each grid.columnManager.getVisibleColumns() as column}
-							<div
-								class="grid-cell overflow-hidden text-ellipsis text-nowrap"
-								style={`${column.cell && column.cell.style && column.cell.style(item)}; --width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'}`}
-							>
-								{#if column.cell && column.cell.component}
-									<!-- svelte-ignore svelte_component_deprecated -->
-									<svelte:component this={column.cell.component} row={item} />
-								{:else if column.formatter}
-									{column.formatter(item.original)}
-								{:else}
-									{column.accessor(item.original)}
-								{/if}
-							</div>
-						{/each}
+				{/each}
+			</div>
+		{:else}
+			<div class="grid-row">
+				<button
+					onclick={() => grid.rowManager.toggleRowExpansion(String(item?.original?.id))}
+					class="my-auto ml-2 h-fit !px-0 !py-0"
+				>
+					{#if grid.rowManager.isRowExpanded(String(item?.original?.id))}
+						<Expand />
+					{:else}
+						<Collapse />
+					{/if}
+				</button>
+				{#each grid.columnManager.getVisibleColumns() as column}
+					<div
+						class={`grid-cell overflow-hidden text-ellipsis text-nowrap ${column.pinning.position === 'left' && 'offset-left bg-white'} ${column.pinning.position === 'right' && 'offset-right bg-white'}`}
+						style:--offset={column.pinning.offset + 'px'}
+						style={`${column.cell && column.cell.style && column.cell.style(item)}; --width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'};`}
+					>
+						{#if column.cell && column.cell.component}
+							<svelte:component this={column.cell.component} row={item} {grid} />
+						{:else if column.formatter}
+							{column.formatter(item.original)}
+						{:else}
+							{column.accessor(item.original)}
+						{/if}
 					</div>
-				{/if}
+				{/each}
+			</div>
+			{#if grid.rowManager.isRowExpanded(String(item?.original?.id))}
+				<div class="grid-row">
+					<div class="grid-cell">some content here eg lazy loaded</div>
+				</div>
+			{/if}
+		{/if}
 			{/snippet}
 		</VirtualList>
 	</div>

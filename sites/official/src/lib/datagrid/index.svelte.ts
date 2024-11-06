@@ -19,7 +19,6 @@ export interface DatagridOriginal {
 export interface DatagridInstance {
     original: DatagridOriginal
 
-
     rows: Row[]
     columns: Column[]
 
@@ -33,6 +32,11 @@ export interface DatagridInstance {
 
     dataProcessor: DataProcessorInstance
     columnsProcessor: ColumnProcessorInstance
+
+
+    isRowVisible(row: Row): boolean
+    getVisibleRows(page: number, pageSize: number): Row[]
+    getVisibleRowCount(): number
 }
 
 
@@ -44,7 +48,7 @@ export class Datagrid implements DatagridInstance {
 
     rows: Row[] = $state([]);
     columns: Column[] = $state([]);
-
+  
     sorting: SortingFeature = new SortingManager(this);
     filtering: FilteringFeature = new FilteringManager(this);
     grouping: GroupingFeature = new GroupingManager(this);
@@ -69,10 +73,12 @@ export class Datagrid implements DatagridInstance {
 
 
         this.filtering.assignFuseInstance(this.original.data);
+        this.pagination.updatePageCount()
+
     }
 
     refreshVisibleRows(): void {
-        this.rows = this.dataProcessor.getVisibleRows(this.pagination.page, this.pagination.pageSize);
+        this.rows = this.getVisibleRows(this.pagination.page, this.pagination.pageSize);
     }
 
 
@@ -89,8 +95,34 @@ export class Datagrid implements DatagridInstance {
         const timeStart = performance.now();
         command();
         this.dataProcessor.process()
+        this.pagination.updatePageCount()
         console.log(`Execution took ${performance.now() - timeStart}ms`)
 
     }
 
+
+    getVisibleRows(page: number, pageSize: number): Row[] {
+        const visibleRows = this.dataProcessor.processedRowsCache.filter(row => this.isRowVisible(row));
+        const startIndex = (page - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        return visibleRows.slice(startIndex, endIndex);
+    }
+
+    isRowVisible(row: Row): boolean {
+        if (!row.parentId) return true;
+
+        let currentParentId: string | null = row.parentId;
+        while (currentParentId) {
+            if (!this.grouping.state.expandedRows.has(currentParentId)) {
+                return false;
+            }
+            const parentRow = this.dataProcessor.rowsMap.get(currentParentId);
+            currentParentId = parentRow?.parentId ?? null;
+        }
+
+        return true;
+    }
+    getVisibleRowCount(): number {
+        return this.dataProcessor.processedRowsCache.filter(row => this.isRowVisible(row)).length;
+    }
 }

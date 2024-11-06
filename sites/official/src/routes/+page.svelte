@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	// @ts-expect-error
 	import Description from './description.md';
+	import VirtualizedDatagrid from './_components/virtualized-datagrid.svelte';
 
 	type DataItem = {
 		id: number;
@@ -83,10 +84,12 @@
 </script>
 
 <div class="mx-auto max-w-2xl p-4">
-	<div class='text-xl font-bold pb-4'>
+	<div class="pb-4 text-xl font-bold">
 		<h1>Do you wonder how final project will look like?</h1>
 		<h2>
-			<a href="https://datagrid.tzezar.pl/" class="text-green-400">GIVE IT A TRY: https://datagrid.tzezar.pl/"</a>
+			<a href="https://datagrid.tzezar.pl/" class="text-green-400"
+				>GIVE IT A TRY: https://datagrid.tzezar.pl/"</a
+			>
 		</h2>
 	</div>
 
@@ -129,6 +132,7 @@
 		</div>
 	{:else}
 		<Datagrid {data} />
+		<!-- <VirtualizedDatagrid {data} /> -->
 	{/if}
 </div>
 

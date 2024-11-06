@@ -254,7 +254,7 @@
 	</div>
 </div>
 <div class="grid-wrapper overflow-auto">
-	<div class="grid">
+	<div class="grid max-h-[600px]">
 		<div class="grid-header">
 			<div class="grid-header-row">
 				<div class="grid-header-cell">&nbsp; &nbsp;</div>
@@ -460,6 +460,7 @@
 			<option value={pageSize}>{pageSize}</option>
 		{/each}
 	</select>
+	{grid.pagination.pageCount}
 </div>
 
 <pre>
