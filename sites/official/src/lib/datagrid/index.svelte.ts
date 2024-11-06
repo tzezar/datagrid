@@ -1,8 +1,8 @@
 import { ColumnManager } from "./features/column-manager.svelte";
-import { FilteringManager, type FilteringFeature } from "./features/filtering-manager.svelte";
-import { GroupingManager, type GroupingFeature } from "./features/grouping-manager.svelte";
+import { FilteringManager, type FilteringFeature, type FilteringState } from "./features/filtering-manager.svelte";
+import { GroupingManager, type GroupingFeature, type GroupingManagerState } from "./features/grouping-manager.svelte";
 import { PaginationManager, type PaginationFeature, type PaginationState } from "./features/pagination-manager.svelte";
-import { RowManager } from "./features/row-manager.svelte";
+import { RowManager, type RowExpansionMode, type RowManagerState, type RowSelectionMode } from "./features/row-manager.svelte";
 import { SortingManager, type SortingFeature } from "./features/sorting-manager.svelte";
 import { ColumnProcessor, type Column, type ColumnProcessorInstance } from "./processors/column-processor.svelte";
 import { DataProcessor, type DataProcessorInstance, type Row } from "./processors/data-processor.svelte";
@@ -40,13 +40,22 @@ export interface DatagridInstance {
 }
 
 
-type PaginationStateConfig = Partial<Omit<PaginationState, 'pageCount'>>
+export type PaginationStateConfig = Partial<Omit<PaginationState, 'pageCount'>>
+export type GroupingStateConfig = Partial<Omit<GroupingManagerState, '_groupedDataCache'>>
+export type FilteringStateConfig = Partial<FilteringState>
+export type RowManagerStateConfig = Partial<RowManagerState> & {
+    selectionMode?: RowSelectionMode
+    expansionMode?: RowExpansionMode
+}
 
 export type DatagridConfig = {
     columns: ColumnDef[]
     data: Data[]
 
     pagination?: PaginationStateConfig
+    grouping?: GroupingStateConfig
+    filtering?: FilteringStateConfig
+    rowManager?: RowManagerStateConfig
 }
 
 
@@ -71,13 +80,20 @@ export class Datagrid implements DatagridInstance {
 
     constructor(config: DatagridConfig) {
         this.original = { data: config.data, columns: config.columns };
-        this.columnsProcessor.initialize();
-        this.rows = this.dataProcessor.process();
+        this.initialize(config);
+    }
+
+    private initialize(config: DatagridConfig): void {
+        this.pagination.initializeState(config.pagination || {});
+        this.grouping.initializeState(config.grouping || {});
+        this.filtering.initializeState(config.filtering || {});
+        this.rowManager.initializeState(config.rowManager || {});
+
+        this.columnsProcessor.transform();
+        this.dataProcessor.process();
         this.columnsProcessor.calculateFacets(this.dataProcessor.processedRowsCache);
         this.filtering.assignFuseInstance(this.original.data);
         this.pagination.updatePageCount()
-
-
     }
 
     refreshVisibleRows(): void {

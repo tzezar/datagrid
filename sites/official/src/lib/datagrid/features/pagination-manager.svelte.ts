@@ -1,4 +1,4 @@
-import type { DatagridInstance } from "../index.svelte";
+import type { DatagridInstance, PaginationStateConfig } from "../index.svelte";
 
 export type PaginationState = {
     page: number
@@ -20,6 +20,8 @@ export type PaginationFeature = {
 
     updatePageSize(pageSize: number): void;
     updatePageCount(): void;
+
+    initializeState(state: Partial<PaginationState>): void
 } & PaginationState
 
 
@@ -36,7 +38,11 @@ export class PaginationManager implements PaginationFeature {
         this.grid = grid;
     }
 
-
+    initializeState (state: PaginationStateConfig) {
+        this.page = state.page || this.page;
+        this.pageSize = state.pageSize || this.pageSize;
+        this.count = state.count || this.count;
+    }
 
     canPrevPage(): boolean {
         return this.page === 1;

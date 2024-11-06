@@ -140,11 +140,11 @@
 	class="align-middlep mx-auto flex max-w-xl flex-col items-center justify-center py-20 text-xl font-bold uppercase"
 ></div>
 
-<article class="mx-auto flex w-full max-w-lg flex-col px-4 py-10">
+<!-- <article class="mx-auto flex w-full max-w-lg flex-col px-4 py-10">
 	<div class="prose min-w-full pt-8">
 		<Description />
 	</div>
-</article>
+</article> -->
 
 <!-- <div
 	class="align-middlep sticky bottom-0 mx-auto flex max-w-xl flex-col items-center justify-center bg-white py-2 text-xl font-bold"

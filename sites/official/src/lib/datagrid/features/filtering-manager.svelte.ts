@@ -1,5 +1,5 @@
 import Fuse from "fuse.js";
-import type { DatagridInstance } from "../index.svelte";
+import type { DatagridInstance, FilteringStateConfig } from "../index.svelte";
 import type { Accessor } from "../processors/column-processor.svelte";
 
 export const filterOperators: FilterOperator[] = [
@@ -68,8 +68,15 @@ export interface FilterCondition {
     valueTo?: any; // For 'between' operator
 }
 
+export type FilteringState = {
+    fuseInstance: Fuse<any> | null;
+    conditions: FilterCondition[];
+    search: SearchState;
+}
 
-export interface FilteringFeature {
+export type FilteringFeature = {
+    initializeState(state: FilteringStateConfig): void
+
     addFilter(condition: FilterCondition): void;
     removeFilter(accessorKey: string): void;
     clearFilters(): void;
@@ -81,11 +88,7 @@ export interface FilteringFeature {
     getConditionOperator(accessorKey: string): FilterOperator;
     getConditionValue(accessorKey: string): any;
     getConditionValueTo(accessorKey: string): any;
-
-    search: SearchState,
-    conditions: FilterCondition[],
-    fuse: Fuse<any> | null
-}
+} & FilteringState
 
 export interface SearchState {
     value: string;
@@ -93,17 +96,24 @@ export interface SearchState {
     delay: number;
 }
 
+
+
 export class FilteringManager implements FilteringFeature {
     protected grid: DatagridInstance;
-    fuse: Fuse<any> | null = null
-
-
+    fuseInstance: Fuse<any> | null = null
     conditions: FilterCondition[] = $state([])
 
     search: SearchState = {
         value: '',
         fuzzy: true,
         delay: 500
+    }
+
+
+    initializeState(state: FilteringStateConfig): void {
+        this.fuseInstance = state?.fuseInstance || this.initializeFuseInstance(this.grid.original.data, this.grid.columns.map(col => col.columnId))
+        this.conditions = state?.conditions || this.conditions
+        this.search = state?.search || this.search
     }
 
     getConditionOperator(accessorKey: string): FilterOperator {
@@ -142,13 +152,11 @@ export class FilteringManager implements FilteringFeature {
 
     clearFilters(): void {
         this.conditions = [];
-        this.grid.rows = this.grid.dataProcessor.process();
+        this.grid.dataProcessor.process();
     }
 
     isRowMatching(row: any): boolean {
         return this.conditions.every(condition =>
-            // * There is room for improvemt here
-            // adding cache for value to improve performance
             this.evaluateCondition(condition.accessor(row), condition)
         );
     }
@@ -231,6 +239,6 @@ export class FilteringManager implements FilteringFeature {
     }
 
     assignFuseInstance(items: any[]): void {
-        this.fuse = this.initializeFuseInstance(items, this.grid.columnManager.getSearchableColumns().map(col => col.columnId as string))
+        this.fuseInstance = this.initializeFuseInstance(items, this.grid.columnManager.getSearchableColumns().map(col => col.columnId as string))
     }
 }

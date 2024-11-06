@@ -1,5 +1,5 @@
 import { SvelteSet } from "svelte/reactivity";
-import type { DatagridInstance } from "../index.svelte";
+import type { DatagridInstance, GroupingStateConfig } from "../index.svelte";
 import type { Column, ColumnId } from "../processors/column-processor.svelte";
 import type { Data } from "../types";
 
@@ -37,10 +37,11 @@ export interface GroupingManagerState {
 
 export interface GroupingFeature {
     state: GroupingManagerState
-
+    initializeState(state: GroupingStateConfig): void
+    
     setGroupBy(groupBy: Group[]): void
     isGroupExpanded(groupId: string): boolean
-    isGrouped(): boolean
+    hasGroups(): boolean
 
 
 
@@ -59,8 +60,14 @@ export class GroupingManager implements GroupingFeature {
 
     }
 
+    initializeState(state: GroupingStateConfig): void {
+        this.state.groupBy = state.groupBy || this.state.groupBy;
+        this.state.expandedRows = state.expandedRows || this.state.expandedRows;
+    }
 
-    isGrouped(): boolean {
+
+
+    hasGroups(): boolean {
         return this.state.groupBy.length > 0;
     }
 

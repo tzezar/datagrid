@@ -54,11 +54,12 @@ export interface Column {
     includeInExport: boolean
     allowedSortDirections: SortDirection[]
     allowedFilterOperators: FilterOperator[],
-    aggregationFn: AggregationFn
+    aggregationFn: AggregationFn,
+    columnDef: ColumnDef
 }
 
 export interface ColumnProcessorInstance {
-    initialize(): void
+    transform(): void
     getAccessor(columnId: ColumnId): Accessor
     calculateFacets(rows: Row[]): void
 }
@@ -70,7 +71,7 @@ export class ColumnProcessor implements ColumnProcessorInstance {
         this.grid = grid;
     }
 
-    initialize() {
+    transform() {
         const makeAccessor = (col: ColumnDef) => {
             let accessor: Accessor
             if (col.accessorFn) {
@@ -86,43 +87,44 @@ export class ColumnProcessor implements ColumnProcessorInstance {
         }
         const columns: Column[] = [];
         for (let i = 0; i < this.grid.original.columns.length; i++) {
-            const col: ColumnDef = this.grid.original.columns[i]
+            const columnDef: ColumnDef = this.grid.original.columns[i]
 
-            const columnId = col.accessorKey || String(i);
-            const accessor: Accessor = makeAccessor(col);
+            const columnId = columnDef.accessorKey || String(i);
+            const accessor: Accessor = makeAccessor(columnDef);
             const isSorted = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId).length > 0;
             const getSortingDirection = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId)[0]?.direction;
-            const pinningPosition = col.pinning?.position || 'none';
-            const size = col.size || { width: 100, minWidth: 50, maxWidth: 200 };
+            const pinningPosition = columnDef.pinning?.position || 'none';
+            const size = columnDef.size || { width: 100, minWidth: 50, maxWidth: 200 };
 
             const processedColumn: Column = {
                 columnId,
-                header: col.header,
+                header: columnDef.header,
                 accessor,
                 isSorted,
                 getSortingDirection,
-                includeInSearch: col.includeInSearch ?? true,
-                includeInExport: col.includeInExport ?? true,
+                includeInSearch: columnDef.includeInSearch ?? true,
+                includeInExport: columnDef.includeInExport ?? true,
                 cell: {
-                    component: col?.cell?.component,
-                    style: col?.cell?.style
+                    component: columnDef?.cell?.component,
+                    style: columnDef?.cell?.style
                 },
-                filter: col.filter,
-                faceting: col.faceting,
-                formatter: col.formatter,
+                filter: columnDef.filter,
+                faceting: columnDef.faceting,
+                formatter: columnDef.formatter,
                 size,
-                visible: col.visible ?? true,
-                groupable: col.groupable ?? true,
-                sortable: col.sortable ?? true,
-                filterable: col.filterable ?? true,
-                allowedSortDirections: col.allowedSortDirections || ['asc', 'desc'],
-                allowedFilterOperators: this.getAllowedFilterOperators(col),
+                visible: columnDef.visible ?? true,
+                groupable: columnDef.groupable ?? true,
+                sortable: columnDef.sortable ?? true,
+                filterable: columnDef.filterable ?? true,
+                allowedSortDirections: columnDef.allowedSortDirections || ['asc', 'desc'],
+                allowedFilterOperators: this.getAllowedFilterOperators(columnDef),
                 pinning: {
                     position: pinningPosition,
                     offset: 0
                 },
-                aggregationFn: col.aggregationFn || 'none',
-                type: col?.type || 'string'
+                aggregationFn: columnDef.aggregationFn || 'none',
+                type: columnDef?.type || 'string',
+                columnDef: columnDef
             };
 
             columns.push(processedColumn);

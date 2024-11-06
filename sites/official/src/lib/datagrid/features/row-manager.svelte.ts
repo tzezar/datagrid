@@ -1,5 +1,8 @@
 import { SvelteSet } from "svelte/reactivity";
-import type { DatagridInstance } from "../index.svelte";
+import type { DatagridInstance, RowManagerStateConfig } from "../index.svelte";
+
+export type RowSelectionMode = 'single' | 'multi' | 'none';
+export type RowExpansionMode = 'single' | 'multi' | 'none';
 
 export interface RowManagerState {
     expandedRows: SvelteSet<string>;
@@ -12,7 +15,7 @@ export interface RowManagerState {
 
 export interface RowManagerInstance {
     state: RowManagerState;
-
+    initializeState(config: RowManagerStateConfig): void;
     expandRow(rowId: string): void;
     collapseRow(rowId: string): void;
     toggleRowExpansion(rowId: string): void;
@@ -39,8 +42,8 @@ export interface RowManagerInstance {
 export class RowManager implements RowManagerInstance {
     private grid: DatagridInstance;
 
-    selectionMode: 'single' | 'multiple' | 'none' = 'single';
-    expansionMode: 'single' | 'multiple' | 'none' = 'single';
+    selectionMode: RowSelectionMode = 'single';
+    expansionMode: RowExpansionMode = 'single';
 
     state: RowManagerState = {
         expandedRows: new SvelteSet(),
@@ -54,6 +57,23 @@ export class RowManager implements RowManagerInstance {
     constructor(grid: DatagridInstance) {
         this.grid = grid;
     }
+
+    initializeState(config: RowManagerStateConfig) {
+        this.selectionMode = config.selectionMode || 'single';
+        this.expansionMode = config.expansionMode || 'single';
+
+        if (config.expandedRows) {
+            this.state.expandedRows = new SvelteSet(config.expandedRows);
+        }
+        if (config.selectedRows) {
+            this.state.selectedRows = new SvelteSet(config.selectedRows);
+        }
+        if (config.pinnedRows) {
+            this.state.pinnedRows.top = new SvelteSet(config.pinnedRows.top);
+            this.state.pinnedRows.bottom = new SvelteSet(config.pinnedRows.bottom);
+        }
+    }
+
 
     pinRow(rowId: string, position: "top" | "bottom"): void {
         if (position === 'top') {

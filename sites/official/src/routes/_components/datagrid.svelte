@@ -15,17 +15,12 @@
 
 	let grid = new Datagrid({
 		data,
-		columns
+		columns,
+		pagination: {
+			page: 2
+		}
 	});
 
-	$effect(() => {
-		console.log($state.snapshot(grid.rows));
-	});
-
-	// grid.grouping.setAggregations([
-	// 	{ columnId: 'sales', functions: ['sum', 'min', 'max'] },
-	// 	{ columnId: 'profit', functions: ['sum', 'mean'] }
-	// ]);
 	function handleGroupToggle(groupId: string) {
 		grid.refresh(() => {
 			grid.dataProcessor.toggleGroupExpansion(groupId);
@@ -47,7 +42,6 @@
 			};
 		});
 
-		console.log(newGroupBy);
 
 		grid.reload(() => {
 			grid.pagination.goToFirstPage();
@@ -70,7 +64,6 @@
 
 	$effect(() => {
 		// console.log($state.snapshot(grid.grouping.state.expandedRows));
-		// console.log($state.snapshot(grid.rows));
 	});
 
 	const handleColumnPinningChange = (column: Column, position: PinningPosition) => {
@@ -83,9 +76,6 @@
 		grid.columnManager.refreshColumnPinningOffsets();
 	};
 
-	$effect(() => {
-		console.log($state.snapshot(grid.grouping.state.groupBy));
-	});
 </script>
 
 <div class="flex flex-row flex-wrap gap-4 pb-4 [&>*]:grow md:[&>*]:w-[calc(50%-8px)]">

@@ -78,7 +78,7 @@ export class SortingManager implements SortingFeature {
 
         this.sortBy = [];
         this._sortedDataCache = [];
-        this.grid.rows = this.grid.dataProcessor.process();
+        this.grid.dataProcessor.process();
     }
 
     public setSortMode(mode: SortMode): void {

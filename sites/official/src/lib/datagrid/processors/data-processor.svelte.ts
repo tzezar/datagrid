@@ -30,7 +30,7 @@ export interface GroupingState {
 
 export interface DataProcessorInstance {
     processedRowsCache: Row[]
-    process(): Row[];
+    process(): void,
     toggleGroupExpansion(groupId: string): void;
     rowsMap: Map<string, Row>;
 }
@@ -47,27 +47,20 @@ export class DataProcessor implements DataProcessorInstance {
         this.grid.grouping.state.expandedRows = new SvelteSet([]);
     }
 
-    process(): Row[] {
-        console.log('data processing');
+    process(): void {
+        // prepare
         this.grid.grouping.state._groupedDataCache = null;
         this.rowsMap.clear();
-
-        // Apply global search first
+        
         let processedData: Data[] = [...this.grid.original.data];
         if (this.grid.filtering.search.value) processedData = this.applyGlobalFilter(processedData);
-        // Apply filters first
-        processedData = processedData.filter(item => this.grid.filtering.isRowMatching(item));
-
-        if (this.grid.grouping.isGrouped()) {
-            this.processedRowsCache = this.createGroupedRows();
-        } else {
+        if (this.grid.filtering.conditions) processedData = processedData.filter(item => this.grid.filtering.isRowMatching(item));
+        if (this.grid.grouping.hasGroups()) this.processedRowsCache = this.applyGrouping();
+        if (!this.grid.grouping.hasGroups()) {
             if (this.grid.sorting.sortBy.length > 0) processedData = this.sortData(processedData);
             this.processedRowsCache = this.createRows(processedData);
         }
-
-        const visibleRows = this.grid.getVisibleRows(this.grid.pagination.page, this.grid.pagination.pageSize);
-        this.grid.rows = visibleRows;
-        return visibleRows;
+        this.grid.rows = this.grid.getVisibleRows(this.grid.pagination.page, this.grid.pagination.pageSize);
     }
 
     // Data
@@ -91,9 +84,9 @@ export class DataProcessor implements DataProcessorInstance {
 
         // Fuzzy search
         if (search.fuzzy) {
-            const fuse = this.grid.filtering.fuse
-            if (!fuse) throw new Error('fuse is null')
-            return fuse.search(search.value).map(result => result.item);
+            const fuseInstance = this.grid.filtering.fuseInstance
+            if (!fuseInstance) throw new Error('fuse is null')
+            return fuseInstance.search(search.value).map(result => result.item);
         }
 
         // Cache the column accessor functions for searchable columns
@@ -171,7 +164,7 @@ export class DataProcessor implements DataProcessorInstance {
 
         return groups;
     }
-    private createGroupedRows(): Row[] {
+    private applyGrouping(): Row[] {
         const rows: Row[] = [];
         this.createGroups(this.getGroupedData(), rows);
         return rows;
@@ -278,7 +271,7 @@ export class DataProcessor implements DataProcessorInstance {
             this.grid.grouping.state.expandedRows.add(groupId);
         }
 
-        this.processedRowsCache = this.createGroupedRows();
+        this.processedRowsCache = this.applyGrouping();
     }
 
     // Helpers
