@@ -69,13 +69,13 @@ export interface FilterCondition {
 }
 
 export type FilteringState = {
-    fuseInstance: Fuse<any> | null;
+    fuse: Fuse<any> | null;
     conditions: FilterCondition[];
     search: SearchState;
 }
 
 export type FilteringFeature = {
-    initializeState(state: FilteringStateConfig): void
+    initialize(state: FilteringStateConfig): void
 
     addFilter(condition: FilterCondition): void;
     removeFilter(accessorKey: string): void;
@@ -96,11 +96,9 @@ export interface SearchState {
     delay: number;
 }
 
-
-
 export class FilteringManager implements FilteringFeature {
     protected grid: DatagridInstance;
-    fuseInstance: Fuse<any> | null = null
+    fuse: Fuse<any> | null = null
     conditions: FilterCondition[] = $state([])
 
     search: SearchState = {
@@ -109,9 +107,12 @@ export class FilteringManager implements FilteringFeature {
         delay: 500
     }
 
+    constructor(grid: DatagridInstance) {
+        this.grid = grid;
+    }
 
-    initializeState(state: FilteringStateConfig): void {
-        this.fuseInstance = state?.fuseInstance || this.initializeFuseInstance(this.grid.original.data, this.grid.columns.map(col => col.columnId))
+    initialize(state: FilteringStateConfig): void {
+        this.fuse = state?.fuse || this.initializeFuseInstance(this.grid.original.data, this.grid.columns.map(col => col.columnId))
         this.conditions = state?.conditions || this.conditions
         this.search = state?.search || this.search
     }
@@ -133,10 +134,6 @@ export class FilteringManager implements FilteringFeature {
     }
 
 
-    constructor(grid: DatagridInstance) {
-        this.grid = grid;
-        this.conditions = []
-    }
 
     addFilter(condition: FilterCondition): void {
         // Remove any existing filter for the same column
@@ -239,6 +236,6 @@ export class FilteringManager implements FilteringFeature {
     }
 
     assignFuseInstance(items: any[]): void {
-        this.fuseInstance = this.initializeFuseInstance(items, this.grid.columnManager.getSearchableColumns().map(col => col.columnId as string))
+        this.fuse = this.initializeFuseInstance(items, this.grid.columnManager.getSearchableColumns().map(col => col.columnId as string))
     }
 }

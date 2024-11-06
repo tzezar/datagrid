@@ -7,44 +7,44 @@ export type AccessorKey = string
 
 export type DataType = 'string' | 'number' | 'date' | 'boolean'
 
-export interface ColumnDef {
-    accessorKey: AccessorKey;
-    accessorFn?: (row: any) => any;
-    formatter?: (row: any) => any;
-    header: string;
-    footer?: string;
-    size?: {
+export type CommonColumnProps = {
+    sortable: boolean;
+    resizable: boolean;
+    movable: boolean;
+    pinnable: boolean;
+    hideable: boolean;
+    exportable: boolean;
+    filterable: boolean;
+    groupable: boolean;
+    searchable?: boolean;
+    visible: boolean;
+    size: {
         width: number;
         minWidth: number;
         maxWidth: number;
     },
-    pinning?: {
-        position: 'left' | 'right';
-    }
+    formatter?: (row: any) => any;
+    faceting?: NumericFacet | CategoricalFacet;
+    allowedSortDirections: SortDirection[]
+    allowedFilterOperators: FilterOperator[]
+    header: string;
+}
 
-    visible?: boolean;
 
-    sortable?: boolean;
-    resizable?: boolean;
-    movable?: boolean;
-    pinnable?: boolean;
-    hideable?: boolean;
-    exportable?: boolean;
-    filterable?: boolean;
-    groupable?: boolean;
-    
+export type ColumnDef = {
+    accessorKey: AccessorKey;
+    accessorFn?: (row: any) => any;
+    footer?: string;
+    pinning?: "left"| "right"
     type: DataType
     filter?: 'string' | 'number' | 'date' | 'boolean' | 'select' | 'custom',
-    allowedSortDirections?: SortDirection[]
-    allowedFilterOperators?: FilterOperator[]
     cell?: {
         component?: any;
         style?: (row: any) => any;
     }
-    faceting?: NumericFacet | CategoricalFacet;
-    includeInSearch?: boolean;
-    includeInExport?: boolean;
     aggregationFn?: AggregationFn
+} & Partial<Omit<CommonColumnProps, 'header'>> & {
+    header: string
 }
 
 export interface Data<T = any> {

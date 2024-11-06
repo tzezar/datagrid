@@ -21,7 +21,7 @@ export type PaginationFeature = {
     updatePageSize(pageSize: number): void;
     updatePageCount(): void;
 
-    initializeState(state: Partial<PaginationState>): void
+    initialize(state: Partial<PaginationState>): void
 } & PaginationState
 
 
@@ -38,7 +38,7 @@ export class PaginationManager implements PaginationFeature {
         this.grid = grid;
     }
 
-    initializeState (state: PaginationStateConfig) {
+    initialize (state: PaginationStateConfig) {
         this.page = state.page || this.page;
         this.pageSize = state.pageSize || this.pageSize;
         this.count = state.count || this.count;

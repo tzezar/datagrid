@@ -3,7 +3,7 @@ import { numberFilterOperators, stringFilterOperators, type FilterOperator } fro
 import type { AggregationFn } from "../features/grouping-manager.svelte";
 import type { SortDirection } from "../features/sorting-manager.svelte";
 import type { DatagridInstance } from "../index.svelte";
-import type { ColumnDef, DataType } from "../types";
+import type { ColumnDef, CommonColumnProps, DataType } from "../types";
 import type { Row } from "./data-processor.svelte";
 
 
@@ -19,29 +19,16 @@ export type CategoricalFacet = {
     uniqueValuesCount: number
 }
 
-
 export type Accessor = (row: any) => any
 export type ColumnId = string
 
-export interface Column {
+export type Column = {
     columnId: ColumnId, // Used to identify the column
     accessor: Accessor // Used to get the value
-    formatter?: (row: any) => any
-    header: string
-    size: {
-        width: number
-        minWidth: number
-        maxWidth: number
-    },
     cell?: {
         component?: any | undefined
         style?: (row: any) => any | undefined
     }
-    visible: boolean;
-    groupable: boolean;
-    sortable: boolean;
-    filterable: boolean;
-    faceting: NumericFacet | CategoricalFacet | undefined
     filter: 'string' | 'number' | 'date' | 'boolean' | 'select' | 'custom' | undefined
     pinning: {
         position: PinningPosition
@@ -50,17 +37,12 @@ export interface Column {
     type: DataType
     isSorted: () => boolean
     getSortingDirection: () => SortDirection
-    includeInSearch: boolean
-    includeInExport: boolean
-    allowedSortDirections: SortDirection[]
-    allowedFilterOperators: FilterOperator[],
     aggregationFn: AggregationFn,
     columnDef: ColumnDef
-}
+} & CommonColumnProps
 
 export interface ColumnProcessorInstance {
     transform(): void
-    getAccessor(columnId: ColumnId): Accessor
     calculateFacets(rows: Row[]): void
 }
 
@@ -93,8 +75,7 @@ export class ColumnProcessor implements ColumnProcessorInstance {
             const accessor: Accessor = makeAccessor(columnDef);
             const isSorted = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId).length > 0;
             const getSortingDirection = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId)[0]?.direction;
-            const pinningPosition = columnDef.pinning?.position || 'none';
-            const size = columnDef.size || { width: 100, minWidth: 50, maxWidth: 200 };
+            const pinningPosition = columnDef?.pinning || 'none' as PinningPosition
 
             const processedColumn: Column = {
                 columnId,
@@ -102,8 +83,6 @@ export class ColumnProcessor implements ColumnProcessorInstance {
                 accessor,
                 isSorted,
                 getSortingDirection,
-                includeInSearch: columnDef.includeInSearch ?? true,
-                includeInExport: columnDef.includeInExport ?? true,
                 cell: {
                     component: columnDef?.cell?.component,
                     style: columnDef?.cell?.style
@@ -111,20 +90,30 @@ export class ColumnProcessor implements ColumnProcessorInstance {
                 filter: columnDef.filter,
                 faceting: columnDef.faceting,
                 formatter: columnDef.formatter,
-                size,
-                visible: columnDef.visible ?? true,
-                groupable: columnDef.groupable ?? true,
-                sortable: columnDef.sortable ?? true,
-                filterable: columnDef.filterable ?? true,
                 allowedSortDirections: columnDef.allowedSortDirections || ['asc', 'desc'],
                 allowedFilterOperators: this.getAllowedFilterOperators(columnDef),
                 pinning: {
-                    position: pinningPosition,
+                    position: pinningPosition as PinningPosition,
+                    // temporary offset, later will be calculated
                     offset: 0
                 },
                 aggregationFn: columnDef.aggregationFn || 'none',
-                type: columnDef?.type || 'string',
-                columnDef: columnDef
+                type: columnDef.type || 'string',
+                
+                columnDef: columnDef,
+                
+                sortable: columnDef.sortable || false,
+                resizable: columnDef.resizable || false,
+                movable: columnDef.movable || false,
+                pinnable: columnDef.pinnable || false,
+                hideable: columnDef.hideable || false,
+                exportable: columnDef.exportable || false,
+                searchable: columnDef.searchable ?? true,
+                filterable: columnDef.filterable || false,
+                groupable: columnDef.groupable || false,
+                visible: columnDef.visible || true,
+                size: columnDef.size || { width: 100, minWidth: 50, maxWidth: 200 }
+
             };
 
             columns.push(processedColumn);
@@ -171,18 +160,14 @@ export class ColumnProcessor implements ColumnProcessorInstance {
     private getAllowedFilterOperators(column: ColumnDef): FilterOperator[] {
         if (!column) return []
         if (column.filterable === false) return []
-        if (!column.type) return []
+        if (!column.filter) return []
         if (column.allowedFilterOperators) return column.allowedFilterOperators
-        if (column.type === 'string') return stringFilterOperators
-        if (column.type === 'number') return numberFilterOperators
+        if (column.filter === 'string') return stringFilterOperators
+        if (column.filter === 'number') return numberFilterOperators
         return []
     }
 
-    getAccessor(columnId: ColumnId) {
-        const column = this.grid.columns.find(c => c.columnId === columnId)
-        if (!column) throw new Error(`Column ${columnId} not found`)
-        return column.accessor
-    }
+   
 
     calculateFacets(rows: Row[]) {
         for (const column of this.grid.columns) {

@@ -3,7 +3,7 @@ import { FilteringManager, type FilteringFeature, type FilteringState } from "./
 import { GroupingManager, type GroupingFeature, type GroupingManagerState } from "./features/grouping-manager.svelte";
 import { PaginationManager, type PaginationFeature, type PaginationState } from "./features/pagination-manager.svelte";
 import { RowManager, type RowExpansionMode, type RowManagerState, type RowSelectionMode } from "./features/row-manager.svelte";
-import { SortingManager, type SortingFeature } from "./features/sorting-manager.svelte";
+import { SortingManager, type SortingFeature, type SortingState } from "./features/sorting-manager.svelte";
 import { ColumnProcessor, type Column, type ColumnProcessorInstance } from "./processors/column-processor.svelte";
 import { DataProcessor, type DataProcessorInstance, type Row } from "./processors/data-processor.svelte";
 import type { ColumnDef, Data } from "./types";
@@ -47,6 +47,7 @@ export type RowManagerStateConfig = Partial<RowManagerState> & {
     selectionMode?: RowSelectionMode
     expansionMode?: RowExpansionMode
 }
+export type SortingStateConfig = Partial<SortingState>
 
 export type DatagridConfig = {
     columns: ColumnDef[]
@@ -56,6 +57,7 @@ export type DatagridConfig = {
     grouping?: GroupingStateConfig
     filtering?: FilteringStateConfig
     rowManager?: RowManagerStateConfig
+    sorting?: SortingStateConfig
 }
 
 
@@ -84,10 +86,11 @@ export class Datagrid implements DatagridInstance {
     }
 
     private initialize(config: DatagridConfig): void {
-        this.pagination.initializeState(config.pagination || {});
-        this.grouping.initializeState(config.grouping || {});
-        this.filtering.initializeState(config.filtering || {});
-        this.rowManager.initializeState(config.rowManager || {});
+        this.pagination.initialize(config.pagination || {});
+        this.grouping.initialize(config.grouping || {});
+        this.filtering.initialize(config.filtering || {});
+        this.rowManager.initialize(config.rowManager || {});
+        this.sorting.initialize(config.sorting || {});
 
         this.columnsProcessor.transform();
         this.dataProcessor.process();

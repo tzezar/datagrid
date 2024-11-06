@@ -48,15 +48,15 @@ export class DataProcessor implements DataProcessorInstance {
     }
 
     process(): void {
-        // prepare
         this.grid.grouping.state._groupedDataCache = null;
         this.rowsMap.clear();
         
         let processedData: Data[] = [...this.grid.original.data];
         if (this.grid.filtering.search.value) processedData = this.applyGlobalFilter(processedData);
         if (this.grid.filtering.conditions) processedData = processedData.filter(item => this.grid.filtering.isRowMatching(item));
-        if (this.grid.grouping.hasGroups()) this.processedRowsCache = this.applyGrouping();
-        if (!this.grid.grouping.hasGroups()) {
+        if (this.grid.grouping.hasGroups()) {
+            this.processedRowsCache = this.applyGrouping()
+        } else {
             if (this.grid.sorting.sortBy.length > 0) processedData = this.sortData(processedData);
             this.processedRowsCache = this.createRows(processedData);
         }
@@ -84,7 +84,7 @@ export class DataProcessor implements DataProcessorInstance {
 
         // Fuzzy search
         if (search.fuzzy) {
-            const fuseInstance = this.grid.filtering.fuseInstance
+            const fuseInstance = this.grid.filtering.fuse
             if (!fuseInstance) throw new Error('fuse is null')
             return fuseInstance.search(search.value).map(result => result.item);
         }
@@ -247,6 +247,8 @@ export class DataProcessor implements DataProcessorInstance {
         // Calculate aggregates and sort items within each group
         groups.forEach(group => {
             // Calculate aggregates for the current group
+
+            // ! here is bottleneck when grouping by eg id (100k groups)
             group.aggregates = this.grid.grouping.calculateGroupAggregates(group);
 
             if (group.items.length > 0) {
@@ -280,7 +282,7 @@ export class DataProcessor implements DataProcessorInstance {
         return sortingDirections.map(config => ({
             columnId: config.columnId,
             direction: config.direction,
-            accessor: this.grid.columnsProcessor.getAccessor(config.columnId)
+            accessor: this.grid.columnManager.getAccessor(config.columnId)
         }));
     }
 }

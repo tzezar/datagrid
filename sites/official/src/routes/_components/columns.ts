@@ -7,30 +7,31 @@ export const columns = [
     {
         accessorKey: 'selection',
         header: 'Selection',
-        type: 'string',
+        filter: 'string',
         filterable: false,
         sortable: false,
         groupable: false,
         cell: {
             component: RowSelection
-        }
+        },
+        type: 'number'
     },
     {
         accessorKey: 'id',
         header: 'ID',
-        type: 'number',
-        pinning: {
-            position: 'left',
-        },
+        filter: 'number',
+        pinning: 'left',
+        type: 'number'
+
 
     },
     {
         accessorKey: 'department.name',
         header: 'Department',
-        type: 'string',
-        pinning: {
-            position: 'left',
-        }
+        filter: 'string',
+        pinning: 'left',
+        type: 'string'
+
     },
 
     {
@@ -58,6 +59,7 @@ export const columns = [
         //     min: 0
         // },
         type: 'number',
+        filter: 'number',
     },
     {
         accessorKey: 'profit',
@@ -71,5 +73,6 @@ export const columns = [
         //     min: 0
         // },
         type: 'number',
+        filter: 'number'
     }
 ] satisfies ColumnDef[]

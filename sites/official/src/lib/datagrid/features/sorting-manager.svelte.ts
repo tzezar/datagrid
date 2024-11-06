@@ -1,4 +1,4 @@
-import type { DatagridInstance } from "../index.svelte";
+import type { DatagridInstance, SortingStateConfig } from "../index.svelte";
 import type { Accessor, ColumnId } from "../processors/column-processor.svelte";
 
 export type SortDirection = "asc" | "desc";
@@ -12,13 +12,17 @@ export interface Sort {
 
 export type SortBy = Sort[];  // Removed readonly to allow mutations
 
-export interface SortingFeature {
-    sortBy: SortBy;
-    mode: SortMode;
+export type SortingFeature = {
+    initialize(state: SortingStateConfig): void;
     _sortedDataCache: any[];
     toggleSort(accessor: string): void;
     clearSort(): void;
     setSortMode(mode: SortMode): void;
+} & SortingState
+
+export type SortingState = {
+    sortBy: SortBy
+    mode: SortMode
 }
 
 export class SortingManager implements SortingFeature {
@@ -27,14 +31,13 @@ export class SortingManager implements SortingFeature {
     mode: SortMode = "single";
     _sortedDataCache: any[] = [];
 
-    constructor(
-        grid: DatagridInstance,
-        initialSort: SortBy = [],
-        mode: SortMode = "single"
-    ) {
+    constructor(grid: DatagridInstance) {
         this.grid = grid;
-        this.mode = mode;
-        this.sortBy = initialSort;
+    }
+
+    initialize(state: SortingStateConfig): void {
+        this.sortBy = state.sortBy || this.sortBy;
+        this.mode = state.mode || this.mode;
     }
 
     public toggleSort(columnId: ColumnId): void {

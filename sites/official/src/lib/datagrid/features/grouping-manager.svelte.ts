@@ -37,15 +37,10 @@ export interface GroupingManagerState {
 
 export interface GroupingFeature {
     state: GroupingManagerState
-    initializeState(state: GroupingStateConfig): void
-    
+    initialize(state: GroupingStateConfig): void
     setGroupBy(groupBy: Group[]): void
     isGroupExpanded(groupId: string): boolean
     hasGroups(): boolean
-
-
-
-    calculateAggregates(items: Data[], column: any): any
     calculateGroupAggregates(group: any): any
 }
 
@@ -60,7 +55,7 @@ export class GroupingManager implements GroupingFeature {
 
     }
 
-    initializeState(state: GroupingStateConfig): void {
+    initialize(state: GroupingStateConfig): void {
         this.state.groupBy = state.groupBy || this.state.groupBy;
         this.state.expandedRows = state.expandedRows || this.state.expandedRows;
     }
@@ -85,10 +80,10 @@ export class GroupingManager implements GroupingFeature {
         return this.state.expandedRows.has(groupId);
     }
 
-    calculateAggregates(items: Data[], column: Column): any {
+    private calculateAggregates(items: Data[], column: Column): any {
         if (!items.length) return null;
 
-        const accessor = this.grid.columnsProcessor.getAccessor(column.columnId);
+        const accessor = this.grid.columnManager.getAccessor(column.columnId);
         const values = items.map(item => accessor(item)).filter(val => val !== null && val !== undefined);
 
         if (!values.length) return null;

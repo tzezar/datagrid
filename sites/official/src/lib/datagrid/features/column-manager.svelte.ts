@@ -1,20 +1,22 @@
 import type { DatagridInstance } from "../index.svelte";
-import type { Column, ColumnId } from "../processors/column-processor.svelte"
+import type { Accessor, Column, ColumnId } from "../processors/column-processor.svelte"
 
 export type PinningPosition = 'left' | 'right' | 'none'
 
 
 interface ColumnManagerInstance {
+    getAccessor(columnId: ColumnId): Accessor
+    
     hideColumn(column: Column): void;
     showColumn(column: Column): void;
 
-    changeColumnPinning(column: Column, position: PinningPosition): void;
-
+    changeColumnPinningPosition(column: Column, position: PinningPosition): void;
 
     resizeColumn(column: Column, width: number): void;
 
     moveColumnLeft(column: Column): void;
     moveColumnRight(column: Column): void;
+    moveColumnToPosition(column: Column, position: number): void
 
     canMoveColumnLeft(column: Column): boolean;
     canMoveColumnRight(column: Column): boolean;
@@ -34,6 +36,12 @@ export class ColumnManager implements ColumnManagerInstance {
 
     constructor(grid: DatagridInstance) {
         this.grid = grid;
+    }
+
+    getAccessor(columnId: ColumnId) {
+        const column = this.grid.columns.find(c => c.columnId === columnId)
+        if (!column) throw new Error(`Column ${columnId} not found`)
+        return column.accessor
     }
 
     isFilterable(column: Column): boolean {
@@ -106,7 +114,7 @@ export class ColumnManager implements ColumnManagerInstance {
         this.grid.columns = newColumns;
     };
 
-    changeColumnPinning(column: Column, position: PinningPosition): void {
+    changeColumnPinningPosition(column: Column, position: PinningPosition): void {
         column.pinning.position = position
     }
 
@@ -147,10 +155,18 @@ export class ColumnManager implements ColumnManagerInstance {
             this.grid.columns[columnIndex] = nextColumn;
         }
     }
+    
+    moveColumnToPosition(column: Column, position: number): void {
+        const columnIndex = this.getColumnIndex(column);
+        if (columnIndex !== position) {
+            this.grid.columns.splice(position, 0, column);
+            this.grid.columns.splice(columnIndex, 1);
+        }
+    }
 
     // used in global search
     getSearchableColumns(): Column[] {
-        return this.grid.columns.filter(c => c.includeInSearch && c.visible);
+        return this.grid.columns.filter(c => c.searchable && c.visible);
     }
 
 }

@@ -63,11 +63,11 @@
 	}
 
 	$effect(() => {
-		// console.log($state.snapshot(grid.grouping.state.expandedRows));
+		console.log($state.snapshot(grid.rows));
 	});
 
 	const handleColumnPinningChange = (column: Column, position: PinningPosition) => {
-		grid.columnManager.changeColumnPinning(column, position);
+		grid.columnManager.changeColumnPinningPosition(column, position);
 		grid.columnManager.refreshColumnPinningOffsets();
 	};
 
