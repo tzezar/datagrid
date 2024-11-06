@@ -1,7 +1,7 @@
 import { ColumnManager } from "./features/column-manager.svelte";
 import { FilteringManager, type FilteringFeature } from "./features/filtering-manager.svelte";
 import { GroupingManager, type GroupingFeature } from "./features/grouping-manager.svelte";
-import { PaginationManager, type PaginationFeature } from "./features/pagination-manager.svelte";
+import { PaginationManager, type PaginationFeature, type PaginationState } from "./features/pagination-manager.svelte";
 import { RowManager } from "./features/row-manager.svelte";
 import { SortingManager, type SortingFeature } from "./features/sorting-manager.svelte";
 import { ColumnProcessor, type Column, type ColumnProcessorInstance } from "./processors/column-processor.svelte";
@@ -40,6 +40,16 @@ export interface DatagridInstance {
 }
 
 
+type PaginationStateConfig = Partial<Omit<PaginationState, 'pageCount'>>
+
+export type DatagridConfig = {
+    columns: ColumnDef[]
+    data: Data[]
+
+    pagination?: PaginationStateConfig
+}
+
+
 export class Datagrid implements DatagridInstance {
     original: DatagridOriginal = {
         data: [],
@@ -48,7 +58,7 @@ export class Datagrid implements DatagridInstance {
 
     rows: Row[] = $state([]);
     columns: Column[] = $state([]);
-  
+
     sorting: SortingFeature = new SortingManager(this);
     filtering: FilteringFeature = new FilteringManager(this);
     grouping: GroupingFeature = new GroupingManager(this);
@@ -59,21 +69,14 @@ export class Datagrid implements DatagridInstance {
     dataProcessor: DataProcessorInstance = new DataProcessor(this);
     columnsProcessor: ColumnProcessorInstance = new ColumnProcessor(this);
 
-    constructor(data: Data[], columns: ColumnDef[]) {
-        this.original = { data, columns };
+    constructor(config: DatagridConfig) {
+        this.original = { data: config.data, columns: config.columns };
         this.columnsProcessor.initialize();
-
-        // this.grouping.state.groupBy = [
-        //     { columnId: 'department.name', accessor: this.columnManager.getColumn('department.name').accessor },
-        //     { columnId: 'region', accessor: grid.columnManager.getColumn('region').accessor }
-        // ]
-
         this.rows = this.dataProcessor.process();
         this.columnsProcessor.calculateFacets(this.dataProcessor.processedRowsCache);
-
-
         this.filtering.assignFuseInstance(this.original.data);
         this.pagination.updatePageCount()
+
 
     }
 

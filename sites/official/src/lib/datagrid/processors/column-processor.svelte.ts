@@ -3,7 +3,7 @@ import { numberFilterOperators, stringFilterOperators, type FilterOperator } fro
 import type { AggregationFn } from "../features/grouping-manager.svelte";
 import type { SortDirection } from "../features/sorting-manager.svelte";
 import type { DatagridInstance } from "../index.svelte";
-import type { ColumnDef } from "../types";
+import type { ColumnDef, DataType } from "../types";
 import type { Row } from "./data-processor.svelte";
 
 
@@ -24,12 +24,8 @@ export type Accessor = (row: any) => any
 export type ColumnId = string
 
 export interface Column {
-    columnId: ColumnId,
-    // ? I am not sure if keeping accessor as fn is good idea, it makes more problems than getting value
-    // ? with getNestedValue(); or maybe cached value would be better for performance
-    // ? (row) => row.smth comes with performance overhead 200%
-    accessor: (obj: any) => any
-    accessorKey: string
+    columnId: ColumnId, // Used to identify the column
+    accessor: Accessor // Used to get the value
     formatter?: (row: any) => any
     header: string
     size: {
@@ -45,103 +41,104 @@ export interface Column {
     groupable: boolean;
     sortable: boolean;
     filterable: boolean;
-    type: 'string' | 'number'
     faceting: NumericFacet | CategoricalFacet | undefined
     filter: 'string' | 'number' | 'date' | 'boolean' | 'select' | 'custom' | undefined
-
     pinning: {
         position: PinningPosition
         offset: number
     }
-
+    type: DataType
     isSorted: () => boolean
     getSortingDirection: () => SortDirection
     includeInSearch: boolean
     includeInExport: boolean
     allowedSortDirections: SortDirection[]
     allowedFilterOperators: FilterOperator[],
-    aggregationFn: AggregationFn | undefined
+    aggregationFn: AggregationFn
 }
 
 export interface ColumnProcessorInstance {
     initialize(): void
     getAccessor(columnId: ColumnId): Accessor
-
-    createAccessor(columnId: ColumnId): Accessor
     calculateFacets(rows: Row[]): void
 }
 
 export class ColumnProcessor implements ColumnProcessorInstance {
-    private grid: DatagridInstance
+    private grid: DatagridInstance;
 
     constructor(grid: DatagridInstance) {
         this.grid = grid;
     }
 
     initialize() {
+        const makeAccessor = (col: ColumnDef) => {
+            let accessor: Accessor
+            if (col.accessorFn) {
+                // If accessorFn is provided, use it directly
+                accessor = (obj: any) => col.accessorFn!(({ original: obj } as Row));
+            } else if (col.accessorKey) {
+                // If only accessorKey is provided, create an accessor function
+                accessor = this.createAccessor(col.accessorKey);
+            } else {
+                throw new Error('Neither accessorFn nor accessorKey is provided')
+            }
+            return accessor
+        }
         const columns: Column[] = [];
         for (let i = 0; i < this.grid.original.columns.length; i++) {
-            const col = this.grid.original.columns[i];
-            const columnId = col.accessorKey || String(i)
+            const col: ColumnDef = this.grid.original.columns[i]
 
-            let accessor = col.accessorKey || col.accessorFn
-            if (accessor === undefined) {
-                throw new Error(`Column ${columnId} with header ${col.header} does not have an accessorKey or accessorFn.`);
-            }
-            // accessor = this.createAccessorFn(accessor)
-            accessor = this.createAccessor(col.accessorKey)
-
+            const columnId = col.accessorKey || String(i);
+            const accessor: Accessor = makeAccessor(col);
             const isSorted = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId).length > 0;
-            const getSortingDirection = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId)[0]?.direction
-
+            const getSortingDirection = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId)[0]?.direction;
             const pinningPosition = col.pinning?.position || 'none';
+            const size = col.size || { width: 100, minWidth: 50, maxWidth: 200 };
 
             const processedColumn: Column = {
                 columnId,
-                accessorKey: col.accessorKey,
                 header: col.header,
                 accessor,
                 isSorted,
                 getSortingDirection,
-                includeInSearch: col.includeInSearch === undefined ? true : col.includeInSearch,
-                includeInExport: col.includeInExport === undefined ? true : col.includeInExport,
+                includeInSearch: col.includeInSearch ?? true,
+                includeInExport: col.includeInExport ?? true,
                 cell: {
                     component: col?.cell?.component,
                     style: col?.cell?.style
                 },
-                filter: col.filter || undefined,
+                filter: col.filter,
                 faceting: col.faceting,
                 formatter: col.formatter,
-                size: col.size || { width: 100, minWidth: 50, maxWidth: 200 },
-                visible: col.visible === undefined ? true : col.visible,
-                groupable: col.groupable === undefined ? true : col.groupable,
-                sortable: col.sortable === undefined ? true : col.sortable,
-                filterable: col.filterable === undefined ? true : col.filterable,
+                size,
+                visible: col.visible ?? true,
+                groupable: col.groupable ?? true,
+                sortable: col.sortable ?? true,
+                filterable: col.filterable ?? true,
                 allowedSortDirections: col.allowedSortDirections || ['asc', 'desc'],
                 allowedFilterOperators: this.getAllowedFilterOperators(col),
-                type: col.type || 'string',
                 pinning: {
                     position: pinningPosition,
                     offset: 0
                 },
-                aggregationFn: col.aggregationFn
-            }
+                aggregationFn: col.aggregationFn || 'none',
+                type: col?.type || 'string'
+            };
 
             columns.push(processedColumn);
         }
+
         this.grid.columns = columns;
 
-        // process pinning 
-        for (let i = 0; i < columns.length; i++) {
-            const col = this.grid.columns[i];
+        // Process pinning
+        for (const col of columns) {
             if (col.pinning?.position !== 'none') {
                 col.pinning.offset = this.grid.columnManager.getOffset(col.columnId, col.pinning.position);
             }
         }
     }
 
-
-    createAccessor = (path: string): ((obj: any) => any) => {
+    private createAccessor = (path: string): ((obj: any) => any) => {
         const parts = path.split('.');
 
         // For non-nested properties, use direct access for best performance
@@ -169,8 +166,6 @@ export class ColumnProcessor implements ColumnProcessorInstance {
         }
     };
 
-
-
     private getAllowedFilterOperators(column: ColumnDef): FilterOperator[] {
         if (!column) return []
         if (column.filterable === false) return []
@@ -181,24 +176,11 @@ export class ColumnProcessor implements ColumnProcessorInstance {
         return []
     }
 
-
-    createAccessorFn<T,>(accessor: string | Accessor) {
-        if (typeof accessor === 'string') {
-            return (row: T) => {
-                // Handle nested paths like 'department.name'
-                //@ts-expect-error TS7053
-                return accessor.split('.').reduce((obj, key) => obj?.[key], row);
-            };
-        }
-        return accessor;
-    };
-
     getAccessor(columnId: ColumnId) {
         const column = this.grid.columns.find(c => c.columnId === columnId)
         if (!column) throw new Error(`Column ${columnId} not found`)
         return column.accessor
     }
-
 
     calculateFacets(rows: Row[]) {
         for (const column of this.grid.columns) {

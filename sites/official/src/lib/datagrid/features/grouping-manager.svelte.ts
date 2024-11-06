@@ -1,10 +1,10 @@
 import { SvelteSet } from "svelte/reactivity";
 import type { DatagridInstance } from "../index.svelte";
-import type { ColumnId } from "../processors/column-processor.svelte";
+import type { Column, ColumnId } from "../processors/column-processor.svelte";
 import type { Data } from "../types";
 
 
-export type AggregationFn = 'sum' | 'min' | 'max' | 'extent' | 'mean' | 'median' | 'unique' | 'uniqueCount' | 'count'
+export type AggregationFn = "none" | 'sum' | 'min' | 'max' | 'extent' | 'mean' | 'median' | 'unique' | 'uniqueCount' | 'count' | 'all'
 export interface Aggregate {
     columnId: ColumnId
     accessor: (row: any) => any,
@@ -78,10 +78,10 @@ export class GroupingManager implements GroupingFeature {
         return this.state.expandedRows.has(groupId);
     }
 
-    calculateAggregates(items: Data[], column: any): any {
+    calculateAggregates(items: Data[], column: Column): any {
         if (!items.length) return null;
 
-        const accessor = this.grid.columnsProcessor.getAccessor(column.accessorKey);
+        const accessor = this.grid.columnsProcessor.getAccessor(column.columnId);
         const values = items.map(item => accessor(item)).filter(val => val !== null && val !== undefined);
 
         if (!values.length) return null;
@@ -121,7 +121,7 @@ export class GroupingManager implements GroupingFeature {
 
         // Calculate aggregates for each column using allItems for complete aggregation
         columnsWithAggregation.forEach(column => {
-            aggregates[column.accessorKey] = this.calculateAggregates(group.allItems, column);
+            aggregates[column.columnId] = this.calculateAggregates(group.allItems, column);
         });
 
         return aggregates;

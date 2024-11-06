@@ -13,12 +13,14 @@
 
 	let { data }: { data: Data[] } = $props();
 
-	let grid = new Datagrid(data, columns);
-
+	let grid = new Datagrid({
+		data,
+		columns
+	});
 
 	$effect(() => {
-		console.log($state.snapshot(grid.rows))
-	})
+		console.log($state.snapshot(grid.rows));
+	});
 
 	// grid.grouping.setAggregations([
 	// 	{ columnId: 'sales', functions: ['sum', 'min', 'max'] },
@@ -216,7 +218,7 @@
 			<select
 				value={grid.rowManager.selectionMode}
 				onchange={(e) => {
-					grid.rowManager.selectionMode = e.currentTarget.value;
+					grid.rowManager.selectionMode = e.currentTarget.value as 'none' | 'single' | 'multiple';
 					grid.rowManager.state.selectedRows.clear();
 				}}
 			>
@@ -231,7 +233,7 @@
 			<select
 				value={grid.rowManager.selectionMode}
 				onchange={(e) => {
-					grid.rowManager.expansionMode = e.currentTarget.value;
+					grid.rowManager.expansionMode = e.currentTarget.value as 'none' | 'single' | 'multiple';
 					grid.rowManager.state.expandedRows.clear();
 				}}
 			>
@@ -396,7 +398,11 @@
 						{/each}
 					</div>
 				{:else}
-					<div class="grid-row">
+					<div
+						class="grid-row {grid.rowManager.isPinned(String(row?.original?.id), 'top')
+							? 'sticky top-0 bg-red-400'
+							: ''}"
+					>
 						<button
 							onclick={() => grid.rowManager.toggleRowExpansion(String(row?.original?.id))}
 							class="my-auto ml-2 h-fit !px-0 !py-0"
@@ -407,6 +413,17 @@
 								<Collapse />
 							{/if}
 						</button>
+						<div>
+							<button
+								onclick={() => grid.rowManager.toggleRowPinning(String(row?.original?.id), 'top')}
+								>pin up</button
+							>
+							<button
+								onclick={() =>
+									grid.rowManager.toggleRowPinning(String(row?.original?.id), 'bottom')}
+								>pin down</button
+							>
+						</div>
 						{#each grid.columnManager.getVisibleColumns() as column}
 							<div
 								class={`grid-cell overflow-hidden text-ellipsis text-nowrap ${column.pinning.position === 'left' && 'offset-left bg-white'} ${column.pinning.position === 'right' && 'offset-right bg-white'}`}
@@ -471,6 +488,10 @@
 <pre>
 	<p>Expanded Rows</p>
 	{JSON.stringify(grid.rowManager.getExpandedRows(), null, 2)}
+</pre>
+<pre>
+	<p>Pinned Rows</p>
+	{JSON.stringify(grid.rowManager.getPinnedRows(), null, 2)}
 </pre>
 
 <style>

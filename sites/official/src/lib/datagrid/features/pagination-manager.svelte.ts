@@ -1,15 +1,14 @@
 import type { DatagridInstance } from "../index.svelte";
 
-
-export interface PaginationFeature {
-    page: number;
-    pageSize: number;
-    count: number;
-
+export type PaginationState = {
+    page: number
+    pageSize: number
+    count: number
     pageSizes: number[]
-    pageCount: number;
+    pageCount: number
+}
 
-
+export type PaginationFeature = {
     canPrevPage(): boolean;
     canNextPage(): boolean;
     goToPage(page: number): void;
@@ -21,7 +20,7 @@ export interface PaginationFeature {
 
     updatePageSize(pageSize: number): void;
     updatePageCount(): void;
-}
+} & PaginationState
 
 
 export class PaginationManager implements PaginationFeature {
@@ -36,6 +35,8 @@ export class PaginationManager implements PaginationFeature {
     constructor(grid: DatagridInstance) {
         this.grid = grid;
     }
+
+
 
     canPrevPage(): boolean {
         return this.page === 1;

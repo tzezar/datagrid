@@ -3,13 +3,16 @@ import type { AggregationFn } from "./features/grouping-manager.svelte";
 import type { SortDirection } from "./features/sorting-manager.svelte";
 import type { CategoricalFacet, NumericFacet } from "./processors/column-processor.svelte";
 
+export type AccessorKey = string
+
+export type DataType = 'string' | 'number' | 'date' | 'boolean'
+
 export interface ColumnDef {
-    accessorKey: string;
+    accessorKey: AccessorKey;
     accessorFn?: (row: any) => any;
     formatter?: (row: any) => any;
     header: string;
-
-
+    footer?: string;
     size?: {
         width: number;
         minWidth: number;
@@ -20,11 +23,17 @@ export interface ColumnDef {
     }
 
     visible?: boolean;
-    groupable?: boolean;
+
     sortable?: boolean;
+    resizable?: boolean;
+    movable?: boolean;
+    pinnable?: boolean;
+    hideable?: boolean;
+    exportable?: boolean;
     filterable?: boolean;
-    // type: 'string' | 'number' | 'date' | 'boolean' | 'object' | 'html' | 'image' | 'link' | 'custom' | 'unknown',
-    type: 'string' | 'number',
+    groupable?: boolean;
+    
+    type: DataType
     filter?: 'string' | 'number' | 'date' | 'boolean' | 'select' | 'custom',
     allowedSortDirections?: SortDirection[]
     allowedFilterOperators?: FilterOperator[]

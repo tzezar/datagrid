@@ -10,7 +10,7 @@ export interface Row {
     subRows: Row[];
     groupId: string | null;
     parentId: string | null;
-    original: Data | null;
+    original: Data
     depth: number;
     isExpanded?: boolean;
     aggregates: {
@@ -99,13 +99,13 @@ export class DataProcessor implements DataProcessorInstance {
         // Cache the column accessor functions for searchable columns
         const accessorCache = new Map<string, (item: Data) => any>();
         searchableColumns.forEach(col => {
-            accessorCache.set(col.accessorKey as string, col.accessor);
+            accessorCache.set(col.columnId as string, col.accessor);
         });
 
         // Column-level search
         return data.filter(item =>
             searchableColumns.some(col => {
-                const accessor = accessorCache.get(col.accessorKey as string);
+                const accessor = accessorCache.get(col.columnId as string);
                 if (!accessor) return false;
 
                 const value = accessor(item);
@@ -219,7 +219,7 @@ export class DataProcessor implements DataProcessorInstance {
                 subRows: [],
                 groupId: group.groupPath,
                 parentId,
-                original: null,
+                original: {},
                 depth,
                 isExpanded: this.grid.grouping.state.expandedRows.has(group.groupPath),
                 aggregates: group.aggregates || {},

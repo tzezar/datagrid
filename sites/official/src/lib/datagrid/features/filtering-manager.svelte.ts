@@ -231,6 +231,6 @@ export class FilteringManager implements FilteringFeature {
     }
 
     assignFuseInstance(items: any[]): void {
-        this.fuse = this.initializeFuseInstance(items, this.grid.columnManager.getSearchableColumns().map(col => col.accessorKey as string))
+        this.fuse = this.initializeFuseInstance(items, this.grid.columnManager.getSearchableColumns().map(col => col.columnId as string))
     }
 }

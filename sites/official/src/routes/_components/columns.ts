@@ -58,7 +58,6 @@ export const columns = [
         //     min: 0
         // },
         type: 'number',
-        aggregationFn: 'sum'
     },
     {
         accessorKey: 'profit',

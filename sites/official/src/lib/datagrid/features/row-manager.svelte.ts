@@ -28,8 +28,12 @@ export interface RowManagerInstance {
 
     pinRow(rowId: string, position: "top" | "bottom"): void;
     unpinRow(rowId: string): void;
-    getPinnedRows(): string[]
-    toggleRowPinning(rowId: string): void;
+    getPinnedRows(): {
+        top: string[],
+        bottom: string[]
+    },
+    toggleRowPinning(rowId: string, position: "top" | "bottom"): void;
+    isPinned(rowId: string, position: "top" | "bottom"): boolean;
 }
 
 export class RowManager implements RowManagerInstance {
@@ -66,17 +70,28 @@ export class RowManager implements RowManagerInstance {
         this.state.pinnedRows.bottom.delete(rowId);
     }
 
-    getPinnedRows(): string[] {
-        return [...this.state.pinnedRows.top, ...this.state.pinnedRows.bottom];
-    }
-
-    toggleRowPinning(rowId: string): void {
-        if (this.state.pinnedRows.top.has(rowId)) {
-            this.unpinRow(rowId);
-        } else {
-            this.pinRow(rowId, 'top');
+    getPinnedRows(): {
+        top: string[];
+        bottom: string[]
+    } {
+        return {
+            top: Array.from(this.state.pinnedRows.top),
+            bottom: Array.from(this.state.pinnedRows.bottom),
         }
     }
+
+    toggleRowPinning(rowId: string, position: "top" | "bottom"): void {
+        if (this.state.pinnedRows[position].has(rowId)) {
+            this.unpinRow(rowId);
+        } else {
+            this.pinRow(rowId, position);
+        }
+    }
+
+    isPinned(rowId: string, position: "top" | "bottom"): boolean {
+        return this.state.pinnedRows[position].has(rowId);
+    }
+
 
     expandRow(rowId: string): void {
         if (this.expansionMode === 'single') {
