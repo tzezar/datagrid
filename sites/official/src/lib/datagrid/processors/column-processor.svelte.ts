@@ -1,9 +1,8 @@
 import type { PinningPosition } from "../features/column-manager.svelte";
-import { numberFilterOperators, stringFilterOperators, type FilterOperator } from "../features/filtering-manager.svelte";
 import type { AggregationFn } from "../features/grouping-manager.svelte";
 import type { SortDirection } from "../features/sorting-manager.svelte";
 import type { DatagridInstance } from "../index.svelte";
-import type { ColumnDef, CommonColumnProps, DataType } from "../types";
+import type { ColumnDef, CommonColumnProps } from "../types";
 import type { Row } from "./data-processor.svelte";
 
 
@@ -29,12 +28,10 @@ export type Column = {
         component?: any | undefined
         style?: (row: any) => any | undefined
     }
-    filter: 'string' | 'number' | 'date' | 'boolean' | 'select' | 'custom' | undefined
     pinning: {
         position: PinningPosition
         offset: number
     }
-    type: DataType
     isSorted: () => boolean
     getSortingDirection: () => SortDirection
     aggregationFn: AggregationFn,
@@ -87,32 +84,28 @@ export class ColumnProcessor implements ColumnProcessorInstance {
                     component: columnDef?.cell?.component,
                     style: columnDef?.cell?.style
                 },
-                filter: columnDef.filter,
                 faceting: columnDef.faceting,
                 formatter: columnDef.formatter,
                 allowedSortDirections: columnDef.allowedSortDirections || ['asc', 'desc'],
-                allowedFilterOperators: this.getAllowedFilterOperators(columnDef),
                 pinning: {
                     position: pinningPosition as PinningPosition,
                     // temporary offset, later will be calculated
                     offset: 0
                 },
                 aggregationFn: columnDef.aggregationFn || 'none',
-                type: columnDef.type || 'string',
-                
                 columnDef: columnDef,
-                
-                sortable: columnDef.sortable || false,
-                resizable: columnDef.resizable || false,
-                movable: columnDef.movable || false,
-                pinnable: columnDef.pinnable || false,
-                hideable: columnDef.hideable || false,
-                exportable: columnDef.exportable || false,
+                sortable: columnDef.sortable ?? true,
+                resizable: columnDef.resizable ?? true,
+                movable: columnDef.movable ?? true,
+                pinnable: columnDef.pinnable ?? true,
+                hideable: columnDef.hideable ?? true,
+                // exportable: columnDef.exportable ?? true,
                 searchable: columnDef.searchable ?? true,
-                filterable: columnDef.filterable || false,
-                groupable: columnDef.groupable || false,
-                visible: columnDef.visible || true,
-                size: columnDef.size || { width: 100, minWidth: 50, maxWidth: 200 }
+                filterable: columnDef.filterable ?? true,
+                groupable: columnDef.groupable ?? true,
+                visible: columnDef.visible ?? true,
+                size: columnDef.size ?? { width: 100, minWidth: 50, maxWidth: 200 },
+                _meta: columnDef._meta
 
             };
 
@@ -156,17 +149,6 @@ export class ColumnProcessor implements ColumnProcessorInstance {
                 };
         }
     };
-
-    private getAllowedFilterOperators(column: ColumnDef): FilterOperator[] {
-        if (!column) return []
-        if (column.filterable === false) return []
-        if (!column.filter) return []
-        if (column.allowedFilterOperators) return column.allowedFilterOperators
-        if (column.filter === 'string') return stringFilterOperators
-        if (column.filter === 'number') return numberFilterOperators
-        return []
-    }
-
    
 
     calculateFacets(rows: Row[]) {

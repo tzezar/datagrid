@@ -1,4 +1,3 @@
-import type { FilterOperator } from "./features/filtering-manager.svelte";
 import type { AggregationFn } from "./features/grouping-manager.svelte";
 import type { SortDirection } from "./features/sorting-manager.svelte";
 import type { CategoricalFacet, NumericFacet } from "./processors/column-processor.svelte";
@@ -13,7 +12,7 @@ export type CommonColumnProps = {
     movable: boolean;
     pinnable: boolean;
     hideable: boolean;
-    exportable: boolean;
+    // exportable: boolean;
     filterable: boolean;
     groupable: boolean;
     searchable?: boolean;
@@ -26,8 +25,8 @@ export type CommonColumnProps = {
     formatter?: (row: any) => any;
     faceting?: NumericFacet | CategoricalFacet;
     allowedSortDirections: SortDirection[]
-    allowedFilterOperators: FilterOperator[]
     header: string;
+    _meta: any
 }
 
 
@@ -36,8 +35,6 @@ export type ColumnDef = {
     accessorFn?: (row: any) => any;
     footer?: string;
     pinning?: "left"| "right"
-    type: DataType
-    filter?: 'string' | 'number' | 'date' | 'boolean' | 'select' | 'custom',
     cell?: {
         component?: any;
         style?: (row: any) => any;

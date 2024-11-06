@@ -7,31 +7,31 @@ export const columns = [
     {
         accessorKey: 'selection',
         header: 'Selection',
-        filter: 'string',
         filterable: false,
         sortable: false,
         groupable: false,
         cell: {
             component: RowSelection
         },
-        type: 'number'
     },
     {
         accessorKey: 'id',
         header: 'ID',
-        filter: 'number',
         pinning: 'left',
-        type: 'number'
-
-
+        groupable: false,
+        _meta: {
+            type: 'number',
+            operators: ['equals', 'greaterThan', 'lessThan']
+        }
     },
     {
         accessorKey: 'department.name',
         header: 'Department',
-        filter: 'string',
         pinning: 'left',
-        type: 'string'
-
+        _meta: {
+            type: 'string',
+            operators: ['contains', 'equals']
+        }
     },
 
     {
@@ -45,25 +45,34 @@ export const columns = [
         //     uniqueValues: [],
         //     uniqueValuesCount: 0
         // },
-        type: 'string',
-        filter: 'select'
-
+        _meta: {
+            type: 'string',
+            operators: ['contains', 'equals']
+        }
     },
     {
         accessorKey: 'sales',
         header: 'Sales',
+        pinnable: false,
+        resizable: false,
+        groupable: false,
+        movable: false,
+        hideable: false,
         formatter: (row: Data) => row.sales.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
         // faceting: {
         //     type: 'numeric',
         //     max: 0,
         //     min: 0
         // },
-        type: 'number',
-        filter: 'number',
+        _meta: {
+            type: 'number',
+            operators: ['contains', 'equals']
+        }
     },
     {
         accessorKey: 'profit',
         header: 'Profit',
+        groupable: false,
         cell: {
             component: Profit
         },
@@ -72,7 +81,9 @@ export const columns = [
         //     max: 0,
         //     min: 0
         // },
-        type: 'number',
-        filter: 'number'
+        _meta: {
+            type: 'number',
+            operators: ['equals', 'greaterThan', 'lessThan']
+        }
     }
 ] satisfies ColumnDef[]

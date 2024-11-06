@@ -1,6 +1,6 @@
 import Fuse from "fuse.js";
 import type { DatagridInstance, FilteringStateConfig } from "../index.svelte";
-import type { Accessor } from "../processors/column-processor.svelte";
+import type { Accessor, ColumnId } from "../processors/column-processor.svelte";
 
 export const filterOperators: FilterOperator[] = [
     'equals',
@@ -61,7 +61,7 @@ export type FilterOperator =
     | 'notEmpty';
 
 export interface FilterCondition {
-    accessorKey: string;
+    columnId: ColumnId;
     accessor: Accessor;
     operator: FilterOperator;
     value: any;
@@ -118,17 +118,17 @@ export class FilteringManager implements FilteringFeature {
     }
 
     getConditionOperator(accessorKey: string): FilterOperator {
-        const operator = this.conditions.find(condition => condition.accessorKey === accessorKey)?.operator
+        const operator = this.conditions.find(condition => condition.columnId === accessorKey)?.operator
         if (!operator) return 'equals'
         return operator
     }
     getConditionValue(accessorKey: string): any {
-        const condition = this.conditions.find(condition => condition.accessorKey === accessorKey)
+        const condition = this.conditions.find(condition => condition.columnId === accessorKey)
         if (!condition) return null
         return condition.value
     }
     getConditionValueTo(accessorKey: string): any {
-        const condition = this.conditions.find(condition => condition.accessorKey === accessorKey)
+        const condition = this.conditions.find(condition => condition.columnId === accessorKey)
         if (!condition) return null
         return condition.valueTo
     }
@@ -137,13 +137,13 @@ export class FilteringManager implements FilteringFeature {
 
     addFilter(condition: FilterCondition): void {
         // Remove any existing filter for the same column
-        this.removeFilter(condition.accessorKey);
+        this.removeFilter(condition.columnId);
         this.conditions.push(condition);
     }
 
     removeFilter(accessorKey: string): void {
         this.conditions = this.conditions.filter(
-            condition => condition.accessorKey !== accessorKey
+            condition => condition.columnId !== accessorKey
         );
     }
 

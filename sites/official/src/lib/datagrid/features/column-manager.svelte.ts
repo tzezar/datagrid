@@ -6,7 +6,7 @@ export type PinningPosition = 'left' | 'right' | 'none'
 
 interface ColumnManagerInstance {
     getAccessor(columnId: ColumnId): Accessor
-    
+
     hideColumn(column: Column): void;
     showColumn(column: Column): void;
 
@@ -45,7 +45,7 @@ export class ColumnManager implements ColumnManagerInstance {
     }
 
     isFilterable(column: Column): boolean {
-        return column.filterable !== false
+        return column.filterable === true
     }
 
     getVisibleColumns(): Column[] {
@@ -155,7 +155,7 @@ export class ColumnManager implements ColumnManagerInstance {
             this.grid.columns[columnIndex] = nextColumn;
         }
     }
-    
+
     moveColumnToPosition(column: Column, position: number): void {
         const columnIndex = this.getColumnIndex(column);
         if (columnIndex !== position) {
