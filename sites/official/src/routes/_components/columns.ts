@@ -40,14 +40,14 @@ export const columns = [
         cell: {
             style: (row: Row) => `${row?.original?.region === 'East' ? 'color: orange' : ''}`
         },
-        // faceting: {
-        //     type: 'categorical',
-        //     uniqueValues: [],
-        //     uniqueValuesCount: 0
-        // },
+        faceting: {
+            type: 'categorical',
+            uniqueValues: [],
+            uniqueValuesCount: 0
+        },
         _meta: {
-            type: 'string',
-            operators: ['contains', 'equals']
+            type: 'select',
+            operators: ['equals']
         }
     },
     {
@@ -58,6 +58,7 @@ export const columns = [
         groupable: false,
         movable: false,
         hideable: false,
+        filterable: false,
         formatter: (row: Data) => row.sales.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
         // faceting: {
         //     type: 'numeric',
@@ -83,7 +84,7 @@ export const columns = [
         // },
         _meta: {
             type: 'number',
-            operators: ['equals', 'greaterThan', 'lessThan']
+            operators: ['equals', 'greaterThan', 'lessThan', 'between']
         }
     }
 ] satisfies ColumnDef[]

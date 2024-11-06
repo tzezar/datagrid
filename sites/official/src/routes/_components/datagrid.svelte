@@ -1,12 +1,8 @@
 <script lang="ts">
-	import type { PinningPosition } from '$lib/datagrid/features/column-manager.svelte';
 	import { type FilterOperator } from '$lib/datagrid/features/filtering-manager.svelte';
-	import type { Group } from '$lib/datagrid/features/grouping-manager.svelte';
-	import type { SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
 	import { Datagrid } from '$lib/datagrid/index.svelte';
-	import type { Column } from '$lib/datagrid/processors/column-processor.svelte';
 	import type { Data } from '$lib/datagrid/types';
-	import { debounce } from '$lib/datagrid/utils/debounce';
+	import ColumnFilter from './column-filter.svelte';
 	import { columns } from './columns';
 	import Collapse from './icons/collapse.svelte';
 	import Expand from './icons/expand.svelte';
@@ -21,38 +17,9 @@
 			page: 2
 		}
 	});
-
-	function handleGroupToggle(groupId: string) {
-		grid.refresh(() => {
-			grid.dataProcessor.toggleGroupExpansion(groupId);
-			grid.pagination.updatePageCount();
-			grid.pagination.goToClosestPage();
-		});
-	}
-
-	let isOptionsPanelOpen = $state(false);
 </script>
 
-{#if isOptionsPanelOpen}
-	<button
-		class="mb-4 !bg-blue-400"
-		onclick={() => {
-			isOptionsPanelOpen = false;
-		}}
-	>
-		<Expand />
-	</button>
-	<OptionsPanel {grid} />
-{:else}
-	<button
-		class="mb-4 !bg-blue-400"
-		onclick={() => {
-			isOptionsPanelOpen = true;
-		}}
-	>
-		<Collapse />
-	</button>
-{/if}
+<OptionsPanel {grid} />
 
 <div class="grid-wrapper overflow-auto">
 	<div class="grid max-h-[600px]">
@@ -93,83 +60,7 @@
 							</span>
 						</div>
 						{#if grid.columnManager.isFilterable(column)}
-							<select
-								class="h-6 text-xs"
-								value={grid.filtering.conditions.filter(
-									(condition) => condition.columnId === column.columnId
-								)[0]?.operator}
-								onchange={(e) =>
-									grid.filtering.addFilter({
-										accessor: column.accessor,
-										columnId: column.columnId,
-										operator: e.currentTarget.value as FilterOperator,
-										value: grid.filtering.getConditionValue(column.columnId)
-									})}
-							>
-								{#each column._meta.operators as filterOperator}
-									<option value={filterOperator}>
-										{filterOperator}
-									</option>
-								{/each}
-							</select>
-							{#if column._meta.type === 'number'}
-								<input
-									class="h-6 text-xs"
-									placeholder="Search..."
-									type="text"
-									value={grid.filtering.conditions.filter(
-										(c) => c.columnId === column.columnId
-									)[0]?.value || ''}
-									onchange={(e) =>
-										grid.filtering.addFilter({
-											accessor: column.accessor,
-											columnId: column.columnId,
-											operator: grid.filtering.getConditionOperator(column.columnId),
-											value: +e.currentTarget.value || '',
-											valueTo: grid.filtering.getConditionValueTo(column.columnId)
-										})}
-								/>
-								{#if grid.filtering.conditions.filter((c) => c.columnId === column.columnId)[0]?.operator === 'between'}
-									<input
-										placeholder="Search..."
-										type="text"
-										class="h-6 text-xs"
-										value={grid.filtering.getConditionValueTo(column.columnId)}
-										onchange={(e) =>
-											grid.filtering.addFilter({
-												accessor: column.accessor,
-												columnId: column.columnId,
-												operator: grid.filtering.getConditionOperator(column.columnId),
-												value: grid.filtering.getConditionValue(column.columnId),
-												valueTo: +e.currentTarget.value
-											})}
-									/>
-								{/if}
-							{:else}
-								<input
-									placeholder="Search..."
-									type="text"
-									class="h-6 text-xs"
-									value={grid.filtering.conditions.filter(
-										(c) => c.columnId === column.columnId
-									)[0]?.value || ''}
-									onchange={(e) =>
-										grid.filtering.addFilter({
-											accessor: column.accessor,
-											columnId: column.columnId,
-											operator: grid.filtering.getConditionOperator(column.columnId),
-											value: e.currentTarget.value
-										})}
-								/>
-							{/if}
-							<div class="flex h-6 gap-2">
-								<button
-									class="w-full !rounded-none !bg-white !py-[2px] text-xs !text-black"
-									onclick={() => grid.filtering.removeFilter(column.columnId)}
-								>
-									clear
-								</button>
-							</div>
+							<ColumnFilter {column} {grid} />
 						{/if}
 					</div>
 				{/each}
