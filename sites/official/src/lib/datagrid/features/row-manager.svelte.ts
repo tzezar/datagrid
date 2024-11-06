@@ -4,7 +4,10 @@ import type { DatagridInstance } from "../index.svelte";
 export interface RowManagerState {
     expandedRows: SvelteSet<string>;
     selectedRows: SvelteSet<string>;
-    pinnedRows: SvelteSet<string>;
+    pinnedRows: {
+        top: SvelteSet<string>;
+        bottom: SvelteSet<string>;
+    }
 }
 
 export interface RowManagerInstance {
@@ -22,6 +25,11 @@ export interface RowManagerInstance {
     unselectRow(rowId: string): void;
     toggleRowSelection(rowId: string): void;
     getSelectedRows(): string[];
+
+    pinRow(rowId: string, position: "top" | "bottom"): void;
+    unpinRow(rowId: string): void;
+    getPinnedRows(): string[]
+    toggleRowPinning(rowId: string): void;
 }
 
 export class RowManager implements RowManagerInstance {
@@ -32,12 +40,42 @@ export class RowManager implements RowManagerInstance {
 
     state: RowManagerState = {
         expandedRows: new SvelteSet(),
-        pinnedRows: new SvelteSet(),
         selectedRows: new SvelteSet(),
+        pinnedRows: {
+            top: new SvelteSet(),
+            bottom: new SvelteSet(),
+        }
     }
 
     constructor(grid: DatagridInstance) {
         this.grid = grid;
+    }
+
+    pinRow(rowId: string, position: "top" | "bottom"): void {
+        if (position === 'top') {
+            this.state.pinnedRows.top.add(rowId);
+            this.state.pinnedRows.bottom.delete(rowId);
+        } else if (position === 'bottom') {
+            this.state.pinnedRows.top.delete(rowId);
+            this.state.pinnedRows.bottom.add(rowId);
+        }
+    }
+
+    unpinRow(rowId: string): void {
+        this.state.pinnedRows.top.delete(rowId);
+        this.state.pinnedRows.bottom.delete(rowId);
+    }
+
+    getPinnedRows(): string[] {
+        return [...this.state.pinnedRows.top, ...this.state.pinnedRows.bottom];
+    }
+
+    toggleRowPinning(rowId: string): void {
+        if (this.state.pinnedRows.top.has(rowId)) {
+            this.unpinRow(rowId);
+        } else {
+            this.pinRow(rowId, 'top');
+        }
     }
 
     expandRow(rowId: string): void {
