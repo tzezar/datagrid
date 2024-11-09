@@ -2,15 +2,93 @@
 	import GroupTitle from './group-title.svelte';
 	import GroupItem from './group-item.svelte';
 	import Group from './group.svelte';
-	// import { hrefs } from '$lib/hrefs';
+	import { hrefs } from '$lib/hrefs';
 </script>
 
 <div class="flex w-full flex-col">
 	<div class="flex w-full flex-col gap-8 p-8">
-		<!-- <Group>
-			<GroupItem title="about" href={hrefs.about} />
-			<GroupItem title="features" href={hrefs.features} />
+		<GroupTitle title="Headless" class="border-b-2 border-orange-400 pb-1 text-orange-400 text-lg" />
+		<Group>
+			<GroupTitle title="Quick start" />
+			<GroupItem title="Installation" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Getting started" href={hrefs.headless.quickStart.gettingStarted} />
 		</Group>
+		<Group>
+			<GroupTitle title="Examples" />
+			<GroupItem title="basic" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column filters" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column filters faceted" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column ordering" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column pinning" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column sizing" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column visibility" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Editable data" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Expanding" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Fully controlled" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Grouping" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Pagination" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Pagination controlled" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Row selection" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Sorting" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Sub components" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Virtualization" href={hrefs.headless.quickStart.installation} />
+		</Group>
+		<Group>
+			<GroupTitle title="Feature APIs" />
+			<GroupItem title="Column faceting" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column filters" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column ordering" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column pinning" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column sizing" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column visibility" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Expanding" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Global search" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Grouping" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Pagination" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Row pinning" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Row selection" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Sorting" href={hrefs.headless.quickStart.installation} />
+		</Group>
+		<GroupTitle title="Shadcn svelte" class="border-b-2 border-orange-400 pb-1 text-orange-400 text-lg" />
+		<Group>
+			<GroupTitle title="Quick start" />
+			<GroupItem title="Installation" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Getting started" href={hrefs.headless.quickStart.gettingStarted} />
+		</Group>
+		<Group>
+			<GroupTitle title="Playground" />
+			<GroupItem title="Perfomance showcase" href={hrefs.headless.quickStart.installation} />
+		</Group>
+		<Group>
+			<GroupTitle title="Examples" />
+			<GroupItem title="basic" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column alignment" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column filters" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column filters faceted" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column ordering" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column pinning" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column sizing" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column visibility" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Context menu" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Copying data" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Editable data" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Expanding" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Exporting data" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Fullscreen" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Fully controlled" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Grouping" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Pagination" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Pagination controlled" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Row selection" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Scroll to top" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Sorting" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Spacing" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Status indicator" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Sub components" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Text sizing" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Virtualization" href={hrefs.headless.quickStart.installation} />
+		</Group>
+		<!-- 
 		<Group>
 			<GroupTitle title="quick start" />
 			<GroupItem title="installation" href={hrefs.quickStart.installation} />

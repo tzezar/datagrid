@@ -26,7 +26,7 @@
 	onclick={()=> closeSidebarOnClick()}
 	{href}
 	class={cn(
-		'capitalize',
+		'capitalize text-sm',
 		disabled && 'opacity-30',
 		$page.url.pathname === href && 'font-semibold text-orange-500',
 		_class

@@ -48,17 +48,16 @@
 		<div class="hidden h-full w-64 shrink-0 flex-col overflow-auto border-r lg:flex">
 			<!-- Logo Section -->
 			<a href="/" class="">
-				<div class="bg-primary-foreground sticky top-0 flex items-center justify-center gap-1 py-4">
+				<div class="bg-primary-foreground sticky top-0 flex items-center justify-center gap-4 py-4">
 					<div class="flex h-10 flex-row items-center justify-center align-middle">
 						{#if schema == 'dark'}
-							<img src={logoWhite} alt="Logo" class="h-[52px] w-[52px]" />
+							<img src={logoWhite} alt="Logo" class="h-[42px] w-[42px]" />
 						{:else}
-							<img src={logoBlack} alt="Logo" class="h-[52px] w-[52px]" />
+							<img src={logoBlack} alt="Logo" class="h-[42px] w-[42px]" />
 						{/if}
 					</div>
 					<div>
 						<h1 class="text-lg font-semibold">Tzezar's Datagrid</h1>
-						<p class="text-right text-orange-400">Beta</p>
 					</div>
 				</div>
 			</a>
@@ -84,7 +83,7 @@
 				<div
 					class="bg-primary-foreground flex w-full flex-row items-center justify-between gap-1 px-4 py-2 lg:px-6"
 				>
-					<a href="/" class="flex items-center justify-center gap-2">
+					<a href="/" class="flex items-center justify-center gap-4">
 						<div class="flex h-10 flex-row items-center justify-between align-middle">
 							{#if schema == 'dark'}
 								<img src={logoWhite} alt="Logo" class="h-[32px] w-[32px]" />
@@ -94,13 +93,12 @@
 						</div>
 						<div class="flex items-center gap-1">
 							<h1 class="text-lg font-semibold leading-tight">Tzezar's Datagrid</h1>
-							<p class="self-start text-right text-sm leading-none text-orange-400">Beta</p>
 						</div>
 					</a>
 					<div
 						class=" flex place-content-center place-items-center items-center justify-center leading-none"
 					>
-						<!-- <SidebarMobile /> -->
+						<SidebarMobile />
 					</div>
 				</div>
 			</div>

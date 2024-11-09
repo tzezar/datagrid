@@ -5,6 +5,27 @@ export const hrefs = {
     default: "/",
     headless: {
         default: "/headless",
+        quickStart: {
+            default: "/headless/quick-start",
+            installation: "/headless/quick-start/installation",
+            gettingStarted: "/headless/quick-start/getting-started",
+        },
+        featureApis: {
+            default: "/headless/feature-apis",
+            columnFilters: "/headless/feature-apis/column-filters",
+            columnFaceting: "/headless/feature-apis/column-faceting",
+            columnOrdering: "/headless/feature-apis/column-ordering",
+            columnPinning: "/headless/feature-apis/column-pinning",
+            columnSizing: "/headless/feature-apis/column-sizing",
+            columnVisibility: "/headless/feature-apis/column-visibility",
+            globalSearch: "/headless/feature-apis/global-search",
+            sorting: "/headless/feature-apis/sorting",
+            grouping: "/headless/feature-apis/grouping",
+            expanding: "/headless/feature-apis/expanding",
+            pagination: "/headless/feature-apis/pagination",
+            rowPinning: "/headless/feature-apis/row-pinning",
+            rowSelection: "/headless/feature-apis/row-selection",
+        },
         examples: {
             default: "/headless/examples",
             basic: "/headless/examples/basic",
@@ -26,6 +47,15 @@ export const hrefs = {
     },
     shadcnSvelte: {
         default: "/shadcn-svelte",
+        quickStart: {
+            default: "/shadcn-svelte/quick-start",
+            installation: "/shadcn-svelte/quick-start/installation",
+            gettingStarted: "/shadcn-svelte/quick-start/getting-started",
+        },
+        playground: {
+            default: "/shadcn-svelte/playground",
+            performance: "/shadcn-svelte/playground/performance",
+        },
         examples: {
             default: "/shadcn-svelte/examples",
             basic: "/shadcn-svelte/examples/basic",

@@ -1,7 +1,12 @@
 <script lang="ts">
+	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 
-	let { children, title = '' }: { children?: Snippet; title: string } = $props();
+	let {
+		children,
+		title = '',
+		class: _class
+	}: { children?: Snippet; title: string; class?: string } = $props();
 </script>
 
-<span class="text-xs font-thin uppercase text-muted-foreground">{title}</span>
+<span class={cn('text-sm text-muted-foreground font-normal uppercase ', _class)}>{title}</span>
