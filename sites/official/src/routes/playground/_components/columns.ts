@@ -1,4 +1,4 @@
-import type { ColumnDef, NestedPaths } from "$lib/datagrid/types";
+import type { ColumnDef } from "$lib/datagrid/types";
 import Actions from "./cells/actions.svelte";
 import Profit from "./cells/profit.svelte";
 import RowSelection from "./cells/row-selection.svelte";
