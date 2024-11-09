@@ -72,9 +72,6 @@
 						<!-- svelte-ignore a11y_no_static_element_interactions -->
 
 						{#each grid.columns as column, colIndex}
-							{#if column.columnDef.accessorKey === 'actions'}
-							321
-							{/if}	
 						<div
 								class="grid-cell overflow-hidden text-ellipsis"
 								style:--offset={column.pinning.offset + 'px'}
