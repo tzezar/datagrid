@@ -1,6 +1,7 @@
 import Fuse from "fuse.js";
 import type { DatagridInstance, FilteringStateConfig } from "../index.svelte";
-import type { Accessor, ColumnId } from "../processors/column-processor.svelte";
+import type { ColumnId } from "../processors/column-processor.svelte";
+import type { Accessor } from "../types";
 
 export const filterOperators: FilterOperator[] = [
     'equals',
@@ -60,24 +61,24 @@ export type FilterOperator =
     | 'empty'
     | 'notEmpty';
 
-export interface FilterCondition {
+export interface FilterCondition<TData> {
     columnId: ColumnId;
-    accessor: Accessor;
+    accessor: Accessor<TData>
     operator: FilterOperator;
     value: any;
     valueTo?: any; // For 'between' operator
 }
 
-export type FilteringState = {
+export type FilteringState<TData> = {
     fuse: Fuse<any> | null;
-    conditions: FilterCondition[];
+    conditions: FilterCondition<TData>[];
     search: SearchState;
 }
 
-export type FilteringFeature = {
-    initialize(state: FilteringStateConfig): void
+export type FilteringFeature<TData> = {
+    initialize(state: FilteringStateConfig<TData>): void
 
-    addFilter(condition: FilterCondition): void;
+    addFilter(condition: FilterCondition<TData>): void;
     removeFilter(accessorKey: string): void;
     clearFilters(): void;
     isRowMatching(row: any): boolean;
@@ -88,7 +89,7 @@ export type FilteringFeature = {
     getConditionOperator(accessorKey: string): FilterOperator;
     getConditionValue(accessorKey: string): any;
     getConditionValueTo(accessorKey: string): any;
-} & FilteringState
+} & FilteringState<TData>
 
 export interface SearchState {
     value: string;
@@ -96,10 +97,10 @@ export interface SearchState {
     delay: number;
 }
 
-export class FilteringManager implements FilteringFeature {
-    protected grid: DatagridInstance;
+export class FilteringManager<TData> implements FilteringFeature<TData> {
+    protected grid: DatagridInstance<TData, any>
     fuse: Fuse<any> | null = null
-    conditions: FilterCondition[] = $state([])
+    conditions: FilterCondition<TData>[] = $state([])
 
     search: SearchState = {
         value: '',
@@ -107,11 +108,11 @@ export class FilteringManager implements FilteringFeature {
         delay: 500
     }
 
-    constructor(grid: DatagridInstance) {
+    constructor(grid: DatagridInstance<TData, any>) {
         this.grid = grid;
     }
 
-    initialize(state: FilteringStateConfig): void {
+    initialize(state: FilteringStateConfig<TData>): void {
         this.fuse = state?.fuse || this.initializeFuseInstance(this.grid.original.data, this.grid.columns.map(col => col.columnId))
         this.conditions = state?.conditions || this.conditions
         this.search = state?.search || this.search
@@ -135,7 +136,7 @@ export class FilteringManager implements FilteringFeature {
 
 
 
-    addFilter(condition: FilterCondition): void {
+    addFilter(condition: FilterCondition<TData>): void {
         // Remove any existing filter for the same column
         this.removeFilter(condition.columnId);
         this.conditions.push(condition);
@@ -158,7 +159,7 @@ export class FilteringManager implements FilteringFeature {
         );
     }
 
-    private evaluateCondition(cellValue: any, condition: FilterCondition): boolean {
+    private evaluateCondition(cellValue: any, condition: FilterCondition<TData>): boolean {
         const value = condition.value;
         const valueTo = condition.valueTo;
 

@@ -6,86 +6,85 @@ import { RowManager, type RowExpansionMode, type RowManagerState, type RowSelect
 import { SortingManager, type SortingFeature, type SortingState } from "./features/sorting-manager.svelte";
 import { ColumnProcessor, type Column, type ColumnProcessorInstance } from "./processors/column-processor.svelte";
 import { DataProcessor, type DataProcessorInstance, type Row } from "./processors/data-processor.svelte";
-import type { ColumnDef, Data } from "./types";
+import type { ColumnDef } from "./types";
 
 
-
-export interface DatagridOriginal {
-    data: Data[];
-    columns: ColumnDef[];
+export interface DatagridOriginal<TData, CDef> {
+    data: TData[];
+    columns: CDef[];
 }
 
 
-export interface DatagridInstance {
-    original: DatagridOriginal
+export interface DatagridInstance<TData, CDef> {
+    original: DatagridOriginal<TData, CDef>
 
-    rows: Row[]
-    columns: Column[]
+    rows: Row<TData>[]
+    columns: Column<TData>[]
 
-    sorting: SortingFeature;
-    filtering: FilteringFeature;
+    sorting: SortingFeature<TData>
+    filtering: FilteringFeature<TData>;
     grouping: GroupingFeature
     pagination: PaginationFeature
 
-    columnManager: ColumnManager
+    columnManager: ColumnManager<TData>
 
 
-    dataProcessor: DataProcessorInstance
-    columnsProcessor: ColumnProcessorInstance
+    dataProcessor: DataProcessorInstance<TData>
+    columnsProcessor: ColumnProcessorInstance<TData>
 
 
-    isRowVisible(row: Row): boolean
-    getVisibleRows(page: number, pageSize: number): Row[]
+    isRowVisible(row: Row<TData>): boolean
+    getVisibleRows(page: number, pageSize: number): Row<TData>[]
     getVisibleRowCount(): number
 }
 
 
 export type PaginationStateConfig = Partial<Omit<PaginationState, 'pageCount'>>
 export type GroupingStateConfig = Partial<Omit<GroupingManagerState, '_groupedDataCache'>>
-export type FilteringStateConfig = Partial<FilteringState>
+export type FilteringStateConfig<TData> = Partial<FilteringState<TData>>
 export type RowManagerStateConfig = Partial<RowManagerState> & {
     selectionMode?: RowSelectionMode
     expansionMode?: RowExpansionMode
 }
-export type SortingStateConfig = Partial<SortingState>
+export type SortingStateConfig<TData> = Partial<SortingState<TData>>
 
-export type DatagridConfig = {
-    columns: ColumnDef[]
-    data: Data[]
+export type DatagridConfig<T, C> = {
+    columns: C[]
+    data: T[]
 
     pagination?: PaginationStateConfig
     grouping?: GroupingStateConfig
-    filtering?: FilteringStateConfig
+    filtering?: FilteringStateConfig<T>
     rowManager?: RowManagerStateConfig
-    sorting?: SortingStateConfig
+    sorting?: SortingStateConfig<T>
 }
 
 
-export class Datagrid implements DatagridInstance {
-    original: DatagridOriginal = {
-        data: [],
-        columns: [],
+export class Datagrid<TData, CDef extends ColumnDef<TData>> implements DatagridInstance<TData, CDef> {
+    original: DatagridOriginal<TData, CDef> = {
+        data: [] as TData[],
+        columns: [] as CDef[],
     }
 
-    rows: Row[] = $state([]);
-    columns: Column[] = $state([]);
+    rows: Row<TData>[] = $state([]);
+    columns: Column<TData>[] = $state([]);
 
-    sorting: SortingFeature = new SortingManager(this);
-    filtering: FilteringFeature = new FilteringManager(this);
+    sorting: SortingFeature<TData> = new SortingManager(this);
+    filtering: FilteringFeature<TData> = new FilteringManager(this);
     grouping: GroupingFeature = new GroupingManager(this);
     pagination: PaginationFeature = new PaginationManager(this);
-    columnManager: ColumnManager = new ColumnManager(this);
-    rowManager: RowManager = new RowManager(this);
+    columnManager: ColumnManager<TData> = new ColumnManager<TData>(this);
+    rowManager: RowManager<TData> = new RowManager(this);
 
-    dataProcessor: DataProcessorInstance = new DataProcessor(this);
-    columnsProcessor: ColumnProcessorInstance = new ColumnProcessor(this);
+    dataProcessor: DataProcessorInstance<TData> = new DataProcessor(this);
+    columnsProcessor: ColumnProcessorInstance<TData> = new ColumnProcessor<TData>(this);
 
-    constructor(config: DatagridConfig) {
+    constructor(config: DatagridConfig<TData, CDef>) {
         this.original = { data: config.data, columns: config.columns };
         this.initialize(config);
     }
 
-    private initialize(config: DatagridConfig): void {
+    private initialize(config: DatagridConfig<TData, CDef>): void {
         this.pagination.initialize(config.pagination || {});
         this.grouping.initialize(config.grouping || {});
         this.filtering.initialize(config.filtering || {});
@@ -123,14 +122,14 @@ export class Datagrid implements DatagridInstance {
     }
 
 
-    getVisibleRows(page: number, pageSize: number): Row[] {
+    getVisibleRows(page: number, pageSize: number): Row<TData>[] {
         const visibleRows = this.dataProcessor.processedRowsCache.filter(row => this.isRowVisible(row));
         const startIndex = (page - 1) * pageSize;
         const endIndex = startIndex + pageSize;
         return visibleRows.slice(startIndex, endIndex);
     }
 
-    isRowVisible(row: Row): boolean {
+    isRowVisible(row: Row<TData>): boolean {
         if (!row.parentId) return true;
 
         let currentParentId: string | null = row.parentId;

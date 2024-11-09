@@ -2,9 +2,10 @@ import type { AggregationFn } from "./features/grouping-manager.svelte";
 import type { SortDirection } from "./features/sorting-manager.svelte";
 import type { CategoricalFacet, NumericFacet } from "./processors/column-processor.svelte";
 
-export type AccessorKey = string
 
-export type DataType = 'string' | 'number' | 'date' | 'boolean'
+export type AccessorKey<TData> = TData| (string & {});
+export type Accessor<TData> = (row: TData) => any
+export type AccessorFn<TData> = (row: TData) => any
 
 export type CommonColumnProps = {
     sortable: boolean;
@@ -12,7 +13,6 @@ export type CommonColumnProps = {
     movable: boolean;
     pinnable: boolean;
     hideable: boolean;
-    // exportable: boolean;
     filterable: boolean;
     groupable: boolean;
     searchable?: boolean;
@@ -30,20 +30,16 @@ export type CommonColumnProps = {
 }
 
 
-export type ColumnDef = {
-    accessorKey: AccessorKey;
-    accessorFn?: (row: any) => any;
+export type ColumnDef<TData> = {
+    accessorKey: AccessorKey<TData>;
+    accessorFn?: AccessorFn<TData>;
     footer?: string;
     pinning?: "left"| "right"
     cell?: {
         component?: any;
-        style?: (row: any) => any;
+        style?: (row: TData) => any;
     }
     aggregationFn?: AggregationFn
 } & Partial<Omit<CommonColumnProps, 'header'>> & {
     header: string
-}
-
-export interface Data<T = any> {
-    [key: string]: T;
 }

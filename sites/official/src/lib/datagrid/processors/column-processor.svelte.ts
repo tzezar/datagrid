@@ -2,7 +2,7 @@ import type { PinningPosition } from "../features/column-manager.svelte";
 import type { AggregationFn } from "../features/grouping-manager.svelte";
 import type { SortDirection } from "../features/sorting-manager.svelte";
 import type { DatagridInstance } from "../index.svelte";
-import type { ColumnDef, CommonColumnProps } from "../types";
+import type { Accessor, ColumnDef, CommonColumnProps } from "../types";
 import type { Row } from "./data-processor.svelte";
 
 
@@ -18,12 +18,11 @@ export type CategoricalFacet = {
     uniqueValuesCount: number
 }
 
-export type Accessor = (row: any) => any
 export type ColumnId = string
 
-export type Column = {
+export type Column<TData> = {
     columnId: ColumnId, // Used to identify the column
-    accessor: Accessor // Used to get the value
+    accessor: Accessor<TData> // Used to get the value
     cell?: {
         component?: any | undefined
         style?: (row: any) => any | undefined
@@ -35,46 +34,46 @@ export type Column = {
     isSorted: () => boolean
     getSortingDirection: () => SortDirection
     aggregationFn: AggregationFn,
-    columnDef: ColumnDef
+    columnDef: ColumnDef<TData>
 } & CommonColumnProps
 
-export interface ColumnProcessorInstance {
+export interface ColumnProcessorInstance<TData> {
     transform(): void
-    calculateFacets(rows: Row[]): void
+    calculateFacets(rows: Row<TData>[]): void
 }
 
-export class ColumnProcessor implements ColumnProcessorInstance {
-    private grid: DatagridInstance;
+export class ColumnProcessor<TData> implements ColumnProcessorInstance<TData> {
+    private grid: DatagridInstance<TData, any>
 
-    constructor(grid: DatagridInstance) {
+    constructor(grid: DatagridInstance<TData, any>) {
         this.grid = grid;
     }
 
     transform() {
-        const makeAccessor = (col: ColumnDef) => {
-            let accessor: Accessor
-            if (col.accessorFn) {
+        const makeAccessor = (col: ColumnDef<TData>) => {
+            let accessor: Accessor<TData>
+            if (col.accessorFn !== undefined) {
                 // If accessorFn is provided, use it directly
-                accessor = (obj: any) => col.accessorFn!(({ original: obj } as Row));
+                accessor = (obj) => col.accessorFn!(( obj )) 
             } else if (col.accessorKey) {
                 // If only accessorKey is provided, create an accessor function
-                accessor = this.createAccessor(col.accessorKey);
+                accessor = this.createAccessor(col.accessorKey as string);
             } else {
                 throw new Error('Neither accessorFn nor accessorKey is provided')
             }
             return accessor
         }
-        const columns: Column[] = [];
+        const columns: Column<TData>[] = [];
         for (let i = 0; i < this.grid.original.columns.length; i++) {
-            const columnDef: ColumnDef = this.grid.original.columns[i]
+            const columnDef = this.grid.original.columns[i]
 
-            const columnId = columnDef.accessorKey || String(i);
-            const accessor: Accessor = makeAccessor(columnDef);
+            const columnId = columnDef.accessorKey || String(i)
+            const accessor: Accessor<TData> = makeAccessor(columnDef);
             const isSorted = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId).length > 0;
             const getSortingDirection = () => this.grid.sorting.sortBy.filter((s) => s.columnId === columnId)[0]?.direction;
             const pinningPosition = columnDef?.pinning || 'none' as PinningPosition
 
-            const processedColumn: Column = {
+            const processedColumn: Column<TData> = {
                 columnId,
                 header: columnDef.header,
                 accessor,
@@ -151,7 +150,7 @@ export class ColumnProcessor implements ColumnProcessorInstance {
     };
    
 
-    calculateFacets(rows: Row[]) {
+    calculateFacets(rows: Row<TData>[]) {
         for (const column of this.grid.columns) {
             if (!column.faceting) continue
             if (column.faceting.type === 'numeric') {

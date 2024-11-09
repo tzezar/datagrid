@@ -25,8 +25,8 @@ export type PaginationFeature = {
 } & PaginationState
 
 
-export class PaginationManager implements PaginationFeature {
-    protected grid: DatagridInstance;
+export class PaginationManager<TData> implements PaginationFeature {
+    protected grid: DatagridInstance<TData, any>
 
     page = $state(1);
     pageSize = 10;
@@ -34,7 +34,7 @@ export class PaginationManager implements PaginationFeature {
     pageSizes = [10, 25, 50, 100];
     pageCount = $state(0)
 
-    constructor(grid: DatagridInstance) {
+    constructor(grid: DatagridInstance<TData, any>) {
         this.grid = grid;
     }
 
@@ -42,6 +42,7 @@ export class PaginationManager implements PaginationFeature {
         this.page = state.page || this.page;
         this.pageSize = state.pageSize || this.pageSize;
         this.count = state.count || this.count;
+        this.pageSizes = state.pageSizes || this.pageSizes;
     }
 
     canPrevPage(): boolean {

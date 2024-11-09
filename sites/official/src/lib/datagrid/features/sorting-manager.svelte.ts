@@ -1,41 +1,42 @@
 import type { DatagridInstance, SortingStateConfig } from "../index.svelte";
-import type { Accessor, ColumnId } from "../processors/column-processor.svelte";
+import type { ColumnId } from "../processors/column-processor.svelte";
+import type { Accessor } from "../types";
 
 export type SortDirection = "asc" | "desc";
 export type SortMode = "multi" | "single" | "none";
 
-export interface Sort {
+export interface Sort<TData> {
     columnId: ColumnId;
-    accessor: Accessor,
+    accessor: Accessor<TData>;
     direction: SortDirection;
 }
 
-export type SortBy = Sort[];  // Removed readonly to allow mutations
+export type SortBy<TData> = Sort<TData>[];  // Removed readonly to allow mutations
 
-export type SortingFeature = {
-    initialize(state: SortingStateConfig): void;
-    _sortedDataCache: any[];
+export type SortingFeature<TData> = {
+    initialize(state: SortingStateConfig<TData>): void;
+    _sortedDataCache: TData[];
     toggleSort(accessor: string): void;
     clearSort(): void;
     setSortMode(mode: SortMode): void;
-} & SortingState
+} & SortingState<TData>
 
-export type SortingState = {
-    sortBy: SortBy
+export type SortingState<TData> = {
+    sortBy: SortBy<TData>
     mode: SortMode
 }
 
-export class SortingManager implements SortingFeature {
-    protected grid: DatagridInstance;
-    sortBy: SortBy = $state([]);
+export class SortingManager<TData> implements SortingFeature<TData> {
+    protected grid: DatagridInstance<TData, any>;
+    sortBy: SortBy<TData> = $state([]);
     mode: SortMode = "single";
-    _sortedDataCache: any[] = [];
+    _sortedDataCache: TData[] = [];
 
-    constructor(grid: DatagridInstance) {
+    constructor(grid: DatagridInstance<TData, any>) {
         this.grid = grid;
     }
 
-    initialize(state: SortingStateConfig): void {
+    initialize(state: SortingStateConfig<TData>): void {
         this.sortBy = state.sortBy || this.sortBy;
         this.mode = state.mode || this.mode;
     }

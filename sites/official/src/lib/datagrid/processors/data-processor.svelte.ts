@@ -1,16 +1,16 @@
 import { SvelteSet } from "svelte/reactivity";
 import type { DatagridInstance } from "../index.svelte";
-import type { Data } from "../types";
 import { sort } from 'fast-sort';
 import type { SortBy } from "../features/sorting-manager.svelte";
-import type { GroupData } from "../features/grouping-manager.svelte";
+import type { GroupData, GroupRow } from "../features/grouping-manager.svelte";
+import type { ColumnId } from "./column-processor.svelte";
 
-export interface Row {
+export interface Row<T> {
     index: string;
-    subRows: Row[];
+    subRows: Row<T>[];
     groupId: string | null;
     parentId: string | null;
-    original: Data
+    original: T;
     depth: number;
     isExpanded?: boolean;
     aggregates: {
@@ -22,27 +22,30 @@ export interface Row {
             mean?: number;
         };
     };
+    columnId: ColumnId,
 }
+
+
 
 export interface GroupingState {
     groupBy: string[];
 }
 
-export interface DataProcessorInstance {
-    processedRowsCache: Row[]
+export interface DataProcessorInstance<TData> {
+    processedRowsCache: Row<TData>[]
     process(): void,
     toggleGroupExpansion(groupId: string): void;
-    rowsMap: Map<string, Row>;
+    rowsMap: Map<string, GroupRow<TData>>;
 }
 
 
-export class DataProcessor implements DataProcessorInstance {
-    private grid: DatagridInstance;
-    processedRowsCache: Row[] = [];
-    rowsMap: Map<string, Row> = new Map();
-    private compiledSortConfigs: SortBy = [];
+export class DataProcessor<TData> implements DataProcessorInstance<TData> {
+    private grid: DatagridInstance<TData, any>
+    processedRowsCache: Row<TData>[] = [];
+    rowsMap: Map<string, GroupRow<TData>> = new Map();
+    private compiledSortConfigs: SortBy<TData> = [];
 
-    constructor(grid: DatagridInstance) {
+    constructor(grid: DatagridInstance<TData, any>) {
         this.grid = grid;
         this.grid.grouping.state.expandedRows = new SvelteSet([]);
     }
@@ -50,8 +53,8 @@ export class DataProcessor implements DataProcessorInstance {
     process(): void {
         this.grid.grouping.state._groupedDataCache = null;
         this.rowsMap.clear();
-        
-        let processedData: Data[] = [...this.grid.original.data];
+
+        let processedData: TData[] = [...this.grid.original.data];
         if (this.grid.filtering.search.value) processedData = this.applyGlobalFilter(processedData);
         if (this.grid.filtering.conditions) processedData = processedData.filter(item => this.grid.filtering.isRowMatching(item));
         if (this.grid.grouping.hasGroups()) {
@@ -64,7 +67,7 @@ export class DataProcessor implements DataProcessorInstance {
     }
 
     // Data
-    createRows(data: Data[]): Row[] {
+    createRows(data: TData[]): Row<TData>[] {
         return data.map((item, i) => ({
             index: i.toString(),
             subRows: [],
@@ -72,10 +75,11 @@ export class DataProcessor implements DataProcessorInstance {
             parentId: null,
             original: item,
             depth: 0,
-            aggregates: {}
+            aggregates: {},
+            columnId: ''
         }));
     }
-    applyGlobalFilter(data: Data[]) {
+    applyGlobalFilter(data: TData[]) {
         const { search } = this.grid.filtering;
         if (!search.value) return data;
 
@@ -90,7 +94,7 @@ export class DataProcessor implements DataProcessorInstance {
         }
 
         // Cache the column accessor functions for searchable columns
-        const accessorCache = new Map<string, (item: Data) => any>();
+        const accessorCache = new Map<string, (item: TData) => any>();
         searchableColumns.forEach(col => {
             accessorCache.set(col.columnId as string, col.accessor);
         });
@@ -106,20 +110,20 @@ export class DataProcessor implements DataProcessorInstance {
             })
         );
     }
-    private sortData(data: Data[]): Data[] {
+    private sortData(data: TData[]): TData[] {
         if (this.grid.sorting.sortBy.length === 0) return data;
         // not sure why, but when precompiled, sorting is 70% faster
         const sortConfigs = this.setupSortingConfig(this.grid.sorting.sortBy);
 
         const sortInstructions = sortConfigs.map(({ direction, accessor }) => {
-            return { [direction]: (item: Data) => accessor(item) }
+            return { [direction]: (item: TData) => accessor(item) }
         });
 
         return sort(data).by(sortInstructions as any);
     }
 
     // Grouping
-    private groupData(data: Data[]): Map<string, any> {
+    private groupData(data: TData[]): Map<string, GroupData> {
         const groups = new Map();
         const groupBy = this.grid.grouping.state.groupBy;
 
@@ -129,7 +133,7 @@ export class DataProcessor implements DataProcessorInstance {
                 return;
             }
 
-            let currentLevel = groups;
+            let currentLevel: Map<string, GroupData> = groups;
             let groupPath = '';
 
             groupBy.forEach(({ columnId, accessor }, depth) => {
@@ -142,13 +146,14 @@ export class DataProcessor implements DataProcessorInstance {
                         subgroups: new Map(),
                         groupPath,
                         value: groupValue,
-                        key: columnId,
+                        columnId,
                         depth,
-                        allItems: []
+                        allItems: [],
+                        aggregates: {}
                     });
                 }
 
-                const group = currentLevel.get(groupValue);
+                const group = currentLevel.get(groupValue) as GroupData;
                 group.allItems.push(item);
 
                 if (depth === groupBy.length - 1) {
@@ -164,15 +169,16 @@ export class DataProcessor implements DataProcessorInstance {
 
         return groups;
     }
-    private applyGrouping(): Row[] {
-        const rows: Row[] = [];
+    private applyGrouping(): Row<TData>[] {
+        const rows: Row<TData>[] = [];
         this.createGroups(this.getGroupedData(), rows);
         return rows;
     }
-    private getGroupedData(): Map<string, any> {
+    private getGroupedData(): Map<string, GroupData> {
         if (!this.grid.grouping.state._groupedDataCache) {
             this.grid.grouping.state._groupedDataCache = this.groupData(this.grid.original.data);
         }
+
         return this.grid.grouping.state._groupedDataCache;
     }
     private sortGroups(groups: Map<string, GroupData>): [string, GroupData][] {
@@ -186,7 +192,7 @@ export class DataProcessor implements DataProcessorInstance {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 [direction]: ([_, group]: [string, GroupData]) => {
                     // If sorting by the grouped column, use the group's own value
-                    if (columnId === group.key) {
+                    if (columnId === group.columnId) {
                         return group.value;
                     }
                     // Otherwise sort by the first item's value
@@ -200,22 +206,23 @@ export class DataProcessor implements DataProcessorInstance {
 
         return sort(entries).by(sortInstructions as any);
     }
-    private createGroups(groups: Map<string, any>, rows: Row[], parentIndex: string = '', depth = 0, parentId: string | null = null) {
+    private createGroups(groups: Map<string, GroupData>, rows: (Row<TData> | GroupRow<TData>)[], parentIndex: string = '', depth = 0, parentId: string | null = null) {
         const sortedGroups = Array.from(groups.entries());
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         sortedGroups.forEach(([_, group], groupIndex) => {
             // Create hierarchical index
             const currentIndex = parentIndex ? `${parentIndex}.${groupIndex}` : `${groupIndex}`;
 
-            const groupRow: Row = {
+            const groupRow: GroupRow<TData> = {
                 index: currentIndex,
                 subRows: [],
                 groupId: group.groupPath,
                 parentId,
-                original: {},
+                original: null,
                 depth,
                 isExpanded: this.grid.grouping.state.expandedRows.has(group.groupPath),
                 aggregates: group.aggregates || {},
+                columnId: group.columnId
             };
 
             rows.push(groupRow);
@@ -228,7 +235,7 @@ export class DataProcessor implements DataProcessorInstance {
                 // Add leaf items
                 if (group.items.length > 0) {
                     const sortedItems = this.sortData(group.items);
-                    sortedItems.forEach((item: Data, itemIndex: number) => {
+                    sortedItems.forEach((item: TData, itemIndex: number) => {
                         rows.push({
                             index: `${currentIndex}.${itemIndex}`,
                             subRows: [],
@@ -237,13 +244,14 @@ export class DataProcessor implements DataProcessorInstance {
                             original: item,
                             depth: depth + 1,
                             aggregates: {},
+                            columnId: ""
                         });
                     });
                 }
             }
         });
     }
-    private applyGroupSorting(groups: Map<string, any>, depth: number) {
+    private applyGroupSorting(groups: Map<string, GroupData>, depth: number) {
         // Calculate aggregates and sort items within each group
         groups.forEach(group => {
             // Calculate aggregates for the current group
@@ -266,6 +274,7 @@ export class DataProcessor implements DataProcessorInstance {
         groups.clear();
         sortedEntries.forEach(([key, value]) => groups.set(key, value));
     }
+
     toggleGroupExpansion(groupId: string) {
         if (this.grid.grouping.state.expandedRows.has(groupId)) {
             this.grid.grouping.state.expandedRows.delete(groupId);
@@ -278,7 +287,7 @@ export class DataProcessor implements DataProcessorInstance {
 
     // Helpers
 
-    private setupSortingConfig(sortingDirections: SortBy): SortBy {
+    private setupSortingConfig(sortingDirections: SortBy<TData>): SortBy<TData> {
         return sortingDirections.map(config => ({
             columnId: config.columnId,
             direction: config.direction,

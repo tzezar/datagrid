@@ -1,7 +1,7 @@
 import { SvelteSet } from "svelte/reactivity";
 import type { DatagridInstance, GroupingStateConfig } from "../index.svelte";
 import type { Column, ColumnId } from "../processors/column-processor.svelte";
-import type { Data } from "../types";
+import type { Row } from "../processors/data-processor.svelte";
 
 
 export type AggregationFn = "none" | 'sum' | 'min' | 'max' | 'extent' | 'mean' | 'median' | 'unique' | 'uniqueCount' | 'count' | 'all'
@@ -15,12 +15,33 @@ export interface Aggregate {
 
 export interface GroupData {
     items: any[];
+    allItems: any[];
     subgroups: Map<string, any>;
     groupPath: string;
     value: any;
-    key: string;
+    columnId: ColumnId;
     depth: number;
     aggregates: any;
+}
+
+export type GroupRow<T> = {
+    index: string;
+    subRows: Row<T>[];
+    groupId: string | null;
+    parentId: string | null;
+    original: null,
+    depth: number;
+    isExpanded?: boolean;
+    aggregates: {
+        [columnId: string]: {
+            sum?: number;
+            count?: number;
+            min?: number;
+            max?: number;
+            mean?: number;
+        };
+    };
+    columnId: ColumnId,
 }
 
 export type Group = {
@@ -45,8 +66,8 @@ export interface GroupingFeature {
 }
 
 
-export class GroupingManager implements GroupingFeature {
-    protected grid: DatagridInstance;
+export class GroupingManager<TData> implements GroupingFeature {
+    protected grid: DatagridInstance<TData, any>
 
     state: GroupingManagerState = {
         groupBy: [],
@@ -66,7 +87,7 @@ export class GroupingManager implements GroupingFeature {
         return this.state.groupBy.length > 0;
     }
 
-    constructor(grid: DatagridInstance) {
+    constructor(grid: DatagridInstance<TData, any>) {
         this.grid = grid;
 
     }
@@ -80,7 +101,7 @@ export class GroupingManager implements GroupingFeature {
         return this.state.expandedRows.has(groupId);
     }
 
-    private calculateAggregates(items: Data[], column: Column): any {
+    private calculateAggregates(items: TData[], column: Column<TData>): any {
         if (!items.length) return null;
 
         const accessor = this.grid.columnManager.getAccessor(column.columnId);

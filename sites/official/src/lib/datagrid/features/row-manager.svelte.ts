@@ -44,8 +44,8 @@ export interface RowManagerInstance {
     isPinned(rowId: string, position: "top" | "bottom"): boolean;
 }
 
-export class RowManager implements RowManagerInstance {
-    private grid: DatagridInstance;
+export class RowManager<TData> implements RowManagerInstance {
+    private grid: DatagridInstance<TData, any>;
 
     selectionMode: RowSelectionMode = 'single';
     expansionMode: RowExpansionMode = 'single';
@@ -57,7 +57,7 @@ export class RowManager implements RowManagerInstance {
         bottom: new SvelteSet(),
     }
 
-    constructor(grid: DatagridInstance) {
+    constructor(grid: DatagridInstance<TData, any>) {
         this.grid = grid;
     }
 

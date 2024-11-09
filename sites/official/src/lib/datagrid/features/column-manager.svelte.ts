@@ -1,40 +1,41 @@
 import type { DatagridInstance } from "../index.svelte";
-import type { Accessor, Column, ColumnId } from "../processors/column-processor.svelte"
+import type { Column, ColumnId } from "../processors/column-processor.svelte";
+import type { Accessor } from "../types";
 
 export type PinningPosition = 'left' | 'right' | 'none'
 
 
-interface ColumnManagerInstance {
-    getAccessor(columnId: ColumnId): Accessor
+interface ColumnManagerInstance<TData> {
+    getAccessor(columnId: ColumnId): Accessor<TData>
 
-    hideColumn(column: Column): void;
-    showColumn(column: Column): void;
+    hideColumn(column: Column<TData>): void;
+    showColumn(column: Column<TData>): void;
 
-    changeColumnPinningPosition(column: Column, position: PinningPosition): void;
+    changeColumnPinningPosition(column: Column<TData>, position: PinningPosition): void;
 
-    resizeColumn(column: Column, width: number): void;
+    resizeColumn(column: Column<TData>, width: number): void;
 
-    moveColumnLeft(column: Column): void;
-    moveColumnRight(column: Column): void;
-    moveColumnToPosition(column: Column, position: number): void
+    moveColumnLeft(column: Column<TData>): void;
+    moveColumnRight(column: Column<TData>): void;
+    moveColumnToPosition(column: Column<TData>, position: number): void
 
-    canMoveColumnLeft(column: Column): boolean;
-    canMoveColumnRight(column: Column): boolean;
+    canMoveColumnLeft(column: Column<TData>): boolean;
+    canMoveColumnRight(column: Column<TData>): boolean;
 
-    toggleColumnVisibility(column: Column): void;
-    getVisibleColumns(): Column[]
+    toggleColumnVisibility(column: Column<TData>): void;
+    getVisibleColumns(): Column<TData>[]
 
-    isFilterable(column: Column): boolean
+    isFilterable(column: Column<TData>): boolean
 
-    getSearchableColumns(): Column[]
+    getSearchableColumns(): Column<TData>[]
 }
 
 
-export class ColumnManager implements ColumnManagerInstance {
-    private grid: DatagridInstance;
+export class ColumnManager<TData> implements ColumnManagerInstance<TData> {
+    private grid: DatagridInstance<TData, any>
 
 
-    constructor(grid: DatagridInstance) {
+    constructor(grid: DatagridInstance<TData, any>) {
         this.grid = grid;
     }
 
@@ -44,29 +45,29 @@ export class ColumnManager implements ColumnManagerInstance {
         return column.accessor
     }
 
-    isFilterable(column: Column): boolean {
+    isFilterable(column: Column<TData>): boolean {
         return column.filterable === true
     }
 
-    getVisibleColumns(): Column[] {
-        return this.grid.columns.filter(c => c.visible);
+    getVisibleColumns(): Column<TData>[] {
+        return this.grid.columns.filter(c => c.visible)
     }
 
-    getColumn(columnId: ColumnId): Column {
+    getColumn(columnId: ColumnId): Column<TData> {
         const column = this.grid.columns.find(c => c.columnId === columnId);
         if (!column) throw new Error(`Column ${columnId} not found`);
         return column
     }
 
-    hideColumn(column: Column): void {
+    hideColumn(column: Column<TData>): void {
         column.visible = false
     }
 
-    showColumn(column: Column): void {
+    showColumn(column: Column<TData>): void {
         column.visible = true
     }
 
-    toggleColumnVisibility(column: Column): void {
+    toggleColumnVisibility(column: Column<TData>): void {
         if (column.visible) {
             this.hideColumn(column);
         } else {
@@ -100,7 +101,7 @@ export class ColumnManager implements ColumnManagerInstance {
 
 
     refreshColumnPinningOffsets() {
-        const newColumns: Column[] = [];
+        const newColumns: Column<TData>[] = [];
         for (let i = 0; i < this.grid.columns.length; i++) {
             const col = this.grid.columns[i];
             if (col.pinning.position === 'none') {
@@ -114,31 +115,31 @@ export class ColumnManager implements ColumnManagerInstance {
         this.grid.columns = newColumns;
     };
 
-    changeColumnPinningPosition(column: Column, position: PinningPosition): void {
+    changeColumnPinningPosition(column: Column<TData>, position: PinningPosition): void {
         column.pinning.position = position
     }
 
 
-    resizeColumn(column: Column, width: number): void {
+    resizeColumn(column: Column<TData>, width: number): void {
         if (width <= column.size.minWidth) width = column.size.minWidth
         if (width >= column.size.maxWidth) width = column.size.maxWidth
         column.size.width = width
     }
 
-    private getColumnIndex(column: Column): number {
+    private getColumnIndex(column: Column<TData>): number {
         return this.grid.columns.indexOf(column);
     }
 
 
-    canMoveColumnLeft(column: Column): boolean {
+    canMoveColumnLeft(column: Column<TData>): boolean {
         return this.getColumnIndex(column) > 0;
     }
 
-    canMoveColumnRight(column: Column): boolean {
+    canMoveColumnRight(column: Column<TData>): boolean {
         return this.getColumnIndex(column) < this.grid.columns.length - 1;
     }
 
-    moveColumnLeft(column: Column): void {
+    moveColumnLeft(column: Column<TData>): void {
         const columnIndex = this.getColumnIndex(column);
         if (this.canMoveColumnLeft(column)) {
             const prevColumn = this.grid.columns[columnIndex - 1];
@@ -147,7 +148,7 @@ export class ColumnManager implements ColumnManagerInstance {
         }
     }
 
-    moveColumnRight(column: Column): void {
+    moveColumnRight(column: Column<TData>): void {
         const columnIndex = this.getColumnIndex(column);
         if (this.canMoveColumnRight(column)) {
             const nextColumn = this.grid.columns[columnIndex + 1];
@@ -156,7 +157,7 @@ export class ColumnManager implements ColumnManagerInstance {
         }
     }
 
-    moveColumnToPosition(column: Column, position: number): void {
+    moveColumnToPosition(column: Column<TData>, position: number): void {
         const columnIndex = this.getColumnIndex(column);
         if (columnIndex !== position) {
             this.grid.columns.splice(position, 0, column);
@@ -165,7 +166,7 @@ export class ColumnManager implements ColumnManagerInstance {
     }
 
     // used in global search
-    getSearchableColumns(): Column[] {
+    getSearchableColumns(): Column<TData>[] {
         return this.grid.columns.filter(c => c.searchable && c.visible);
     }
 
