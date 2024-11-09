@@ -20,7 +20,7 @@ export type CategoricalFacet = {
 
 export type ColumnId = string
 
-export type Column<TData> = {
+export type Column<TData, TCustomKeys extends string = never> = {
     columnId: ColumnId, // Used to identify the column
     accessor: Accessor<TData> // Used to get the value
     cell?: {
@@ -34,7 +34,7 @@ export type Column<TData> = {
     isSorted: () => boolean
     getSortingDirection: () => SortDirection
     aggregationFn: AggregationFn,
-    columnDef: ColumnDef<TData>
+    columnDef: ColumnDef<TData, TCustomKeys>
 } & CommonColumnProps
 
 export interface ColumnProcessorInstance<TData> {

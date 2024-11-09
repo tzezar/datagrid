@@ -3,7 +3,26 @@ import type { SortDirection } from "./features/sorting-manager.svelte";
 import type { CategoricalFacet, NumericFacet } from "./processors/column-processor.svelte";
 
 
-export type AccessorKey<TData> = TData| (string & {});
+type PathImpl<T, K extends keyof T> = 
+  K extends string
+    ? T[K] extends Record<string, any>
+      ? T[K] extends Array<any>
+        ? K | `${K}.${PathImpl<T[K], Exclude<keyof T[K], keyof any[]>>}`
+        : K | `${K}.${PathImpl<T[K], keyof T[K]>}`
+      : K
+    : never;
+
+// Modified to only return the full paths, not intermediate objects
+export type NestedPaths<T> = {
+  [K in PathImpl<T, keyof T>]: K extends keyof T 
+    ? T[K] extends Record<string, any>
+      ? never 
+      : K
+    : K
+}[PathImpl<T, keyof T>];
+
+// Modified AccessorKey to use NestedPaths
+export type AccessorKey<TData, TCustomKeys extends string = never> = NestedPaths<TData> | TCustomKeys;
 export type Accessor<TData> = (row: TData) => any
 export type AccessorFn<TData> = (row: TData) => any
 
@@ -30,16 +49,16 @@ export type CommonColumnProps = {
 }
 
 
-export type ColumnDef<TData> = {
-    accessorKey: AccessorKey<TData>;
+export type ColumnDef<TData, TCustomKeys extends string = never> = {
+    accessorKey?: AccessorKey<TData, TCustomKeys>;
     accessorFn?: AccessorFn<TData>;
     footer?: string;
-    pinning?: "left"| "right"
+    pinning?: "left" | "right";
     cell?: {
         component?: any;
         style?: (row: TData) => any;
-    }
-    aggregationFn?: AggregationFn
+    };
+    aggregationFn?: AggregationFn;
 } & Partial<Omit<CommonColumnProps, 'header'>> & {
-    header: string
-}
+    header: string;
+};

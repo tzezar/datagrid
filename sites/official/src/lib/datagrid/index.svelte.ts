@@ -9,17 +9,16 @@ import { DataProcessor, type DataProcessorInstance, type Row } from "./processor
 import type { ColumnDef } from "./types";
 
 
-export interface DatagridOriginal<TData, CDef> {
+export interface DatagridOriginal<TData, TCustomKeys extends string = never> {
     data: TData[];
-    columns: CDef[];
+    columns: ColumnDef<TData, TCustomKeys>[]
 }
 
-
-export interface DatagridInstance<TData, CDef> {
-    original: DatagridOriginal<TData, CDef>
+export interface DatagridInstance<TData, TCustomKeys extends string = never> {
+    original: DatagridOriginal<TData, TCustomKeys>
 
     rows: Row<TData>[]
-    columns: Column<TData>[]
+    columns: Column<TData, TCustomKeys>[]
 
     sorting: SortingFeature<TData>
     filtering: FilteringFeature<TData>;
@@ -38,7 +37,6 @@ export interface DatagridInstance<TData, CDef> {
     getVisibleRowCount(): number
 }
 
-
 export type PaginationStateConfig = Partial<Omit<PaginationState, 'pageCount'>>
 export type GroupingStateConfig = Partial<Omit<GroupingManagerState, '_groupedDataCache'>>
 export type FilteringStateConfig<TData> = Partial<FilteringState<TData>>
@@ -49,25 +47,24 @@ export type RowManagerStateConfig = Partial<RowManagerState> & {
 export type SortingStateConfig<TData> = Partial<SortingState<TData>>
 
 export type DatagridConfig<T, C> = {
-    columns: C[]
-    data: T[]
+    columns: C[];
+    data: T[];
+    pagination?: PaginationStateConfig;
+    grouping?: GroupingStateConfig;
+    filtering?: FilteringStateConfig<T>;
+    rowManager?: RowManagerStateConfig;
+    sorting?: SortingStateConfig<T>;
+};
 
-    pagination?: PaginationStateConfig
-    grouping?: GroupingStateConfig
-    filtering?: FilteringStateConfig<T>
-    rowManager?: RowManagerStateConfig
-    sorting?: SortingStateConfig<T>
-}
 
-
-export class Datagrid<TData, CDef extends ColumnDef<TData>> implements DatagridInstance<TData, CDef> {
-    original: DatagridOriginal<TData, CDef> = {
+export class Datagrid<TData, TCustomKeys extends string = never> implements DatagridInstance<TData, TCustomKeys> {
+    original: DatagridOriginal<TData, TCustomKeys> = {
         data: [] as TData[],
-        columns: [] as CDef[],
+        columns: [] as ColumnDef<TData, TCustomKeys>[],
     }
 
     rows: Row<TData>[] = $state([]);
-    columns: Column<TData>[] = $state([]);
+    columns: Column<TData, TCustomKeys>[] = $state([]);
 
     sorting: SortingFeature<TData> = new SortingManager(this);
     filtering: FilteringFeature<TData> = new FilteringManager(this);
@@ -79,12 +76,12 @@ export class Datagrid<TData, CDef extends ColumnDef<TData>> implements DatagridI
     dataProcessor: DataProcessorInstance<TData> = new DataProcessor(this);
     columnsProcessor: ColumnProcessorInstance<TData> = new ColumnProcessor<TData>(this);
 
-    constructor(config: DatagridConfig<TData, CDef>) {
+    constructor(config: DatagridConfig<TData, ColumnDef<TData, TCustomKeys>>) {
         this.original = { data: config.data, columns: config.columns };
         this.initialize(config);
     }
 
-    private initialize(config: DatagridConfig<TData, CDef>): void {
+    private initialize(config: DatagridConfig<TData, ColumnDef<TData, TCustomKeys>>): void {
         this.pagination.initialize(config.pagination || {});
         this.grouping.initialize(config.grouping || {});
         this.filtering.initialize(config.filtering || {});
