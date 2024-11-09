@@ -83,9 +83,9 @@ export const columns = [
     {
         accessorKey: 'region',
         header: 'Region',
-        // cell: {
-        //     style: (row: Row) => `${row?.original?.region === 'East' ? 'color: orange' : ''}`
-        // },
+        cell: {
+            style: (row) => `${row?.original?.region === 'East' ? 'color: orange' : ''}`
+        },
         faceting: {
             type: 'categorical',
             uniqueValues: [],

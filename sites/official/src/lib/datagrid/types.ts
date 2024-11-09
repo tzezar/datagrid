@@ -1,6 +1,7 @@
 import type { AggregationFn } from "./features/grouping-manager.svelte";
 import type { SortDirection } from "./features/sorting-manager.svelte";
 import type { CategoricalFacet, NumericFacet } from "./processors/column-processor.svelte";
+import type { Row } from "./processors/data-processor.svelte";
 
 
 type PathImpl<T, K extends keyof T> = 
@@ -56,7 +57,7 @@ export type ColumnDef<TData, TCustomKeys extends string = never> = {
     pinning?: "left" | "right";
     cell?: {
         component?: any;
-        style?: (row: TData) => any;
+        style?: (row: Row<TData>) => any;
     };
     aggregationFn?: AggregationFn;
 } & Partial<Omit<CommonColumnProps, 'header'>> & {
