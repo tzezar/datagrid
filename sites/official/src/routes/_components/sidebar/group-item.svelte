@@ -2,10 +2,7 @@
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
 	import { getContext, type Snippet } from 'svelte';
-
-
 	let closeSidebarOnClick = getContext('mobile-sidebar') as () => void
-
 
 	let {
 		children,

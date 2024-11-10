@@ -56,7 +56,6 @@ export type DatagridConfig<T, C> = {
     sorting?: SortingStateConfig<T>;
 };
 
-
 export class Datagrid<TData, TCustomKeys extends string = never> implements DatagridInstance<TData, TCustomKeys> {
     original: DatagridOriginal<TData, TCustomKeys> = {
         data: [] as TData[],

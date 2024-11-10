@@ -1,10 +1,8 @@
-// @ts-nocheck
-// !TODO
 import { error } from '@sveltejs/kit'
 
 export async function load({ params }) {
 	try {
-		// const post = await import(`../../../../examples/${params.slug}/documentation.md`)
+		const post = await import(`../_md/${params.slug}/documentation.md`)
 		
 		return {
 			content: post.default,

@@ -40,9 +40,11 @@ export const hrefs = {
             fullyControlled: "/headless/examples/fully-controlled",
             grouping: "/headless/examples/grouping",
             pagination: "/headless/examples/pagination",
+            paginationControlled: "/headless/examples/pagination-controlled",
             sorting: "/headless/examples/sorting",
             subComponents: "/headless/examples/sub-components",
             virtualization: "/headless/examples/virtualization",
+            rowSelection: "/headless/examples/row-selection",
         }
     },
     shadcnSvelte: {
