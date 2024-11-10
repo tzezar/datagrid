@@ -57,6 +57,7 @@ export class DataProcessor<TData> implements DataProcessorInstance<TData> {
         let processedData: TData[] = [...this.grid.original.data];
         if (this.grid.filtering.search.value) processedData = this.applyGlobalFilter(processedData);
         if (this.grid.filtering.conditions) processedData = processedData.filter(item => this.grid.filtering.isRowMatching(item));
+        this.grid.pagination.updateCount(processedData.length);
         if (this.grid.grouping.hasGroups()) {
             this.processedRowsCache = this.applyGrouping()
         } else {

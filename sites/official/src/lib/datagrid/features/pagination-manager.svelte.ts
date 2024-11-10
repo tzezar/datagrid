@@ -20,6 +20,7 @@ export type PaginationFeature = {
 
     updatePageSize(pageSize: number): void;
     updatePageCount(): void;
+    updateCount(count: number): void;
 
     initialize(state: Partial<PaginationState>): void
 } & PaginationState
@@ -30,7 +31,7 @@ export class PaginationManager<TData> implements PaginationFeature {
 
     page = $state(1);
     pageSize = 10;
-    count = 0;
+    count = $state(0);
     pageSizes = [10, 25, 50, 100];
     pageCount = $state(0)
 
@@ -41,7 +42,7 @@ export class PaginationManager<TData> implements PaginationFeature {
     initialize (state: PaginationStateConfig) {
         this.page = state.page || this.page;
         this.pageSize = state.pageSize || this.pageSize;
-        this.count = state.count || this.count;
+        if (state.count) this.count = state.count
         this.pageSizes = state.pageSizes || this.pageSizes;
     }
 
@@ -88,5 +89,9 @@ export class PaginationManager<TData> implements PaginationFeature {
 
     updatePageCount(): void {
         this.pageCount = Math.ceil(this.grid.getVisibleRowCount() / this.pageSize);
+    }
+
+    updateCount(count: number): void {
+        this.count = count 
     }
 }

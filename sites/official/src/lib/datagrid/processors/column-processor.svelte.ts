@@ -103,7 +103,7 @@ export class ColumnProcessor<TData> implements ColumnProcessorInstance<TData> {
                 filterable: columnDef.filterable ?? true,
                 groupable: columnDef.groupable ?? true,
                 visible: columnDef.visible ?? true,
-                size: columnDef.size ?? { width: 100, minWidth: 50, maxWidth: 200 },
+                size: columnDef.size ?? { width: 100, minWidth: 50, maxWidth: 200, grow: false },
                 _meta: columnDef._meta
 
             };
