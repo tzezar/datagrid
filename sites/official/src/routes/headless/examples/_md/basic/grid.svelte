@@ -23,32 +23,32 @@
 						class={`grid-header-cell flex cursor-pointer flex-col ${column.pinning.position === 'left' && 'offset-left bg-orange-500'} ${column.pinning.position === 'right' && 'offset-right bg-orange-500'}`}
 						style:--offset={column.pinning.offset + 'px'}
 						style={`${column.size.grow === false ? `--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'};` : `flex-grow: 1;`};  --min-width: ${column.size.minWidth + 'px'};`}
+		
 					>
-						<div class={`flex flex-row items-center w-fit ${column.align === 'end' && ' self-end'} ${column.align === 'center' && 'self-center'} ${column.align === 'start' && 'self-start'}`}>
+						<div class={`flex flex-row items-center ${column.align === 'end' && ' self-end'} ${column.align === 'center' && 'self-center'} ${column.align === 'start' && 'self-start'} w-full`}
+						
+						aria-label="Click to sort column"
+						tabindex="0"
+						role="button"
+						onclick={(e) => {
+								grid.reload(() => grid.sorting.toggleSort(column.columnId));
+						}}
+						onkeydown={(e) => {
+							if (e.key === 'Enter') {
+								grid.reload(() => grid.sorting.toggleSort(column.columnId));
+							} else if (e.key === 'Escape') {
+								grid.reload(() => grid.sorting.clearSort());
+							}
+						}}>
 							<span
-								aria-label="Click to sort column"
-								tabindex="0"
-								role="button"
-								class="grow flex-nowrap overflow-hidden text-ellipsis text-nowrap"
-								onclick={(e) => {
-									if (e.currentTarget === e.target) {
-										e.stopPropagation();
-										grid.reload(() => grid.sorting.toggleSort(column.columnId));
-									}
-								}}
-								onkeydown={(e) => {
-									if (e.key === 'Enter') {
-										e.stopPropagation();
-										grid.reload(() => grid.sorting.toggleSort(column.columnId));
-									} else if (e.key === 'Escape') {
-										grid.reload(() => grid.sorting.clearSort());
-									}
-								}}
+							
+								class="grow flex-nowrap overflow-hidden text-ellipsis text-nowrap w-full "
+								
 							>
 								{column.header}
 							</span>
-							<span class="text-xs">
-								{#if column.isSorted()}
+							{#if column.isSorted()}
+							<span class="text-xs w-fit max-w-fit">
 									{#if column.getSortingDirection() === 'asc'}
 										▲
 									{:else if column.getSortingDirection() === 'desc'}
@@ -56,8 +56,8 @@
 									{:else}
 										&nbsp;
 									{/if}
+								</span>
 								{/if}
-							</span>
 						</div>
 					</div>
 				{/each}

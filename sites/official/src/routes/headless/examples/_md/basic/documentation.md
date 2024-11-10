@@ -8,6 +8,6 @@ published: true
   import GridWrapper from './grid-wrapper.svelte'
 </script>
 
-
-
 <GridWrapper />
+
+## Implementation

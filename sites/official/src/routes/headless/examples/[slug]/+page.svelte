@@ -15,7 +15,7 @@
 	<group>
 		<h1 class="text-3xl font-bold">{data.meta.title}</h1>
 	</group>
-	<div class="prose dark:prose-invert pt-8 min-w-full ">
+	<div class="prose dark:prose-invert pt-8 min-w-full">
 		<svelte:component this={data.content} />
 	</div>
 </article>
