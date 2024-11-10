@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { Datagrid } from '$lib/datagrid/index.svelte';
-	import type { Data } from '$lib/datagrid/types';
 	import CellRenderer from '$lib/datagrid/utils/cell-renderer.svelte';
+	import type { SalesDataRow } from '$lib/generate-data/generate-sales-data';
 	import ActionsGroup from './cells/actions-group.svelte';
 	import ColumnFilter from './column-filter.svelte';
 	import { columns } from './columns';
 	import OptionsPanel from './options-panel.svelte';
-	import type { GeneratedRow } from './types';
 
-	let { data }: { data: GeneratedRow[] } = $props();
+	let { data }: { data: SalesDataRow[] } = $props();
 
 	let grid = new Datagrid({
 		data,
@@ -72,7 +71,7 @@
 						<!-- svelte-ignore a11y_no_static_element_interactions -->
 
 						{#each grid.columns as column, colIndex}
-						<div
+							<div
 								class="grid-cell overflow-hidden text-ellipsis"
 								style:--offset={column.pinning.offset + 'px'}
 								style={`${column.cell && column.cell.style && column.cell.style(row)}; --width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'};`}
@@ -100,7 +99,7 @@
 					>
 						{#each grid.columnManager.getVisibleColumns() as column}
 							<div
-								class={`grid-cell overflow-hidden text-ellipsis text-nowrap ${column.pinning.position === 'left' && 'offset-left bg-white'} ${column.pinning.position === 'right' && 'offset-right bg-white'}`}
+								class={`grid-cell overflow-hidden text-ellipsis text-nowrap ${column.pinning.position === 'left' && 'offset-left'} ${column.pinning.position === 'right' && 'offset-right'}`}
 								style:--offset={column.pinning.offset + 'px'}
 								style={`${column.cell && column.cell.style && column.cell.style(row)}; --width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'}; --min-width: ${column.size.width + 'px'};`}
 							>

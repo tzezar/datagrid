@@ -1,42 +1,8 @@
 import type { ColumnDef } from "$lib/datagrid/types";
+import type { SalesDataRow } from "$lib/generate-data/generate-sales-data";
 import Actions from "./cells/actions.svelte";
 import Profit from "./cells/profit.svelte";
 import RowSelection from "./cells/row-selection.svelte";
-import type { GeneratedRow } from "./types";
-
-
-// type DataColumnDef<TData> = ColumnDef<TData> & {
-//     accessorKey: NestedPaths<TData>;
-//     accessorFn?: (row: TData) => any;
-// };
-
-// export function createDataColumn<TData>(
-//     key: NestedPaths<TData>,
-//     options: Omit<DataColumnDef<TData>, 'accessorKey'>
-// ): DataColumnDef<TData> {
-//     return {
-//         accessorKey: key,
-//         ...options,
-//     };
-// }
-
-// type VirtualColumnKey = 'actions' | 'selection';
-
-// type VirtualColumnDef<TData> = ColumnDef<TData> & {
-//     accessorKey: VirtualColumnKey;
-//     accessorFn?: (row: TData) => any;
-// };
-
-// // Helper function to create a virtual column
-// export function createVirtualColumn<TData>(
-//     key: VirtualColumnKey,
-//     options: Omit<VirtualColumnDef<TData>, 'accessorKey'>
-// ): VirtualColumnDef<TData> {
-//     return {
-//         accessorKey: key,
-//         ...options,
-//     };
-// }
 
 type TableCustomKeys = 'actions' | 'selection';
 export const columns = [
@@ -84,7 +50,7 @@ export const columns = [
         accessorKey: 'region',
         header: 'Region',
         cell: {
-            style: (row) => `${row?.original?.region === 'East' ? 'color: orange' : ''}`
+            // style: (row) => `${row?.original?.region === 'East' ? 'color: orange' : ''}`
         },
         faceting: {
             type: 'categorical',
@@ -134,5 +100,5 @@ export const columns = [
             operators: ['equals', 'greaterThan', 'lessThan', 'between']
         }
     }
-]  satisfies ColumnDef<GeneratedRow, TableCustomKeys>[]
+] satisfies ColumnDef<SalesDataRow, TableCustomKeys>[]
 

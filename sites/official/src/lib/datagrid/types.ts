@@ -38,6 +38,7 @@ export type CommonColumnProps = {
     searchable?: boolean;
     visible: boolean;
     size: {
+        grow: boolean;
         width: number;
         minWidth: number;
         maxWidth: number;
