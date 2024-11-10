@@ -6,7 +6,7 @@
 	let { generator, grid }: { generator: DataGenerator; grid: Snippet<[{ data: any[] }]> } = $props();
 </script>
 
-<div class="mx-auto max-w-2xl p-4">
+<div class="mx-auto  p-4">
 	<div class="mb-4 flex flex-col justify-center gap-4">
 		<div class="flex flex-col">
 			<label for="rowCount" class="mb-1 text-sm font-medium">Number of rows:</label>

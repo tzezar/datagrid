@@ -17,6 +17,3 @@
 		<Grid {data} />
 	{/snippet}
 </DataGeneratorWrapper>
-<div
-	class="align-middlep mx-auto flex max-w-xl flex-col items-center justify-center py-20 text-xl font-bold uppercase"
-></div>

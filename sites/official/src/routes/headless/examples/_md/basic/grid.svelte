@@ -2,6 +2,8 @@
 	import { Datagrid } from '$lib/datagrid/index.svelte';
 	import CellRenderer from '$lib/datagrid/utils/cell-renderer.svelte';
 	import type { SalesDataRow } from '$lib/generate-data/generate-sales-data';
+	import ChevronLeft from '$lib/icons/chevron-left.svelte';
+	import ChevronRight from '$lib/icons/chevron-right.svelte';
 	import { columns } from './columns';
 
 	let { data }: { data: SalesDataRow[] } = $props();
@@ -12,18 +14,17 @@
 	});
 </script>
 
-<div class="grid-wrapper overflow-auto">
-	<div class="grid max-h-[600px]">
-		<div class="grid-header">
+<div class="grid-wrapper overflow-auto flex flex-col max-h-[600px]  ">
+	<div class="grid-content relative flex flex-col">
+		<div class="grid-header sticky top-0">
 			<div class="grid-header-row">
 				{#each grid.columnManager.getVisibleColumns() as column}
 					<div
 						class={`grid-header-cell flex cursor-pointer flex-col ${column.pinning.position === 'left' && 'offset-left bg-orange-500'} ${column.pinning.position === 'right' && 'offset-right bg-orange-500'}`}
 						style:--offset={column.pinning.offset + 'px'}
-						style={`${column.size.grow === false ? `--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'};`: `flex-grow: 1;`};  --min-width: ${column.size.width + 'px'};`}
-
+						style={`${column.size.grow === false ? `--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'};` : `flex-grow: 1;`};  --min-width: ${column.size.minWidth + 'px'};`}
 					>
-						<div class="flex flex-row justify-center items-center">
+						<div class="flex flex-row items-center justify-center">
 							<span
 								aria-label="Click to sort column"
 								tabindex="0"
@@ -46,7 +47,7 @@
 							>
 								{column.header}
 							</span>
-							<span class='text-xs'>
+							<span class="text-xs">
 								{#if column.isSorted()}
 									{#if column.getSortingDirection() === 'asc'}
 										▲
@@ -71,8 +72,7 @@
 							<div
 								class="grid-cell overflow-hidden text-ellipsis"
 								style:--offset={column.pinning.offset + 'px'}
-								style={`${column.cell && column.cell.style && column.cell.style(row)}; ${column.size.grow === false ? `--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'};`: `flex-grow: 1;`};  --min-width: ${column.size.width + 'px'};`}
-
+								style={`${column.cell && column.cell.style && column.cell.style(row)}; ${column.size.grow === false ? `--width: ${column.size.width + 'px'}; --max-width: ${column.size.maxWidth + 'px'};` : `flex-grow: 1;`};  --min-width: ${column.size.minWidth + 'px'};`}
 							>
 								{#if column.columnId === row.columnId && Object.keys(row.aggregates).find((key) => key === column.columnId)}
 									<!-- <span>{column.accessor(row)}</span> -->
@@ -87,15 +87,15 @@
 					</div>
 				{:else}
 					<div
-						class="grid-row  {grid.rowManager.isPinned(String(row?.original?.id), 'top')
+						class="grid-row {grid.rowManager.isPinned(String(row?.original?.id), 'top')
 							? 'sticky top-0 bg-red-400'
 							: ''}"
 					>
 						{#each grid.columnManager.getVisibleColumns() as column}
 							<div
-								class={`grid-cell last:bg-blue-400 text-ellipsis text-nowrap ${column.pinning.position === 'left' && 'offset-left'} ${column.pinning.position === 'right' && 'offset-right'}`}
+								class={`grid-cell text-ellipsis text-nowrap  ${column.pinning.position === 'left' && 'offset-left'} ${column.pinning.position === 'right' && 'offset-right'}`}
 								style:--offset={column.pinning.offset + 'px'}
-								style={`${column.cell && column.cell.style && column.cell.style(row)}; ${column.size.grow === false ? `--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'};`: `flex-grow: 1;`};  --min-width: ${column.size.width + 'px'};`}
+								style={`${column.cell && column.cell.style && column.cell.style(row)}; ${column.size.grow === false ? `--width: ${column.size.width + 'px'}; --max-width: ${column.size.maxWidth + 'px'};` : `flex-grow: 1;`};  --min-width: ${column.size.minWidth + 'px'};`}
 							>
 								<CellRenderer {column} {row} {grid} />
 							</div>
@@ -111,43 +111,60 @@
 		</div>
 	</div>
 </div>
-<div class="pagination">
-	<div>
+<div class="pagination grid grid-cols-2 sm:grid-cols-3 gap-[0.75rem] items-center">
+	<div class="text-xs text-center sm:text-left col-span-2 sm:col-span-1 order-2 sm:order-1 hidden sm:block text-muted-foreground">
 		Showing: {grid.pagination.page * grid.pagination.pageSize - grid.pagination.pageSize}
 		to {grid.pagination.page * grid.pagination.pageSize} of {grid.pagination.count}
 	</div>
-	<button
-		disabled={grid.pagination.canPrevPage()}
-		onclick={() => grid.refresh(() => grid.pagination.goToPrevPage())}
-	>
-		Previous
-	</button>
-	<span>Page {grid.pagination.page}</span>
-	<button
-		disabled={grid.pagination.canNextPage()}
-		onclick={() => grid.refresh(() => grid.pagination.goToNextPage())}
-	>
-		Next
-	</button>
-	<select
-		value={grid.pagination.pageSize}
-		onchange={(e) => {
-			grid.refresh(() => grid.pagination.updatePageSize(Number(e.currentTarget.value)));
-
-			// setPageSize(Number(e.currentTarget.value));
-		}}
-	>
-		{#each grid.pagination.pageSizes as pageSize}
-			<option value={pageSize}>{pageSize}</option>
-		{/each}
-	</select>
-	{grid.pagination.pageCount}
+	<div class="flex order-1 sm:order-2 gap-[0.5rem] justify-center">
+		<button
+			class="pagination-button"
+			disabled={grid.pagination.canPrevPage()}
+			onclick={() => grid.refresh(() => grid.pagination.goToPrevPage())}
+		>
+			<ChevronLeft />
+		</button>
+		<input
+			type="text"
+			class="max-w-20"
+			value={grid.pagination.page}
+			onchange={(e) => {
+				if (+e.currentTarget.value > 0 && +e.currentTarget.value <= grid.pagination.pageCount) {
+					grid.refresh(() => grid.pagination.goToPage(Number(e.currentTarget.value)));
+				} else {
+					e.currentTarget.value = String(grid.pagination.page);
+				}
+			}}
+			min="1"
+		/>
+		<button
+			disabled={grid.pagination.canNextPage()}
+			onclick={() => grid.refresh(() => grid.pagination.goToNextPage())}
+		>
+			<ChevronRight />
+		</button>
+	</div>
+	<div class="flex justify-end order-1 sm:order-2">
+		<select
+			value={grid.pagination.pageSize}
+			onchange={(e) => {
+				grid.refresh(() => grid.pagination.updatePageSize(Number(e.currentTarget.value)));
+			}}
+		>
+			{#each grid.pagination.pageSizes as pageSize}
+				<option value={pageSize}>{pageSize}</option>
+			{/each}
+		</select>
+	</div>
 </div>
 
-<!-- Pagination controls -->
-
-
 <style>
+	.grid-content{
+		background-color: hsl(var(--grid-row-even-background));
+		height: 100%;
+		flex-grow: 1;
+	}
+
 	.grid-header-row {
 		background-color: hsl(var(--grid-header-row-background));
 		display: flex;
@@ -164,7 +181,7 @@
 		padding: 0.5rem 0.5rem;
 		border-right: 1px solid hsl(var(--grid-border));
 	}
-	
+
 	.grid-header-cell:last-child {
 		flex-grow: 1;
 		border-right: none;
@@ -175,6 +192,10 @@
 		border-bottom: 1px solid hsl(var(--grid-border));
 		border-left: 1px solid hsl(var(--grid-border));
 		border-right: 1px solid hsl(var(--grid-border));
+	}
+
+	.grid-row:last-child {
+		border-bottom: none;
 	}
 
 	.grid-row:nth-child(odd) {
@@ -220,14 +241,18 @@
 	}
 
 	.pagination {
+		background-color: hsl(var(--grid-header-row-background));
+		padding: 0.75rem;
+		border-top: 1px solid hsl(var(--grid-border));
 		border-bottom: 1px solid hsl(var(--grid-border));
 		border-left: 1px solid hsl(var(--grid-border));
 		border-right: 1px solid hsl(var(--grid-border));
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		align-items: center;
-		gap: 0.5rem 0rem;
+	}
+
+	.pagination > * > button {
+		border: 1px solid hsl(var(--grid-border));
+		padding-left: 0.5rem;
+		padding-right: 0.5rem;
 	}
 
 	button {

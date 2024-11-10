@@ -14,7 +14,6 @@
 <article class="flex w-full flex-col">
 	<group>
 		<h1 class="text-3xl font-bold">{data.meta.title}</h1>
-		<p class="text-muted-foreground">Published at {formatDate(data.meta.date)}</p>
 	</group>
 	<div class="prose dark:prose-invert pt-8 min-w-full ">
 		<svelte:component this={data.content} />
