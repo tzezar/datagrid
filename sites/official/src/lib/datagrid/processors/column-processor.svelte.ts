@@ -30,7 +30,8 @@ export type Column<TData, TCustomKeys extends string = never> = {
     pinning: {
         position: PinningPosition
         offset: number
-    }
+    },
+    align: "start" | "center" | "end"
     isSorted: () => boolean
     getSortingDirection: () => SortDirection
     aggregationFn: AggregationFn,
@@ -74,6 +75,7 @@ export class ColumnProcessor<TData> implements ColumnProcessorInstance<TData> {
             const pinningPosition = columnDef?.pinning || 'none' as PinningPosition
 
             const processedColumn: Column<TData> = {
+                align: columnDef.align || 'start',
                 columnId,
                 header: columnDef.header,
                 accessor,

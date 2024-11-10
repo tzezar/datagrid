@@ -47,6 +47,7 @@ export type CommonColumnProps = {
     faceting?: NumericFacet | CategoricalFacet;
     allowedSortDirections: SortDirection[]
     header: string;
+    align?: "start" | "center" | "end";
     _meta: any
 }
 

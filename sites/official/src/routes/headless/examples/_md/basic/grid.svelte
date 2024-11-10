@@ -24,7 +24,7 @@
 						style:--offset={column.pinning.offset + 'px'}
 						style={`${column.size.grow === false ? `--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'};` : `flex-grow: 1;`};  --min-width: ${column.size.minWidth + 'px'};`}
 					>
-						<div class="flex flex-row items-center justify-center">
+						<div class={`flex flex-row items-center w-fit ${column.align === 'end' && ' self-end'} ${column.align === 'center' && 'self-center'} ${column.align === 'start' && 'self-start'}`}>
 							<span
 								aria-label="Click to sort column"
 								tabindex="0"
@@ -63,7 +63,6 @@
 				{/each}
 			</div>
 		</div>
-
 		<div class="grid-body">
 			{#each grid.rows as row}
 				{#if row.groupId}
@@ -93,10 +92,13 @@
 					>
 						{#each grid.columnManager.getVisibleColumns() as column}
 							<div
-								class={`grid-cell text-ellipsis text-nowrap  ${column.pinning.position === 'left' && 'offset-left'} ${column.pinning.position === 'right' && 'offset-right'}`}
+								class={`grid-cell text-ellipsis text-nowrap \
+								 ${column.align === 'end' && 'justify-end'} ${column.align === 'center' && ' justify-center'} ${column.align === 'start' && ' justify-start'} \								
+								  ${column.pinning.position === 'left' && 'offset-left'} ${column.pinning.position === 'right' && 'offset-right'}`}
 								style:--offset={column.pinning.offset + 'px'}
 								style={`${column.cell && column.cell.style && column.cell.style(row)}; ${column.size.grow === false ? `--width: ${column.size.width + 'px'}; --max-width: ${column.size.maxWidth + 'px'};` : `flex-grow: 1;`};  --min-width: ${column.size.minWidth + 'px'};`}
-							>
+							
+								>
 								<CellRenderer {column} {row} {grid} />
 							</div>
 						{/each}
@@ -175,6 +177,7 @@
 	}
 
 	.grid-header-cell {
+		display: flex;
 		width: var(--width);
 		max-width: var(--max-width);
 		min-width: var(--min-width);
@@ -215,6 +218,7 @@
 	}
 
 	.grid-cell {
+		display: flex;
 		border-right: 1px solid hsl(var(--grid-border));
 		width: var(--width);
 		max-width: var(--max-width);

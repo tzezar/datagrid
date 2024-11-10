@@ -5,16 +5,17 @@ export const columns = [
     {
         accessorKey: 'id',
         header: 'ID',
+        align: 'end',
     },
     {
         accessorKey: 'department.name',
         header: 'Department',
         size: {
             grow: true,
-            width: 0,
+            width: -1,
             minWidth: 100,
-            maxWidth: 6000
-        }
+            maxWidth: -1
+        },
     },
 
     {
@@ -24,11 +25,12 @@ export const columns = [
     {
         accessorKey: 'sales',
         header: 'Sales',
+        align: 'end',
     },
     {
         accessorKey: 'profit',
         header: 'Profit',
-   
+        align: 'end',
     }
 ] satisfies ColumnDef<SalesDataRow, string>[]
 
