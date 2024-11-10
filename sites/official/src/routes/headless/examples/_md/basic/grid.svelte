@@ -14,67 +14,47 @@
 	});
 </script>
 
-<div class="grid-wrapper overflow-auto flex flex-col max-h-[600px]  ">
+<div class="grid-wrapper overflow-auto flex flex-col max-h-[600px]">
 	<div class="grid-content relative flex flex-col">
 		<div class="grid-header sticky top-0">
 			<div class="grid-header-row">
 				{#each grid.columnManager.getVisibleColumns() as column}
 					<div
-						class={`grid-header-cell flex cursor-pointer flex-col ${column.pinning.position === 'left' && 'offset-left bg-orange-500'} ${column.pinning.position === 'right' && 'offset-right bg-orange-500'}`}
-						style:--offset={column.pinning.offset + 'px'}
-						style={`${column.size.grow === false ? `--width: ${column.size.width + 'px'}; --max-width: ${column.size.width + 'px'};` : `flex-grow: 1;`};  --min-width: ${column.size.minWidth + 'px'};`}
-		
-					>
-						<div class={`flex flex-row items-center ${column.align === 'end' && ' self-end'} ${column.align === 'center' && 'self-center'} ${column.align === 'start' && 'self-start'} w-full`}
-						
+						class="grid-header-cell {column.align === 'end' ? 'justify-end' : ''} {column.align === 'center' ? 'justify-center' : ''} {column.align === 'start' ? 'justify-start' : ''} {column.pinning.position === 'left' ? 'offset-left bg-orange-500' : ''} {column.pinning.position === 'right' ? 'offset-right bg-orange-500' : ''}"
+						style="--offset:{column.pinning.offset}px; {column.size.grow === false ? `--width:${column.size.width}px; --max-width:${column.size.width}px;` : 'flex-grow:1;'} --min-width:{column.size.minWidth}px;"
 						aria-label="Click to sort column"
-						tabindex="0"
 						role="button"
-						onclick={(e) => {
-								grid.reload(() => grid.sorting.toggleSort(column.columnId));
-						}}
+						tabindex="0"
+						onclick={() => grid.reload(() => grid.sorting.toggleSort(column.columnId))}
 						onkeydown={(e) => {
-							if (e.key === 'Enter') {
-								grid.reload(() => grid.sorting.toggleSort(column.columnId));
-							} else if (e.key === 'Escape') {
-								grid.reload(() => grid.sorting.clearSort());
-							}
-						}}>
-							<span
-							
-								class="grow flex-nowrap overflow-hidden text-ellipsis text-nowrap w-full "
-								
-							>
-								{column.header}
-							</span>
+							if (e.key === 'Enter') grid.reload(() => grid.sorting.toggleSort(column.columnId));
+							else if (e.key === 'Escape') grid.reload(() => grid.sorting.clearSort());
+						}}
+					>
+						<div class="flex items-center gap-1">
+							<span>{column.header}</span>
 							{#if column.isSorted()}
-							<span class="text-xs w-fit max-w-fit">
-									{#if column.getSortingDirection() === 'asc'}
-										▲
-									{:else if column.getSortingDirection() === 'desc'}
-										▼
-									{:else}
-										&nbsp;
-									{/if}
+								<span class="text-xs">
+									{column.getSortingDirection() === 'asc' ? '▲' : 
+									 column.getSortingDirection() === 'desc' ? '▼' : ' '}
 								</span>
-								{/if}
+							{/if}
 						</div>
 					</div>
 				{/each}
 			</div>
 		</div>
+
 		<div class="grid-body">
 			{#each grid.rows as row}
 				{#if row.groupId}
 					<div class="grid-row">
-						{#each grid.columns as column, colIndex}
+						{#each grid.columns as column}
 							<div
 								class="grid-cell overflow-hidden text-ellipsis"
-								style:--offset={column.pinning.offset + 'px'}
-								style={`${column.cell && column.cell.style && column.cell.style(row)}; ${column.size.grow === false ? `--width: ${column.size.width + 'px'}; --max-width: ${column.size.maxWidth + 'px'};` : `flex-grow: 1;`};  --min-width: ${column.size.minWidth + 'px'};`}
+								style="--offset:{column.pinning.offset}px; {column.size.grow === false ? `--width:${column.size.width}px; --max-width:${column.size.width}px;` : 'flex-grow:1;'} --min-width:{column.size.minWidth}px;"
 							>
 								{#if column.columnId === row.columnId && Object.keys(row.aggregates).find((key) => key === column.columnId)}
-									<!-- <span>{column.accessor(row)}</span> -->
 									<span>{row.groupId}</span>
 								{:else if row.aggregates[column.columnId]}
 									{#each Object.entries(row.aggregates[column.columnId]) as [aggKey, aggValue]}
@@ -85,20 +65,12 @@
 						{/each}
 					</div>
 				{:else}
-					<div
-						class="grid-row {grid.rowManager.isPinned(String(row?.original?.id), 'top')
-							? 'sticky top-0 bg-red-400'
-							: ''}"
-					>
+					<div class="grid-row {grid.rowManager.isPinned(String(row?.original?.id), 'top') ? 'sticky top-0 bg-red-400' : ''}">
 						{#each grid.columnManager.getVisibleColumns() as column}
 							<div
-								class={`grid-cell text-ellipsis text-nowrap \
-								 ${column.align === 'end' && 'justify-end'} ${column.align === 'center' && ' justify-center'} ${column.align === 'start' && ' justify-start'} \								
-								  ${column.pinning.position === 'left' && 'offset-left'} ${column.pinning.position === 'right' && 'offset-right'}`}
-								style:--offset={column.pinning.offset + 'px'}
-								style={`${column.cell && column.cell.style && column.cell.style(row)}; ${column.size.grow === false ? `--width: ${column.size.width + 'px'}; --max-width: ${column.size.maxWidth + 'px'};` : `flex-grow: 1;`};  --min-width: ${column.size.minWidth + 'px'};`}
-							
-								>
+								class="grid-cell text-ellipsis text-nowrap {column.align === 'end' ? 'justify-end' : ''} {column.align === 'center' ? 'justify-center' : ''} {column.align === 'start' ? 'justify-start' : ''} {column.pinning.position === 'left' ? 'offset-left' : ''} {column.pinning.position === 'right' ? 'offset-right' : ''}"
+								style="--offset:{column.pinning.offset}px; {column.size.grow === false ? `--width:${column.size.width}px; --max-width:${column.size.width}px;` : 'flex-grow:1;'} --min-width:{column.size.minWidth}px;"
+							>
 								<CellRenderer {column} {row} {grid} />
 							</div>
 						{/each}
@@ -113,12 +85,13 @@
 		</div>
 	</div>
 </div>
+
 <div class="pagination grid grid-cols-2 sm:grid-cols-3 gap-[0.75rem] items-center">
 	<div class="text-xs text-center sm:text-left col-span-2 sm:col-span-1 order-2 sm:order-1 hidden sm:block text-muted-foreground">
 		Showing: {grid.pagination.page * grid.pagination.pageSize - grid.pagination.pageSize}
 		to {grid.pagination.page * grid.pagination.pageSize} of {grid.pagination.count}
 	</div>
-	<div class="flex order-1 sm:order-2 gap-[0.5rem] justify-center">
+	<div class="flex order-1 sm:order-2 gap-[0.5rem] sm:justify-center">
 		<button
 			class="pagination-button"
 			disabled={grid.pagination.canPrevPage()}
@@ -161,7 +134,7 @@
 </div>
 
 <style>
-	.grid-content{
+	.grid-content {
 		background-color: hsl(var(--grid-row-even-background));
 		height: 100%;
 		flex-grow: 1;
@@ -170,31 +143,26 @@
 	.grid-header-row {
 		background-color: hsl(var(--grid-header-row-background));
 		display: flex;
-		border-bottom: 1px solid hsl(var(--grid-border));
-		border-left: 1px solid hsl(var(--grid-border));
-		border-right: 1px solid hsl(var(--grid-border));
-		border-top: 1px solid hsl(var(--grid-border));
+		border: 1px solid hsl(var(--grid-border));
 	}
 
 	.grid-header-cell {
 		display: flex;
+		padding: 0.5rem;
+		border-right: 1px solid hsl(var(--grid-border));
 		width: var(--width);
 		max-width: var(--max-width);
 		min-width: var(--min-width);
-		padding: 0.5rem 0.5rem;
-		border-right: 1px solid hsl(var(--grid-border));
 	}
 
 	.grid-header-cell:last-child {
-		flex-grow: 1;
 		border-right: none;
 	}
 
 	.grid-row {
 		display: flex;
-		border-bottom: 1px solid hsl(var(--grid-border));
-		border-left: 1px solid hsl(var(--grid-border));
-		border-right: 1px solid hsl(var(--grid-border));
+		border: 1px solid hsl(var(--grid-border));
+		border-top: none;
 	}
 
 	.grid-row:last-child {
@@ -202,30 +170,31 @@
 	}
 
 	.grid-row:nth-child(odd) {
-		background-color: hsl(var(--grid-row-odd-background)); /* Customize for odd rows */
+		background-color: hsl(var(--grid-row-odd-background));
 	}
 
 	.grid-row:hover:nth-child(odd) {
-		background-color: hsl(var(--grid-row-odd-background-hover)); /* Customize for odd rows */
+		background-color: hsl(var(--grid-row-odd-background-hover));
 	}
 
 	.grid-row:nth-child(even) {
-		background-color: hsl(var(--grid-row-even-background)); /* Customize for even rows */
+		background-color: hsl(var(--grid-row-even-background));
 	}
 
 	.grid-row:hover:nth-child(even) {
-		background-color: hsl(var(--grid-row-even-background-hover)); /* Customize for even rows */
+		background-color: hsl(var(--grid-row-even-background-hover));
 	}
 
 	.grid-cell {
 		display: flex;
+		padding: 0.5rem;
 		border-right: 1px solid hsl(var(--grid-border));
+		cursor: pointer;
 		width: var(--width);
 		max-width: var(--max-width);
 		min-width: var(--min-width);
-		padding: 0.5rem 0.5rem;
-		cursor: pointer;
 	}
+
 	.grid-cell:last-child {
 		border-right: none;
 	}
@@ -240,17 +209,29 @@
 		position: sticky;
 	}
 
-	.group-toggle {
-		margin-right: 0.5rem;
-	}
-
 	.pagination {
 		background-color: hsl(var(--grid-header-row-background));
 		padding: 0.75rem;
-		border-top: 1px solid hsl(var(--grid-border));
-		border-bottom: 1px solid hsl(var(--grid-border));
-		border-left: 1px solid hsl(var(--grid-border));
-		border-right: 1px solid hsl(var(--grid-border));
+		border: 1px solid hsl(var(--grid-border));
+	}
+
+	
+
+	
+
+	.pagination-button {
+		border: 1px solid hsl(var(--grid-border));
+		padding: 0.5rem 1rem;
+		border-radius: 0.25rem;
+	}
+
+	.pagination-button:disabled {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+
+	.pagination-button:hover:not(:disabled) {
+		background-color: theme('colors.orange.400');
 	}
 
 	.pagination > * > button {
@@ -292,4 +273,5 @@
 		line-height: 1.25rem;
 		font-weight: 500;
 	}
+
 </style>
