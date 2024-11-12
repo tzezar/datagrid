@@ -1,4 +1,5 @@
 <script lang="ts">
+	import './styles.css';
 	import { Datagrid } from '$lib/datagrid/index.svelte';
 	import CellRenderer from '$lib/datagrid/utils/cell-renderer.svelte';
 	import type { SalesDataRow } from '$lib/generate-data/generate-sales-data';
@@ -14,22 +15,22 @@
 	});
 </script>
 
-<div class="grid-wrapper flex max-h-[600px] flex-col overflow-auto">
-	<div class="grid-content relative flex flex-col">
-		<div class="grid-header sticky top-0">
+<div class="grid-wrapper">
+	<div class="grid-content">
+		<div class="grid-header">
 			<div class="grid-header-row">
 				{#each grid.columnManager.getVisibleColumns() as column}
 					<div
-						class="grid-header-cell {column.align === 'end' ? 'justify-end' : ''} {column.align ===
-						'center'
-							? 'justify-center'
-							: ''} {column.align === 'start' ? 'justify-start' : ''} {column.pinning.position ===
-						'left'
-							? 'offset-left bg-orange-500'
-							: ''} {column.pinning.position === 'right' ? 'offset-right bg-orange-500' : ''}"
-						style="--offset:{column.pinning.offset}px; {column.size.grow === false
+						class="grid-header-cell"
+						style="{column.size.grow === false
 							? `--width:${column.size.width}px; --max-width:${column.size.width}px;`
 							: 'flex-grow:1;'} --min-width:{column.size.minWidth}px;"
+						class:justify-end={column.align === 'end'}
+						class:justify-center={column.align === 'center'}
+						class:justify-start={column.align === 'start'}
+						class:offset-left={column.pinning.position === 'left'}
+						class:offset-right={column.pinning.position === 'right'}
+						style:--offset={`${column.pinning.offset}px`}
 						aria-label="Click to sort column"
 						role="button"
 						tabindex="0"
@@ -39,14 +40,14 @@
 							else if (e.key === 'Escape') grid.reload(() => grid.sorting.clearSort());
 						}}
 					>
-						<div class="flex items-center gap-1">
+						<div class="flex items-center gap-1 w-full justify-between">
 							<span>{column.header}</span>
 							{#if column.isSorted()}
 								<span class="text-xs">
 									{column.getSortingDirection() === 'asc'
-										? '▲'
+										? `▲ ${grid.sorting.getColumnSortPosition(column)}`
 										: column.getSortingDirection() === 'desc'
-											? '▼'
+											? `▼ ${grid.sorting.getColumnSortPosition(column)}`
 											: ' '}
 								</span>
 							{/if}
@@ -62,10 +63,10 @@
 					<div class="grid-row">
 						{#each grid.columns as column}
 							<div
-								class="grid-cell overflow-hidden text-ellipsis"
+								class="grid-cell"
 								style="--offset:{column.pinning.offset}px; {column.size.grow === false
 									? `--width:${column.size.width}px; --max-width:${column.size.width}px;`
-									: 'flex-grow:1;'} --min-width:{column.size.minWidth}px;"
+									: 'flex-grow: 1;'} --min-width:{column.size.minWidth}px;"
 							>
 								{#if column.columnId === row.columnId && Object.keys(row.aggregates).find((key) => key === column.columnId)}
 									<span>{row.groupId}</span>
@@ -78,25 +79,20 @@
 						{/each}
 					</div>
 				{:else}
-					<div
-						class="grid-row {grid.rowManager.isPinned(String(row?.original?.id), 'top')
-							? 'sticky top-0 bg-red-400'
-							: ''}"
-					>
+					<div class="grid-row">
 						{#each grid.columnManager.getVisibleColumns() as column}
 							<div
-								class="grid-cell text-ellipsis text-nowrap {column.align === 'end'
-									? 'justify-end'
-									: ''} {column.align === 'center' ? 'justify-center' : ''} {column.align ===
-								'start'
-									? 'justify-start'
-									: ''} {column.pinning.position === 'left' ? 'offset-left' : ''} {column.pinning
-									.position === 'right'
-									? 'offset-right'
-									: ''}"
-								style="--offset:{column.pinning.offset}px; {column.size.grow === false
-									? `--width:${column.size.width}px; --max-width:${column.size.width}px;`
-									: 'flex-grow:1;'} --min-width:{column.size.minWidth}px;"
+								class="grid-cell text-ellipsis text-nowrap"
+								class:justify-end={column.align === 'end'}
+								class:justify-center={column.align === 'center'}
+								class:justify-start={column.align === 'start'}
+								class:offset-left={column.pinning.position === 'left'}
+								class:offset-right={column.pinning.position === 'right'}
+								style:--offset="{column.pinning.offset}px"
+								style:--min-width="{column.size.minWidth}px"
+								style:--width={!column.size.grow ? `${column.size.width}px` : null}
+								style:--max-width={!column.size.grow ? `${column.size.width}px` : null}
+								style:flex-grow={column.size.grow ? 1 : null}
 							>
 								<CellRenderer {column} {row} {grid} />
 							</div>
@@ -113,14 +109,12 @@
 	</div>
 </div>
 
-<div class="pagination grid grid-cols-2 items-center gap-[0.75rem] sm:grid-cols-3">
-	<div
-		class="text-muted-foreground order-2 col-span-2 hidden text-center text-xs sm:order-1 sm:col-span-1 sm:block sm:text-left"
-	>
+<div class="pagination">
+	<div class="pagination-details">
 		Showing: {grid.pagination.page * grid.pagination.pageSize - grid.pagination.pageSize}
 		to {grid.pagination.page * grid.pagination.pageSize} of {grid.pagination.count}
 	</div>
-	<div class="order-1 flex gap-[0.5rem] sm:order-2 sm:justify-center">
+	<div class="pagination-navigation-container">
 		<button
 			class="pagination-button"
 			disabled={grid.pagination.canPrevPage()}
@@ -130,7 +124,7 @@
 		</button>
 		<input
 			type="text"
-			class="max-w-20"
+			class="pagination-input"
 			value={grid.pagination.page}
 			onchange={(e) => {
 				if (+e.currentTarget.value > 0 && +e.currentTarget.value <= grid.pagination.pageCount) {
@@ -149,7 +143,7 @@
 			<ChevronRight />
 		</button>
 	</div>
-	<div class="order-1 flex justify-end sm:order-2">
+	<div class="pagination-per-page-wrapper">
 		<select
 			class="pagination-select"
 			value={grid.pagination.pageSize}
@@ -163,143 +157,3 @@
 		</select>
 	</div>
 </div>
-
-<style>
-	.grid-content {
-		background-color: hsl(var(--grid-row-even-background));
-		height: 100%;
-		flex-grow: 1;
-	}
-
-	.grid-header-row {
-		background-color: hsl(var(--grid-header-row-background));
-		display: flex;
-		border: 1px solid hsl(var(--grid-border));
-	}
-
-	.grid-header-cell {
-		display: flex;
-		padding: 0.5rem;
-		border-right: 1px solid hsl(var(--grid-border));
-		width: var(--width);
-		max-width: var(--max-width);
-		min-width: var(--min-width);
-	}
-
-	.grid-header-cell:last-child {
-		border-right: none;
-	}
-
-	.grid-row {
-		display: flex;
-		border: 1px solid hsl(var(--grid-border));
-		border-top: none;
-	}
-
-	.grid-row:last-child {
-		border-bottom: none;
-	}
-
-	.grid-row:nth-child(odd) {
-		background-color: hsl(var(--grid-row-odd-background));
-	}
-
-	.grid-row:hover:nth-child(odd) {
-		background-color: hsl(var(--grid-row-odd-background-hover));
-	}
-
-	.grid-row:nth-child(even) {
-		background-color: hsl(var(--grid-row-even-background));
-	}
-
-	.grid-row:hover:nth-child(even) {
-		background-color: hsl(var(--grid-row-even-background-hover));
-	}
-
-	.grid-cell {
-		display: flex;
-		padding: 0.5rem;
-		border-right: 1px solid hsl(var(--grid-border));
-		cursor: pointer;
-		width: var(--width);
-		max-width: var(--max-width);
-		min-width: var(--min-width);
-	}
-
-	.grid-cell:last-child {
-		border-right: none;
-	}
-
-	.offset-left {
-		left: var(--offset);
-		position: sticky;
-	}
-
-	.offset-right {
-		right: var(--offset);
-		position: sticky;
-	}
-
-	.pagination {
-		background-color: hsl(var(--grid-header-row-background));
-		padding: 0.75rem;
-		border: 1px solid hsl(var(--grid-border));
-	}
-
-	.pagination-button {
-		border: 1px solid hsl(var(--grid-border));
-		padding: 0.5rem 1rem;
-		border-radius: 0.25rem;
-		border: 1px solid hsl(var(--grid-border));
-		padding-left: 0.5rem;
-		padding-right: 0.5rem;
-		height: 1.5rem;
-		display: flex;
-		justify-items: center;
-		align-items: center;
-	}
-
-	.pagination-button:disabled {
-		cursor: not-allowed;
-		opacity: 0.5;
-	}
-
-	.pagination-button:hover:not(:disabled) {
-		background-color: theme('colors.orange.400');
-	}
-
-	button {
-		border-radius: 0.25rem;
-		padding: 0.5rem 1rem;
-	}
-
-	button:disabled {
-		cursor: not-allowed;
-		opacity: 0.5;
-	}
-
-	button:hover:not(:disabled) {
-		background-color: theme('colors.orange.400');
-	}
-
-	input {
-		border-radius: 0.25rem;
-		border: 1px solid hsl(var(--grid-border));
-		padding: 0rem 0.5rem;
-		height: 1.5rem;
-	}
-
-	.pagination-select {
-		border-radius: 0.25rem;
-		border: 1px solid hsl(var(--grid-border));
-		height: 1.5rem;
-		padding: 0rem 0.5rem;
-	}
-
-	label {
-		padding-bottom: 0.25rem;
-		font-size: 0.875rem;
-		line-height: 1.25rem;
-		font-weight: 500;
-	}
-</style>

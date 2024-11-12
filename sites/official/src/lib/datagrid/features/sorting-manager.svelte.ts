@@ -1,5 +1,5 @@
 import type { DatagridInstance, SortingStateConfig } from "../index.svelte";
-import type { ColumnId } from "../processors/column-processor.svelte";
+import type { Column, ColumnId } from "../processors/column-processor.svelte";
 import type { Accessor } from "../types";
 
 export type SortDirection = "asc" | "desc";
@@ -19,6 +19,7 @@ export type SortingFeature<TData> = {
     toggleSort(accessor: string): void;
     clearSort(): void;
     setSortMode(mode: SortMode): void;
+    getColumnSortPosition(column: Column<TData>): number;
 } & SortingState<TData>
 
 export type SortingState<TData> = {
@@ -96,5 +97,9 @@ export class SortingManager<TData> implements SortingFeature<TData> {
             this._sortedDataCache = [];
             this.grid.dataProcessor.process();
         }
+    }
+
+    public getColumnSortPosition(column: Column<TData>): number {
+        return this.sortBy.findIndex(sort => sort.columnId === column.columnId) + 1
     }
 }
