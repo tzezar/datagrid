@@ -3,12 +3,13 @@
 	import type { DataGenerator } from './data-generator.svelte';
 	import type { Datagrid } from '$lib/datagrid/index.svelte';
 
-	let { generator, grid }: { generator: DataGenerator; grid: Snippet<[{ data: any[] }]> } = $props();
+	let { generator, grid }: { generator: DataGenerator; grid: Snippet<[{ data: any[] }]> } =
+		$props();
 </script>
 
 <div class="mx-auto">
-	<div class="mb-4 flex flex-col justify-center gap-4">
-		<div class="flex flex-col">
+	<div class="mb-4 flex flex-row items-end justify-center gap-4">
+		<div class="flex grow flex-col">
 			<label for="rowCount" class="mb-1 text-sm font-medium">Number of rows:</label>
 			<input
 				id="rowCount"
@@ -22,7 +23,7 @@
 		<button
 			onclick={() => generator.generate()}
 			disabled={generator.isLoading}
-			class="rounded bg-orange-400 px-4 py-2 text-white hover:bg-orange-500 disabled:opacity-50"
+			class="h-fit rounded bg-orange-400 px-4 py-1 text-white hover:bg-orange-500 disabled:opacity-50"
 		>
 			{generator.isLoading ? 'Generating...' : 'Regenerate Data'}
 		</button>
@@ -48,7 +49,6 @@
 		{@render grid({ data: generator.data })}
 	{/if}
 </div>
-
 
 <style>
 	.progress-container {
