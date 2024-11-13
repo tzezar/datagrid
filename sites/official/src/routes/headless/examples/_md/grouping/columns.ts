@@ -21,36 +21,57 @@ export const columns = [
         align: 'end',
         groupable: false,
         aggregationFn: 'count',
+        size: {
+            width: 150,
+            minWidth: 150,
+            maxWidth: 150,
+            grow: false
+        },
     },
     {
         accessorKey: 'department.name',
         header: 'Department',
-  
+        size: {
+            width: 150,
+            minWidth: 150,
+            maxWidth: 150,
+            grow: false
+        },
     },
-
     {
         accessorKey: 'region',
         header: 'Region',
         resizable: false,
         size: {
-            grow: true,
-            width: -1,
-            minWidth: -1,
-            maxWidth: -1
+            width: 150,
+            minWidth: 150,
+            maxWidth: 150,
+            grow: false
         },
-        
     },
     {
         accessorKey: 'sales',
         header: 'Sales',
         align: 'end',
         groupable: false,
-        aggregationFn: 'sum',
+        aggregationFn: 'mean',
+        size: {
+            width: 150,
+            minWidth: 150,
+            maxWidth: 150,
+            grow: false
+        },
     },
     {
         accessorKey: 'profit',
         header: 'Profit',
         align: 'end',
+        size: {
+            width: 150,
+            minWidth: 150,
+            maxWidth: 150,
+            grow: false
+        },
         groupable: false,
         aggregationFn: 'sum',
     }
