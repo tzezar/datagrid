@@ -111,24 +111,56 @@ export class GroupingManager<TData> implements GroupingFeature {
 
         const aggregates: any = {};
 
-        if (column.aggregationFn === 'sum' || column.aggregationFn === 'all') {
-            aggregates.sum = values.reduce((sum, val) => sum + (Number(val) || 0), 0);
-        }
-
-        if (column.aggregationFn === 'count' || column.aggregationFn === 'all') {
-            aggregates.count = values.length;
-        }
-
-        if (column.aggregationFn === 'min' || column.aggregationFn === 'all') {
-            aggregates.min = Math.min(...values);
-        }
-
-        if (column.aggregationFn === 'max' || column.aggregationFn === 'all') {
-            aggregates.max = Math.max(...values);
-        }
-
-        if (column.aggregationFn === 'mean' || column.aggregationFn === 'all') {
-            aggregates.mean = aggregates.sum / aggregates.count;
+        switch (column.aggregationFn) {
+            case 'sum':
+                aggregates.sum = values.reduce((sum, val) => sum + (Number(val) || 0), 0);
+                break;
+            case 'count':
+                aggregates.count = values.length;
+                break;
+            case 'min':
+                aggregates.min = Math.min(...values);
+                break;
+            case 'max':
+                aggregates.max = Math.max(...values);
+                break;
+            case 'extent':
+                aggregates.extent = [Math.min(...values), Math.max(...values)];
+                break;
+            case 'mean':
+                aggregates.mean = values.reduce((sum, val) => sum + (Number(val) || 0), 0) / values.length;
+                break;
+            case 'median': {
+                const sorted = [...values].sort((a, b) => Number(a) - Number(b));
+                const mid = Math.floor(sorted.length / 2);
+                aggregates.median = sorted.length % 2 !== 0 
+                    ? sorted[mid] 
+                    : (Number(sorted[mid - 1]) + Number(sorted[mid])) / 2;
+                break;
+            }
+            case 'unique':
+                aggregates.unique = Array.from(new Set(values));
+                break;
+            case 'uniqueCount':
+                aggregates.uniqueCount = new Set(values).size;
+                break;
+            case 'all':
+                aggregates.sum = values.reduce((sum, val) => sum + (Number(val) || 0), 0);
+                aggregates.count = values.length;
+                aggregates.min = Math.min(...values);
+                aggregates.max = Math.max(...values);
+                aggregates.mean = aggregates.sum / aggregates.count;
+                aggregates.extent = [aggregates.min, aggregates.max];
+                const sorted = [...values].sort((a, b) => Number(a) - Number(b));
+                const mid = Math.floor(sorted.length / 2);
+                aggregates.median = sorted.length % 2 !== 0 
+                    ? sorted[mid] 
+                    : (Number(sorted[mid - 1]) + Number(sorted[mid])) / 2;
+                aggregates.unique = Array.from(new Set(values));
+                aggregates.uniqueCount = new Set(values).size;
+                break;
+            case 'none':
+                return null;
         }
 
         return aggregates;
@@ -139,7 +171,7 @@ export class GroupingManager<TData> implements GroupingFeature {
 
         // Get all columns that have aggregation functions
         const columnsWithAggregation = this.grid.columns.filter(
-            col => col.aggregationFn
+            col => col.aggregationFn && col.aggregationFn !== 'none'
         );
 
         // Calculate aggregates for each column using allItems for complete aggregation
