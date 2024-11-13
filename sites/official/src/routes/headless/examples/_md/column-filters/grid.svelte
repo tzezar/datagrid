@@ -26,7 +26,9 @@
 						class="grid-header-cell"
 						style="{column.size.grow === false
 							? `--width:${column.size.width}px; --max-width:${column.size.width}px;`
-							: 'flex-grow:1;'} --min-width:{column.size.minWidth}px;"
+							: 'flex-grow:1;'} --min-width:{column.size.minWidth}px; 
+							{['left', 'right'].includes(column.pinning.position) && `background-color: black;`}
+							"
 						class:offset-left={column.pinning.position === 'left'}
 						class:offset-right={column.pinning.position === 'right'}
 						style:--offset={`${column.pinning.offset}px`}
@@ -35,7 +37,7 @@
 							aria-label="Click to sort column"
 							role="button"
 							tabindex="0"
-							class="flex w-full items-center gap-1"
+							class="flex w-full items-center gap-1 overflow-hidden"
 							class:justify-end={column.align === 'end'}
 							class:justify-center={column.align === 'center'}
 							class:justify-start={column.align === 'start'}
@@ -45,9 +47,9 @@
 								else if (e.key === 'Escape') grid.reload(() => grid.sorting.clearSort());
 							}}
 						>
-							<span>{column.header}</span>
+							<span class='overflow-hidden text-ellipsis'>{column.header}</span>
 							{#if column.isSorted()}
-								<span class="text-xs">
+								<span class="text-xs text-nowrap">
 									{column.getSortingDirection() === 'asc'
 										? `▲ ${grid.sorting.getColumnSortPosition(column)}`
 										: column.getSortingDirection() === 'desc'
@@ -56,9 +58,6 @@
 								</span>
 							{/if}
 						</div>
-						{#if grid.columnManager.isFilterable(column)}
-							<ColumnFilter {column} {grid} />
-						{/if}
 					</div>
 				{/each}
 			</div>
