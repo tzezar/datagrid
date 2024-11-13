@@ -139,7 +139,7 @@ export class DataProcessor<TData> implements DataProcessorInstance<TData> {
 
             groupBy.forEach(({ columnId, accessor }, depth) => {
                 const groupValue = accessor(item);
-                groupPath = groupPath ? `${groupPath}/${groupValue}` : groupValue;
+                groupPath = groupPath ? `${groupValue}` : groupValue;
 
                 if (!currentLevel.has(groupValue)) {
                     currentLevel.set(groupValue, {
