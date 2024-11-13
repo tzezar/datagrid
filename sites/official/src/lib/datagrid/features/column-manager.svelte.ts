@@ -67,7 +67,7 @@ export class ColumnManager<TData> implements ColumnManagerInstance<TData> {
         column.visible = true
     }
 
-    toggleColumnVisibility(column: Column<TData>): void {
+    toggleColumnVisibility(column: Column<TData, any>): void {
         if (column.visible) {
             this.hideColumn(column);
         } else {
