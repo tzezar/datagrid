@@ -39,9 +39,6 @@
 		});
 	}
 
-	$effect(() => {
-		console.log($state.snapshot(grid.rows))
-	})
 </script>
 
 <div class="flex flex-col pb-6">
@@ -118,9 +115,6 @@
 			{#each grid.rows as row}
 				{#if row.groupId}
 					<div class="grid-row">
-						<!-- svelte-ignore a11y_click_events_have_key_events -->
-						<!-- svelte-ignore a11y_no_static_element_interactions -->
-
 						{#each grid.columns as column, colIndex}
 							<div
 								class="grid-cell text-ellipsis text-nowrap items-center bg-green-400/5"
