@@ -120,26 +120,26 @@ export class ColumnManager<TData> implements ColumnManagerInstance<TData> {
     }
 
 
-    resizeColumn(column: Column<TData, any>, width: number): void {
+    resizeColumn(column: Column<TData>, width: number): void {
         if (width <= column.size.minWidth) width = column.size.minWidth
         if (width >= column.size.maxWidth) width = column.size.maxWidth
         column.size.width = width
     }
 
-    private getColumnIndex(column: Column<TData, any>): number {
+    private getColumnIndex(column: Column<TData>): number {
         return this.grid.columns.indexOf(column);
     }
 
 
-    canMoveColumnLeft(column: Column<TData, any>): boolean {
+    canMoveColumnLeft(column: Column<TData>): boolean {
         return this.getColumnIndex(column) > 0;
     }
 
-    canMoveColumnRight(column: Column<TData, any>): boolean {
+    canMoveColumnRight(column: Column<TData>): boolean {
         return this.getColumnIndex(column) < this.grid.columns.length - 1;
     }
 
-    moveColumnLeft(column: Column<TData, any>): void {
+    moveColumnLeft(column: Column<TData>): void {
         const columnIndex = this.getColumnIndex(column);
         if (this.canMoveColumnLeft(column)) {
             const prevColumn = this.grid.columns[columnIndex - 1];
@@ -148,7 +148,7 @@ export class ColumnManager<TData> implements ColumnManagerInstance<TData> {
         }
     }
 
-    moveColumnRight(column: Column<TData, any>): void {
+    moveColumnRight(column: Column<TData>): void {
         const columnIndex = this.getColumnIndex(column);
         if (this.canMoveColumnRight(column)) {
             const nextColumn = this.grid.columns[columnIndex + 1];
@@ -157,7 +157,7 @@ export class ColumnManager<TData> implements ColumnManagerInstance<TData> {
         }
     }
 
-    moveColumnToPosition(column: Column<TData, any>, position: number): void {
+    moveColumnToPosition(column: Column<TData>, position: number): void {
         const columnIndex = this.getColumnIndex(column);
         if (columnIndex !== position) {
             this.grid.columns.splice(position, 0, column);
@@ -166,7 +166,7 @@ export class ColumnManager<TData> implements ColumnManagerInstance<TData> {
     }
 
     // used in global search
-    getSearchableColumns(): Column<TData, any>[] {
+    getSearchableColumns(): Column<TData>[] {
         return this.grid.columns.filter(c => c.searchable && c.visible);
     }
 
