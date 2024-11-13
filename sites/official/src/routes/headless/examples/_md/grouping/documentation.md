@@ -9,3 +9,5 @@ published: true
 </script>
 
 <GridWrapper />
+
+Implementation with native html. Use ctrl + left mouse button to select/deselect or multigroup.

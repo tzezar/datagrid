@@ -123,7 +123,7 @@
 
 						{#each grid.columns as column, colIndex}
 							<div
-								class="grid-cell text-ellipsis text-nowrap items-center"
+								class="grid-cell text-ellipsis text-nowrap items-center bg-green-400/5"
 								class:justify-end={column.align === 'end'}
 								class:justify-center={column.align === 'center'}
 								class:justify-start={column.align === 'start'}
