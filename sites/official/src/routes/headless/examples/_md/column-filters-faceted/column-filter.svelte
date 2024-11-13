@@ -26,7 +26,7 @@
 
 	let { grid, column }: { grid: Datagrid<T, any>; column: Column<T> } = $props();
 	// here you can set default filter option, "equals" or "contains" are good candidates
-	let currentOperator = $state(grid.filtering.getConditionOperator(column.columnId) || 'contains');
+	let currentOperator = $state(grid.filtering.getConditionOperator(column.columnId) || column._meta.currentOperator ||'contains');
 	let currentValue = $state(grid.filtering.getConditionValue(column.columnId) || '');
 	let currentValueTo = $state(grid.filtering.getConditionValueTo(column.columnId) || '');
 
@@ -87,8 +87,8 @@
 	}
 </script>
 
-<div class="flex w-full items-start h-full">
-	<div class="filter-container max-w-20 items-center justify-center h-full">
+<div class="flex h-full w-full items-start">
+	<div class="filter-container h-full max-w-20 items-center justify-center">
 		{#if availableOperators.length > 1}
 			<select class="filter-select" value={currentOperator} onchange={handleOperatorChange}>
 				{#each availableOperators as op}
@@ -113,6 +113,24 @@
 						{/each}
 					</select>
 				{/if}
+			{:else if column._meta?.type === 'numeric-facet'}
+				<input
+					min={column.faceting?.type === 'numeric' ? column.faceting?.min : 0}
+					type={column._meta?.type === 'number' ? 'number' : 'text'}
+					class="filter-input"
+					placeholder={`Min: ${column.faceting?.type === 'numeric' ? String(column.faceting?.min) : "0"}`}
+
+					value={currentValue}
+					oninput={handleValueChange}
+				/>
+
+				<input
+					type={column._meta?.type === 'number' ? 'number' : 'text'}
+					class="filter-input"
+					placeholder={`Max: ${column.faceting?.type === 'numeric' ? String(column.faceting?.max) : "0"}`}
+					value={currentValueTo}
+					oninput={handleValueToChange}
+				/>
 			{:else}
 				<input
 					type={column._meta?.type === 'number' ? 'number' : 'text'}
