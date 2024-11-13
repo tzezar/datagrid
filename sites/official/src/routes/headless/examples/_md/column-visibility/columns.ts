@@ -18,10 +18,10 @@ export const columns = [
         header: 'Region',
         resizable: false,
         size: {
-            grow: false,
-            width: 200,
-            minWidth: 200,
-            maxWidth: 200
+            grow: true,
+            width: -1,
+            minWidth: -1,
+            maxWidth: -1
         },
     },
     {
