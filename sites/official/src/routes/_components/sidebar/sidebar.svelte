@@ -27,7 +27,7 @@
 			<GroupItem title="Fully controlled" href={hrefs.headless.examples.fullyControlled} />
 			<GroupItem title="Grouping" href={hrefs.headless.examples.grouping} />
 			<GroupItem title="Pagination" href={hrefs.headless.examples.pagination} />
-			<GroupItem title="Pagination controlled" href={hrefs.headless.examples.pagination} />
+			<GroupItem title="Pagination controlled" href={hrefs.headless.examples.paginationControlled} />
 			<GroupItem title="Row selection" href={hrefs.headless.examples.rowSelection} />
 			<GroupItem title="Sorting" href={hrefs.headless.examples.sorting} />
 			<GroupItem title="Sub components" href={hrefs.headless.examples.subComponents} />

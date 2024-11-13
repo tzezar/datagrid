@@ -1,6 +1,6 @@
 ---
-title: Expanding
-description: First post.
+title: Grouping
+description: Example showing grouping
 date: '2024-10-11'
 published: true
 ---

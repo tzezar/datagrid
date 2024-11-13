@@ -11,8 +11,31 @@
 
 	let grid = new Datagrid({
 		data,
-		columns
+		columns,
+		pagination: {
+			count: 0,
+			page: 2,
+			pageSize: 25,
+			pageSizes: [25, 50, 100],
+		}
 	});
+
+	const prevPage = () => {
+		alert('prevPage');
+	}
+
+	const nextPage = () => {
+		alert('nextPage');
+	}
+
+	const goToPage = (page: number) => {
+		alert(`goToPage: ${page}`);
+	}
+
+	const changePageSize = (pageSize: number) => {
+		alert(`changePageSize: ${pageSize}`);
+	}
+
 </script>
 
 <div class="grid-wrapper">
@@ -80,7 +103,7 @@
 		<button
 			class="pagination-button"
 			disabled={grid.pagination.canPrevPage()}
-			onclick={() => grid.refresh(() => grid.pagination.goToPrevPage())}
+			onclick={() => prevPage()}
 		>
 			<ChevronLeft />
 		</button>
@@ -90,7 +113,7 @@
 			value={grid.pagination.page}
 			onchange={(e) => {
 				if (+e.currentTarget.value > 0 && +e.currentTarget.value <= grid.pagination.pageCount) {
-					grid.refresh(() => grid.pagination.goToPage(Number(e.currentTarget.value)));
+					goToPage(Number(e.currentTarget.value));
 				} else {
 					e.currentTarget.value = String(grid.pagination.page);
 				}
@@ -100,7 +123,7 @@
 		<button
 			class="pagination-button"
 			disabled={grid.pagination.canNextPage()}
-			onclick={() => grid.refresh(() => grid.pagination.goToNextPage())}
+			onclick={() => nextPage()}
 		>
 			<ChevronRight />
 		</button>
@@ -110,7 +133,7 @@
 			class="pagination-select"
 			value={grid.pagination.pageSize}
 			onchange={(e) => {
-				grid.refresh(() => grid.pagination.updatePageSize(Number(e.currentTarget.value)));
+				changePageSize(Number(e.currentTarget.value));
 			}}
 		>
 			{#each grid.pagination.pageSizes as pageSize}

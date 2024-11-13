@@ -39,8 +39,12 @@
 							class:justify-end={column.align === 'end'}
 							class:justify-center={column.align === 'center'}
 							class:justify-start={column.align === 'start'}
-							onclick={() => grid.reload(() => grid.sorting.toggleSort(column.columnId))}
+							onclick={() => {
+								if (column.sortable === false) return;
+								grid.reload(() => grid.sorting.toggleSort(column.columnId));
+							}}
 							onkeydown={(e) => {
+								if (column.sortable === false) return;
 								if (e.key === 'Enter') grid.reload(() => grid.sorting.toggleSort(column.columnId));
 								else if (e.key === 'Escape') grid.reload(() => grid.sorting.clearSort());
 							}}

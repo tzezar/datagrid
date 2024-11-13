@@ -1,6 +1,6 @@
 ---
 title: Column sizing
-description: First post.
+description: Example showing how to make column sizing
 date: '2024-10-11'
 published: true
 ---

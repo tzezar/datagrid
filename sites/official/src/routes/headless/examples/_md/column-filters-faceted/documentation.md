@@ -1,6 +1,6 @@
 ---
 title: Column filters faceted
-description: First post.
+description: Example showing how to use column faceting
 date: '2024-10-11'
 published: true
 ---

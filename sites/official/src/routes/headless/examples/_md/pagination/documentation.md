@@ -1,6 +1,6 @@
 ---
 title: Pagination
-description: First post.
+description: Example showing pagination implementation
 date: '2024-10-11'
 published: true
 ---
