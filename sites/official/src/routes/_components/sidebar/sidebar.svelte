@@ -10,8 +10,8 @@
 		<GroupTitle title="Headless" class="border-b-2 border-orange-400 pb-1 text-orange-400 text-lg" />
 		<Group>
 			<GroupTitle title="Quick start" />
-			<GroupItem title="Installation" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Getting started" href={hrefs.headless.quickStart.gettingStarted} />
+			<GroupItem disabled title="Installation" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Getting started" href={hrefs.headless.quickStart.gettingStarted} />
 		</Group>
 		<Group>
 			<GroupTitle title="Examples" />
@@ -24,69 +24,69 @@
 			<GroupItem title="Column visibility" href={hrefs.headless.examples.columnVisibility} />
 			<GroupItem title="Editable data" href={hrefs.headless.examples.editableData} />
 			<GroupItem title="Expanding" href={hrefs.headless.examples.expanding} />
-			<GroupItem title="Fully controlled" href={hrefs.headless.examples.fullyControlled} />
+			<GroupItem title="Fully controlled" href={hrefs.headless.examples.fullyControlled} disabled/>
 			<GroupItem title="Grouping" href={hrefs.headless.examples.grouping} />
 			<GroupItem title="Pagination" href={hrefs.headless.examples.pagination} />
 			<GroupItem title="Pagination controlled" href={hrefs.headless.examples.paginationControlled} />
 			<GroupItem title="Row selection" href={hrefs.headless.examples.rowSelection} />
 			<GroupItem title="Sorting" href={hrefs.headless.examples.sorting} />
-			<GroupItem title="Sub components" href={hrefs.headless.examples.subComponents} />
+			<!-- <GroupItem title="Sub components" href={hrefs.headless.examples.subComponents} /> -->
 			<GroupItem title="Virtualization" href={hrefs.headless.examples.virtualization} />
 		</Group>
 		<Group>
 			<GroupTitle title="Feature APIs" />
-			<GroupItem title="Column faceting" href={hrefs.headless.featureApis.columnFaceting} />
-			<GroupItem title="Column filters" href={hrefs.headless.featureApis.columnFilters} />
-			<GroupItem title="Column ordering" href={hrefs.headless.featureApis.columnOrdering} />
-			<GroupItem title="Column pinning" href={hrefs.headless.featureApis.columnPinning} />
-			<GroupItem title="Column sizing" href={hrefs.headless.featureApis.columnSizing} />
-			<GroupItem title="Column visibility" href={hrefs.headless.featureApis.columnVisibility} />
-			<GroupItem title="Expanding" href={hrefs.headless.featureApis.expanding} />
-			<GroupItem title="Global search" href={hrefs.headless.featureApis.globalSearch} />
-			<GroupItem title="Grouping" href={hrefs.headless.featureApis.grouping} />
-			<GroupItem title="Pagination" href={hrefs.headless.featureApis.pagination} />
-			<GroupItem title="Row pinning" href={hrefs.headless.featureApis.rowPinning} />
-			<GroupItem title="Row selection" href={hrefs.headless.featureApis.rowSelection} />
-			<GroupItem title="Sorting" href={hrefs.headless.featureApis.sorting} />
+			<GroupItem disabled title="Column faceting" href={hrefs.headless.featureApis.columnFaceting} />
+			<GroupItem disabled title="Column filters" href={hrefs.headless.featureApis.columnFilters} />
+			<GroupItem disabled title="Column ordering" href={hrefs.headless.featureApis.columnOrdering} />
+			<GroupItem disabled title="Column pinning" href={hrefs.headless.featureApis.columnPinning} />
+			<GroupItem disabled title="Column sizing" href={hrefs.headless.featureApis.columnSizing} />
+			<GroupItem disabled title="Column visibility" href={hrefs.headless.featureApis.columnVisibility} />
+			<GroupItem disabled title="Expanding" href={hrefs.headless.featureApis.expanding} />
+			<GroupItem disabled title="Global search" href={hrefs.headless.featureApis.globalSearch} />
+			<GroupItem disabled title="Grouping" href={hrefs.headless.featureApis.grouping} />
+			<GroupItem disabled title="Pagination" href={hrefs.headless.featureApis.pagination} />
+			<GroupItem disabled title="Row pinning" href={hrefs.headless.featureApis.rowPinning} />
+			<GroupItem disabled title="Row selection" href={hrefs.headless.featureApis.rowSelection} />
+			<GroupItem disabled title="Sorting" href={hrefs.headless.featureApis.sorting} />
 		</Group>
 		<GroupTitle title="Shadcn svelte" class="border-b-2 border-orange-400 pb-1 text-orange-400 text-lg" />
 		<Group>
 			<GroupTitle title="Quick start" />
-			<GroupItem title="Installation" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Getting started" href={hrefs.headless.quickStart.gettingStarted} />
+			<GroupItem disabled title="Installation" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Getting started" href={hrefs.headless.quickStart.gettingStarted} />
 		</Group>
 		<Group>
 			<GroupTitle title="Playground" />
-			<GroupItem title="Perfomance showcase" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Perfomance showcase" href={hrefs.headless.quickStart.installation} />
 		</Group>
 		<Group>
 			<GroupTitle title="Examples" />
-			<GroupItem title="basic" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Column alignment" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Column filters" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Column filters faceted" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Column ordering" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Column pinning" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Column sizing" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Column visibility" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Context menu" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Copying data" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Editable data" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Expanding" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Exporting data" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Fullscreen" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Fully controlled" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Grouping" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Pagination" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Pagination controlled" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Row selection" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Scroll to top" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Sorting" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Spacing" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Status indicator" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Sub components" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Text sizing" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Virtualization" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="basic" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column alignment" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column filters" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column filters faceted" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column ordering" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column pinning" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column sizing" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column visibility" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Context menu" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Copying data" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Editable data" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Expanding" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Exporting data" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Fullscreen" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Fully controlled" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Grouping" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Pagination" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Pagination controlled" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Row selection" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Scroll to top" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Sorting" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Spacing" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Status indicator" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Sub components" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Text sizing" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Virtualization" href={hrefs.headless.quickStart.installation} />
 		</Group>
 		<!-- 
 		<Group>
