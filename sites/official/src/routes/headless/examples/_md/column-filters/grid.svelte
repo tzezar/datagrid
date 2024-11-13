@@ -6,12 +6,17 @@
 	import ChevronLeft from '$lib/icons/chevron-left.svelte';
 	import ChevronRight from '$lib/icons/chevron-right.svelte';
 	import { columns } from './columns';
+	import ColumnFilter from './column-filter.svelte';
 
 	let { data }: { data: SalesDataRow[] } = $props();
 
 	let grid = new Datagrid({
 		data,
 		columns
+	});
+
+	$effect(() => {
+		console.log($state.snapshot(grid.filtering.conditions));
 	});
 </script>
 
@@ -28,20 +33,20 @@
 						class:offset-left={column.pinning.position === 'left'}
 						class:offset-right={column.pinning.position === 'right'}
 						style:--offset={`${column.pinning.offset}px`}
-						aria-label="Click to sort column"
-						role="button"
-						tabindex="0"
-						onclick={() => grid.reload(() => grid.sorting.toggleSort(column.columnId))}
-						onkeydown={(e) => {
-							if (e.key === 'Enter') grid.reload(() => grid.sorting.toggleSort(column.columnId));
-							else if (e.key === 'Escape') grid.reload(() => grid.sorting.clearSort());
-						}}
 					>
 						<div
-							class="flex items-center gap-1 w-full"
+							aria-label="Click to sort column"
+							role="button"
+							tabindex="0"
+							class="flex w-full items-center gap-1"
 							class:justify-end={column.align === 'end'}
 							class:justify-center={column.align === 'center'}
 							class:justify-start={column.align === 'start'}
+							onclick={() => grid.reload(() => grid.sorting.toggleSort(column.columnId))}
+							onkeydown={(e) => {
+								if (e.key === 'Enter') grid.reload(() => grid.sorting.toggleSort(column.columnId));
+								else if (e.key === 'Escape') grid.reload(() => grid.sorting.clearSort());
+							}}
 						>
 							<span>{column.header}</span>
 							{#if column.isSorted()}
@@ -54,6 +59,9 @@
 								</span>
 							{/if}
 						</div>
+						{#if grid.columnManager.isFilterable(column)}
+							<ColumnFilter {column} {grid} />
+						{/if}
 					</div>
 				{/each}
 			</div>

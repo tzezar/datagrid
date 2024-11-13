@@ -86,7 +86,7 @@ export type FilteringFeature<TData> = {
     initializeFuseInstance(items: any[], keys: string[]): Fuse<any>;
     assignFuseInstance(items: any[]): void;
 
-    getConditionOperator(accessorKey: string): FilterOperator;
+    getConditionOperator(accessorKey: string): FilterOperator | undefined;
     getConditionValue(accessorKey: string): any;
     getConditionValueTo(accessorKey: string): any;
 } & FilteringState<TData>
@@ -118,9 +118,9 @@ export class FilteringManager<TData> implements FilteringFeature<TData> {
         this.search = state?.search || this.search
     }
 
-    getConditionOperator(accessorKey: string): FilterOperator {
+    getConditionOperator(accessorKey: string): FilterOperator | undefined {
         const operator = this.conditions.find(condition => condition.columnId === accessorKey)?.operator
-        if (!operator) return 'equals'
+        if (!operator) return undefined
         return operator
     }
     getConditionValue(accessorKey: string): any {

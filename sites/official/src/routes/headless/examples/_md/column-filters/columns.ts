@@ -16,6 +16,10 @@ export const columns = [
             minWidth: 100,
             maxWidth: -1
         },
+        _meta: {
+            type: 'text',
+            operators: ['contains', 'equals']
+        }
     },
 
     {
@@ -26,6 +30,11 @@ export const columns = [
         accessorKey: 'sales',
         header: 'Sales',
         align: 'end',
+
+        _meta: {
+            type: 'number',
+            operators: ['between', 'equals', 'greaterThan', 'lessThan', 'contains']
+        }
     },
     {
         accessorKey: 'profit',

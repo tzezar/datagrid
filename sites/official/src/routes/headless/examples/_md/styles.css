@@ -23,6 +23,7 @@
 
 .grid-header-cell {
     display: flex;
+    flex-direction: column;
     padding: 0.5rem;
     border-right: 1px solid hsl(var(--grid-border));
     width: var(--width);

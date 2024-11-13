@@ -9,5 +9,3 @@ published: true
 </script>
 
 <GridWrapper />
-
-## Implementation
