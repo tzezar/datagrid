@@ -38,6 +38,10 @@
 			grid.pagination.updatePageCount();
 		});
 	}
+
+	$effect(() => {
+		console.log($state.snapshot(grid.rows))
+	})
 </script>
 
 <div class="flex flex-col pb-6">
@@ -136,12 +140,12 @@
 									<ActionsGroup {grid} {row} />
 								{/if}
 
-								{#if column.columnId === row.columnId && Object.keys(row.aggregates).find((key) => key === column.columnId)}
+								{#if column.columnId === row.columnId }
 									<!-- <span>{column.accessor(row)}</span> -->
-									<span>{row.groupId}</span>
+									<span class="font-bold overflow-hidden text-ellipsis">{row.groupId}</span>
 								{:else if row.aggregates[column.columnId]}
 									{#each Object.entries(row.aggregates[column.columnId]) as [aggKey, aggValue]}
-										<span class='text-xs'>{aggKey}: {aggValue.toFixed(2)}</span>
+										<span class='text-xs text-muted-foreground'>{aggKey}: {aggValue.toFixed(2)}</span>
 									{/each}
 								{/if}
 							</div>
@@ -168,11 +172,6 @@
 							</div>
 						{/each}
 					</div>
-					{#if grid.rowManager.isRowExpanded(String(row?.original?.id))}
-						<div class="grid-row">
-							<div class="grid-cell">some content here eg lazy loaded</div>
-						</div>
-					{/if}
 				{/if}
 			{/each}
 		</div>
