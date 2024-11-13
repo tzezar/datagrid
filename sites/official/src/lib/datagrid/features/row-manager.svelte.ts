@@ -42,6 +42,8 @@ export interface RowManagerInstance {
     },
     toggleRowPinning(rowId: string, position: "top" | "bottom"): void;
     isPinned(rowId: string, position: "top" | "bottom"): boolean;
+    expansionMode: RowExpansionMode
+    selectionMode: RowSelectionMode
 }
 
 export class RowManager<TData> implements RowManagerInstance {
