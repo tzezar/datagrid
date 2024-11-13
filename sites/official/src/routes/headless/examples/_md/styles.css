@@ -19,6 +19,8 @@
     background-color: hsl(var(--grid-header-row-background));
     display: flex;
     border: 1px solid hsl(var(--grid-border));
+    min-width: fit-content;
+
 }
 
 .grid-header-cell {
@@ -42,6 +44,7 @@
     display: flex;
     border: 1px solid hsl(var(--grid-border));
     border-top: none;
+    min-width: fit-content;
 }
 
 .grid-row:last-child {
