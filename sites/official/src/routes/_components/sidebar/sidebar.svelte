@@ -35,19 +35,15 @@
 		</Group>
 		<Group>
 			<GroupTitle title="Feature APIs" />
-			<GroupItem disabled title="Column faceting" href={hrefs.headless.featureApis.columnFaceting} />
-			<GroupItem disabled title="Column filters" href={hrefs.headless.featureApis.columnFilters} />
-			<GroupItem disabled title="Column ordering" href={hrefs.headless.featureApis.columnOrdering} />
-			<GroupItem disabled title="Column pinning" href={hrefs.headless.featureApis.columnPinning} />
-			<GroupItem disabled title="Column sizing" href={hrefs.headless.featureApis.columnSizing} />
-			<GroupItem disabled title="Column visibility" href={hrefs.headless.featureApis.columnVisibility} />
-			<GroupItem disabled title="Expanding" href={hrefs.headless.featureApis.expanding} />
-			<GroupItem disabled title="Global search" href={hrefs.headless.featureApis.globalSearch} />
-			<GroupItem disabled title="Grouping" href={hrefs.headless.featureApis.grouping} />
-			<GroupItem disabled title="Pagination" href={hrefs.headless.featureApis.pagination} />
-			<GroupItem disabled title="Row pinning" href={hrefs.headless.featureApis.rowPinning} />
-			<GroupItem disabled title="Row selection" href={hrefs.headless.featureApis.rowSelection} />
-			<GroupItem disabled title="Sorting" href={hrefs.headless.featureApis.sorting} />
+			<GroupItem title="Column manager" href={hrefs.headless.featureApis.columnManager} />
+			<GroupItem title="Column processor" href={hrefs.headless.featureApis.columnProcessor} />
+			<GroupItem title="Data processor" href={hrefs.headless.featureApis.dataProcessor} />
+			<GroupItem title="Filtering manager" href={hrefs.headless.featureApis.filteringManager} />
+			<GroupItem title="Grouping manager" href={hrefs.headless.featureApis.groupingManager} />
+			<GroupItem title="Pagination manager" href={hrefs.headless.featureApis.paginationManager} />
+			<GroupItem title="Row manager" href={hrefs.headless.featureApis.rowManager} />
+			<GroupItem title="Sorting manager" href={hrefs.headless.featureApis.sortingManager} />
+			<GroupItem title="Grid instance" href={hrefs.headless.featureApis.gridInstance} />
 		</Group>
 		<GroupTitle title="Shadcn svelte" class="border-b-2 border-orange-400 pb-1 text-orange-400 text-lg" />
 		<Group>
