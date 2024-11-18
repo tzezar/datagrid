@@ -19,7 +19,7 @@
 </script>
 
 
-<div class="flex flex-col">
+<div class="flex flex-col pb-6">
 	<!-- svelte-ignore a11y_label_has_associated_control -->
 	<label>Colum reordering:</label>
 	<div class="flex flex-col gap-2 border p-2">

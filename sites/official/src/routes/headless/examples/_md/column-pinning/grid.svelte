@@ -6,8 +6,6 @@
 	import ChevronLeft from '$lib/icons/chevron-left.svelte';
 	import ChevronRight from '$lib/icons/chevron-right.svelte';
 	import { columns } from './columns';
-	import Expand from '$lib/icons/expand.svelte';
-	import Collapse from '$lib/icons/collapse.svelte';
 	import type { Column } from '$lib/datagrid/processors/column-processor.svelte';
 	import type { PinningPosition } from '$lib/datagrid/features/column-manager.svelte';
 
@@ -27,7 +25,7 @@
 	};
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col  pb-6">
 	<!-- svelte-ignore a11y_label_has_associated_control -->
 	<label>Colum pinning:</label>
 	<div class="border p-2">

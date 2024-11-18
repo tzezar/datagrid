@@ -6,7 +6,6 @@
 	import ChevronLeft from '$lib/icons/chevron-left.svelte';
 	import ChevronRight from '$lib/icons/chevron-right.svelte';
 	import { columns } from './columns';
-	import { type RowExpansionMode } from '$lib/datagrid/features/row-manager.svelte';
 	import type { Group } from '$lib/datagrid/features/grouping-manager.svelte';
 	import ActionsGroup from './actions-group.svelte';
 

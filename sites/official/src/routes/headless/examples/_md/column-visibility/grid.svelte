@@ -6,10 +6,6 @@
 	import ChevronLeft from '$lib/icons/chevron-left.svelte';
 	import ChevronRight from '$lib/icons/chevron-right.svelte';
 	import { columns } from './columns';
-	import Expand from '$lib/icons/expand.svelte';
-	import Collapse from '$lib/icons/collapse.svelte';
-	import type { Column } from '$lib/datagrid/processors/column-processor.svelte';
-	import type { PinningPosition } from '$lib/datagrid/features/column-manager.svelte';
 
 	let { data }: { data: SalesDataRow[] } = $props();
 
@@ -18,13 +14,9 @@
 		columns
 	});
 
-	const handleColumnResize = (column: Column<SalesDataRow, any>, width: number) => {
-		grid.columnManager.resizeColumn(column, Number(width));
-		grid.columnManager.refreshColumnPinningOffsets();
-	};
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col  pb-6">
 	<label for="column-visibility">Colum visibility:</label>
 	<div id="column-visibility" class="border p-2">
 		{#each grid.columns as column}

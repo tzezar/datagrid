@@ -7,6 +7,7 @@
 	import ChevronRight from '$lib/icons/chevron-right.svelte';
 	import { columns } from './columns';
 	import ColumnFilter from '../_components/column-filter.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	let { data }: { data: SalesDataRow[] } = $props();
 
@@ -14,7 +15,12 @@
 		data,
 		columns
 	});
+
+
+	let isFilteringVisible = $state(false)
 </script>
+
+<Button class='mb-4' onclick={() => isFilteringVisible = !isFilteringVisible}>{isFilteringVisible ? 'Hide column filters' : 'Show column filters'}</Button>
 
 <div class="grid-wrapper">
 	<div class="grid-content">
@@ -57,7 +63,7 @@
 								</span>
 							{/if}
 						</div>
-						{#if grid.columnManager.isFilterable(column)}
+						{#if isFilteringVisible && grid.columnManager.isFilterable(column)}
 							<ColumnFilter {column} {grid} />
 						{/if}
 					</div>

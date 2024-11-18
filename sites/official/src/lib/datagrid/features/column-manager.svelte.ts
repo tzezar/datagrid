@@ -131,15 +131,15 @@ export class ColumnManager<TData> implements ColumnManagerInstance<TData> {
     }
 
 
-    canMoveColumnLeft(column: Column<TData>): boolean {
+    canMoveColumnLeft(column: Column<TData, any>): boolean {
         return this.getColumnIndex(column) > 0;
     }
 
-    canMoveColumnRight(column: Column<TData>): boolean {
+    canMoveColumnRight(column: Column<TData, any>): boolean {
         return this.getColumnIndex(column) < this.grid.columns.length - 1;
     }
 
-    moveColumnLeft(column: Column<TData>): void {
+    moveColumnLeft(column: Column<TData, any>): void {
         const columnIndex = this.getColumnIndex(column);
         if (this.canMoveColumnLeft(column)) {
             const prevColumn = this.grid.columns[columnIndex - 1];
@@ -148,7 +148,7 @@ export class ColumnManager<TData> implements ColumnManagerInstance<TData> {
         }
     }
 
-    moveColumnRight(column: Column<TData>): void {
+    moveColumnRight(column: Column<TData, any>): void {
         const columnIndex = this.getColumnIndex(column);
         if (this.canMoveColumnRight(column)) {
             const nextColumn = this.grid.columns[columnIndex + 1];
