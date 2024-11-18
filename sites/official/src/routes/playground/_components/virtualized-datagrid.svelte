@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
-	import { Datagrid } from '$lib/datagrid/index.svelte';
-	import type { Data } from '$lib/datagrid/types';
+	import type { SortMode } from '$lib/tzezars-datagrid/features/sorting-manager.svelte';
+	import { Datagrid } from '$lib/tzezars-datagrid/index.svelte';
+	import type { Data } from '$lib/tzezars-datagrid/types';
 	import { columns } from './columns';
 	import { VirtualList } from 'svelte-virtuallists';
 	import Expand from './icons/expand.svelte';

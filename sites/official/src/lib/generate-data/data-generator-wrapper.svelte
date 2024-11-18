@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { DataGenerator } from './data-generator.svelte';
-	import type { Datagrid } from '$lib/datagrid/index.svelte';
+	import type { Datagrid } from '$lib/tzezars-datagrid/index.svelte';
 
 	let { generator, grid }: { generator: DataGenerator; grid: Snippet<[{ data: any[] }]> } =
 		$props();

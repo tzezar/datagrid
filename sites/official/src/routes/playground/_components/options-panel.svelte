@@ -1,14 +1,14 @@
 <script lang="ts">
-	import type { PinningPosition } from '$lib/datagrid/features/column-manager.svelte';
-	import type { Group } from '$lib/datagrid/features/grouping-manager.svelte';
+	import type { PinningPosition } from '$lib/tzezars-datagrid/features/column-manager.svelte';
+	import type { Group } from '$lib/tzezars-datagrid/features/grouping-manager.svelte';
 	import {
 		type RowSelectionMode,
 		type RowExpansionMode
-	} from '$lib/datagrid/features/row-manager.svelte';
-	import { type SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
-	import type { Datagrid } from '$lib/datagrid/index.svelte';
-	import type { Column } from '$lib/datagrid/processors/column-processor.svelte';
-	import { debounce } from '$lib/datagrid/utils/debounce';
+	} from '$lib/tzezars-datagrid/features/row-manager.svelte';
+	import { type SortMode } from '$lib/tzezars-datagrid/features/sorting-manager.svelte';
+	import type { Datagrid } from '$lib/tzezars-datagrid/index.svelte';
+	import type { Column } from '$lib/tzezars-datagrid/processors/column-processor.svelte';
+	import { debounce } from '$lib/tzezars-datagrid/utils/debounce';
 	import Collapse from './icons/collapse.svelte';
 	import Expand from './icons/expand.svelte';
 

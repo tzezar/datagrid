@@ -1,7 +1,7 @@
 <script lang="ts" generics="T">
-	import type { FilterOperator } from '$lib/datagrid/features/filtering-manager.svelte';
-	import type { Column } from '$lib/datagrid/processors/column-processor.svelte';
-	import type { Datagrid } from '$lib/datagrid/index.svelte';
+	import type { FilterOperator } from '$lib/tzezars-datagrid/features/filtering-manager.svelte';
+	import type { Column } from '$lib/tzezars-datagrid/processors/column-processor.svelte';
+	import type { Datagrid } from '$lib/tzezars-datagrid/index.svelte';
 	import Delete from '$lib/icons/delete.svelte';
 
 	type FilterType = 'text' | 'number' | 'select' | 'date';

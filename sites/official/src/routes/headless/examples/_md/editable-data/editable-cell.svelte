@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { Row } from '$lib/datagrid/processors/data-processor.svelte';
-    import type { Datagrid } from '$lib/datagrid/index.svelte';
-    import type { Column } from '$lib/datagrid/processors/column-processor.svelte';
+    import type { Row } from '$lib/tzezars-datagrid/processors/data-processor.svelte';
+    import type { Datagrid } from '$lib/tzezars-datagrid/index.svelte';
+    import type { Column } from '$lib/tzezars-datagrid/processors/column-processor.svelte';
 
     let { row, grid, column }: { 
         row: Row<any>; 

@@ -1,16 +1,16 @@
 <script lang="ts">
 	import '../styles.css';
-	import { Datagrid } from '$lib/datagrid/index.svelte';
-	import CellRenderer from '$lib/datagrid/utils/cell-renderer.svelte';
+	import { Datagrid } from '$lib/tzezars-datagrid/index.svelte';
+	import CellRenderer from '$lib/tzezars-datagrid/utils/cell-renderer.svelte';
 	import type { SalesDataRow } from '$lib/generate-data/generate-sales-data';
 	import ChevronLeft from '$lib/icons/chevron-left.svelte';
 	import ChevronRight from '$lib/icons/chevron-right.svelte';
 	import { columns } from './columns';
-	import { type SortMode } from '$lib/datagrid/features/sorting-manager.svelte';
+	import { type SortMode } from '$lib/tzezars-datagrid/features/sorting-manager.svelte';
 	import { VirtualList } from 'svelte-virtuallists';
-	import { type Row } from '$lib/datagrid/processors/data-processor.svelte';
+	import { type Row } from '$lib/tzezars-datagrid/processors/data-processor.svelte';
 	import ActionsGroup from './actions-group.svelte';
-	import type { Group } from '$lib/datagrid/features/grouping-manager.svelte';
+	import type { Group } from '$lib/tzezars-datagrid/features/grouping-manager.svelte';
 
 	let { data }: { data: SalesDataRow[] } = $props();
 

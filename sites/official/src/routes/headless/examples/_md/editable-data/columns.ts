@@ -1,4 +1,4 @@
-import type { ColumnDef } from "$lib/datagrid/types"
+import type { ColumnDef } from "$lib/tzezars-datagrid/types"
 import type { SalesDataRow } from "$lib/generate-data/generate-sales-data"
 import EditableCell from "./editable-cell.svelte"
 

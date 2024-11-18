@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../styles.css';
-	import { Datagrid } from '$lib/datagrid/index.svelte';
-	import CellRenderer from '$lib/datagrid/utils/cell-renderer.svelte';
+	import { Datagrid } from '$lib/tzezars-datagrid/index.svelte';
+	import CellRenderer from '$lib/tzezars-datagrid/utils/cell-renderer.svelte';
 	import type { SalesDataRow } from '$lib/generate-data/generate-sales-data';
 	import ChevronLeft from '$lib/icons/chevron-left.svelte';
 	import ChevronRight from '$lib/icons/chevron-right.svelte';
@@ -10,7 +10,7 @@
 	import OptionsPanel from './options-panel.svelte';
 	import ColumnFilter from './column-filter.svelte';
 	import { VirtualList } from 'svelte-virtuallists';
-	import { type Row } from '$lib/datagrid/processors/data-processor.svelte';
+	import { type Row } from '$lib/tzezars-datagrid/processors/data-processor.svelte';
 
 	let { data }: { data: SalesDataRow[] } = $props();
 

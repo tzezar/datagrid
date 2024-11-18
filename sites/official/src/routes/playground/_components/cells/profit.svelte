@@ -1,5 +1,5 @@
 <script lang='ts'>
-	import type { Row } from "$lib/datagrid/processors/data-processor.svelte";
+	import type { Row } from "$lib/tzezars-datagrid/processors/data-processor.svelte";
 
 
     let {row}: {row: Row} = $props();

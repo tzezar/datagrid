@@ -1,4 +1,4 @@
-import type { BaseColumn } from "$lib/datagrid/types";
+import type { BaseColumn } from "$lib/tzezars-datagrid/types";
 import type { DataRow } from "$lib/generateData";
 
 // export type DataRow = {

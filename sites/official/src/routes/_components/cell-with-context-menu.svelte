@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getNestedValue } from '$lib/datagrid/fns/get-nested-value';
-	import type { BaseColumn } from '$lib/datagrid/types';
+	import type { BaseColumn } from '$lib/tzezars-datagrid/types';
 	import type { TzezarDatagrid } from '$lib/datagrid/tzezar-datagrid.svelte';
 	import { cn } from '$lib/utils';
 	import { getContext, type Snippet } from 'svelte';
