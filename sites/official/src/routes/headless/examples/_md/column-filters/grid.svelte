@@ -14,7 +14,6 @@
 		data,
 		columns
 	});
-
 </script>
 
 <div class="grid-wrapper">
@@ -47,9 +46,9 @@
 								else if (e.key === 'Escape') grid.reload(() => grid.sorting.clearSort());
 							}}
 						>
-							<span class='overflow-hidden text-ellipsis'>{column.header}</span>
+							<span class="overflow-hidden text-ellipsis">{column.header}</span>
 							{#if column.isSorted()}
-								<span class="text-xs text-nowrap">
+								<span class="text-nowrap text-xs">
 									{column.getSortingDirection() === 'asc'
 										? `▲ ${grid.sorting.getColumnSortPosition(column)}`
 										: column.getSortingDirection() === 'desc'
@@ -58,6 +57,9 @@
 								</span>
 							{/if}
 						</div>
+						{#if grid.columnManager.isFilterable(column)}
+							<ColumnFilter {column} {grid} />
+						{/if}
 					</div>
 				{/each}
 			</div>

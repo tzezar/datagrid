@@ -76,7 +76,7 @@
 	}
 
 	function clearFilter() {
-		currentOperator = 'equals';
+		currentOperator = 'contains';
 		currentValue = '';
 		currentValueTo = '';
 		grid.refresh(() => {
