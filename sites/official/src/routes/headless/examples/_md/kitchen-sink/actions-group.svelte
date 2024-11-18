@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Datagrid } from '$lib/datagrid/index.svelte';
 	import type { Row } from '$lib/datagrid/processors/data-processor.svelte';
-	import GroupCollapsed from '../icons/group-collapsed.svelte';
-	import GroupExpanded from '../icons/group-expanded.svelte';
+	import GroupCollapsed from '$lib/icons/group-collapsed.svelte';
+	import GroupExpanded from '$lib/icons/group-expanded.svelte';
 
 	let { row, grid }: { row: Row<any>; grid: Datagrid<any, any> } = $props();
 

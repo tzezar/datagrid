@@ -15,7 +15,7 @@
 		</Group>
 		<Group>
 			<GroupTitle title="Examples" />
-			<GroupItem title="basic" href={hrefs.headless.examples.basic} />
+			<GroupItem title="Basic" href={hrefs.headless.examples.basic} />
 			<GroupItem title="Column filters" href={hrefs.headless.examples.columnFilters} />
 			<GroupItem title="Column filters faceted" href={hrefs.headless.examples.columnFiltersFaceted} />
 			<GroupItem title="Column ordering" href={hrefs.headless.examples.columnOrdering} />
@@ -32,6 +32,7 @@
 			<GroupItem title="Sorting" href={hrefs.headless.examples.sorting} />
 			<!-- <GroupItem title="Sub components" href={hrefs.headless.examples.subComponents} /> -->
 			<GroupItem title="Virtualization" href={hrefs.headless.examples.virtualization} />
+			<GroupItem title="Kitchen sink" href={hrefs.headless.examples.kitchenSink} />
 		</Group>
 		<Group>
 			<GroupTitle title="Feature APIs" />

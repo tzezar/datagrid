@@ -22,7 +22,7 @@
 {#if disabled}
 	<span
 		class={cn(
-			'cursor-not-allowed text-sm capitalize',
+			'cursor-not-allowed text-sm',
 			disabled && 'opacity-30',
 			$page.url.pathname === href && 'font-semibold text-orange-500',
 			_class
@@ -35,7 +35,7 @@
 		onclick={closeSidebarOnClick}
 		{href}
 		class={cn(
-			'text-sm capitalize',
+			'text-sm',
 			disabled && 'opacity-30',
 			$page.url.pathname === href && 'font-semibold text-orange-500',
 			_class

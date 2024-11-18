@@ -18,18 +18,4 @@
 			<Collapse />
 		{/if}
 	</button>
-	<!-- <div>
-		<button
-			class="my-auto ml-2 h-fit !px-0 !py-0"
-			onclick={() => grid.rowManager.toggleRowPinning(String(row?.original?.id), 'top')}
-		>
-			<Expand />
-		</button>
-		<button
-			class="my-auto ml-2 h-fit !px-0 !py-0"
-			onclick={() => grid.rowManager.toggleRowPinning(String(row?.original?.id), 'bottom')}
-		>
-			<Collapse />
-		</button>
-	</div> -->
 </div>

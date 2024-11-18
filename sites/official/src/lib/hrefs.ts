@@ -41,6 +41,7 @@ export const hrefs = {
             subComponents: "/headless/examples/sub-components",
             virtualization: "/headless/examples/virtualization",
             rowSelection: "/headless/examples/row-selection",
+            kitchenSink: "/headless/examples/kitchen-sink",
         }
     },
     shadcnSvelte: {
