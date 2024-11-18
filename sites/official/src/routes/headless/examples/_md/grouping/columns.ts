@@ -55,23 +55,13 @@ export const columns = [
         align: 'end',
         groupable: false,
         aggregationFn: 'mean',
-        size: {
-            width: 150,
-            minWidth: 150,
-            maxWidth: 150,
-            grow: false
-        },
+       
     },
     {
         accessorKey: 'profit',
         header: 'Profit',
         align: 'end',
-        size: {
-            width: 150,
-            minWidth: 150,
-            maxWidth: 150,
-            grow: false
-        },
+       
         groupable: false,
         aggregationFn: 'sum',
     }

@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-
 	:root {
 		--background: 0 0% 100%;
 		--foreground: 240 10% 3.9%;
@@ -34,9 +33,20 @@
 		--sidebar-border: 220 13% 91%;
 		--sidebar-ring: 217.2 91.2% 59.8%;
 
-
-		--grid-border: 240 4.8% 95.9%;
-		--grid-header-row: 240 10% 3.9%
+		--grid-border: 220 10% 85%; /* Cool light gray for clean separation */
+		--grid-background: 210 20% 98%; /* Subtle cool white for a fresh look */
+		--grid-header-background: 220 10% 96%; /* Soft neutral beige for a modern touch */
+		--grid-header-cell-background: 220 10% 96%; /* Slightly darker neutral for subtle emphasis */
+		--grid-header-cell-background-hover: 220 10% 85%; /* Refined warm beige for hover */
+		--grid-footer-background: 220 10% 96%; /* Muted cool gray to contrast the header */
+		--grid-row-even-background: 220 10% 99%; /* Crisp white for even rows */
+		--grid-row-even-background-hover: 16 65% 92%; /* Gentle coral-orange hover for vibrancy */
+		--grid-row-odd-background: 220 10% 97%; /* Very light gray for odd rows */
+		--grid-row-odd-background-hover: 16 65% 92%; /* Matches even row hover */
+		--grid-accent-color: 16 75% 60%; /* Vibrant coral-orange for highlights */
+		--grid-text-color: 220 10% 20%; /* Dark, cool gray for readability */
+		--grid-text-color-hover: 16 75% 40%; /* Coral-orange for active/hover states */
+		--grid-shadow: 220 10% 90%; /* Light, subtle shadow for hover or focus effects */
 	}
 
 	.dark {
@@ -51,6 +61,7 @@
 		--border: 240 3.7% 15.9%;
 		--input: 240 3.7% 15.9%;
 		--primary: 0 0% 98%;
+
 		--primary-foreground: 240 5.9% 10%;
 		--secondary: 240 3.7% 15.9%;
 		--secondary-foreground: 0 0% 98%;
@@ -68,20 +79,25 @@
 		--sidebar-border: 240 3.7% 15.9%;
 		--sidebar-ring: 217.2 91.2% 59.8%;
 
-
 		--table-primary: 0 0% 9%;
 		--table-primary-hover: 0 0% 5%;
 		--table-secondary: 0 0% 10%;
 		--table-secondary-hover: 0 0% 5%;
 
-		--grid-border: 0 0% 15%;
-		--grid-header-row-background: 0 0% 9%;
-
-		--grid-row-even-background: 0 0% 9%;
-		--grid-row-even-background-hover: 0 0% 5%;
-		--grid-row-odd-background: 0 0% 10%;
-		--grid-row-odd-background-hover: 0 0% 5%;
-
+		--grid-border: 220 10% 20%; /* Deep cool gray for separation */
+		--grid-background: 220 15% 10%; /* Dark neutral background for elegance */
+		--grid-header-background: 220 15% 12%; /* Slightly lighter for header distinction */
+		--grid-header-cell-background: 220 15% 12%; /* Subtle emphasis for header cells */
+		--grid-header-cell-background-hover: 220 15% 25%; /* Hover effect with soft gray */
+		--grid-footer-background: 220 15% 12%; /* Slightly darker footer for balance */
+		--grid-row-even-background: 220 15% 12%; /* Matches footer for even rows */
+		--grid-row-even-background-hover: 16 65% 30%; /* Coral-orange hover for warmth */
+		--grid-row-odd-background: 220 15% 10%; /* Matches background for odd rows */
+		--grid-row-odd-background-hover: 16 65% 30%; /* Matches even row hover for consistency */
+		--grid-accent-color: 16 75% 60%; /* Vibrant coral-orange for highlights */
+		--grid-text-color: 220 15% 80%; /* Light cool gray for readability */
+		--grid-text-color-hover: 16 75% 60%; /* Coral-orange for hover/active states */
+		--grid-shadow: 220 15% 8%; /* Soft shadow for depth without glare */
 	}
 }
 
@@ -92,8 +108,4 @@
 	body {
 		@apply bg-background text-foreground;
 	}
-
-
-
 }
-

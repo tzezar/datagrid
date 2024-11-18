@@ -98,7 +98,7 @@
 								style:--width={!column.size.grow ? `${column.size.width}px` : null}
 								style:--max-width={!column.size.grow ? `${column.size.width}px` : null}
 								style:flex-grow={column.size.grow ? 1 : null}
-								style="{['left', 'right'].includes(column.pinning.position) && `background-color: black;`}"
+								style="{['left', 'right'].includes(column.pinning.position) ? 'background-color: black;': ''}"
 							>
 								{#if column.columnId === 'actions'}
 									<ActionsGroup {grid} {row} />

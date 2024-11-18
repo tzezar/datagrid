@@ -6,7 +6,7 @@
 	import ChevronLeft from '$lib/icons/chevron-left.svelte';
 	import ChevronRight from '$lib/icons/chevron-right.svelte';
 	import { columns } from './columns';
-	import ColumnFilter from './column-filter.svelte';
+	import ColumnFilter from '../_components/column-filter.svelte';
 
 	let { data }: { data: SalesDataRow[] } = $props();
 

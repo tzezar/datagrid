@@ -134,7 +134,7 @@
 			{/if}
 		{/if}
 
-		<button class="clear-button mt-auto" onclick={clearFilter}><Delete /></button>
+		<button class="clear-button mt-auto " onclick={clearFilter}><Delete class='text-primary-foreground'/></button>
 	</div>
 </div>
 

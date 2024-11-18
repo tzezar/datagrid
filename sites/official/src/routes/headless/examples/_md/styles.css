@@ -1,6 +1,7 @@
 /* Grid Content and Header */
 .grid-content {
     background-color: hsl(var(--grid-row-even-background));
+    color: hsl(var(--grid-text-color));
     height: 100%;
     flex-grow: 1;
     max-height: 600px;
@@ -16,12 +17,11 @@
 }
 
 .grid-header-row {
-    background-color: hsl(var(--grid-header-row-background));
+    background-color: hsl(var(--grid-header-background));
     display: flex;
     border: 1px solid hsl(var(--grid-border));
     min-width: fit-content;
     z-index: 10;
-
 }
 
 .grid-header-cell {
@@ -29,11 +29,16 @@
     flex-direction: column;
     padding: 0.5rem;
     border-right: 1px solid hsl(var(--grid-border));
+    background-color: hsl(var(--grid-header-cell-background));
     width: var(--width);
     max-width: var(--max-width);
     min-width: var(--min-width);
     align-items: center;
     gap: 0.25rem;
+}
+
+.grid-header-cell:hover {
+    background-color: hsl(var(--grid-header-cell-background-hover));
 }
 
 .grid-header-cell:last-child {
@@ -98,7 +103,7 @@
 
 /* Pagination */
 .pagination {
-    background-color: hsl(var(--grid-header-row-background));
+    background-color: hsl(var(--grid-footer-background));
     padding: 0.75rem;
     border: 1px solid hsl(var(--grid-border));
     display: grid;
@@ -115,14 +120,13 @@
 
 /* Pagination Details */
 .pagination-details {
-    --tw-text-opacity: 1;
-    color: hsl(var(--muted-foreground) / var(--tw-text-opacity));
+    color: hsl(var(--grid-text-color));
     order: 2;
     column-span: 2;
     display: none;
     text-align: center;
-    font-size: 0.75rem; /* 12px */
-    line-height: 1rem; /* 16px */
+    font-size: 0.75rem;
+    line-height: 1rem;
 }
 
 @media (min-width: 640px) {
@@ -162,6 +166,7 @@
 
 /* Pagination Buttons */
 .pagination-button {
+    background-color: hsl(var(--grid-row-odd-background));
     border: 1px solid hsl(var(--grid-border));
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
@@ -177,16 +182,19 @@
 }
 
 .pagination-button:hover:not(:disabled) {
-    background-color: theme('colors.orange.400');
+    background-color: hsl(var(--grid-accent-color));
+    color: hsl(var(--grid-row-even-background));
 }
 
 /* Pagination Inputs and Select */
 .pagination-input,
 .pagination-select {
+    background-color: hsl(var(--grid-row-odd-background));
     border-radius: 0.25rem;
     border: 1px solid hsl(var(--grid-border));
     padding: 0 0.5rem;
     height: 2rem;
+    color: hsl(var(--grid-text-color));
 }
 
 .pagination-input {
@@ -199,4 +207,5 @@ label {
     font-size: 0.875rem;
     line-height: 1.25rem;
     font-weight: 500;
+    color: hsl(var(--grid-text-color));
 }

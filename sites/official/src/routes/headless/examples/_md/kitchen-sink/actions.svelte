@@ -22,7 +22,7 @@
 		if (['Enter', 'Spacebar'].includes(e.key)) handleExpandRow(String(row?.original?.id));
 	}}
 >
-	<button class="my-auto h-fit !px-0 !py-0 " tabindex="-1">
+	<button class="my-auto h-fit !px-0 !py-0  " tabindex="-1">
 		{#if grid.rowManager.isRowExpanded(String(row?.original?.id))}
 			<Expand />
 		{:else}

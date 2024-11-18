@@ -24,8 +24,8 @@ export const columns = [
         cell: {
             style: (row) => {
                 let style = ""
-                if (+row.index % 2 === 0) {
-                    style = "background-color: gray;"
+                if (+row.index % 2 === 1) {
+                    style = "font-weight: bold;"
                 }
                 return style
             }

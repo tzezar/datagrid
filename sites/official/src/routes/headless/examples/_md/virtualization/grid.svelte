@@ -192,7 +192,7 @@
 					</div>
 					{#if grid.rowManager.isRowExpanded(String(item?.original?.id))}
 						<div class="grid-row">
-							<div class="grid-cell">some content here eg lazy loaded</div>
+							<div class="grid-cell">Penguins propose to their mates by giving them a pebble. 💍🐧</div>
 						</div>
 					{/if}
 				{/if}
