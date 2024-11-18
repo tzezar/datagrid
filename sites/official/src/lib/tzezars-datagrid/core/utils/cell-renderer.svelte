@@ -11,6 +11,7 @@
 </script>
 
 {#if column.cell && column.cell.component}
+	<!-- svelte-ignore svelte_component_deprecated -->
 	<svelte:component this={column.cell.component} {row} {grid} {column}/>
 {:else if column.formatter}
 	{column.formatter(row.original)}

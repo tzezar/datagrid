@@ -145,7 +145,7 @@ export class GroupingManager<TData> implements GroupingFeature {
                 aggregates.uniqueCount = new Set(values).size;
                 break;
             case 'all':
-                aggregates.sum = values.reduce((sum, val) => sum + (Number(val) || 0), 0);
+                { aggregates.sum = values.reduce((sum, val) => sum + (Number(val) || 0), 0);
                 aggregates.count = values.length;
                 aggregates.min = Math.min(...values);
                 aggregates.max = Math.max(...values);
@@ -158,7 +158,7 @@ export class GroupingManager<TData> implements GroupingFeature {
                     : (Number(sorted[mid - 1]) + Number(sorted[mid])) / 2;
                 aggregates.unique = Array.from(new Set(values));
                 aggregates.uniqueCount = new Set(values).size;
-                break;
+                break; }
             case 'none':
                 return null;
         }

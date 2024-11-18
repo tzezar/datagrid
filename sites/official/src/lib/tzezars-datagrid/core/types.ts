@@ -1,7 +1,7 @@
-import type { AggregationFn } from "./features/grouping-manager.svelte";
 import type { SortDirection } from "./features/sorting-manager.svelte";
-import type { CategoricalFacet, NumericFacet } from "./processors/column-processor.svelte";
+import type { CategoricalFacet, NumericFacet } from "../processors/column-processor.svelte";
 import type { Row } from "./processors/data-processor.svelte";
+import type { AggregationFn } from "./features/grouping-manager.svelte";
 
 
 type PathImpl<T, K extends keyof T> = 

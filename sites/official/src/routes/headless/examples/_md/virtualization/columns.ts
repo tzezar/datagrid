@@ -1,4 +1,4 @@
-import type { ColumnDef } from "$lib/tzezars-datagrid/types"
+import type { ColumnDef } from "$lib/tzezars-datagrid/core/types"
 import type { SalesDataRow } from "$lib/generate-data/generate-sales-data"
 import Actions from "./actions.svelte"
 import RowSelection from "./row-selection.svelte"

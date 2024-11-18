@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Datagrid } from '$lib/tzezars-datagrid/index.svelte';
-	import CellRenderer from '$lib/tzezars-datagrid/utils/cell-renderer.svelte';
+	import CellRenderer from '$lib/tzezars-datagrid/core/utils/cell-renderer.svelte';
 	import type { SalesDataRow } from '$lib/generate-data/generate-sales-data';
 	import ActionsGroup from './cells/actions-group.svelte';
 	import ColumnFilter from './column-filter.svelte';

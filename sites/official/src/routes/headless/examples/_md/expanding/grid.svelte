@@ -1,12 +1,12 @@
 <script lang="ts">
 	import '../styles.css';
-	import { Datagrid } from '$lib/tzezars-datagrid/index.svelte';
-	import CellRenderer from '$lib/tzezars-datagrid/utils/cell-renderer.svelte';
+	import { Datagrid } from '$lib/tzezars-datagrid/core/index.svelte';
+	import CellRenderer from '$lib/tzezars-datagrid/core/utils/cell-renderer.svelte';
 	import type { SalesDataRow } from '$lib/generate-data/generate-sales-data';
 	import ChevronLeft from '$lib/icons/chevron-left.svelte';
 	import ChevronRight from '$lib/icons/chevron-right.svelte';
 	import { columns } from './columns';
-	import { type RowExpansionMode } from '$lib/tzezars-datagrid/features/row-manager.svelte';
+	import { type RowExpansionMode } from '$lib/tzezars-datagrid/core/features/row-manager.svelte';
 
 	let { data }: { data: SalesDataRow[] } = $props();
 

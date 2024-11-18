@@ -8,7 +8,7 @@
 	import { type SortMode } from '$lib/tzezars-datagrid/features/sorting-manager.svelte';
 	import type { Datagrid } from '$lib/tzezars-datagrid/index.svelte';
 	import type { Column } from '$lib/tzezars-datagrid/processors/column-processor.svelte';
-	import { debounce } from '$lib/tzezars-datagrid/utils/debounce';
+	import { debounce } from '$lib/tzezars-datagrid/core/utils/debounce';
 	import Collapse from './icons/collapse.svelte';
 	import Expand from './icons/expand.svelte';
 

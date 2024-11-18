@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../styles.css';
-	import { Datagrid } from '$lib/tzezars-datagrid/index.svelte';
-	import CellRenderer from '$lib/tzezars-datagrid/utils/cell-renderer.svelte';
+	import { Datagrid } from '$lib/tzezars-datagrid/core/index.svelte';
+	import CellRenderer from '$lib/tzezars-datagrid/core/utils/cell-renderer.svelte';
 	import type { SalesDataRow } from '$lib/generate-data/generate-sales-data';
 	import ChevronLeft from '$lib/icons/chevron-left.svelte';
 	import ChevronRight from '$lib/icons/chevron-right.svelte';
@@ -16,11 +16,12 @@
 		columns
 	});
 
-
-	let isFilteringVisible = $state(false)
+	let isFilteringVisible = $state(false);
 </script>
 
-<Button class='mb-4' onclick={() => isFilteringVisible = !isFilteringVisible}>{isFilteringVisible ? 'Hide column filters' : 'Show column filters'}</Button>
+<Button class="mb-4" onclick={() => (isFilteringVisible = !isFilteringVisible)}
+	>{isFilteringVisible ? 'Hide column filters' : 'Show column filters'}</Button
+>
 
 <div class="grid-wrapper">
 	<div class="grid-content">

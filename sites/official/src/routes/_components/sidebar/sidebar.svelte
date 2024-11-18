@@ -34,7 +34,7 @@
 			<GroupItem title="Virtualization" href={hrefs.headless.examples.virtualization} />
 			<GroupItem title="Kitchen sink" href={hrefs.headless.examples.kitchenSink} />
 		</Group>
-		<Group>
+		<!-- <Group>
 			<GroupTitle title="Feature APIs" />
 			<GroupItem title="Column manager" href={hrefs.headless.featureApis.columnManager} />
 			<GroupItem title="Column processor" href={hrefs.headless.featureApis.columnProcessor} />
@@ -45,7 +45,7 @@
 			<GroupItem title="Row manager" href={hrefs.headless.featureApis.rowManager} />
 			<GroupItem title="Sorting manager" href={hrefs.headless.featureApis.sortingManager} />
 			<GroupItem title="Grid instance" href={hrefs.headless.featureApis.gridInstance} />
-		</Group>
+		</Group> -->
 		<GroupTitle title="Shadcn svelte" class="border-b-2 border-orange-400 pb-1 text-orange-400 text-lg" />
 		<Group>
 			<GroupTitle title="Quick start" />
@@ -58,7 +58,7 @@
 		</Group>
 		<Group>
 			<GroupTitle title="Examples" />
-			<GroupItem disabled title="basic" href={hrefs.headless.quickStart.installation} />
+			<GroupItem  title="Basic" href={hrefs.shadcnSvelte.examples.basic} />
 			<GroupItem disabled title="Column alignment" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Column filters" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Column filters faceted" href={hrefs.headless.quickStart.installation} />

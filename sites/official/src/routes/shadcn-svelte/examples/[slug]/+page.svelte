@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { formatDate } from '$lib/utils';
 
 	export let data;
 </script>
@@ -10,16 +11,14 @@
 	<meta property="og:title" content={data.meta.title} />
 </svelte:head>
 
-132
-321
-<!-- <article class="flex w-full flex-col">
+<article class="flex w-full flex-col">
 	<group>
 		<h1 class="text-3xl font-bold">{data.meta.title}</h1>
 	</group>
-	<div class="prose dark:prose-invert pt-8 min-w-full ">
+	<div class="prose dark:prose-invert pt-8 min-w-full">
 		<svelte:component this={data.content} />
 	</div>
-</article> -->
+</article>
 
 <style>
 </style>
