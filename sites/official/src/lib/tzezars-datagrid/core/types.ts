@@ -69,15 +69,15 @@ export type ColumnDef<TData, TCustomKeys extends string = never> = {
 
 // Plugins
 
-export interface DatagridPlugin<TData, TCustomKeys extends string = never> {
+export interface DatagridPlugin<TData> {
   name: string;
-  initialize?: (datagrid: Datagrid<TData, TCustomKeys>) => void;
+  initialize?: (datagrid: Datagrid<TData, any>) => void;
   destroy?: () => void;
   // Allow any additional properties
   [key: string]: any;
 }
 
-export interface DatagridFeature<TData, TCustomKeys extends string = never> extends DatagridPlugin<TData, TCustomKeys> {
+export interface DatagridFeature<TData extends string = never> extends DatagridPlugin<TData> {
   state: Record<string, any>;
 }
 

@@ -9,7 +9,7 @@ export class PluginManager<TData, TCustomKeys extends string = never> {
         this.datagrid = datagrid;
     }
 
-    register(plugin: DatagridPlugin<TData, TCustomKeys>): void {
+    register(plugin: DatagridPlugin<TData>): void {
         if (this.plugins.has(plugin.name)) {
             console.warn(`Plugin ${plugin.name} is already registered. It will be overwritten.`);
         }
