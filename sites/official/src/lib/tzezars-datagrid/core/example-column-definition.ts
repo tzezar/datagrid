@@ -18,36 +18,28 @@ interface User {
 // Example columns with full IntelliSense support
 export const userColumns: ColumnDef<User>[] = [
     // Basic column - will suggest all possible keys from User interface
-    createColumn('First Name', 'firstName', { 
-        sortable: true 
-    }),
-
-    // Nested property access - will suggest all nested paths
-    createColumn('Age', 'profile.age'),
+    createColumn({ header: "First Name", accessorKey: 'firstName', options: { sortable: true } }),
+    createColumn({ header: 'Age', accessorKey: 'profile.age' }),
 
     // Computed column with type checking
-    createAccessorColumn(
-        'Full Name',
-        (row) => `${row.firstName} ${row.lastName}`,
-        { sortable: true }
-    ),
+    createAccessorColumn({
+        header: 'Full Name',
+        accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+        options: { sortable: true }
+    }),
 
     // Display column with type-safe row access
-    createDisplayColumn(
-        'Status',
-        (info) => `
-            <span class="${info.row.original.status}">
-                ${info.row.original.status}
-            </span>
-        `
-    ),
+    createDisplayColumn({
+        header: 'Status',
+        cell: (info) => `<span class="${info.row.original.status}">${info.row.original.status}</span>`,
+        options: { sortable: true }
+    }),
 
     // Grouped columns
-    createColumnGroup('Profile', [
-        createColumn('Email', 'profile.email'),
-        createAccessorColumn(
-            'Last Active',
-            (row) => row.stats.lastLogin.toLocaleDateString()
-        )
-    ])
+    createColumnGroup({
+        header: 'Profile', columns: [
+            createColumn({ header: 'Email', accessorKey: 'profile.email' }),
+            createAccessorColumn({ header: 'Last Active', accessorFn: (row) => row.stats.lastLogin.toLocaleDateString() })
+        ]
+    })
 ];
