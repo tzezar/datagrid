@@ -31,6 +31,7 @@ export interface DatagridInstance<TData, TCustomKeys extends string = never> {
     dataProcessor: DataProcessorInstance<TData>
     columnsProcessor: ColumnProcessorInstance<TData>
 
+    
 
     isRowVisible(row: Row<TData>): boolean
     getVisibleRows(page: number, pageSize: number): Row<TData>[]

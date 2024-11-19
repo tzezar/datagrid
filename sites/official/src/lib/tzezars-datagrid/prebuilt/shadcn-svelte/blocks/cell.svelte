@@ -4,22 +4,38 @@
 	import CellRenderer from '$lib/tzezars-datagrid/core/utils/cell-renderer.svelte';
 	import type { Snippet } from 'svelte';
 
-	let { children, column, grid, row }: { children?: Snippet; column?: Column<any>; grid: Datagrid<any, any>; row: any } =
-		$props();
+	let {
+		children,
+		column,
+		grid,
+		row
+	}: { children?: Snippet; column?: Column<any>; grid: Datagrid<any, any>; row: any } = $props();
 </script>
 
-<div
-	class="grid-cell text-ellipsis text-nowrap"
-	class:justify-end={column.align === 'end'}
-	class:justify-center={column.align === 'center'}
-	class:justify-start={column.align === 'start'}
-	class:offset-left={column.pinning.position === 'left'}
-	class:offset-right={column.pinning.position === 'right'}
-	style:--offset="{column.pinning.offset}px"
-	style:--min-width="{column.size.minWidth}px"
-	style:--width={!column.size.grow ? `${column.size.width}px` : null}
-	style:--max-width={!column.size.grow ? `${column.size.width}px` : null}
-	style:flex-grow={column.size.grow ? 1 : null}
->
-	<CellRenderer {column} {row} {grid} />
-</div>
+{#if column}
+	<div
+		class="grid-cell text-ellipsis text-nowrap"
+		class:justify-end={column.align === 'end'}
+		class:justify-center={column.align === 'center'}
+		class:justify-start={column.align === 'start'}
+		class:offset-left={column.pinning.position === 'left'}
+		class:offset-right={column.pinning.position === 'right'}
+		style:--offset="{column.pinning.offset}px"
+		style:--min-width="{column.size.minWidth}px"
+		style:--width={!column.size.grow ? `${column.size.width}px` : null}
+		style:--max-width={!column.size.grow ? `${column.size.width}px` : null}
+		style:flex-grow={column.size.grow ? 1 : null}
+	>
+		{#if children}
+			{@render children()}
+		{:else}
+			<CellRenderer {column} {row} {grid} />
+		{/if}
+	</div>
+{:else}
+	<div class="grid-cell">
+		{#if children}
+			{@render children()}
+		{/if}
+	</div>
+{/if}

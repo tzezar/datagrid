@@ -4,6 +4,7 @@
 	import { type Row } from '$lib/tzezars-datagrid/core/processors/data-processor.svelte';
 	import type { Snippet } from 'svelte';
 	import { VirtualList } from 'svelte-virtuallists';
+	import Toolbar from './_components/toolbar.svelte';
 
 	type Config = {
 		pagination?: boolean;
@@ -29,6 +30,7 @@
 </script>
 
 <Grid.Wrapper>
+	<Grid.Toolbar {grid}/>
 	<Grid.Content>
 		{#if config.virtualization === true}
 			<VirtualList items={grid.rows}  isTable={true}>

@@ -1,5 +1,6 @@
 import { SvelteSet } from "svelte/reactivity";
 import type { DatagridInstance, RowManagerStateConfig } from "../index.svelte";
+import type { Row } from "../processors/data-processor.svelte";
 
 export type RowSelectionMode = 'single' | 'multi' | 'none';
 export type RowExpansionMode = 'single' | 'multi' | 'none';
@@ -27,6 +28,8 @@ export interface RowManagerInstance {
     getExpandedRows(): string[];
     setExpandedRows(rows: string[]): void;
     isRowExpanded(rowId: string): boolean;
+
+    isGroup(row: Row<any>): boolean;
 
     isRowSelected(rowId: string): boolean;
     selectRow(rowId: string): void;
@@ -63,6 +66,7 @@ export class RowManager<TData> implements RowManagerInstance {
         this.grid = grid;
     }
 
+
     initialize(config: RowManagerStateConfig) {
         this.selectionMode = config.selectionMode || 'single';
         this.expansionMode = config.expansionMode || 'single';
@@ -77,6 +81,10 @@ export class RowManager<TData> implements RowManagerInstance {
             this.pinnedRows.top = new SvelteSet(config.pinnedRows.top);
             this.pinnedRows.bottom = new SvelteSet(config.pinnedRows.bottom);
         }
+    }
+
+    isGroup(row: any): boolean {
+        return row.groupId
     }
 
 

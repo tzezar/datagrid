@@ -2,10 +2,12 @@
 	import { Select as SelectPrimitive } from "bits-ui";
 	import { cn } from "$lib/utils.js";
 
-	type $$Props = SelectPrimitive.SeparatorProps;
+	type $$Props = SelectPrimitive.LabelProps;
 
 	let className: $$Props["class"] = undefined;
 	export { className as class };
 </script>
 
-<SelectPrimitive.Separator class={cn("bg-muted -mx-1 my-1 h-px", className)} {...$$restProps} />
+<SelectPrimitive.Label class={cn("px-2 py-1.5 text-sm font-semibold", className)} {...$$restProps}>
+	<slot />
+</SelectPrimitive.Label>

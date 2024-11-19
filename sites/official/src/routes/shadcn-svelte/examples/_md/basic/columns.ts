@@ -2,12 +2,19 @@ import type { ColumnDef } from "$lib/tzezars-datagrid/core/types"
 import type { SalesDataRow } from "$lib/generate-data/generate-sales-data"
 
 
+type CustomKeys = 'actions'
+
 export const columns = [
     {
         accessorKey: 'id',
         header: 'ID',
         align: 'end',
         filterable: false,
+        movable: false,
+        hideable: false,
+        resizable: false,
+        groupable: false,
+        pinnable: false
     },
     {
         accessorKey: 'department.name',
@@ -21,7 +28,6 @@ export const columns = [
         filterable: false,
 
     },
-
     {
         accessorKey: 'region',
         header: 'Region',
@@ -39,5 +45,5 @@ export const columns = [
         align: 'end',
         filterable: false,
     }
-] satisfies ColumnDef<SalesDataRow, never>[]
+] satisfies ColumnDef<SalesDataRow, CustomKeys>[]
 

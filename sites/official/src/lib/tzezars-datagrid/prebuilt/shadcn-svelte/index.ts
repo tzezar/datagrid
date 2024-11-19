@@ -11,9 +11,13 @@ import Cell from "./blocks/cell.svelte";
 
 import GroupCell from "./blocks/group-cell.svelte";
 import Pagination from "./blocks/pagination.svelte";
+import Toolbar from "./_components/toolbar.svelte";
 
 export {
     Wrapper,
+
+    Toolbar,
+    
     Content,
 
     Header,
