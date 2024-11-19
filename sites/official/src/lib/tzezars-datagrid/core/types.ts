@@ -88,3 +88,4 @@ export interface ExtendedDatagridConfig<TData, TCustomKeys extends string = neve
   plugins?: DatagridPlugin<TData>[];
   features?: Record<string, PluginConfig>;
 }
+
