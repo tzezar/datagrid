@@ -1,4 +1,4 @@
-import { createAccessorColumn, createColumn, createColumnGroup, createDisplayColumn, type ColumnDef } from "./column-creators";
+import { createComputedColum, createColumn, createColumnGroup, createDisplayColumn, type ColumnDef } from "./column-creators";
 
 interface User {
     id: number;
@@ -22,7 +22,7 @@ export const userColumns: ColumnDef<User>[] = [
     createColumn({ header: 'Age', accessorKey: 'profile.age' }),
 
     // Computed column with type checking
-    createAccessorColumn({
+    createComputedColum({
         header: 'Full Name',
         accessorFn: (row) => `${row.firstName} ${row.lastName}`,
         options: { sortable: true }
@@ -39,7 +39,7 @@ export const userColumns: ColumnDef<User>[] = [
     createColumnGroup({
         header: 'Profile', columns: [
             createColumn({ header: 'Email', accessorKey: 'profile.email' }),
-            createAccessorColumn({ header: 'Last Active', accessorFn: (row) => row.stats.lastLogin.toLocaleDateString() })
+            createComputedColum({ header: 'Last Active', accessorFn: (row) => row.stats.lastLogin.toLocaleDateString() })
         ]
     })
 ];

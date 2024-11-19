@@ -15,37 +15,28 @@ interface ColumnBase<TData> {
   header: string;
   sortable?: boolean;
   hidden?: boolean;
+
+  cell?: (value: any, row?: TData) => string | HTMLElement
 }
 
 // Specific interfaces for different column types
-interface AccessorColumn<TData> extends ColumnBase<TData> {
+export interface AccessorColumn<TData> extends ColumnBase<TData> {
   accessorKey: DotNestedKeys<TData>;
   accessorFn?: never;
-  cell?: (info: {
-    getValue: () => any;
-    row: { original: TData }
-  }) => string | number | boolean | null | undefined;
+  getValue?: (row: TData) => CellValue
 }
 
-interface ComputedColumn<TData> extends ColumnBase<TData> {
+export interface ComputedColumn<TData> extends ColumnBase<TData> {
   accessorKey?: never;
   accessorFn: (row: TData) => CellValue;
-  cell?: (info: {
-    getValue: () => any;
-    row: { original: TData }
-  }) => string | number | boolean | null | undefined;
 }
 
-interface DisplayColumn<TData> extends ColumnBase<TData> {
+export interface DisplayColumn<TData> extends ColumnBase<TData> {
   accessorKey?: never;
   accessorFn?: never;
-  cell: (info: {
-    getValue: () => undefined;
-    row: { original: TData }
-  }) => string;
 }
 
-interface GroupColumn<TData> extends ColumnBase<TData> {
+export interface GroupColumn<TData> extends ColumnBase<TData> {
   columns: ColumnDef<TData>[];
 }
 
@@ -60,7 +51,27 @@ export type ColumnDef<TData> =
 type CreateColumnProps<TData, TKey extends DotNestedKeys<TData>> = {
   header: string,
   accessorKey: TKey,
+  getValue: (row: TData) => CellValue,
   options?: Omit<Partial<AccessorColumn<TData>>, 'header' | 'accessorKey'>
+}
+
+type CreateAccessorColumnProps<TData> = {
+  header: string,
+  accessorFn: (row: TData) => CellValue,
+  getValue: (row: TData) => CellValue,
+  options?: Omit<Partial<ComputedColumn<TData>>, 'header' | 'accessorFn'>
+}
+
+type CreateDisplayColumnProps<TData> = {
+  header: string,
+  cell: (info: { getValue: () => undefined; row: { original: TData } }) => string,
+  options?: Omit<Partial<DisplayColumn<TData>>, 'header' | 'cell'>
+}
+
+type CreateGroupColumnProps<TData> = {
+  header: string,
+  columns: ColumnDef<TData>[],
+  options?: Omit<Partial<GroupColumn<TData>>, 'header' | 'columns'>
 }
 
 // Helper functions with improved type inference
@@ -68,35 +79,26 @@ export function createColumn<
   TData extends Record<string, any>,
   TKey extends DotNestedKeys<TData>
 >(
-  { header, accessorKey, options = {} }: CreateColumnProps<TData, TKey>,
+  { header, accessorKey, getValue, options = {} }: CreateColumnProps<TData, TKey>,
 ): AccessorColumn<TData> {
   return {
     header,
     accessorKey,
+    getValue,
     ...options,
   };
 }
 
-type CreateAccessorColumnProps<TData> = {
-  header: string,
-  accessorFn: (row: TData) => CellValue,
-  options?: Omit<Partial<ComputedColumn<TData>>, 'header' | 'accessorFn'>
-}
 
-export function createAccessorColumn<TData extends Record<string, any>>(
-  { header, accessorFn, options = {} }: CreateAccessorColumnProps<TData>,
+export function createComputedColum<TData extends Record<string, any>>(
+  { header, accessorFn, getValue, options = {} }: CreateAccessorColumnProps<TData>,
 ): ComputedColumn<TData> {
   return {
     header,
     accessorFn,
+    getValue,
     ...options,
   };
-}
-
-type CreateDisplayColumnProps<TData> = {
-  header: string,
-  cell: (info: { getValue: () => undefined; row: { original: TData } }) => string,
-  options?: Omit<Partial<DisplayColumn<TData>>, 'header' | 'cell'>
 }
 
 export function createDisplayColumn<TData extends Record<string, any>>(
@@ -109,11 +111,6 @@ export function createDisplayColumn<TData extends Record<string, any>>(
   };
 }
 
-type CreateGroupColumnProps<TData> = {
-  header: string,
-  columns: ColumnDef<TData>[],
-  options?: Omit<Partial<GroupColumn<TData>>, 'header' | 'columns'>
-}
 
 export function createColumnGroup<TData extends Record<string, any>>(
   { header, columns, options = {} }: CreateGroupColumnProps<TData>,
