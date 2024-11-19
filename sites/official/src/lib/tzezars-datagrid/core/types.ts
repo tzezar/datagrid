@@ -1,7 +1,8 @@
 import type { SortDirection } from "./features/sorting-manager.svelte";
-import type { CategoricalFacet, NumericFacet } from "../processors/column-processor.svelte";
+import type { CategoricalFacet, NumericFacet } from "../core/processors/column-processor.svelte";
 import type { Row } from "./processors/data-processor.svelte";
 import type { AggregationFn } from "./features/grouping-manager.svelte";
+import type { Datagrid, DatagridConfig } from "./index.svelte";
 
 
 type PathImpl<T, K extends keyof T> = 
@@ -65,3 +66,25 @@ export type ColumnDef<TData, TCustomKeys extends string = never> = {
 } & Partial<Omit<CommonColumnProps, 'header'>> & {
     header: string;
 };
+
+// Plugins
+
+export interface DatagridPlugin<TData, TCustomKeys extends string = never> {
+  name: string;
+  initialize?: (datagrid: Datagrid<TData, TCustomKeys>) => void;
+  destroy?: () => void;
+  // Allow any additional properties
+  [key: string]: any;
+}
+
+export interface DatagridFeature<TData, TCustomKeys extends string = never> extends DatagridPlugin<TData, TCustomKeys> {
+  state: Record<string, any>;
+}
+
+// Type for plugin configurations
+export type PluginConfig = Record<string, any>;
+
+export interface ExtendedDatagridConfig<TData, TCustomKeys extends string = never> extends DatagridConfig<TData, TCustomKeys> {
+  plugins?: DatagridPlugin<TData>[];
+  features?: Record<string, PluginConfig>;
+}
