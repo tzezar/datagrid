@@ -82,8 +82,7 @@ export class Datagrid<TData, TCustomKeys extends string = never> implements Data
 
 
     readonly pluginManager: PluginManager<TData, TCustomKeys>;
-    // Store custom features state
-    features: Record<string, any> = $state({});
+  
 
     constructor(config: DatagridConfig<TData, ColumnDef<TData, TCustomKeys>>) {
         this.pluginManager = new PluginManager(this);
@@ -93,7 +92,7 @@ export class Datagrid<TData, TCustomKeys extends string = never> implements Data
 
 
         if (config.plugins) {
-            this.initializePlugins(config.plugins, config.features);
+            this.initializePlugins(config.plugins);
         }
     }
 
@@ -111,15 +110,8 @@ export class Datagrid<TData, TCustomKeys extends string = never> implements Data
         this.pagination.updatePageCount()
     }
 
-    private initializePlugins(plugins: DatagridPlugin<TData>[], features?: Record<string, PluginConfig>): void {
+    private initializePlugins(plugins: DatagridPlugin<TData>[]): void {
         plugins.forEach(plugin => {
-            // If plugin is a feature and has configuration, merge it
-            if ('state' in plugin && features?.[plugin.name]) {
-                (plugin as DatagridFeature<TData>).state = {
-                    ...(plugin as DatagridFeature<TData>).state,
-                    ...features[plugin.name]
-                };
-            }
             this.pluginManager.register(plugin);
         });
     }
