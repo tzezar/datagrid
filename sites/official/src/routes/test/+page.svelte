@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {
 		createComputedColum,
-		createColumn,
+		createAccessorColumn,
 		createColumnGroup,
 		createDisplayColumn,
 		type AccessorColumn,
@@ -31,8 +31,9 @@
 		);
 	}
 
-	export function isGroupColumn<TData>(column: ColumnDef<TData>): column is GroupColumn<TData> {
-		return 'columns' in column && Array.isArray(column.columns);
+	// Type guard for group columns
+	function isGroupColumn(column: ColumnDef<User>): column is GroupColumn<User> {
+		return column.type === 'group';
 	}
 
 	interface User {
@@ -53,27 +54,30 @@
 	// Example columns with full IntelliSense support
 	export const userColumns: ColumnDef<User>[] = [
 		// Basic column - will suggest all possible keys from User interface
-		createColumn({
+		createAccessorColumn({
 			header: 'First Name',
 			accessorKey: 'firstName',
 			getValue: (row) => row.firstName,
 			options: { sortable: true }
 		}),
-		createColumn({ header: 'Age', accessorKey: 'profile.age', getValue: (row) => row.profile.age }),
+		createAccessorColumn({
+			header: 'Age',
+			accessorKey: 'profile.age',
+			getValue: (row) => row.profile.age
+		}),
 
 		// Computed column with type checking
 		createComputedColum({
 			header: 'Full Name',
 			accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-            getValue: (row) => `${row.firstName} ${row.lastName}`,
-            options: { sortable: true }
+			getValue: (row) => `${row.firstName} ${row.lastName}`,
+			options: { sortable: true }
 		}),
 
 		// Display column with type-safe row access
 		createDisplayColumn({
 			header: 'Status',
-			cell: (row) =>
-				`<span class="${row.status}">${row.status}</span>`,
+			cell: (row) => `<span class="${row.status}">${row.status}</span>`,
 			options: { sortable: true }
 		}),
 
@@ -81,7 +85,23 @@
 		createColumnGroup({
 			header: 'Profile',
 			columns: [
-				createColumn({
+				createColumnGroup({
+					header: 'Profile',
+					columns: [
+						createAccessorColumn({
+							header: 'Email',
+							accessorKey: 'profile.email',
+							getValue: (row) => row.profile.email,
+							options: { sortable: true }
+						}),
+						createComputedColum({
+							header: 'Last Active',
+							accessorFn: (row) => row.stats.lastLogin.toLocaleDateString(),
+							getValue: (row) => row.stats.lastLogin.toLocaleDateString()
+						})
+					]
+				}),
+				createAccessorColumn({
 					header: 'Email',
 					accessorKey: 'profile.email',
 					getValue: (row) => row.profile.email,
@@ -90,8 +110,8 @@
 				createComputedColum({
 					header: 'Last Active',
 					accessorFn: (row) => row.stats.lastLogin.toLocaleDateString(),
-                    getValue: (row) => row.stats.lastLogin.toLocaleDateString(),
-                })
+					getValue: (row) => row.stats.lastLogin.toLocaleDateString()
+				})
 			]
 		})
 	];
@@ -127,55 +147,88 @@
 		}
 	]);
 
+	function renderColumn(column: ColumnDef<any>, row: any) {
+		switch (column.type) {
+			case 'group':
+				return column.columns?.map((col) => renderColumnCell(col, row));
+			case 'display':
+				return column.cell?.(row);
+			case 'accessor':
+			case 'computed':
+				return column.getValue?.(row);
+			default:
+				return '';
+		}
+	}
+
+	function renderColumnCell(column: ColumnDef<any>, row: any) {
+		switch (column.type) {
+			case 'display':
+				return column.cell?.(row);
+			case 'accessor':
+			case 'computed':
+				return column.getValue?.(row);
+			default:
+				return '';
+		}
+	}
+
+	// Helper function to safely handle cell content
+	function getCellContent(column: ColumnDef<User>, row: User): string | HTMLElement {
+		if (column.type === 'display' && column.cell) {
+			return column.cell(row);
+		}
+		if (column.getValue) {
+			return String(column.getValue(row));
+		}
+		return '';
+	}
+
 	console.log(userColumns);
 </script>
+
+{#snippet HeaderCell(column: ColumnDef<User>)}
+	{#if isGroupColumn(column)}
+		<div class="grid-header-group">
+			<div class="grid-header-group-cell">{column.header}</div>
+			<div class="grid-header-row">
+				{#each column.columns ?? [] as subColumn (subColumn.header)}
+					{@render HeaderCell(subColumn)}
+				{/each}
+			</div>
+		</div>
+	{:else}
+		<div class="grid-header-cell">{column.header}</div>
+	{/if}
+{/snippet}
+
+<!-- Recursive body cell template -->
+{#snippet BodyCell(column: ColumnDef<User>, row: User)}
+	{#if isGroupColumn(column)}
+		{#each column.columns ?? [] as subColumn (subColumn.header)}
+			{@render BodyCell(subColumn, row)}
+		{/each}
+	{:else}
+		<div class="grid-body-cell">
+			{@html getCellContent(column, row)}
+		</div>
+	{/if}
+{/snippet}
 
 <div class="grid-wrapper">
 	<div class="grid">
 		<div class="grid-header">
 			<div class="grid-header-row">
-				{#each userColumns as column}
-					{#if isGroupColumn(column)}
-						<div class="grid-header-group">
-							<div class="grid-header-group-cell">{column.header}</div>
-							<div class="grid-header-row">
-								<!-- ! Can be grouped again -->
-								{#each column.columns as columnBase}
-									<div class="grid-header-cell">{columnBase.header}</div>
-								{/each}
-							</div>
-						</div>
-					{:else if isDisplayColumn(column)}
-						<div class="grid-header-cell">{column.header}</div>
-					{:else if isComputedColumn(column)}
-						<div class="grid-header-cell">{column.header}</div>
-					{:else if isAccessorColumn(column)}
-						<div class="grid-header-cell">{column.header}</div>
-					{/if}
+				{#each userColumns as column (column.header)}
+					{@render HeaderCell(column)}
 				{/each}
 			</div>
 		</div>
 		<div class="grid-body">
-			{#each data as row}
+			{#each data as row (row.id)}
 				<div class="grid-body-row">
-					{#each userColumns as column}
-						{#if isGroupColumn(column)}
-							{#each column.columns as columnBase}
-								{#if isDisplayColumn(columnBase)}
-									<div class="grid-body-cell">display</div>
-								{:else if isAccessorColumn(columnBase)}
-									<div class="grid-body-cell">{columnBase.getValue(row)}</div>
-								{:else if isComputedColumn(columnBase)}
-									<div class="grid-body-cell">{columnBase.getValue(row)}</div>
-								{/if}
-							{/each}
-						{:else if isDisplayColumn(column)}
-							<div class="grid-body-cell">{@html column.cell(row)}</div>
-						{:else if isAccessorColumn(column)}
-							<div class="grid-body-cell">{column.getValue(row)}</div>
-						{:else if isComputedColumn(column)}
-							<div class="grid-body-cell">{column.getValue(row)}</div>
-						{/if}
+					{#each userColumns as column (column.header)}
+						{@render BodyCell(column, row)}
 					{/each}
 				</div>
 			{/each}
@@ -235,6 +288,6 @@
 	}
 
 	.grid-body-cell {
-		width: 120px
+		width: 120px;
 	}
 </style>

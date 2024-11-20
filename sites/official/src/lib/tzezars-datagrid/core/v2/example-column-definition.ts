@@ -1,4 +1,4 @@
-import { createComputedColum, createColumn, createColumnGroup, createDisplayColumn, type ColumnDef } from "./column-creators";
+import { createComputedColum, createAccessorColumn, createColumnGroup, createDisplayColumn, type ColumnDef } from "./column-creators";
 
 interface User {
     id: number;
@@ -18,8 +18,8 @@ interface User {
 // Example columns with full IntelliSense support
 export const userColumns: ColumnDef<User>[] = [
     // Basic column - will suggest all possible keys from User interface
-    createColumn({ header: "First Name", accessorKey: 'firstName', options: { sortable: true } }),
-    createColumn({ header: 'Age', accessorKey: 'profile.age' }),
+    createAccessorColumn({ header: "First Name", accessorKey: 'firstName', options: { sortable: true } }),
+    createAccessorColumn({ header: 'Age', accessorKey: 'profile.age' }),
 
     // Computed column with type checking
     createComputedColum({
@@ -38,7 +38,7 @@ export const userColumns: ColumnDef<User>[] = [
     // Grouped columns
     createColumnGroup({
         header: 'Profile', columns: [
-            createColumn({ header: 'Email', accessorKey: 'profile.email' }),
+            createAccessorColumn({ header: 'Email', accessorKey: 'profile.email' }),
             createComputedColum({ header: 'Last Active', accessorFn: (row) => row.stats.lastLogin.toLocaleDateString() })
         ]
     })
