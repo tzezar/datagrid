@@ -4,32 +4,10 @@
 		createAccessorColumn,
 		createColumnGroup,
 		createDisplayColumn,
-		type AccessorColumn,
 		type ColumnDef,
-		type ComputedColumn,
-		type DisplayColumn,
 		type GroupColumn
 	} from '$lib/tzezars-datagrid/core/v2/column-creators';
 
-	export function isAccessorColumn<TData>(
-		column: ColumnDef<TData>
-	): column is AccessorColumn<TData> {
-		return 'accessorKey' in column && column.accessorKey !== undefined;
-	}
-
-	export function isComputedColumn<TData>(
-		column: ColumnDef<TData>
-	): column is ComputedColumn<TData> {
-		return 'accessorFn' in column && typeof column.accessorFn === 'function';
-	}
-
-	export function isDisplayColumn<TData>(column: ColumnDef<TData>): column is DisplayColumn<TData> {
-		return (
-			'cell' in column &&
-			typeof column.cell === 'function' &&
-			!('accessorKey' in column || 'accessorFn' in column)
-		);
-	}
 
 	// Type guard for group columns
 	function isGroupColumn(column: ColumnDef<User>): column is GroupColumn<User> {
@@ -146,32 +124,6 @@
 			status: 'inactive'
 		}
 	]);
-
-	function renderColumn(column: ColumnDef<any>, row: any) {
-		switch (column.type) {
-			case 'group':
-				return column.columns?.map((col) => renderColumnCell(col, row));
-			case 'display':
-				return column.cell?.(row);
-			case 'accessor':
-			case 'computed':
-				return column.getValue?.(row);
-			default:
-				return '';
-		}
-	}
-
-	function renderColumnCell(column: ColumnDef<any>, row: any) {
-		switch (column.type) {
-			case 'display':
-				return column.cell?.(row);
-			case 'accessor':
-			case 'computed':
-				return column.getValue?.(row);
-			default:
-				return '';
-		}
-	}
 
 	// Helper function to safely handle cell content
 	function getCellContent(column: ColumnDef<User>, row: User): string | HTMLElement {
