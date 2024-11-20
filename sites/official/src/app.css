@@ -103,6 +103,8 @@
 
 @layer base {
 	* {
+		padding: 0;
+		margin: 0;
 		@apply border-border;
 	}
 	body {
