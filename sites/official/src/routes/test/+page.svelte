@@ -3,189 +3,46 @@
 		createComputedColum,
 		createAccessorColumn,
 		createColumnGroup,
-		createDisplayColumn,
-		type ColumnDef,
-		type GroupColumn
-	} from '$lib/tzezars-datagrid/core/v2/column-creators';
+		type ColumnDef
+	} from './datagrid/core/helpers/column-creators';
+	import type { Row, User } from './types';
+	import { isGroupColumn } from './datagrid/core/column-guards';
+	import type { ColumnId, GridBasicRow, GridGroupRow, GridRow } from './datagrid/core/types';
+	import { Datagrid } from './datagrid/core/index.svelte';
+	import {
+		findColumnById,
+		flattenColumns,
+		getCellContent,
+		getSortIcon,
+		getSortIndex,
+		isGridGroupRow,
+		onSort
+	} from './datagrid/core/utils.svelte';
+	import { userColumns } from './columns.svelte';
 
-	// Type guard for group columns
-	function isGroupColumn(column: ColumnDef<User>): column is GroupColumn<User> {
-		return column.type === 'group';
+	let { data } = $props();
+
+	const datagrid = new Datagrid(userColumns, data.users);
+
+
+	function handleGroupByChange(event: Event) {
+		const select = event.target as HTMLSelectElement;
+		const selectedOptions = Array.from(select.selectedOptions);
+
+		const newGroupBy: ColumnId[] = selectedOptions
+			.map((option) => {
+				const column = findColumnById(datagrid.columns, option.value);
+				if (column?.options?.groupable === false) return null;
+				return option.value;
+			})
+			.filter((group): group is ColumnId => group !== null); // Type guard to filter out null values
+
+
+		
+		datagrid.grouping.groupByColumns = newGroupBy;
+		datagrid.changePage(1);
+		datagrid.executeFullDataTransformation();
 	}
-
-	interface User {
-		id: number;
-		firstName: string;
-		lastName: string;
-		profile: {
-			age: number;
-			email: string;
-			country: string;
-		};
-		stats: {
-			visits: number;
-			lastLogin: Date;
-			averageSessionDuration: number; // in minutes
-		};
-		status: 'active' | 'inactive' | 'pending';
-		role: 'admin' | 'user' | 'guest';
-	}
-
-	export const userColumns: ColumnDef<User>[] = [
-		// Simple accessor columns
-		createAccessorColumn({
-			header: 'First Name',
-			accessorKey: 'firstName',
-			getValue: (row) => row.firstName,
-			options: { sortable: true, filterable: true }
-		}),
-		createAccessorColumn({
-			header: 'Age',
-			accessorKey: 'profile.age',
-			getValue: (row) => row.profile.age,
-			options: { sortable: true, filterable: true }
-		}),
-
-		// Computed column for full name
-		createComputedColum({
-			header: 'Full Name',
-			accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-			getValue: (row) => `${row.firstName} ${row.lastName}`,
-			options: { sortable: true, filterable: true }
-		}),
-
-		// Conditional formatting for status
-		createDisplayColumn({
-			header: 'Status',
-			cell: (row) => `<span class="${row.status}">${row.status.toUpperCase()}</span>`,
-			options: { sortable: true },
-			customStyle: (row) =>
-				row.status === 'active'
-					? 'text-green-600'
-					: row.status === 'inactive'
-						? 'text-gray-400'
-						: 'text-yellow-500'
-		}),
-
-		// Grouped columns for profile
-		createColumnGroup({
-			header: 'Profile',
-			columns: [
-				createAccessorColumn({
-					header: 'Email',
-					accessorKey: 'profile.email',
-					getValue: (row) => row.profile.email,
-					options: { sortable: true, filterable: true },
-					customTooltip: (row) => `Contact: ${row.profile.email}`
-				}),
-				createAccessorColumn({
-					header: 'Country',
-					accessorKey: 'profile.country',
-					getValue: (row) => row.profile.country,
-					options: { filterable: true }
-				})
-			]
-		}),
-
-		// Grouped columns for stats
-		createColumnGroup({
-			header: 'Stats',
-			columns: [
-				createAccessorColumn({
-					header: 'Visits',
-					accessorKey: 'stats.visits',
-					getValue: (row) => row.stats.visits,
-					options: { sortable: true }
-				}),
-				createComputedColum({
-					header: 'Last Login',
-					accessorFn: (row) => row.stats.lastLogin.toLocaleString(),
-					getValue: (row) => row.stats.lastLogin.toLocaleString(),
-					options: { sortable: true }
-				}),
-				createAccessorColumn({
-					header: 'Avg. Session (mins)',
-					accessorKey: 'stats.averageSessionDuration',
-					getValue: (row) => row.stats.averageSessionDuration,
-					options: { sortable: true }
-				})
-			]
-		}),
-        		// Role column with custom formatting
-		createDisplayColumn({
-			header: 'Role',
-			cell: (row) => `<span class="badge role-${row.role}">${row.role.toUpperCase()}</span>`,
-			options: { sortable: true, filterable: true },
-			customStyle: (row) => `role-${row.role}` // Custom classes for styling
-		}),
-	];
-
-	let data: User[] = [
-		{
-			id: 1,
-			firstName: 'John',
-			lastName: 'Doe',
-			profile: {
-				age: 30,
-				email: 'jdoe@example.com',
-				country: 'USA'
-			},
-			stats: {
-				visits: 120,
-				lastLogin: new Date('2024-11-15T10:30:00Z'),
-				averageSessionDuration: 15
-			},
-			status: 'active',
-			role: 'admin'
-		},
-		{
-			id: 2,
-			firstName: 'Jane',
-			lastName: 'Smith',
-			profile: {
-				age: 25,
-				email: 'jane.smith@example.com',
-				country: 'UK'
-			},
-			stats: {
-				visits: 80,
-				lastLogin: new Date('2024-11-10T14:45:00Z'),
-				averageSessionDuration: 12
-			},
-			status: 'inactive',
-			role: 'user'
-		},
-		{
-			id: 3,
-			firstName: 'Alice',
-			lastName: 'Johnson',
-			profile: {
-				age: 28,
-				email: 'alice.johnson@example.com',
-				country: 'Canada'
-			},
-			stats: {
-				visits: 150,
-				lastLogin: new Date('2024-11-18T18:00:00Z'),
-				averageSessionDuration: 20
-			},
-			status: 'pending',
-			role: 'guest'
-		}
-	];
-
-	// Helper function to safely handle cell content
-	function getCellContent(column: ColumnDef<User>, row: User): string | HTMLElement {
-		if (column.type === 'display' && column.cell) {
-			return column.cell(row);
-		}
-		if (column.getValue) {
-			return String(column.getValue(row));
-		}
-		return '';
-	}
-
-	console.log(userColumns);
 </script>
 
 {#snippet HeaderCell(column: ColumnDef<User>)}
@@ -199,42 +56,195 @@
 			</div>
 		</div>
 	{:else}
-		<div class="grid-header-cell">{column.header}</div>
-	{/if}
-{/snippet}
-
-<!-- Recursive body cell template -->
-{#snippet BodyCell(column: ColumnDef<User>, row: User)}
-	{#if isGroupColumn(column)}
-		{#each column.columns ?? [] as subColumn (subColumn.header)}
-			{@render BodyCell(subColumn, row)}
-		{/each}
-	{:else}
-		<div class="grid-body-cell">
-			{@html getCellContent(column, row)}
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<div class="grid-header-cell">
+			<div
+				class="header-content {column?.sortable ? 'sortable' : ''}"
+				onclick={(e) => onSort(datagrid, column, e)}
+			>
+				<span>{column.header}</span>
+				{#if column?.sortable}
+					<div class="sort-indicator">
+						{#if getSortIndex(datagrid, column)}
+							<span class="sort-index">{getSortIndex(datagrid, column)}</span>
+						{/if}
+						<!-- svelte-ignore svelte_component_deprecated -->
+						<svelte:component this={getSortIcon(datagrid, column)} class="sort-icon" size={14} />
+					</div>
+				{/if}
+			</div>
+			<div class="w-full">
+				{#if column.filterable !== false}
+					{#if column._meta.filterType === 'number'}
+						<input
+							type="number"
+							class="column-filter-input w-full"
+							value={datagrid.filtering.getConditionValue(column.columnId)}
+							oninput={(e) => {
+								const value = e.currentTarget.value === '' ? null : +e.currentTarget.value;
+								datagrid.filtering.updateFilterCondition({
+									column,
+									value
+								});
+								datagrid.executeFullDataTransformation();
+							}}
+						/>
+					{/if}
+					{#if column._meta.filterType === 'text'}
+						<input
+							type="text"
+							class="column-filter-input w-full"
+							value={datagrid.filtering.getConditionValue(column.columnId)}
+							oninput={(e) => {
+								datagrid.filtering.updateFilterCondition({
+									column,
+									value: e.currentTarget.value
+								});
+								datagrid.executeFullDataTransformation();
+							}}
+						/>
+					{/if}
+					{#if column._meta.filterType === 'select'}
+						<select
+							value={datagrid.filtering.getConditionValue(column.columnId)}
+							oninput={(e) => {
+								datagrid.filtering.updateFilterCondition({
+									column,
+									value: e.currentTarget.value
+								});
+								datagrid.executeFullDataTransformation();
+							}}
+						>
+							<option value=""></option>
+							{#each column._meta.filterOptions as option}
+								<option value={option.value}>{option.label}</option>
+							{/each}
+						</select>
+					{/if}
+				{/if}
+			</div>
 		</div>
 	{/if}
 {/snippet}
+
+{#snippet BodyCell(column: ColumnDef<User>, row: GridBasicRow<User>)}
+	<div class="grid-body-cell">
+		{@html getCellContent(column, row.original)}
+	</div>
+{/snippet}
+
+{#snippet GroupRowCell(row: GridGroupRow<User>, column: ColumnDef<User>)}
+	<div class="grid-body-cell group-cell">
+		{#if column.columnId === row.groupKey}
+			<div class="group-cell-content">
+				<button
+					class="group-expand-inline-toggle"
+					onclick={() => datagrid.toggleGroupRowIsExpanded(row)}
+				>
+					<span class="expand-icon">
+						{row.isExpanded ? '▼' : '▶'}
+					</span>
+					<span class="group-value">
+						{row.groupValue[0]}
+					</span>
+				</button>
+				<span class="group-items-count">
+					({row.children.length} items)
+				</span>
+			</div>
+		{/if}
+	</div>
+{/snippet}
+
+{#snippet GroupRow(row: GridGroupRow<User>)}
+	<div class="grid-body-row group-row" data-depth={row.depth} data-expanded={row.isExpanded}>
+		{#each flattenColumns(datagrid.columns) as column, columnIndex (columnIndex)}
+			{@render GroupRowCell(row, column)}
+		{/each}
+	</div>
+{/snippet}
+
+{#snippet BasicRow(row: GridBasicRow<User>)}
+	<div class="grid-body-row">
+		{#each flattenColumns(datagrid.columns) as column (column.header)}
+			{@render BodyCell(column, row)}
+		{/each}
+	</div>
+{/snippet}
+
+{#snippet Row(row: GridRow<User>)}
+	{#if isGridGroupRow(row)}
+		{@render GroupRow(row)}
+	{:else}
+		{@render BasicRow(row)}
+	{/if}
+{/snippet}
+
+<div class="flex flex-col pb-6">
+	<label for="groupBy">Group by:</label>
+	<select
+		multiple
+		value={datagrid.grouping.groupByColumns}
+		onchange={(e) => handleGroupByChange(e)}
+		id="groupBy"
+		style={`border-radius: 0.25rem;
+		border: 1px solid hsl(var(--grid-border));
+		padding: 0 0.5rem;
+		height: 140px;
+		`}
+	>
+		{#each datagrid.columns as column}
+			<option value={column.columnId} disabled={column?.options?.groupable === false}>
+				{column.header}
+			</option>
+		{/each}
+	</select>
+</div>
+
+<input
+	type="text"
+	value={datagrid.globalSearch.value}
+	oninput={(e) => {
+		datagrid.globalSearch.value = e.target.value;
+		datagrid.executeFullDataTransformation();
+	}}
+/>
 
 <div class="grid-wrapper">
 	<div class="grid">
 		<div class="grid-header">
 			<div class="grid-header-row">
-				{#each userColumns as column (column.header)}
+				{#each datagrid.columns as column (column.header)}
 					{@render HeaderCell(column)}
 				{/each}
 			</div>
 		</div>
 		<div class="grid-body">
-			{#each data as row (row.id)}
-				<div class="grid-body-row">
-					{#each userColumns as column (column.header)}
-						{@render BodyCell(column, row)}
-					{/each}
-				</div>
+			{#each datagrid.processedRowsCache as row (row.index)}
+				{@render Row(row)}
 			{/each}
 		</div>
 	</div>
+</div>
+<div class="pagination">
+	<button
+		disabled={!datagrid.pagination.canGoToPrevPage()}
+		onclick={() =>
+			datagrid.pagination.canGoToPrevPage() && datagrid.changePage(datagrid.pagination.page - 1)}
+	>
+		Prev
+	</button>
+	<span>
+		Page {datagrid.pagination.page} of {datagrid.pagination.pageCount}
+	</span>
+	<button
+		disabled={!datagrid.pagination.canGoToNextPage()}
+		onclick={() =>
+			datagrid.pagination.canGoToNextPage() && datagrid.changePage(datagrid.pagination.page + 1)}
+	>
+		Next
+	</button>
 </div>
 
 <style>
@@ -302,7 +312,6 @@
 
 	/* Group styles */
 	.grid-header-group {
-        
 		display: flex;
 		flex-direction: column;
 		/* Remove direct border */
@@ -341,6 +350,12 @@
 		border-bottom: none;
 	}
 
+	.grid-header-cell {
+		gap: 0.5rem;
+		display: flex;
+		flex-direction: column;
+	}
+
 	/* Fix for group headers spanning multiple columns */
 	.grid-header-group {
 		display: flex;
@@ -363,7 +378,7 @@
 	.grid-header-cell,
 	.grid-body-cell,
 	.grid-header-group-cell {
-		padding: 8px 12px;
+		padding: 8px 8px;
 	}
 
 	.grid-header-group-cell {
@@ -375,5 +390,96 @@
 		display: flex;
 		flex-direction: column;
 		box-sizing: border-box;
+	}
+
+	.sortable {
+		cursor: pointer;
+		user-select: none;
+	}
+
+	.sortable:hover {
+		background-color: rgba(0, 0, 0, 0.05);
+	}
+
+	.header-content {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		justify-content: space-between;
+	}
+
+	.sort-indicator {
+		display: flex;
+		align-items: center;
+		opacity: 0.5;
+	}
+
+	.sortable:hover .sort-indicator {
+		opacity: 1;
+	}
+
+	.grid-header-cell[data-sort-direction='asc'] .sort-indicator,
+	.grid-header-cell[data-sort-direction='desc'] .sort-indicator {
+		opacity: 1;
+	}
+
+	/* TODO: change coloring */
+	.group-expand-inline-toggle {
+		display: flex;
+		align-items: center;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0;
+		margin: 0;
+		gap: 0.5rem;
+		flex-grow: 1;
+	}
+
+	.group-expand-inline-toggle:hover {
+		background-color: rgba(0, 0, 0, 0.05);
+	}
+
+	.expand-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		color: #666;
+	}
+
+	.group-value {
+		font-weight: 600;
+		color: #333;
+		flex-grow: 1;
+	}
+
+	.group-items-count {
+		color: #666;
+		font-size: 0.8em;
+		margin-left: auto;
+	}
+
+	.group-row {
+		background-color: #f9f9f9;
+	}
+
+	.group-row[data-expanded='true'] {
+		background-color: #f0f0f0;
+	}
+
+	.group-cell {
+		display: flex;
+		align-items: center;
+	}
+
+	/* Filtering */
+	.column-filter-input {
+		background-color: hsl(var(--grid-row-odd-background));
+		border-radius: 0.25rem;
+		border: 1px solid hsl(var(--grid-border));
+		padding: 0 0.5rem;
+		height: 1.25rem;
+		color: hsl(var(--grid-text-color));
 	}
 </style>

@@ -12,6 +12,7 @@
 		"lint": "prettier --check . && eslint ."
 	},
 	"devDependencies": {
+		"@faker-js/faker": "^9.2.0",
 		"@internationalized/date": "^3.5.6",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-node": "^5.2.9",

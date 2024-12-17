@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { Row } from '$lib/tzezars-datagrid/processors/data-processor.svelte';
-	import { Datagrid } from '$lib/tzezars-datagrid/index.svelte';
+	import type { Row } from '$lib/tzezars-datagrid/core/processors/data-processor.svelte';
+	import { Datagrid } from '$lib/tzezars-datagrid/core/index.svelte';
 
 	let { row, grid }: { row: Row<any>; grid: Datagrid<any, any> } = $props();
 </script>

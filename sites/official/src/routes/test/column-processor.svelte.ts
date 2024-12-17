@@ -1,4 +1,4 @@
-import type { ColumnDef } from "./column-creators";
+import type { ColumnDef } from "./datagrid/core/helpers/column-creators";
 
 function createValueGetter<TData>(column: ColumnDef<TData>): (row: TData) => any {
     // Prioritize methods in this order:

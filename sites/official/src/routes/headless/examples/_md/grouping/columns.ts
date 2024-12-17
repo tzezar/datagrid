@@ -19,7 +19,7 @@ export const columns = [
         accessorKey: 'id',
         header: 'ID',
         align: 'end',
-        groupable: false,
+        groupable: true,
         aggregationFn: 'count',
         size: {
             width: 150,

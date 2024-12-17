@@ -3,7 +3,7 @@
     background-color: hsl(var(--grid-row-even-background));
     color: hsl(var(--grid-text-color));
     height: 100%;
-    flex-grow: 1;
+    flex-grow: 0;
     max-height: 600px;
     display: flex;
     flex-direction: column;

@@ -172,7 +172,7 @@ export class DataProcessor<TData> implements DataProcessorInstance<TData> {
     }
     private applyGrouping(): Row<TData>[] {
         const rows: Row<TData>[] = [];
-        this.createGroups(this.getGroupedData(), rows);
+        this.flattenGroups(this.getGroupedData(), rows);
         return rows;
     }
     private getGroupedData(): Map<string, GroupData> {
@@ -207,7 +207,7 @@ export class DataProcessor<TData> implements DataProcessorInstance<TData> {
 
         return sort(entries).by(sortInstructions as any);
     }
-    private createGroups(groups: Map<string, GroupData>, rows: (Row<TData> | GroupRow<TData>)[], parentIndex: string = '', depth = 0, parentId: string | null = null) {
+    private flattenGroups(groups: Map<string, GroupData>, rows: (Row<TData> | GroupRow<TData>)[], parentIndex: string = '', depth = 0, parentId: string | null = null) {
         const sortedGroups = Array.from(groups.entries());
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         sortedGroups.forEach(([_, group], groupIndex) => {
@@ -231,7 +231,7 @@ export class DataProcessor<TData> implements DataProcessorInstance<TData> {
 
             if (this.grid.grouping.state.expandedRows.has(group.groupPath)) {
                 // Process nested groups
-                this.createGroups(group.subgroups, rows, currentIndex, depth + 1, group.groupPath);
+                this.flattenGroups(group.subgroups, rows, currentIndex, depth + 1, group.groupPath);
 
                 // Add leaf items
                 if (group.items.length > 0) {

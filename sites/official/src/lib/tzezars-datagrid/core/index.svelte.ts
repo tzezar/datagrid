@@ -7,7 +7,7 @@ import { RowManager, type RowExpansionMode, type RowManagerState, type RowSelect
 import { SortingManager, type SortingFeature, type SortingState } from "./features/sorting-manager.svelte";
 import { ColumnProcessor, type Column, type ColumnProcessorInstance } from "./processors/column-processor.svelte";
 import { DataProcessor, type DataProcessorInstance, type Row } from "./processors/data-processor.svelte";
-import type { ColumnDef, DatagridFeature, DatagridPlugin, PluginConfig } from "./types";
+import type { ColumnDef, DatagridPlugin, PluginConfig } from "./types";
 
 
 export interface DatagridOriginal<TData, TCustomKeys extends string = never> {

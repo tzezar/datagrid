@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { Datagrid } from '$lib/tzezars-datagrid/index.svelte';
-	import type { Row } from '$lib/tzezars-datagrid/processors/data-processor.svelte';
+	import type { Row } from '$lib/tzezars-datagrid/core/processors/data-processor.svelte';
 	import Collapse from '$lib/icons/collapse.svelte';
 	import Expand from '$lib/icons/expand.svelte';
+	import type { DatagridConfig } from '$lib/tzezars-datagrid/core/index.svelte';
 
-	let { row, grid }: { row: Row<any>; grid: Datagrid<any, any> } = $props();
+	let { row, grid }: { row: Row<any>; grid: DatagridConfig<any, any> } = $props();
 
 	const handleExpandRow = (id: string) => {
 		if (grid.rowManager.expansionMode === 'none') return
