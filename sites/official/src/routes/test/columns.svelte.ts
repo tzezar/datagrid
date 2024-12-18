@@ -1,13 +1,42 @@
-import { createAccessorColumn, createColumnGroup, createComputedColum, type ColumnDef } from "./datagrid/core/helpers/column-creators";
+import ActionsCell from "./actions-cell.svelte";
+import { createAccessorColumn, createColumnGroup, createComputedColumn, createDisplayColumn, type AnyColumn } from "./datagrid/core/helpers/column-creators";
+import SelectRowCell from "./select-row-cell.svelte";
 import type { User } from "./types";
 
-export const userColumns: ColumnDef<User>[] = [
+export const userColumns: AnyColumn<User>[] = [
     // Simple accessor columns
+    createDisplayColumn({
+        header: 'Actions',
+        columnId: 'actions',
+        // TODO fix typing later
+        cell: (row) => {
+            return {
+                component: ActionsCell,
+                props: {
+                    row,
+                }
+            }
+        },
+        options: { sortable: false },
+    }),
+    createDisplayColumn({
+        header: 'Row Selection',
+        columnId: 'selectRow',
+        cell: (row) => {
+            return {
+                component: SelectRowCell,
+                props: {
+                    row,
+                }
+            }
+        },
+        options: { sortable: false },
+    }),
     createAccessorColumn({
         header: 'Id',
         accessorKey: 'id',
         columnId: 'id',
-        getValue: (row) => row.id,
+        getValueFn: (row) => row.id,
         options: { sortable: true },
         _meta: {
             filterType: 'number'
@@ -17,7 +46,7 @@ export const userColumns: ColumnDef<User>[] = [
         header: 'First Name',
         accessorKey: 'firstName',
         columnId: 'firstName',
-        getValue: (row) => row.firstName,
+        getValueFn: (row) => row.firstName,
         options: { sortable: true },
         _meta: {
             filterType: 'text'
@@ -28,33 +57,33 @@ export const userColumns: ColumnDef<User>[] = [
         header: 'Age',
         columnId: 'age',
         accessorKey: 'profile.age',
-        getValue: (row) => row.profile.age,
+        getValueFn: (row) => row.profile.age,
         options: { sortable: true },
         _meta: {
             filterType: 'number'
         },
-        getGroupValue: (row) => {
+        getGroupValueFn: (row) => {
             const age = row.profile?.age;
             // Optional: You can bucket ages into ranges if needed
-            return age !== undefined && age !== null 
+            return age !== undefined && age !== null
                 ? Math.floor(age / 10) * 10 + '-' + (Math.floor(age / 10) * 10 + 9)
                 : 'Unknown';
         },
     }),
     // Computed column for full name
-    createComputedColum({
+    createComputedColumn({
         header: 'Full Name',
         columnId: 'fullName',
         accessorFn: (row) => `${row.firstName} ${row.lastName}`,
- 
-        getValue: (row) => `${row.firstName} ${row.lastName}`,
+
+        getValueFn: (row) => `${row.firstName} ${row.lastName}`,
         options: { sortable: true },
-        getGroupValue: (row) => {
+        getGroupValueFn: (row) => {
             const fullName = `${row.firstName} ${row.lastName}`;
             // Optional: Group by first letter or first word
             return fullName.charAt(0).toUpperCase();
         },
-        
+
     }),
 
     // Conditional formatting for status
@@ -63,23 +92,24 @@ export const userColumns: ColumnDef<User>[] = [
         columnId: 'status',
         accessorKey: 'status',
         // cell: (row) => `<span class="${row?.status}">${row?.status.toUpperCase()}</span>`,
-        getValue: (row) => row.status,
+        getValueFn: (row) => row.status,
         options: { sortable: true },
         _meta: {
             filterType: 'select',
-            filterOptions: [{label: 'active', value: 'active'}, {label:'inactive', value: 'inactive'}, {label: 'pending', value: 'pending'}]
+            filterOptions: [{ label: 'active', value: 'active' }, { label: 'inactive', value: 'inactive' }, { label: 'pending', value: 'pending' }]
         }
     }),
 
     // Grouped columns for profile
     createColumnGroup({
         header: 'Profile',
+        columnId: 'profile',
         columns: [
             createAccessorColumn({
                 header: 'Email',
                 columnId: 'email',
                 accessorKey: 'profile.email',
-                getValue: (row) => row.profile.email,
+                getValueFn: (row) => row.profile.email,
                 options: {
                     sortable: true
                 }
@@ -88,7 +118,7 @@ export const userColumns: ColumnDef<User>[] = [
                 header: 'Country',
                 columnId: 'country',
                 accessorKey: 'profile.country',
-                getValue: (row) => row.profile.country,
+                getValueFn: (row) => row.profile.country,
                 options: {
                     sortable: true
                 }
@@ -99,27 +129,31 @@ export const userColumns: ColumnDef<User>[] = [
     // Grouped columns for stats
     createColumnGroup({
         header: 'Stats',
+        columnId: 'stats',
         columns: [
             createAccessorColumn({
                 header: 'Visits',
                 columnId: 'visits',
                 accessorKey: 'stats.visits',
-                getValue: (row) => row.stats.visits,
+                getValueFn: (row) => row.stats.visits,
                 options: { sortable: true }
             }),
-            createComputedColum({
+            createComputedColumn({
                 header: 'Last Login',
                 columnId: 'lastLogin',
                 accessorFn: (row) => row.stats.lastLogin.toLocaleString(),
-                getValue: (row) => row.stats.lastLogin,
+                getValueFn: (row) => row.stats.lastLogin,
                 options: { sortable: true }
             }),
             createAccessorColumn({
                 header: 'Avg. Session (mins)',
                 columnId: 'averageSessionDuration',
                 accessorKey: 'stats.averageSessionDuration',
-                getValue: (row) => row.stats.averageSessionDuration,
-                options: { sortable: true }
+                getValueFn: (row) => row.stats.averageSessionDuration,
+                options: { sortable: true, filterable: true },
+                _meta: {
+                    filterType: 'number'
+                }
             })
         ]
     }),
@@ -128,7 +162,7 @@ export const userColumns: ColumnDef<User>[] = [
         header: 'Role',
         columnId: 'role',
         accessorKey: 'role',
-        getValue: (row) => row.role,
+        getValueFn: (row) => row.role,
         // cell: (row) => `<span class="badge role-${row.role}">${row.role.toUpperCase()}</span>`,
         options: { sortable: true },
         _meta: {

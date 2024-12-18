@@ -1,10 +1,26 @@
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-svelte";
 import { isGroupColumn } from "./column-guards";
-import type { AccessorColumn, ColumnDef, ComputedColumn, DisplayColumn } from "./helpers/column-creators";
-import type { CellValue, GridGroupRow, GridRow } from "./types";
+import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn } from "./helpers/column-creators";
+import type { CellValue, GridGroupRow, GridRow, SortableColumn } from "./types";
 import type { Datagrid } from "./index.svelte";
 
-export function getCellContent(column: ColumnDef<any>, row: any): CellValue | HTMLElement {
+
+
+export function getCellValue(column: AnyColumn<any>, row: any): CellValue {
+    if (column.type === 'accessor') {
+        column = column as AccessorColumn<any>;
+        return column.getValueFn(row);
+    } else if (column.type === 'computed') {
+        column = column as ComputedColumn<any>;
+        return column.getValueFn(row);
+    } else if (column.type === 'display') {
+        throw new Error('Display columns are not supported')
+    } else if (column.type === 'group') {
+        throw new Error('Group columns are not supported');
+    }
+}
+
+export function getCellContent(column: AnyColumn<any>, row: any): CellValue | HTMLElement {
     if (column.type === 'accessor') {
         column = column as AccessorColumn<any>;
         return column.getValueFn(row);
@@ -19,8 +35,8 @@ export function getCellContent(column: ColumnDef<any>, row: any): CellValue | HT
     }
 }
 
-export function flattenColumns(columns: ColumnDef<any>[]): ColumnDef<any>[] {
-    const flattened: ColumnDef<any>[] = [];
+export function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+    const flattened: AnyColumn<any>[] = [];
 
     for (const column of columns) {
         if (isGroupColumn(column)) {
@@ -33,16 +49,21 @@ export function flattenColumns(columns: ColumnDef<any>[]): ColumnDef<any>[] {
     return flattened;
 }
 
+export const filterOutGroupColumns = <TOriginalRow>(columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] => {
+    return columns.filter(column => column.type !== 'group') 
+}
+
+
 // Find column by ID in nested structure
-export function findColumnById(columns: ColumnDef<User>[], id: string): ColumnDef<User> | null {
+export function findColumnById<TOriginalRow>(columns: AnyColumn<TOriginalRow>[], id: string): AnyColumn<TOriginalRow> | null {
     const flatColumns = flattenColumns(columns);
     return flatColumns.find((col) => col.columnId === id || col.header === id) ?? null;
 }
 
 // Handle sort click with multi-column support
-export function onSort(datagrid: Datagrid<any>, column: ColumnDef<any>, event: MouseEvent) {
+export function onSort(datagrid: Datagrid<any>, column: AnyColumn<any>, event: MouseEvent) {
     const timeStart = performance.now();
-    if (!column.sortable) return;
+    if (!column.options.sortable) return;
 
     const columnId = column.columnId || column.header;
     const existingIndex = datagrid.sorting.sortConfigs.findIndex(
@@ -80,16 +101,19 @@ export function onSort(datagrid: Datagrid<any>, column: ColumnDef<any>, event: M
 }
 
 // Get sort index for display
-export const getSortIndex = (datagrid: Datagrid<any>, column: ColumnDef<any>): number | null => {
-    if (!column?.sortable) return null;
+export const getSortIndex = (datagrid: Datagrid<any>, column: AnyColumn<any>): number | null => {
+    column = column as SortableColumn<any>;
+    if (!column.options.sortable) return null;
     const columnId = column.columnId || column.header;
     const sortConfig = datagrid.sorting.sortConfigs.find((config) => config.id === columnId);
     return sortConfig ? sortConfig.index + 1 : null;
 };
 
 // Get sort icon based on sort state
-export const getSortIcon = (datagrid: any, column: ColumnDef<any>) => {
-    if (!column?.sortable) return null;
+export const getSortIcon = (datagrid: Datagrid<any>, column: AnyColumn<any>) => {
+    column = column as SortableColumn<any>;
+
+    if (!column.options.sortable) return null;
     const columnId = column.columnId || column.header;
     const sortConfig = datagrid.sorting.sortConfigs.find((config) => config.id === columnId);
     if (!sortConfig) return ArrowUpDown;
@@ -103,8 +127,42 @@ export const isGridGroupRow = <TOriginalRow,>(
 };
 
 
-export const getSearchableColumns = (columns: ColumnDef<any>[]): ColumnDef<any>[] => {
-    const searchableColumns = columns.filter(column => column.type === 'accessor' || column.type === 'computed')
-        .filter((column) => column.options?.searchable !== false) as (AccessorColumn<any> | ComputedColumn<any>)[];
+export const getSearchableColumns = <T>(columns: AnyColumn<T>[]): (AccessorColumn<T> | ComputedColumn<T>)[] => {
+    const searchableColumns = columns
+        .filter((column): column is AccessorColumn<T> | ComputedColumn<T> =>
+            column.type === 'accessor' || column.type === 'computed'
+        )
+        .filter(column => column.options?.searchable !== false);
     return searchableColumns;
-}
+};
+
+export const getSortableColumns = <T>(columns: AnyColumn<T>[]): (AccessorColumn<T> | ComputedColumn<T>)[] => {
+    const sortableColumns = columns
+        .filter((column): column is AccessorColumn<T> | ComputedColumn<T> =>
+            column.type === 'accessor' || column.type === 'computed'
+        )
+        .filter(column => column.options?.sortable !== false);
+    return sortableColumns;
+};
+
+
+
+export const isColumnFilterable = <TOriginalRow>(
+    column: AnyColumn<TOriginalRow>
+): (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>) | null => {
+    if (column.options.filterable !== null) {
+        return column as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>;
+    }
+    return null; 
+};
+
+export const isColumnSortable = <TOriginalRow>(
+    column: AnyColumn<TOriginalRow>
+): SortableColumn<TOriginalRow> | null => {
+    if (column.options.sortable !== null) {
+        return column as SortableColumn<TOriginalRow>;
+    }
+    return null; 
+};
+
+

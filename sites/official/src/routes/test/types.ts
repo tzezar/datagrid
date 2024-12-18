@@ -1,4 +1,4 @@
-import type { ColumnDef, ColumnId } from "./datagrid/core/helpers/column-creators";
+import type { AnyColumn, ColumnId } from "./datagrid/core/helpers/column-creators";
 
 
 
@@ -29,7 +29,7 @@ export type Cell<T> = {
   getValue: () => any,
   renderValue: () => any,
   row: Row<T>,
-  column: ColumnDef<T>,
+  column: AnyColumn<T>,
   getContext<T>(): T
 }
 

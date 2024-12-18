@@ -1,7 +1,7 @@
 
 // More specific types for different kinds of values
-
-import type { CellValue, GetValueFn } from "../types";
+import type { AccessorFn, CellValue, Cell, ColumnId, GetGroupValue, GetValueFn, HeaderCell } from "../types";
+import { DEFAULT_COLUMN_SIZE } from "./constants";
 
 // Helper type to get nested key paths
 type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
@@ -10,147 +10,320 @@ type DotNestedKeys<T> = (T extends object ?
   { [K in Exclude<keyof T, symbol>]: `${K}${DotPrefix<DotNestedKeys<T[K]>>}` }[Exclude<keyof T, symbol>]
   : "") extends infer D ? Extract<D, string> : never;
 
-
-
-
-interface ColumnBase<TData> {
-  type: 'accessor' | 'computed' | 'display' | 'group';
-  columnId: string;
+// Specific interfaces for different column types
+export interface AccessorColumn<TOriginalRow> {
+  type: 'accessor';
   header: string;
-
-  sortable?: boolean;
-  hidden?: boolean;
-
-  cell?: (row?: TData) => string | HTMLElement
-  columns?: ColumnDef<TData>[];
-  getValueFn?: GetValueFn<TData>;
+  columnId: string;
+  accessorKey: DotNestedKeys<TOriginalRow>;
+  getValueFn: GetValueFn<TOriginalRow>;
+  getGroupValueFn?: GetGroupValue<TOriginalRow>;
+  cell?: Cell<TOriginalRow>
+  headerCell?: HeaderCell<TOriginalRow>
   options: {
-    searchable?: boolean
+    searchable: boolean,
+    groupable: boolean,
+    sortable: boolean,
+    filterable: boolean,
+    pinnable: boolean,
   },
+  state: {
+    size: {
+      width: number,
+      minWidth: number,
+      maxWidth: number,
+      grow: boolean
+    }
+    visible: boolean
+    pinning: {
+      position: 'left' | 'right' | 'none'
+      offset: number
+    }
+  }
   _meta: any;
 }
 
-// Specific interfaces for different column types
-export interface AccessorColumn<TData> extends ColumnBase<TData> {
-  accessorKey: DotNestedKeys<TData>;
-  getValueFn: GetValueFn<TData>;
+export interface ComputedColumn<TOriginalRow> {
+  type: 'computed';
+  header: string;
+  columnId: string;
+  accessorFn: AccessorFn<TOriginalRow>;
+  getValueFn: GetValueFn<TOriginalRow>;
+  getGroupValueFn?: GetGroupValue<TOriginalRow>;
+  cell?: Cell<TOriginalRow>
+  headerCell?: HeaderCell<TOriginalRow>
+
+  options: {
+    searchable: boolean
+    groupable: boolean,
+    sortable: boolean
+    filterable: boolean
+    pinnable: boolean
+  },
+  state: {
+    size: {
+      width: number,
+      minWidth: number,
+      maxWidth: number,
+      grow: boolean
+    }
+    visible: boolean
+    pinning: {
+      position: 'left' | 'right' | 'none'
+      offset: number
+    }
+  }
+  _meta: any;
 }
 
-export interface ComputedColumn<TData> extends ColumnBase<TData> {
-  accessorKey?: never;
-  accessorFn: (row: TData) => CellValue;
-  getValueFn: GetValueFn<TData>;
+export interface DisplayColumn<TOriginalRow> {
+  type: 'display';
+  header: string;
+  columnId: string;
+  cell: Cell<TOriginalRow>,
+  headerCell?: HeaderCell<TOriginalRow>
+
+  options: {
+    searchable: null,
+    groupable: null,
+    sortable: null
+    filterable: null
+    pinnable: boolean
+  },
+  state: {
+    size: {
+      width: number,
+      minWidth: number,
+      maxWidth: number,
+      grow: boolean
+    },
+    visible: boolean,
+    pinning: {
+      position: 'left' | 'right' | 'none'
+      offset: number
+    }
+
+  }
+  _meta: any;
 }
 
-export interface DisplayColumn<TData> extends ColumnBase<TData> {
-  accessorKey?: never;
-  accessorFn?: never;
-  getValueFn: never;
-  cell: (row?: TData) => string | HTMLElement
-}
-
-export interface GroupColumn<TData> extends ColumnBase<TData> {
-  columns: ColumnDef<TData>[];
+export interface GroupColumn<TOriginalRow> {
+  type: 'group';
+  header: string;
+  headerCell?: HeaderCell<TOriginalRow>
+  columnId: string;
+  columns: AnyColumn<TOriginalRow>[];
+  cell?: Cell<TOriginalRow>,
+  options: {
+    searchable: null
+    groupable: null,
+    sortable: null
+    filterable: null
+    pinnable: null
+  },
+  state: {
+    size: {
+      width: number,
+      minWidth: number,
+      maxWidth: number,
+      grow: boolean
+    }
+    visible: null
+    pinning: {
+      position: null,
+      offset: number
+    }
+  }
+  _meta: any,
 }
 
 // Union type for all column types
-export type ColumnDef<TData> =
-  | AccessorColumn<TData>
-  | ComputedColumn<TData>
-  | DisplayColumn<TData>
-  | GroupColumn<TData>;
+export type AnyColumn<TOriginalRow> =
+  | AccessorColumn<TOriginalRow>
+  | ComputedColumn<TOriginalRow>
+  | DisplayColumn<TOriginalRow>
+  | GroupColumn<TOriginalRow>;
 
 
-type CreateAccessorColumnProps<TData, TKey extends DotNestedKeys<TData>> = {
+type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOriginalRow>> = {
   header: string,
-  columnId: string,
+  columnId: ColumnId,
   accessorKey: TKey,
-  getValue: (row: TData) => CellValue,
-  options?: Omit<Partial<AccessorColumn<TData>>, 'header' | 'accessorKey'>
+  getValueFn: (row: TOriginalRow) => CellValue,
+  getGroupValueFn?: GetGroupValue<TOriginalRow>;
+  cell?: Cell<TOriginalRow>
+  headerCell?: HeaderCell<TOriginalRow>
+  options?: {
+    searchable?: boolean
+    groupable?: boolean,
+    sortable?: boolean
+    filterable?: boolean
+    pinnable?: boolean
+  }
   _meta?: any
 }
 
-type CreateComputeColumnProps<TData> = {
+type CreateComputeColumnProps<TOriginalRow> = {
   header: string,
-  columnId: string,
+  columnId: ColumnId,
 
-  accessorFn: (row: TData) => CellValue,
-  getValue: (row: TData) => CellValue,
-  options?: Omit<Partial<ComputedColumn<TData>>, 'header' | 'accessorFn'>
+  accessorFn: (row: TOriginalRow) => CellValue,
+  getValueFn: (row: TOriginalRow) => CellValue,
+  getGroupValueFn?: GetGroupValue<TOriginalRow>;
+
+  cell?: Cell<TOriginalRow>
+  headerCell?: HeaderCell<TOriginalRow>
+
+  options?: {
+    searchable?: boolean
+    groupable?: boolean
+    sortable?: boolean
+    filterable?: boolean
+    pinnable?: boolean
+  },
   _meta?: any
 }
 
-type CreateDisplayColumnProps<TData> = {
+type CreateDisplayColumnProps<TOriginalRow> = {
   header: string,
-  columnId: string,
-  // cell: (info: { getValue: () => undefined; row: { original: TData } }) => string,
-  cell: (row?: TData) => string | HTMLElement
-  options?: Omit<Partial<DisplayColumn<TData>>, 'header' | 'cell'>
+  columnId: ColumnId,
+  cell: Cell<TOriginalRow>
+  headerCell?: HeaderCell<TOriginalRow>
+  options?: {
+    searchable?: false
+    groupable?: boolean,
+    sortable?: false
+    filterable?: false
+    pinnable?: boolean
+  },
+  _meta?: any
 }
 
-type CreateGroupColumnProps<TData> = {
+type CreateGroupColumnProps<TOriginalRow> = {
   header: string,
-  columns: ColumnDef<TData>[],
-  options?: Omit<Partial<GroupColumn<TData>>, 'header' | 'columns'>
+  headerCell?: HeaderCell<TOriginalRow>
+  columnId: ColumnId,
+  columns: AnyColumn<TOriginalRow>[],
+  _meta?: any,
+
+
 }
 
 // Helper functions with improved type inference
 export function createAccessorColumn<
-  TData extends Record<string, any>,
-  TKey extends DotNestedKeys<TData>
+  TOriginalRow extends Record<string, any>,
+  TKey extends DotNestedKeys<TOriginalRow>
 >(
-  { header, accessorKey, columnId, getValue, options = {}, _meta = {}, ...rest }: CreateAccessorColumnProps<TData, TKey>,
-): AccessorColumn<TData> {
+  { header, accessorKey, columnId, getValueFn: getValue, options, _meta = {}, state, ...rest }: CreateAccessorColumnProps<TOriginalRow, TKey>,
+): AccessorColumn<TOriginalRow> {
   return {
     type: 'accessor',
     columnId,
     header,
     accessorKey,
     getValueFn: getValue,
-    ...options,
+    options: {
+      searchable: options?.searchable ?? true,
+      groupable: options?.groupable ?? true,
+      sortable: options?.sortable ?? true,
+      filterable: options?.filterable ?? true,
+      pinnable: options?.pinnable ?? true,
+    },
+    state: {
+      size: DEFAULT_COLUMN_SIZE,
+      visible: state?.visible ?? true,
+      pinning: {
+        position: state?.pinning?.position ?? 'none',
+        offset: 0
+      },
+    },
     _meta,
     ...rest
   };
 }
 
 
-export function createComputedColum<TData extends Record<string, any>>(
-  { header, columnId, accessorFn, getValue,_meta = {}, options = {}, ...rest }: CreateComputeColumnProps<TData>,
-): ComputedColumn<TData> {
+export function createComputedColumn<TOriginalRow extends Record<string, any>>(
+  { header, columnId, accessorFn, getValueFn: getValue, _meta = {}, options, state, ...rest }: CreateComputeColumnProps<TOriginalRow>,
+): ComputedColumn<TOriginalRow> {
   return {
     type: 'computed',
-    columnId,
     header,
+    columnId,
     accessorFn,
     getValueFn: getValue,
-    ...options,
+    options: {
+      searchable: options?.searchable ?? true,
+      groupable: options?.groupable ?? true,
+      sortable: options?.sortable ?? true,
+      filterable: options?.filterable ?? true,
+      pinnable: options?.pinnable ?? true,
+    },
+    state: {
+      size: DEFAULT_COLUMN_SIZE,
+      visible: state?.visible ?? true,
+      pinning: {
+        position: state?.pinning?.position ?? 'none',
+        offset: 0
+      },
+    },
     _meta,
     ...rest
   };
 }
 
-export function createDisplayColumn<TData extends Record<string, any>>(
-  { header, cell, columnId, _meta, options = {} }: CreateDisplayColumnProps<TData>,
-): DisplayColumn<TData> {
+export function createDisplayColumn<TOriginalRow extends Record<string, any>>(
+  { header, cell, columnId, _meta, options, state }: CreateDisplayColumnProps<TOriginalRow>,
+): DisplayColumn<TOriginalRow> {
   return {
     type: 'display',
-    columnId,
     header,
+    columnId,
     cell,
-    ...options,
+    options: {
+      searchable: null,
+      groupable: null,
+      sortable: null,
+      filterable: null,
+      pinnable: options?.pinnable ?? true,
+    },
+    state: {
+      size: DEFAULT_COLUMN_SIZE,
+      visible: state?.visible ?? true,
+      pinning: {
+        position: state?.pinning?.position ?? 'none',
+        offset: 0
+      }
+    },
     _meta
   };
 }
 
 
-export function createColumnGroup<TData extends Record<string, any>>(
-  { header, columns, _meta, options = {} }: CreateGroupColumnProps<TData>,
-): GroupColumn<TData> {
+export function createColumnGroup<TOriginalRow extends Record<string, any>>(
+  { header, columns, columnId, _meta, ...rest }: CreateGroupColumnProps<TOriginalRow>,
+): GroupColumn<TOriginalRow> {
   return {
     type: 'group',
+    columnId,
     header,
+    _meta,
     columns,
-    ...options,
-    _meta
+    options: {
+      searchable: null,
+      groupable: null,
+      sortable: null,
+      filterable: null,
+      pinnable: null,
+    },
+    state: {
+      size: DEFAULT_COLUMN_SIZE,
+      visible: null,
+      pinning: {
+        position: null,
+        offset: 0
+      }
+    },
+    ...rest
   };
 }

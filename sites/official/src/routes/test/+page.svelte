@@ -1,15 +1,23 @@
 <script lang="ts">
 	import {
-		createComputedColum,
+		createComputedColumn,
 		createAccessorColumn,
 		createColumnGroup,
-		type ColumnDef
+		type AnyColumn,
+		type AccessorColumn
 	} from './datagrid/core/helpers/column-creators';
 	import type { Row, User } from './types';
 	import { isGroupColumn } from './datagrid/core/column-guards';
-	import type { ColumnId, GridBasicRow, GridGroupRow, GridRow } from './datagrid/core/types';
+	import type {
+		ColumnId,
+		GridBasicRow,
+		GridGroupRow,
+		GridRow,
+		PinningPosition
+	} from './datagrid/core/types';
 	import { Datagrid } from './datagrid/core/index.svelte';
 	import {
+		filterOutGroupColumns,
 		findColumnById,
 		flattenColumns,
 		getCellContent,
@@ -23,7 +31,10 @@
 	let { data } = $props();
 
 	const datagrid = new Datagrid(userColumns, data.users);
-
+	$effect(() => {
+		console.log($state.snapshot(datagrid.columnFaceting.getAllNumericFacets()));
+		console.log($state.snapshot(datagrid.columnFaceting.getAllCategoricalFacets()));
+	});
 
 	function handleGroupByChange(event: Event) {
 		const select = event.target as HTMLSelectElement;
@@ -32,110 +43,165 @@
 		const newGroupBy: ColumnId[] = selectedOptions
 			.map((option) => {
 				const column = findColumnById(datagrid.columns, option.value);
-				if (column?.options?.groupable === false) return null;
+				if (!column) return null;
+				if (column.options.groupable === false) return null;
 				return option.value;
 			})
 			.filter((group): group is ColumnId => group !== null); // Type guard to filter out null values
 
-
-		
 		datagrid.grouping.groupByColumns = newGroupBy;
-		datagrid.changePage(1);
+		datagrid.pagination.goToFirstPage();
 		datagrid.executeFullDataTransformation();
 	}
+
+	const handleColumnPinningChange = (column: AnyColumn<any>, position: PinningPosition) => {
+		datagrid.columnPinning.changeColumnPinningPosition(column, position);
+		datagrid.refreshColumnPinningOffsets();
+	};
 </script>
 
-{#snippet HeaderCell(column: ColumnDef<User>)}
+<div class="flex flex-col pb-6">
+	<!-- svelte-ignore a11y_label_has_associated_control -->
+	<label>Colum pinning:</label>
+	<div class="border p-2">
+		{#each filterOutGroupColumns(flattenColumns(datagrid.columns)) as column}
+			<div class="flex max-w-[200px] flex-row justify-between gap-2">
+				{column.header}
+				<select
+					value={column.state.pinning.position}
+					disabled={column.options.pinnable === false}
+					onchange={(e) =>
+						handleColumnPinningChange(column, e.currentTarget.value as PinningPosition)}
+				>
+					<option value="none">none</option>
+					<option value="left">left</option>
+					<option value="right">right</option>
+				</select>
+			</div>
+		{/each}
+	</div>
+</div>
+
+{#snippet HeaderCell(column: (typeof Datagrid.prototype.columns)[0])}
 	{#if isGroupColumn(column)}
 		<div class="grid-header-group">
-			<div class="grid-header-group-cell">{column.header}</div>
-			<div class="grid-header-row">
-				{#each column.columns ?? [] as subColumn (subColumn.header)}
-					{@render HeaderCell(subColumn)}
-				{/each}
-			</div>
+			{#if column.columns.some((c) => c.state.visible === true)}
+				<div class="grid-header-group-cell">{column.header}</div>
+				<div class="grid-header-row">
+					{#each column.columns ?? [] as subColumn (subColumn.header)}
+						{#if subColumn.state.visible === true}
+							{@render HeaderCell(subColumn)}
+						{/if}
+					{/each}
+				</div>
+			{/if}
 		</div>
 	{:else}
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<div class="grid-header-cell">
+		{#if column.state.visible === true}
 			<div
-				class="header-content {column?.sortable ? 'sortable' : ''}"
-				onclick={(e) => onSort(datagrid, column, e)}
+				class="grid-header-cell"
+				style:--width={column.state.size.width + 'px'}
+				style:--min-width={column.state.size.minWidth + 'px'}
+				style:--max-width={column.state.size.maxWidth + 'px'}
 			>
-				<span>{column.header}</span>
-				{#if column?.sortable}
-					<div class="sort-indicator">
-						{#if getSortIndex(datagrid, column)}
-							<span class="sort-index">{getSortIndex(datagrid, column)}</span>
+				<div
+					class="header-content {column.options.sortable ? 'sortable' : ''}"
+					onclick={(e) => onSort(datagrid, column, e)}
+				>
+					<span>{column.header}</span>
+					{#if column.options.sortable}
+						<div class="sort-indicator">
+							{#if getSortIndex(datagrid, column)}
+								<span class="sort-index">{getSortIndex(datagrid, column)}</span>
+							{/if}
+							<!-- svelte-ignore svelte_component_deprecated -->
+							<svelte:component this={getSortIcon(datagrid, column)} class="sort-icon" size={14} />
+						</div>
+					{/if}
+				</div>
+				<div class="w-full">
+					{#if column.options.filterable !== false}
+						{#if column?._meta?.filterType === 'number'}
+							<input
+								type="number"
+								class="column-filter-input w-full"
+								value={datagrid.filtering.getConditionValue(column.columnId)}
+								oninput={(e) => {
+									const value = e.currentTarget.value === '' ? null : +e.currentTarget.value;
+									datagrid.filtering.updateFilterCondition({
+										column,
+										value
+									});
+									datagrid.executeFullDataTransformation();
+								}}
+							/>
 						{/if}
-						<!-- svelte-ignore svelte_component_deprecated -->
-						<svelte:component this={getSortIcon(datagrid, column)} class="sort-icon" size={14} />
-					</div>
-				{/if}
+						{#if column?._meta?.filterType === 'text'}
+							<input
+								type="text"
+								class="column-filter-input w-full"
+								value={datagrid.filtering.getConditionValue(column.columnId)}
+								oninput={(e) => {
+									datagrid.filtering.updateFilterCondition({
+										column,
+										value: e.currentTarget.value
+									});
+									datagrid.executeFullDataTransformation();
+								}}
+							/>
+						{/if}
+						{#if column?._meta?.filterType === 'select'}
+							<select
+								class="w-full"
+								value={datagrid.filtering.getConditionValue(column.columnId)}
+								oninput={(e) => {
+									datagrid.filtering.updateFilterCondition({
+										column,
+										value: e.currentTarget.value
+									});
+									datagrid.executeFullDataTransformation();
+								}}
+							>
+								<option value=""></option>
+								{#each column._meta.filterOptions as option}
+									<option value={option.value}>{option.label}</option>
+								{/each}
+							</select>
+						{/if}
+					{/if}
+				</div>
 			</div>
-			<div class="w-full">
-				{#if column.filterable !== false}
-					{#if column._meta.filterType === 'number'}
-						<input
-							type="number"
-							class="column-filter-input w-full"
-							value={datagrid.filtering.getConditionValue(column.columnId)}
-							oninput={(e) => {
-								const value = e.currentTarget.value === '' ? null : +e.currentTarget.value;
-								datagrid.filtering.updateFilterCondition({
-									column,
-									value
-								});
-								datagrid.executeFullDataTransformation();
-							}}
-						/>
-					{/if}
-					{#if column._meta.filterType === 'text'}
-						<input
-							type="text"
-							class="column-filter-input w-full"
-							value={datagrid.filtering.getConditionValue(column.columnId)}
-							oninput={(e) => {
-								datagrid.filtering.updateFilterCondition({
-									column,
-									value: e.currentTarget.value
-								});
-								datagrid.executeFullDataTransformation();
-							}}
-						/>
-					{/if}
-					{#if column._meta.filterType === 'select'}
-						<select
-							value={datagrid.filtering.getConditionValue(column.columnId)}
-							oninput={(e) => {
-								datagrid.filtering.updateFilterCondition({
-									column,
-									value: e.currentTarget.value
-								});
-								datagrid.executeFullDataTransformation();
-							}}
-						>
-							<option value=""></option>
-							{#each column._meta.filterOptions as option}
-								<option value={option.value}>{option.label}</option>
-							{/each}
-						</select>
-					{/if}
-				{/if}
-			</div>
-		</div>
+		{/if}
 	{/if}
 {/snippet}
 
-{#snippet BodyCell(column: ColumnDef<User>, row: GridBasicRow<User>)}
-	<div class="grid-body-cell">
-		{@html getCellContent(column, row.original)}
+{#snippet BodyCell(column: AnyColumn<User>, row: GridBasicRow<User>)}
+	<div
+		class="grid-body-cell"
+		style:--width={column.state.size.width + 'px'}
+		style:--min-width={column.state.size.minWidth + 'px'}
+		style:--max-width={column.state.size.maxWidth + 'px'}
+	>
+		{#if column.cell && typeof column.cell === 'function'}
+			{@const cellContent = column.cell(row)}
+			{#if cellContent.component}
+				<svelte:component this={cellContent.component} {...cellContent.props} {datagrid} />
+			{/if}
+		{:else}
+			{@html getCellContent(column, row.original)}
+		{/if}
 	</div>
 {/snippet}
 
-{#snippet GroupRowCell(row: GridGroupRow<User>, column: ColumnDef<User>)}
-	<div class="grid-body-cell group-cell">
+{#snippet GroupRowCell(row: GridGroupRow<User>, column: AnyColumn<User>)}
+	<div
+		class="grid-body-cell group-cell"
+		style:--width={column.state.size.width + 'px'}
+		style:--min-width={column.state.size.minWidth + 'px'}
+		style:--max-width={column.state.size.maxWidth + 'px'}
+	>
 		{#if column.columnId === row.groupKey}
 			<div class="group-cell-content">
 				<button
@@ -143,7 +209,7 @@
 					onclick={() => datagrid.toggleGroupRowIsExpanded(row)}
 				>
 					<span class="expand-icon">
-						{row.isExpanded ? '▼' : '▶'}
+						{datagrid.isGroupRowExpanded(row) ? '▼' : '▶'}
 					</span>
 					<span class="group-value">
 						{row.groupValue[0]}
@@ -158,9 +224,15 @@
 {/snippet}
 
 {#snippet GroupRow(row: GridGroupRow<User>)}
-	<div class="grid-body-row group-row" data-depth={row.depth} data-expanded={row.isExpanded}>
+	<div
+		class="grid-body-row group-row"
+		data-depth={row.depth}
+		data-expanded={datagrid.isGroupRowExpanded(row)}
+	>
 		{#each flattenColumns(datagrid.columns) as column, columnIndex (columnIndex)}
-			{@render GroupRowCell(row, column)}
+			{#if column.state.visible === true}
+				{@render GroupRowCell(row, column)}
+			{/if}
 		{/each}
 	</div>
 {/snippet}
@@ -168,9 +240,20 @@
 {#snippet BasicRow(row: GridBasicRow<User>)}
 	<div class="grid-body-row">
 		{#each flattenColumns(datagrid.columns) as column (column.header)}
-			{@render BodyCell(column, row)}
+			{#if column.state.visible === true}
+				{@render BodyCell(column, row)}
+			{/if}
 		{/each}
 	</div>
+	{#if datagrid.rowExpanding.isRowExpanded(row.index)}
+		<div class="grid-body-row">
+			<div class="grid-body-cell">
+				<div class="grid-body-cell">
+					Content for row with ID {row.original.id}
+				</div>
+			</div>
+		</div>
+	{/if}
 {/snippet}
 
 {#snippet Row(row: GridRow<User>)}
@@ -181,7 +264,37 @@
 	{/if}
 {/snippet}
 
-<div class="flex flex-col pb-6">
+<div class="flex flex-col gap-2 pb-6">
+	<label for="resizeColumns">Resize columns:</label>
+	{#each filterOutGroupColumns(flattenColumns(datagrid.columns)) as column}
+		<span>{column.header}</span>
+		<input
+			type="range"
+			min={column.state.size.minWidth}
+			max={column.state.size.maxWidth}
+			value={column.state.size.width}
+			oninput={(e) => {
+				datagrid.columnSizing.setColumnSize(column.columnId, Number(e.currentTarget.value));
+				datagrid.refreshColumnPinningOffsets();
+			}}
+		/>
+	{/each}
+</div>
+<div class="flex flex-col place-items-start gap-2 pb-6">
+	<label for="toggleColumns">Column visibility:</label>
+	{#each filterOutGroupColumns(flattenColumns(datagrid.columns)) as column}
+		<button
+			class=""
+			onclick={() => datagrid.columnVisibility.toggleColumnVisibility(column.columnId)}
+		>
+			<span>
+				{column.header}
+			</span>
+		</button>
+	{/each}
+</div>
+
+<div class="flex flex-col gap-2 pb-6">
 	<label for="groupBy">Group by:</label>
 	<select
 		multiple
@@ -206,7 +319,7 @@
 	type="text"
 	value={datagrid.globalSearch.value}
 	oninput={(e) => {
-		datagrid.globalSearch.value = e.target.value;
+		datagrid.globalSearch.value = e.currentTarget.value;
 		datagrid.executeFullDataTransformation();
 	}}
 />
@@ -229,9 +342,8 @@
 </div>
 <div class="pagination">
 	<button
-		disabled={!datagrid.pagination.canGoToPrevPage()}
-		onclick={() =>
-			datagrid.pagination.canGoToPrevPage() && datagrid.changePage(datagrid.pagination.page - 1)}
+		disabled={datagrid.pagination.canGoToPrevPage()}
+		onclick={() => datagrid.refresh(() => datagrid.pagination.goToPrevPage())}
 	>
 		Prev
 	</button>
@@ -239,12 +351,24 @@
 		Page {datagrid.pagination.page} of {datagrid.pagination.pageCount}
 	</span>
 	<button
-		disabled={!datagrid.pagination.canGoToNextPage()}
-		onclick={() =>
-			datagrid.pagination.canGoToNextPage() && datagrid.changePage(datagrid.pagination.page + 1)}
+		disabled={datagrid.pagination.canGoToNextPage()}
+		onclick={() => datagrid.refresh(() => datagrid.pagination.goToNextPage())}
 	>
 		Next
 	</button>
+	<select
+		value={datagrid.pagination.pageSize}
+		onchange={(e) => {
+			datagrid.refresh(() => {
+				datagrid.pagination.pageSize = Number(e.currentTarget.value);
+				datagrid.pagination.goToFirstPage();
+			});
+		}}
+	>
+		{#each datagrid.pagination.pageSizes as pageSize}
+			<option value={pageSize}>{pageSize}</option>
+		{/each}
+	</select>
 </div>
 
 <style>
@@ -288,7 +412,9 @@
 	/* Cell styles */
 	.grid-header-cell,
 	.grid-body-cell {
-		width: 120px;
+		width: var(--width);
+		min-width: var(--min-width);
+		max-width: var(--max-width);
 		flex-shrink: 0;
 		padding: 8px;
 		margin: 0;

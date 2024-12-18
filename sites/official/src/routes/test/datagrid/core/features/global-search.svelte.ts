@@ -1,11 +1,10 @@
-import type Fuse from "fuse.js";
+import Fuse from "fuse.js";
 
 export class GlobalSearch {
 
-
-    value = $state('Dixie');
+    value = $state('');
     delay = $state(300);
-    fuzzy = $state(false);
+    fuzzy = $state(true);
     fuseInstance: Fuse<any> | null = null;
 
     setFuseInstance(fuseInstance: Fuse<any> | null) {
@@ -16,4 +15,17 @@ export class GlobalSearch {
         this.value = value;
     }
 
+    initializeFuseInstance<T>(items: T[], keys: string[]): Fuse<T> {
+        return new Fuse(items, {
+            keys,
+            threshold: 0.3,
+            location: 0,
+            distance: 100,
+            includeScore: true,
+            useExtendedSearch: true,
+            ignoreLocation: true,
+            findAllMatches: true,
+        });
+    }
+    
 }

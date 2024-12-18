@@ -1,6 +1,6 @@
-import type { ColumnDef } from "./datagrid/core/helpers/column-creators";
+import type { AnyColumn } from "./datagrid/core/helpers/column-creators";
 
-function createValueGetter<TData>(column: ColumnDef<TData>): (row: TData) => any {
+function createValueGetter<TData>(column: AnyColumn<TData>): (row: TData) => any {
     // Prioritize methods in this order:
     // if (column.getValue) return column.getValue;
     if (column.accessorFn) return column.accessorFn;

@@ -1,17 +1,11 @@
-import type { AccessorColumn, ComputedColumn } from "../helpers/column-creators";
-import type { FilterCondition, FilterOperator } from "../types";
+import type { AnyColumn } from "../helpers/column-creators";
+import type { FilterableColumn, FilterCondition, FilterOperator } from "../types";
+import { isColumnFilterable } from "../utils.svelte";
 
 
 
 export class Filtering<TOriginalRow> {
-    conditions: FilterCondition<TOriginalRow>[] = $state([
-        {
-            columnId: 'role',
-            operator: 'equals',
-            getValueFn: (row) => row.role,
-            value: 'user'
-        }
-    ])
+    conditions: FilterCondition<TOriginalRow>[] = $state([])
 
     getConditionValue(columnId: string): any {
         const condition = this.conditions.find(c => c.columnId === columnId);
@@ -24,11 +18,15 @@ export class Filtering<TOriginalRow> {
     }
 
     updateFilterCondition(props: {
-        column: (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>),
+        column: AnyColumn<TOriginalRow>,
         value: any,
     }) {
-        const { column, value } = props;
+        const { value } = props;
+        let column = isColumnFilterable(props.column);
+        if (column === null) return;
+        column = column as FilterableColumn<TOriginalRow>
 
+        if (!column) return;
         // Find existing condition
         const conditionIndex = this.conditions.findIndex(c => c.columnId === column.columnId);
 
