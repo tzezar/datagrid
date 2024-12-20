@@ -36,6 +36,7 @@ export type GridGroupRow<TOriginalRow> = {
 };
 export type GridBasicRow<TOriginalRow> = {
     index: string;
+    parentIndex: string | null;
     original: TOriginalRow;
 };
 

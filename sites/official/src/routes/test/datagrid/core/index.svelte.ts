@@ -3,8 +3,8 @@ import { isGroupColumn } from "./column-guards";
 import { Grouping } from "./features/grouping.svelte";
 import { Pagination } from "./features/pagination.svelte";
 import { Sorting } from "./features/sorting.svelte";
-import type { AccessorColumn, AnyColumn, ComputedColumn } from "./helpers/column-creators";
-import type { FilterCondition, GridBasicRow, GridGroupRow, GridRow } from "./types";
+import type { AccessorColumn, AnyColumn, ComputedColumn, GroupColumn } from "./helpers/column-creators";
+import type { GridBasicRow, GridGroupRow, GridRow } from "./types";
 import { findColumnById, getSearchableColumns, isColumnSortable, isGridGroupRow } from "./utils.svelte";
 import { Filtering } from "./features/column-filtering.svelte";
 import { GlobalSearch } from "./features/global-search.svelte";
@@ -14,6 +14,9 @@ import { RowExpanding } from "./features/row-expanding.svelte";
 import { RowSelection } from "./features/row-selection.svelte";
 import { ColumnPinning } from "./features/column-pinning.svelte";
 import { ColumnFaceting } from "./features/column-faceting.svelte";
+import { RowPinning } from "./features/row-pinning.svelte";
+import { ColumnOrdering } from "./features/column-ordering.svelte";
+import { ColumnGrouping } from "./features/column-grouping.svelte";
 
 export class Datagrid<TOriginalRow> {
     original = $state.raw({
@@ -31,16 +34,21 @@ export class Datagrid<TOriginalRow> {
     columnVisibility = new ColumnVisibility(this);
     columnPinning = new ColumnPinning(this);
     columnFaceting = new ColumnFaceting(this);
+    columnOrdering = new ColumnOrdering(this);
+    columnGrouping = new ColumnGrouping(this);
 
     rowExpanding = new RowExpanding(this);
     rowSelection = new RowSelection();
-
+    rowPinning = new RowPinning(this);
 
     columns: AnyColumn<TOriginalRow>[] = $state([]);
 
-    processedRowsCache: GridRow<TOriginalRow>[] = $state([]);
-    groupedRowsCache: GridRow<TOriginalRow>[] = $state([]);
-    flattenedRowsCache: GridRow<TOriginalRow>[] = $state([]);
+
+    filteredOriginalRowsCache: TOriginalRow[] = $state.raw([]);
+    processedRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
+    paginatedRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
+    groupedRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
+    flattenedRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
 
     constructor(columns: AnyColumn<TOriginalRow>[], data: TOriginalRow[]) {
         this.original = {
@@ -51,9 +59,37 @@ export class Datagrid<TOriginalRow> {
         this.columns = this.transformColumns(columns);
         this.executeFullDataTransformation();
 
+        // Recompute faceted values
+        // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
+        this.recomputeFacetedValues(this.filteredOriginalRowsCache, this.columns);
+
         this.globalSearch.fuseInstance = this.globalSearch.initializeFuseInstance(this.original.data, this.columns.map(col => col.columnId as string))
     }
 
+
+    updateColumnGroups() {
+        const updateGroupColumn = (column: GroupColumn<TOriginalRow>) => {
+            // Recalculate group column width based on child columns
+            const totalWidth = column.columns.reduce((sum, col) => {
+                return sum + (col.state.size.width || 0);
+            }, 0);
+            
+            column.state.size.width = totalWidth;
+            
+            // Recursively update nested groups
+            column.columns.forEach(col => {
+                if (col.type === 'group') {
+                    updateGroupColumn(col as GroupColumn<TOriginalRow>);
+                }
+            });
+        };
+
+        this.columns.forEach(column => {
+            if (column.type === 'group') {
+                updateGroupColumn(column as GroupColumn<TOriginalRow>);
+            }
+        });
+    }
 
     recomputeFacetedValues(rows: TOriginalRow[], columns: AnyColumn<TOriginalRow>[]) {
         this.columnFaceting.calculateFacets(rows, columns);
@@ -86,25 +122,44 @@ export class Datagrid<TOriginalRow> {
 
     executeFullDataTransformation() {
         // Global search first
-        let filteredOriginalRows = this.executeSearch(this.original.data);
+        let filteredOriginalRows = this.filterOriginalRowsWithGlobalSearch(this.original.data);
         // Filter original data
-        filteredOriginalRows = this.filterOriginalRows(filteredOriginalRows);
+        filteredOriginalRows = this.filterOriginalRowsWithColumnFilters(filteredOriginalRows);
+        this.filteredOriginalRowsCache = filteredOriginalRows;
         // Recompute faceted values
-        this.recomputeFacetedValues(filteredOriginalRows, this.columns)
-        
+
         // Sort original data
         const sortedOriginalRows = this.sortOriginalRows(filteredOriginalRows);
         // Create hierarchical groups
         const groupedRows = this.createHierarchicalData(sortedOriginalRows);
+        this.groupedRowsCache = groupedRows;
         // Flatten the hierarchical data, respecting expanded states
-        const flattenedRows = this.flattenHierarchicalData(groupedRows);
+        const flattenedRows = this.flattenExpandedHierarchicalData(groupedRows);
+
+        this.flattenedRowsCache = this.getAllFlattenedRows(this.groupedRowsCache);
+        this.processedRowsCache = flattenedRows
+
+        // Some performance hit
+        this.rowPinning.updatePinnedRows();
+
         this.pagination.pageCount = this.getPageCount(flattenedRows);
         // Paginate the flattened rows
-        this.processedRowsCache = this.paginateFlattenedRows(flattenedRows);
-
+        this.paginatedRowsCache = this.paginateFlattenedGridRows(flattenedRows);
     }
 
-    executeSearch(data: TOriginalRow[]): TOriginalRow[] {
+    getAllFlattenedRows(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
+        const flattened: GridRow<TOriginalRow>[] = [];
+
+        for (const row of data) {
+            flattened.push(row);
+            if (isGridGroupRow(row)) {
+                flattened.push(...this.getAllFlattenedRows(row.children));
+            }
+        }
+        return flattened;
+    }
+
+    filterOriginalRowsWithGlobalSearch(data: TOriginalRow[]): TOriginalRow[] {
         if (!this.globalSearch.value) return data;
 
         const searchValue = this.globalSearch.value.toLowerCase();
@@ -136,7 +191,7 @@ export class Datagrid<TOriginalRow> {
         );
     }
 
-    filterOriginalRows(data: TOriginalRow[]): TOriginalRow[] {
+    filterOriginalRowsWithColumnFilters(data: TOriginalRow[]): TOriginalRow[] {
         // Filter out inactive conditions (empty value)
         const activeConditions = this.filtering.conditions.filter(condition => condition.value !== '');
 
@@ -144,79 +199,16 @@ export class Datagrid<TOriginalRow> {
 
         const isRowMatching = (row: TOriginalRow): boolean => {
             return activeConditions.every(condition =>
-                this.evaluateCondition(condition.getValueFn(row), condition)
+                this.filtering.evaluateCondition(condition.getValueFn(row), condition)
             );
         };
 
         return data.filter(isRowMatching);
     }
 
-    private evaluateCondition(cellValue: any, condition: FilterCondition<TOriginalRow>): boolean {
-        const value = condition.value;
-        const valueTo = condition.valueTo;
 
-        // Handle null/undefined cell values
-        if (cellValue === null || cellValue === undefined) {
-            return condition.operator === 'empty';
-        }
 
-        // Convert to string for string operations
-        const stringCellValue = String(cellValue).toLowerCase();
-        const stringValue = String(value).toLowerCase();
-
-        switch (condition.operator) {
-            case 'equals':
-                return cellValue === value;
-
-            case 'notEquals':
-                return cellValue !== value;
-
-            case 'contains':
-                return stringCellValue.includes(stringValue);
-
-            case 'notContains':
-                return !stringCellValue.includes(stringValue);
-
-            case 'startsWith':
-                return stringCellValue.startsWith(stringValue);
-
-            case 'endsWith':
-                return stringCellValue.endsWith(stringValue);
-
-            case 'greaterThan':
-                return cellValue > value;
-
-            case 'lessThan':
-                return cellValue < value;
-
-            case 'greaterThanOrEqual':
-                return cellValue >= value;
-
-            case 'lessThanOrEqual':
-                return cellValue <= value;
-
-            case 'between':
-                if (valueTo === undefined) throw new Error('Between filter requires a second value');
-                return cellValue >= value && cellValue <= valueTo;
-
-            case 'inList':
-                return Array.isArray(value) && value.includes(cellValue);
-
-            case 'notInList':
-                return Array.isArray(value) && !value.includes(cellValue);
-
-            case 'empty':
-                return cellValue === '' || cellValue === null || cellValue === undefined;
-
-            case 'notEmpty':
-                return cellValue !== '' && cellValue !== null && cellValue !== undefined;
-
-            default:
-                return true;
-        }
-    }
-
-    paginateFlattenedRows(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
+    paginateFlattenedGridRows(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
         const startIndex = (this.pagination.page - 1) * this.pagination.pageSize;
         const endIndex = startIndex + this.pagination.pageSize;
         return data.slice(startIndex, endIndex);
@@ -224,7 +216,7 @@ export class Datagrid<TOriginalRow> {
 
     transformOriginalRowsIntoGridBasicRows(
         rows: TOriginalRow[],
-        parentIndex: string = ''
+        parentIndex: string | null = null
     ): GridRow<TOriginalRow>[] {
         const gridRows: GridBasicRow<TOriginalRow>[] = [];
         for (let i = 0; i < rows.length; i++) {
@@ -234,6 +226,7 @@ export class Datagrid<TOriginalRow> {
                 index: parentIndex
                     ? `${parentIndex}-${i + 1}`
                     : `${i + 1}`,
+                parentIndex: parentIndex,
                 original: row
             };
             gridRows.push(gridRow);
@@ -241,7 +234,7 @@ export class Datagrid<TOriginalRow> {
         return gridRows;
     }
 
-    flattenHierarchicalData(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
+    flattenExpandedHierarchicalData(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
         const flattened: GridRow<TOriginalRow>[] = [];
 
         for (const row of data) {
@@ -250,7 +243,7 @@ export class Datagrid<TOriginalRow> {
             if (isGridGroupRow(row)) {
                 // Only flatten children if the group row is expanded
                 if (this.grouping.expandedGroups.has(row.groupId)) {
-                    flattened.push(...this.flattenHierarchicalData(row.children));
+                    flattened.push(...this.flattenExpandedHierarchicalData(row.children));
                 }
             }
         }
@@ -263,18 +256,6 @@ export class Datagrid<TOriginalRow> {
         const groupByColumns = this.grouping.groupByColumns;
 
         if (groupByColumns.length < 1) return this.transformOriginalRowsIntoGridBasicRows(data);
-
-        // Memoize column access functions for performance
-        // const columnAccessors = groupByColumns.map(col =>
-        //     (row: TOriginalRow) => {
-        //         try {
-        //             // Use deep property access that's null-safe
-        //             return col.split('.').reduce((obj, key) => obj?.[key], row);
-        //         } catch {
-        //             return null;
-        //         }
-        //     }
-        // );
 
         const columnAccessors = groupByColumns.map(col => {
             let column = findColumnById(this.columns, col);

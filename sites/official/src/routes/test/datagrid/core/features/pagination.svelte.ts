@@ -5,7 +5,7 @@ export class Pagination<TOrginalRow> {
 
     page = $state(1);
     pageSize = $state(10);
-    pageSizes = $state([10, 20, 50, 100]);
+    pageSizes = $state([10, 20, 50, 100, 100000]);
     pageCount: number = $state(0)
     
     constructor(datagrid: Datagrid<TOrginalRow>) {

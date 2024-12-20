@@ -1,6 +1,5 @@
 import type { AccessorColumn, AnyColumn, ComputedColumn } from "../helpers/column-creators";
 import type { Datagrid } from "../index.svelte";
-import { getCellValue } from "../utils.svelte";
 
 export class ColumnFaceting<TOriginalRow> {
     datagrid: Datagrid<TOriginalRow>;
@@ -15,7 +14,6 @@ export class ColumnFaceting<TOriginalRow> {
     }
 
     calculateFacets(rows: TOriginalRow[], columns: AnyColumn<TOriginalRow>[]) { 
-        let timeStart = performance.now();
         // Reset existing facets
         this.numericFacets = {};
         this.categoricalFacets = {};
@@ -48,7 +46,6 @@ export class ColumnFaceting<TOriginalRow> {
                 };
             }
         }
-        console.log(`Faceting took ${performance.now() - timeStart}ms`)
     }
 
     // Getters for facets

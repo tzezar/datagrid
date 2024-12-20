@@ -17,18 +17,15 @@
 		getCellContent,
 		getSortIcon,
 		getSortIndex,
-		isDescendantOf,
 		isGridGroupRow,
 		onSort
 	} from './datagrid/core/utils.svelte';
 	import { userColumns } from './columns.svelte';
+	import { VirtualList } from 'svelte-virtuallists';
 
 	let { data } = $props();
 
 	const datagrid = new Datagrid(userColumns, data.users);
-	$effect(() => {
-		console.log($state.snapshot(datagrid.rowPinning.getPinnedRowIds()));
-	});
 
 	function handleGroupByChange(event: Event) {
 		const select = event.target as HTMLSelectElement;
@@ -53,118 +50,88 @@
 		datagrid.refreshColumnPinningOffsets();
 	};
 
-	
-	datagrid.columnGrouping.createGroupColumn('New Group', null);
-
-	
+	let isGroupMenuOpen = $state(false);
+	let selectedColumns: Record<string, boolean> = $state({});
+	let newGroupName = $state('');
 </script>
 
-{#snippet Ordering(columns: AnyColumn<any>[])}
-	{#each columns as column}
-		{#if isGroupColumn(column)}
-			<div class="border p-2">
-				<div class="font-bold underline">
-					{column.header}
+{#snippet ColumnGroupMenu()}
+	<div class="column-group-menu">
+		<button class="group-menu-trigger" onclick={() => (isGroupMenuOpen = !isGroupMenuOpen)}>
+			Group Columns
+		</button>
+
+		{#if isGroupMenuOpen}
+			<div class="group-menu-content">
+				<div class="group-menu-header">
+					<input
+						type="text"
+						bind:value={newGroupName}
+						placeholder="Group Name"
+						class="group-name-input"
+					/>
 				</div>
-				<div class="text-muted-foreground flex flex-row gap-2 text-xs">
-					<button onclick={() => datagrid.columnOrdering.moveColumnUp(column)}>UP</button>
-					<button onclick={() => datagrid.columnOrdering.moveColumnDown(column)}>DOWN</button>
-					<select
-						class="w-full"
-						value={column.parentColumnId || ''}
-						onchange={(e) => {
-							const targetGroupId = e.currentTarget.value;
-							// Prevent moving column to its current group
-							if (targetGroupId === column.parentColumnId) {
-								return;
-							}
 
-							// Prevent moving a group into itself or its children
-							if (column.type === 'group') {
-								const targetGroup = datagrid.columnOrdering
-									.getGroupColumns()
-									.find((group) => group.columnId === targetGroupId);
+				<div class="column-list">
+					{#each datagrid.columns as column}
+						{#if !isGroupColumn(column)}
+							<label class="column-item">
+								<input type="checkbox" bind:checked={selectedColumns[column.columnId]} />
+								{column.header}
+							</label>
+						{/if}
+					{/each}
+				</div>
 
-								if (targetGroup && isDescendantOf(targetGroup, column)) {
-									console.warn('Cannot move a group into its own descendant');
-									e.currentTarget.value = column.parentColumnId || '';
-									return;
-								}
-							}
+				<div class="group-menu-footer">
+					<button
+						class="create-group-btn"
+						disabled={!newGroupName || !Object.values(selectedColumns).some((v) => v)}
+						onclick={() => {
+							const columnsToGroup = Object.entries(selectedColumns)
+								.filter(([_, selected]) => selected)
+								.map(([columnId]) => columnId);
 
-							datagrid.columnOrdering.moveColumnToGroup(column, targetGroupId);
+							datagrid.columnOrdering.createGroup(columnsToGroup, newGroupName);
+							isGroupMenuOpen = false;
+							selectedColumns = {};
+							newGroupName = '';
 						}}
 					>
-						<option value="">Root Level</option>
-						{#each datagrid.columnOrdering
-							.getGroupColumns()
-							.filter((groupCol) => column.type !== 'group' || (groupCol !== column && !isDescendantOf(groupCol, column))) as groupColumn}
-							// Filter out self and descendant groups if this is a group column
-							<option value={groupColumn.columnId} disabled={groupColumn === column}>
-								{groupColumn.header}
-							</option>
-						{/each}
-					</select>
-				</div>
-				{@render Ordering(column.columns)}
-			</div>
-		{:else}
-			<div>
-				<div>{column.header}</div>
-				<div class="text-muted-foreground flex flex-row gap-2 text-xs">
-					<button onclick={() => datagrid.columnOrdering.moveColumnUp(column)}>UP</button>
-					<button onclick={() => datagrid.columnOrdering.moveColumnDown(column)}>DOWN</button>
-					<select
-						class="w-full"
-						value={column.parentColumnId || ''}
-						onchange={(e) => {
-							const targetGroupId = e.currentTarget.value;
-							// Prevent moving column to its current group
-							if (targetGroupId === column.parentColumnId) {
-								return;
-							}
-
-							// Prevent moving a group into itself or its children
-							if (column.type === 'group') {
-								const targetGroup = datagrid.columnOrdering
-									.getGroupColumns()
-									.find((group) => group.columnId === targetGroupId);
-
-								if (targetGroup && isDescendantOf(targetGroup, column)) {
-									console.warn('Cannot move a group into its own descendant');
-									e.currentTarget.value = column.parentColumnId || '';
-									return;
-								}
-							}
-
-							datagrid.columnOrdering.moveColumnToGroup(column, targetGroupId);
-						}}
-					>
-						<option value="">Root Level</option>
-						{#each datagrid.columnOrdering
-							.getGroupColumns()
-							.filter((groupCol) => column.type !== 'group' || (groupCol !== column && !isDescendantOf(groupCol, column))) as groupColumn}
-							// Filter out self and descendant groups if this is a group column
-							<option value={groupColumn.columnId} disabled={groupColumn === column}>
-								{groupColumn.header}
-							</option>
-						{/each}
-					</select>
+						Create Group
+					</button>
 				</div>
 			</div>
 		{/if}
-	{/each}
+	</div>
 {/snippet}
 
-<div class="flex flex-col gap-2">
-	{@render Ordering(datagrid.columns)}
-</div>
+{@render ColumnGroupMenu()}
 
 {#snippet HeaderCell(column: (typeof Datagrid.prototype.columns)[0])}
 	{#if isGroupColumn(column)}
-		<div class="grid-header-group">
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<div
+			class="grid-header-group"
+			class:draggable={column.options.moveable}
+			draggable={column.options.moveable}
+			ondragstart={(e) =>
+				column.options.moveable &&
+				datagrid.columnOrdering.handleColumnDragStart(e, column.columnId, true)}
+			ondragover={(e) => datagrid.columnOrdering.handleColumnDragOver(e)}
+			ondragleave={(e) => datagrid.columnOrdering.handleColumnDragLeave(e)}
+			ondragend={(e) => datagrid.columnOrdering.handleColumnDragEnd(e)}
+			ondrop={(e) => datagrid.columnOrdering.handleColumnDrop(e, column.columnId)}
+		>
 			{#if column.columns.some((c) => c.state.visible === true)}
-				<div class="grid-header-group-cell">{column.header}</div>
+				<div class="grid-header-group-cell">
+					<div class="group-header-content">
+						{#if column.options.moveable}
+							<div class="drag-handle">⋮⋮</div>
+						{/if}
+						<span>{column.header}</span>
+					</div>
+				</div>
 				<div class="grid-header-row">
 					{#each column.columns ?? [] as subColumn (subColumn.header)}
 						{#if subColumn.state.visible === true}
@@ -175,20 +142,29 @@
 			{/if}
 		</div>
 	{:else}
-		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<!-- Regular column header (your existing code) -->
+		<!-- Add column selection UI for grouping if needed -->
 		{#if column.state.visible === true}
+			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div
 				class="grid-header-cell"
+				class:draggable={column.options.moveable}
 				style:--width={column.state.size.width + 'px'}
 				style:--min-width={column.state.size.minWidth + 'px'}
 				style:--max-width={column.state.size.maxWidth + 'px'}
+				draggable={column.options.moveable}
 			>
+				<!-- svelte-ignore a11y_click_events_have_key_events -->
 				<div
 					class="header-content {column.options.sortable ? 'sortable' : ''}"
 					onclick={(e) => onSort(datagrid, column, e)}
 				>
-					<span>{column.header}</span>
+					<div class="header-title-section">
+						{#if column.options.moveable}
+							<div class="drag-handle">⋮⋮</div>
+						{/if}
+						<span>{column.header}</span>
+					</div>
 					{#if column.options.sortable}
 						<div class="sort-indicator">
 							{#if getSortIndex(datagrid, column)}
@@ -213,10 +189,6 @@
 										value
 									});
 									datagrid.executeFullDataTransformation();
-									datagrid.recomputeFacetedValues(
-										datagrid.filteredOriginalRowsCache,
-										datagrid.columns
-									);
 								}}
 							/>
 						{/if}
@@ -231,10 +203,6 @@
 										value: e.currentTarget.value
 									});
 									datagrid.executeFullDataTransformation();
-									datagrid.recomputeFacetedValues(
-										datagrid.filteredOriginalRowsCache,
-										datagrid.columns
-									);
 								}}
 							/>
 						{/if}
@@ -248,10 +216,6 @@
 										value: e.currentTarget.value
 									});
 									datagrid.executeFullDataTransformation();
-									datagrid.recomputeFacetedValues(
-										datagrid.filteredOriginalRowsCache,
-										datagrid.columns
-									);
 								}}
 							>
 								<option value=""></option>
@@ -383,34 +347,28 @@
 
 <div class="grid-wrapper">
 	<div class="grid">
-		<div class="grid-header">
-			<div class="grid-header-row">
-				{#each datagrid.columns as column (column.header)}
-					{@render HeaderCell(column)}
-				{/each}
-			</div>
-		</div>
-		<div class="grid-body">
-			<!-- {#each datagrid.processedRowsCache as row (row.index)}
-				{@render Row(row)}
-			{/each} -->
-			<!-- Top pinned rows -->
-			{#each datagrid.rowPinning.getTopRows() as row (row.index)}
-				{@render Row(row)}
-			{/each}
-
-			<!-- Center (unpinned) rows -->
-			{#each datagrid.rowPinning.getCenterRows() as row (row.index)}
-				{@render Row(row)}
-			{/each}
-
-			<!-- Bottom pinned rows -->
-			{#each datagrid.rowPinning.getBottomRows() as row (row.index)}
-				{@render Row(row)}
-			{/each}
-		</div>
+		<VirtualList
+			items={datagrid.paginatedRowsCache}
+			class="list-table"
+			style="height:600px"
+			isTable={true}
+		>
+			{#snippet header()}
+				<div class="grid-header">
+					<div class="grid-header-row">
+						{#each datagrid.columns as column (column.header)}
+							{@render HeaderCell(column)}
+						{/each}
+					</div>
+				</div>
+			{/snippet}
+			{#snippet vl_slot({ item, index }: { item: GridRow<any>; index: number })}
+				{@render Row(item)}
+			{/snippet}
+		</VirtualList>
 	</div>
 </div>
+
 <div class="pagination">
 	<button
 		disabled={datagrid.pagination.canGoToPrevPage()}
@@ -528,11 +486,29 @@
 	}
 
 	.grid {
-		display: flex;
+		/* display: flex;
 		flex-direction: column;
+		max-height: 600px;
 		width: 100%;
 		min-width: max-content;
+		height: 100%;  */
+		/* background-color: hsl(var(--grid-row-even-background));
+		color: hsl(var(--grid-text-color)); */
+
 		height: 100%;
+		flex-grow: 0;
+		max-height: 600px;
+		display: flex;
+		flex-direction: column;
+		overflow: auto;
+		position: relative;
+	}
+
+	.grid-header {
+		top: 0;
+		position: sticky;
+		z-index: 50;
+		background-color: hsl(var(--grid-header-background));
 	}
 
 	.grid-header,
@@ -649,6 +625,9 @@
 		padding: 8px 8px;
 	}
 
+	.grid-body-cell {
+	}
+
 	.grid-header-group-cell {
 		font-weight: bold;
 	}
@@ -750,4 +729,36 @@
 		height: 1.25rem;
 		color: hsl(var(--grid-text-color));
 	}
+
+	.grid-header-cell,
+	.grid-header-group {
+		position: relative;
+	}
+
+	.draggable {
+		cursor: move;
+	}
+
+	.draggable:hover {
+		background-color: rgba(0, 0, 0, 0.05);
+	}
+
+	.header-title-section {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.drag-handle {
+		cursor: move;
+		color: #666;
+		font-size: 12px;
+		user-select: none;
+		opacity: 0.5;
+	}
+
+	.draggable:hover .drag-handle {
+		opacity: 1;
+	}
+
 </style>

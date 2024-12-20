@@ -15,6 +15,7 @@ export interface AccessorColumn<TOriginalRow> {
   type: 'accessor';
   header: string;
   columnId: string;
+  parentColumnId: string | null;
   accessorKey: DotNestedKeys<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
@@ -26,6 +27,7 @@ export interface AccessorColumn<TOriginalRow> {
     sortable: boolean,
     filterable: boolean,
     pinnable: boolean,
+    moveable: boolean
   },
   state: {
     size: {
@@ -47,6 +49,7 @@ export interface ComputedColumn<TOriginalRow> {
   type: 'computed';
   header: string;
   columnId: string;
+  parentColumnId: string | null;
   accessorFn: AccessorFn<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
@@ -58,7 +61,8 @@ export interface ComputedColumn<TOriginalRow> {
     groupable: boolean,
     sortable: boolean
     filterable: boolean
-    pinnable: boolean
+    pinnable: boolean,
+    moveable: boolean
   },
   state: {
     size: {
@@ -80,6 +84,7 @@ export interface DisplayColumn<TOriginalRow> {
   type: 'display';
   header: string;
   columnId: string;
+  parentColumnId: string | null;
   cell: Cell<TOriginalRow>,
   headerCell?: HeaderCell<TOriginalRow>
 
@@ -89,6 +94,8 @@ export interface DisplayColumn<TOriginalRow> {
     sortable: null
     filterable: null
     pinnable: boolean
+    moveable: boolean
+
   },
   state: {
     size: {
@@ -112,6 +119,7 @@ export interface GroupColumn<TOriginalRow> {
   header: string;
   headerCell?: HeaderCell<TOriginalRow>
   columnId: string;
+  parentColumnId: string | null;
   columns: AnyColumn<TOriginalRow>[];
   cell?: Cell<TOriginalRow>,
   options: {
@@ -120,6 +128,7 @@ export interface GroupColumn<TOriginalRow> {
     sortable: null
     filterable: null
     pinnable: null
+    moveable: boolean
   },
   state: {
     size: {
@@ -148,6 +157,7 @@ export type AnyColumn<TOriginalRow> =
 type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOriginalRow>> = {
   header: string,
   columnId: ColumnId,
+  parentColumnId: string | null,
   accessorKey: TKey,
   getValueFn: (row: TOriginalRow) => CellValue,
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
@@ -159,6 +169,7 @@ type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOrigina
     sortable?: boolean
     filterable?: boolean
     pinnable?: boolean
+    moveable?: boolean
   }
   _meta?: any
 }
@@ -166,6 +177,7 @@ type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOrigina
 type CreateComputeColumnProps<TOriginalRow> = {
   header: string,
   columnId: ColumnId,
+  parentColumnId: string | null,
 
   accessorFn: (row: TOriginalRow) => CellValue,
   getValueFn: (row: TOriginalRow) => CellValue,
@@ -180,6 +192,7 @@ type CreateComputeColumnProps<TOriginalRow> = {
     sortable?: boolean
     filterable?: boolean
     pinnable?: boolean
+    moveable?: boolean
   },
   _meta?: any
 }
@@ -187,6 +200,7 @@ type CreateComputeColumnProps<TOriginalRow> = {
 type CreateDisplayColumnProps<TOriginalRow> = {
   header: string,
   columnId: ColumnId,
+  parentColumnId: string | null,
   cell: Cell<TOriginalRow>
   headerCell?: HeaderCell<TOriginalRow>
   options?: {
@@ -195,6 +209,7 @@ type CreateDisplayColumnProps<TOriginalRow> = {
     sortable?: false
     filterable?: false
     pinnable?: boolean
+    moveable?: boolean
   },
   _meta?: any
 }
@@ -203,6 +218,7 @@ type CreateGroupColumnProps<TOriginalRow> = {
   header: string,
   headerCell?: HeaderCell<TOriginalRow>
   columnId: ColumnId,
+  parentColumnId: string | null,
   columns: AnyColumn<TOriginalRow>[],
   _meta?: any,
 
@@ -214,7 +230,7 @@ export function createAccessorColumn<
   TOriginalRow extends Record<string, any>,
   TKey extends DotNestedKeys<TOriginalRow>
 >(
-  { header, accessorKey, columnId, getValueFn: getValue, options, _meta = {}, state, ...rest }: CreateAccessorColumnProps<TOriginalRow, TKey>,
+  { header, accessorKey, columnId,  getValueFn: getValue, options, _meta = {}, state, ...rest }: CreateAccessorColumnProps<TOriginalRow, TKey>,
 ): AccessorColumn<TOriginalRow> {
   return {
     type: 'accessor',
@@ -228,6 +244,7 @@ export function createAccessorColumn<
       sortable: options?.sortable ?? true,
       filterable: options?.filterable ?? true,
       pinnable: options?.pinnable ?? true,
+      moveable: options?.moveable ?? true,
     },
     state: {
       size: DEFAULT_COLUMN_SIZE,
@@ -258,6 +275,7 @@ export function createComputedColumn<TOriginalRow extends Record<string, any>>(
       sortable: options?.sortable ?? true,
       filterable: options?.filterable ?? true,
       pinnable: options?.pinnable ?? true,
+      moveable: options?.moveable ?? true,
     },
     state: {
       size: DEFAULT_COLUMN_SIZE,
@@ -286,6 +304,7 @@ export function createDisplayColumn<TOriginalRow extends Record<string, any>>(
       sortable: null,
       filterable: null,
       pinnable: options?.pinnable ?? true,
+      moveable: options?.moveable ?? true,
     },
     state: {
       size: DEFAULT_COLUMN_SIZE,
@@ -315,6 +334,7 @@ export function createColumnGroup<TOriginalRow extends Record<string, any>>(
       sortable: null,
       filterable: null,
       pinnable: null,
+      moveable: true,
     },
     state: {
       size: DEFAULT_COLUMN_SIZE,

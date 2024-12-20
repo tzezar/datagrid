@@ -1,6 +1,6 @@
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-svelte";
 import { isGroupColumn } from "./column-guards";
-import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn } from "./helpers/column-creators";
+import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn, GroupColumn } from "./helpers/column-creators";
 import type { CellValue, GridGroupRow, GridRow, SortableColumn } from "./types";
 import type { Datagrid } from "./index.svelte";
 
@@ -35,11 +35,13 @@ export function getCellContent(column: AnyColumn<any>, row: any): CellValue | HT
     }
 }
 
+
 export function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
     const flattened: AnyColumn<any>[] = [];
 
     for (const column of columns) {
         if (isGroupColumn(column)) {
+            flattened.push(column);
             flattened.push(...flattenColumns(column.columns));
         } else {
             flattened.push(column);
@@ -50,7 +52,11 @@ export function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
 }
 
 export const filterOutGroupColumns = <TOriginalRow>(columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] => {
-    return columns.filter(column => column.type !== 'group') 
+    return columns.filter(column => column.type !== 'group')
+}
+
+export const filterGroupColumns = <TOriginalRow>(columns: AnyColumn<TOriginalRow>[]): GroupColumn<TOriginalRow>[] => {
+    return columns.filter(column => column.type === 'group') as GroupColumn<TOriginalRow>[]
 }
 
 
@@ -59,7 +65,17 @@ export function findColumnById<TOriginalRow>(columns: AnyColumn<TOriginalRow>[],
     const flatColumns = flattenColumns(columns);
     return flatColumns.find((col) => col.columnId === id || col.header === id) ?? null;
 }
-
+export function isDescendantOf(possibleDescendant: GroupColumn<any>, ancestor: GroupColumn<any>): boolean {
+    if (!possibleDescendant) return false;
+    
+    // Check direct children
+    if (ancestor.columns.includes(possibleDescendant)) return true;
+    
+    // Recursively check children of group columns
+    return ancestor.columns
+        .filter((col): col is GroupColumn<any> => col.type === 'group')
+        .some(childGroup => isDescendantOf(possibleDescendant, childGroup));
+}
 // Handle sort click with multi-column support
 export function onSort(datagrid: Datagrid<any>, column: AnyColumn<any>, event: MouseEvent) {
     const timeStart = performance.now();
@@ -153,7 +169,7 @@ export const isColumnFilterable = <TOriginalRow>(
     if (column.options.filterable !== null) {
         return column as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>;
     }
-    return null; 
+    return null;
 };
 
 export const isColumnSortable = <TOriginalRow>(
@@ -162,7 +178,7 @@ export const isColumnSortable = <TOriginalRow>(
     if (column.options.sortable !== null) {
         return column as SortableColumn<TOriginalRow>;
     }
-    return null; 
+    return null;
 };
 
 
