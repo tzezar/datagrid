@@ -22,16 +22,16 @@ export class ColumnSizing<TOriginalRow> {
         }
 
         // TODO: not sure if we want to resize groups, those are filtered out right now
-        // If the column is a group, resize its child columns
-        if (column.columns && column.columns.length > 0) {
-            // Iterate over each child column in the group
-            column.columns.forEach(childColumn => {
-                childColumn.state.size.width = Math.max(childColumn.state.size.minWidth, Math.min(width, childColumn.state.size.maxWidth));
-            });
-        } else {
-            // Otherwise, resize the column itself
-            column.state.size.width = Math.max(column.state.size.minWidth, Math.min(width, column.state.size.maxWidth));
-        }
+        // if (column.columns && column.columns.length > 0) {
+        //     // Iterate over each child column in the group
+        //     column.columns.forEach(childColumn => {
+        //         childColumn.state.size.width = Math.max(childColumn.state.size.minWidth, Math.min(width, childColumn.state.size.maxWidth));
+        //     });
+        // } else {
+        //     column.state.size.width = Math.max(column.state.size.minWidth, Math.min(width, column.state.size.maxWidth));
+        //     // Otherwise, resize the column itself
+        // }
+        column.state.size.width = Math.max(column.state.size.minWidth, Math.min(width, column.state.size.maxWidth));
     }
 
 }

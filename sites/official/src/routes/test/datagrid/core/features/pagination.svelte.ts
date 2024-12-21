@@ -1,6 +1,8 @@
 import type { Datagrid } from "../index.svelte";
 
-export class Pagination<TOrginalRow> {
+
+
+export class PaginationFeature<TOrginalRow> {
     datagrid: Datagrid<TOrginalRow>
 
     page = $state(1);
@@ -45,6 +47,10 @@ export class Pagination<TOrginalRow> {
     goToClosestPage(): void {
         const closestPage = Math.min(this.page, this.pageCount);
         this.goToPage(closestPage);
+    }
+
+    getPageCount(data: Array<any>): number {
+        return Math.ceil(data.length / this.pageSize);
     }
 
 }

@@ -112,7 +112,7 @@ export function onSort(datagrid: Datagrid<any>, column: AnyColumn<any>, event: M
                 .map((config, i) => ({ ...config, index: i }));
         }
     }
-    datagrid.executeFullDataTransformation();
+    datagrid.processors.data.executeFullDataTransformation();
     console.log('onSort', performance.now() - timeStart);
 }
 

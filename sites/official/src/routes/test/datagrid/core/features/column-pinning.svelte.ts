@@ -38,4 +38,5 @@ export class ColumnPinning {
         return widthSumOfPreviousIndexes; // Return the total width as a string
     };
 
+  
 }

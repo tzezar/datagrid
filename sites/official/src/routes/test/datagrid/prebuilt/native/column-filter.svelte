@@ -7,6 +7,16 @@
 		column: AnyColumn<any>;
 	};
 	let { datagrid, column }: Props = $props();
+
+	const handleColumnFilterChange = (column: AnyColumn<any>, value: any) => {
+		datagrid.filtering.updateFilterCondition({
+			column,
+			value
+		});
+		datagrid.processors.data.executeFullDataTransformation();
+		datagrid.columnFaceting.calculateFacets(datagrid.cache.filteredOriginalRowsCache, datagrid.columns);
+	}
+
 </script>
 
 {#if column.options.filterable !== false}
@@ -17,12 +27,7 @@
 			value={datagrid.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {
 				const value = e.currentTarget.value === '' ? null : +e.currentTarget.value;
-				datagrid.filtering.updateFilterCondition({
-					column,
-					value
-				});
-				datagrid.executeFullDataTransformation();
-				datagrid.recomputeFacetedValues(datagrid.filteredOriginalRowsCache, datagrid.columns);
+				handleColumnFilterChange(column, value);
 			}}
 		/>
 	{/if}
@@ -32,12 +37,8 @@
 			class="column-filter-input w-full"
 			value={datagrid.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {
-				datagrid.filtering.updateFilterCondition({
-					column,
-					value: e.currentTarget.value
-				});
-				datagrid.executeFullDataTransformation();
-				datagrid.recomputeFacetedValues(datagrid.filteredOriginalRowsCache, datagrid.columns);
+				handleColumnFilterChange(column, e.currentTarget.value);
+
 			}}
 		/>
 	{/if}
@@ -46,12 +47,7 @@
 			class="w-full"
 			value={datagrid.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {
-				datagrid.filtering.updateFilterCondition({
-					column,
-					value: e.currentTarget.value
-				});
-				datagrid.executeFullDataTransformation();
-				datagrid.recomputeFacetedValues(datagrid.filteredOriginalRowsCache, datagrid.columns);
+				handleColumnFilterChange(column, e.currentTarget.value);
 			}}
 		>
 			<option value=""></option>

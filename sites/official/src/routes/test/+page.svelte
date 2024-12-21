@@ -27,7 +27,10 @@
 
 	let { data } = $props();
 
-	const datagrid = new Datagrid(userColumns, data.users);
+	const datagrid = new Datagrid({
+		columns: userColumns,
+		data: data.users
+	});
 
 
 	function handleGroupByChange(event: Event) {
@@ -45,18 +48,18 @@
 
 		datagrid.grouping.groupByColumns = newGroupBy;
 		datagrid.pagination.goToFirstPage();
-		datagrid.executeFullDataTransformation();
+		datagrid.processors.data.executeFullDataTransformation();
 	}
 
 	const handleColumnPinningChange = (column: AnyColumn<any>, position: PinningPosition) => {
 		datagrid.columnPinning.changeColumnPinningPosition(column, position);
-		datagrid.refreshColumnPinningOffsets();
+		datagrid.processors.column.refreshColumnPinningOffsets();
 	};
 
 	// datagrid.columnGrouping.createGroupColumn('New Group', null);
 </script>
 
-{#snippet GroupControls(column: AnyColumn<User>)}
+{#snippet ColumnGroupControls(column: AnyColumn<User>)}
 	<div class="text-muted-foreground flex flex-row gap-2 text-xs">
 		<button onclick={() => datagrid.columnOrdering.moveColumnUp(column)}>UP</button>
 		<button onclick={() => datagrid.columnOrdering.moveColumnDown(column)}>DOWN</button>
@@ -102,13 +105,13 @@
 					{column.header}
 					<button onclick={() => datagrid.columnGrouping.deleteGroupColumn(column)}>X</button>
 				</div>
-				{@render GroupControls(column)}
+				{@render ColumnGroupControls(column)}
 				{@render Ordering(column.columns)}
 			</div>
 		{:else}
 			<div>
 				<div>{column.header}</div>
-				{@render GroupControls(column)}
+				{@render ColumnGroupControls(column)}
 			</div>
 		{/if}
 	{/each}
@@ -205,10 +208,10 @@
 			<div class="group-cell-content">
 				<button
 					class="group-expand-inline-toggle"
-					onclick={() => datagrid.toggleGroupRowIsExpanded(row)}
+					onclick={() => datagrid.rowManager.toggleGroupRowExpansion(row)}
 				>
 					<span class="expand-icon">
-						{datagrid.isGroupRowExpanded(row) ? '▼' : '▶'}
+						{datagrid.rowManager.isGroupRowExpanded(row) ? '▼' : '▶'}
 					</span>
 					<span class="group-value">
 						{row.groupValue[0]}
@@ -226,7 +229,7 @@
 	<div
 		class="grid-body-row group-row"
 		data-depth={row.depth}
-		data-expanded={datagrid.isGroupRowExpanded(row)}
+		data-expanded={datagrid.rowManager.isGroupRowExpanded(row)}
 	>
 		{#each flattenColumns(datagrid.columns) as column, columnIndex (columnIndex)}
 			{#if column.state.visible === true}
@@ -263,7 +266,7 @@
 		{#if datagrid.rowPinning.isPinnedToTop(row.index) || datagrid.rowPinning.isPinnedToBottom(row.index)}
 			<!-- typescript hack -->
 			{@const flattenedRow = datagrid
-				.getAllFlattenedRows(datagrid.groupedRowsCache)
+				.rowManager.getFlattenedRows(datagrid.cache.groupedRowsCache)
 				.find((r) => r.index === row.parentIndex) as GridGroupRow<User>}
 			{#if datagrid.grouping.expandedGroups.has(flattenedRow?.groupId)}
 				{@render BasicRow(row)}
@@ -281,7 +284,7 @@
 	value={datagrid.globalSearch.value}
 	oninput={(e) => {
 		datagrid.globalSearch.value = e.currentTarget.value;
-		datagrid.executeFullDataTransformation();
+		datagrid.processors.data.executeFullDataTransformation();
 	}}
 />
 
@@ -377,7 +380,7 @@
 			value={column.state.size.width}
 			oninput={(e) => {
 				datagrid.columnSizing.setColumnSize(column.columnId, Number(e.currentTarget.value));
-				datagrid.refreshColumnPinningOffsets();
+				datagrid.processors.data.executeFullDataTransformation();
 			}}
 		/>
 	{/each}

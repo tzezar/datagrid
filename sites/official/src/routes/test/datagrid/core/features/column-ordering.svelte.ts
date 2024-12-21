@@ -35,7 +35,7 @@ export class ColumnOrdering<TOriginalRow> {
             if (index === -1) return;
             const [columnToMove] = columnsInGroup.splice(index, 1);
             columnsInGroup.splice(index - 1, 0, columnToMove);
-            this.datagrid.refreshColumnPinningOffsets();
+            this.datagrid.processors.column.refreshColumnPinningOffsets();
             return;
         }
 
@@ -46,7 +46,8 @@ export class ColumnOrdering<TOriginalRow> {
 
         const [columnToMove] = this.datagrid.columns.splice(index, 1);
         this.datagrid.columns.splice(index - 1, 0, columnToMove);
-        this.datagrid.refreshColumnPinningOffsets();
+        this.datagrid.processors.column.refreshColumnPinningOffsets();
+
     }
 
     moveColumnDown(column: AnyColumn<TOriginalRow>): void {
@@ -60,7 +61,7 @@ export class ColumnOrdering<TOriginalRow> {
             if (index === -1) return;
             const [columnToMove] = columnsInGroup.splice(index, 1);
             columnsInGroup.splice(index + 1, 0, columnToMove);
-            this.datagrid.refreshColumnPinningOffsets();
+            this.datagrid.processors.column.refreshColumnPinningOffsets();
             return;
         }
 
@@ -70,7 +71,7 @@ export class ColumnOrdering<TOriginalRow> {
         if (index === -1) return;
         const [columnToMove] = this.datagrid.columns.splice(index, 1);
         this.datagrid.columns.splice(index + 1, 0, columnToMove);
-        this.datagrid.refreshColumnPinningOffsets();
+        this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
 
     moveColumnToGroup(column: AnyColumn<TOriginalRow>, targetGroupColumnId: string): void {
@@ -88,7 +89,7 @@ export class ColumnOrdering<TOriginalRow> {
                 // Add to root level columns
                 this.datagrid.columns.push(column);
             }
-            this.datagrid.refreshColumnPinningOffsets();
+            this.datagrid.processors.column.refreshColumnPinningOffsets();
             return;
         }
 
@@ -125,7 +126,7 @@ export class ColumnOrdering<TOriginalRow> {
         targetGroupColumn.columns.push(column);
 
         // Refresh layout
-        this.datagrid.refreshColumnPinningOffsets();
+        this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
 
     getGroupColumns(): GroupColumn<TOriginalRow>[] {

@@ -21,14 +21,14 @@ export class ColumnGrouping<TOriginalRow> {
             parentColumnId,
             columns: [],
         });
-        this.datagrid.columns.push(groupColumn);
-        this.datagrid.refreshColumnPinningOffsets();
+        this.datagrid.columns.push(groupColumn as GroupColumn<TOriginalRow>);
+        this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
 
 
     renameGroupColumn(column: any, newHeader: string): void {
         column.header = newHeader;
-        this.datagrid.refreshColumnPinningOffsets();
+        this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
 
     deleteGroupColumn(groupColumn: GroupColumn<TOriginalRow>): void {
@@ -66,6 +66,6 @@ export class ColumnGrouping<TOriginalRow> {
             }
         }
     
-        this.datagrid.refreshColumnPinningOffsets();
+        this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
 }

@@ -23,7 +23,7 @@ export class RowPinning<TOriginalRow> {
         const pinnedBottom: GridRow<TOriginalRow>[] = [];
         const unpinned: GridRow<TOriginalRow>[] = [];
 
-        this.datagrid.flattenedRowsCache.forEach(row => {
+        this.datagrid.cache.flattenedRowsCache.forEach(row => {
             const id = 'groupId' in row ? row.index : row.index;
             if (this.rowIdsPinnedTop.has(id)) {
                 pinnedTop.push(row);
@@ -46,7 +46,7 @@ export class RowPinning<TOriginalRow> {
 
     // Get unpinned rows (center)
     getCenterRows(): GridRow<TOriginalRow>[] {
-        return this.datagrid.paginatedRowsCache.filter(row => !this.isPinnedToTop(row.index) && !this.isPinnedToBottom(row.index));
+        return this.datagrid.cache.paginatedRowsCache.filter(row => !this.isPinnedToTop(row.index) && !this.isPinnedToBottom(row.index));
     }
 
     // Get rows pinned to the bottom
@@ -96,7 +96,7 @@ export class RowPinning<TOriginalRow> {
 
         // Remove from bottom pins if necessary
         this.rowIdsPinnedBottom.delete(rowId);
-        this.datagrid.executeFullDataTransformation();
+        this.datagrid.processors.data.executeFullDataTransformation();
     }
 
     // Pin a row or group to the bottom
@@ -116,7 +116,7 @@ export class RowPinning<TOriginalRow> {
 
         // Remove from top pins if necessary
         this.rowIdsPinnedTop.delete(rowId);
-        this.datagrid.executeFullDataTransformation();
+        this.datagrid.processors.data.executeFullDataTransformation();
     }
 
     // Helper to find a row by ID in the processed rows
@@ -134,7 +134,7 @@ export class RowPinning<TOriginalRow> {
             return undefined;
         };
 
-        return findInRows(this.datagrid.getAllFlattenedRows(this.datagrid.groupedRowsCache));
+        return findInRows(this.datagrid.rowManager.getFlattenedRows(this.datagrid.cache.groupedRowsCache));
     }
 
     // Unpin a row or group
@@ -157,7 +157,7 @@ export class RowPinning<TOriginalRow> {
             this.rowIdsPinnedBottom.delete(rowId);
         }
 
-        this.datagrid.executeFullDataTransformation();
+        this.datagrid.processors.data.executeFullDataTransformation();
     }
 
     // Check if a row is pinned to top
@@ -221,7 +221,7 @@ export class RowPinning<TOriginalRow> {
     clearPinnedRows() {
         this.rowIdsPinnedTop.clear();
         this.rowIdsPinnedBottom.clear();
-        this.datagrid.executeFullDataTransformation();
+        this.datagrid.processors.data.executeFullDataTransformation();
     }
 
     // Get all pinned row IDs
@@ -233,10 +233,10 @@ export class RowPinning<TOriginalRow> {
     }
 
     getRowsPinnedToTop(): GridRow<TOriginalRow>[] {
-        return this.datagrid.paginatedRowsCache.filter(row => this.isPinnedToTop(row.index));
+        return this.datagrid.cache.paginatedRowsCache.filter(row => this.isPinnedToTop(row.index));
     }
     getRowsPinnedToBottom(): GridRow<TOriginalRow>[] {
-        return this.datagrid.paginatedRowsCache.filter(row => this.isPinnedToBottom(row.index));
+        return this.datagrid.cache.paginatedRowsCache.filter(row => this.isPinnedToBottom(row.index));
     }
 
 }

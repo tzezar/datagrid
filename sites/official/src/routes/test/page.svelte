@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type AnyColumn } from './datagrid/core/helpers/column-creators';
-	import type { Row, User } from './types';
+	import type { User } from './types';
 	import { isGroupColumn } from './datagrid/core/column-guards';
 	import type {
 		ColumnId,
@@ -20,12 +20,15 @@
 		isGridGroupRow,
 		onSort
 	} from './datagrid/core/utils.svelte';
-	import { userColumns } from './columns.svelte';
 	import { VirtualList } from 'svelte-virtuallists';
+	import { userColumns } from './columns.svelte';
 
-	let { data } = $props();
+	let { data }: { data: { users: User[] } } = $props();
 
-	const datagrid = new Datagrid(userColumns, data.users);
+	const datagrid = new Datagrid({
+		columns: userColumns,
+		data: data.users
+	});
 
 	function handleGroupByChange(event: Event) {
 		const select = event.target as HTMLSelectElement;
@@ -42,12 +45,12 @@
 
 		datagrid.grouping.groupByColumns = newGroupBy;
 		datagrid.pagination.goToFirstPage();
-		datagrid.executeFullDataTransformation();
+		datagrid.processors.data.executeFullDataTransformation();
 	}
 
 	const handleColumnPinningChange = (column: AnyColumn<any>, position: PinningPosition) => {
 		datagrid.columnPinning.changeColumnPinningPosition(column, position);
-		datagrid.refreshColumnPinningOffsets();
+		datagrid.processors.column.refreshColumnPinningOffsets();
 	};
 
 	let isGroupMenuOpen = $state(false);
@@ -92,7 +95,7 @@
 								.filter(([_, selected]) => selected)
 								.map(([columnId]) => columnId);
 
-							datagrid.columnOrdering.createGroup(columnsToGroup, newGroupName);
+							datagrid.columnGrouping.createGroupColumn(columnsToGroup, newGroupName);
 							isGroupMenuOpen = false;
 							selectedColumns = {};
 							newGroupName = '';
@@ -111,18 +114,7 @@
 {#snippet HeaderCell(column: (typeof Datagrid.prototype.columns)[0])}
 	{#if isGroupColumn(column)}
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<div
-			class="grid-header-group"
-			class:draggable={column.options.moveable}
-			draggable={column.options.moveable}
-			ondragstart={(e) =>
-				column.options.moveable &&
-				datagrid.columnOrdering.handleColumnDragStart(e, column.columnId, true)}
-			ondragover={(e) => datagrid.columnOrdering.handleColumnDragOver(e)}
-			ondragleave={(e) => datagrid.columnOrdering.handleColumnDragLeave(e)}
-			ondragend={(e) => datagrid.columnOrdering.handleColumnDragEnd(e)}
-			ondrop={(e) => datagrid.columnOrdering.handleColumnDrop(e, column.columnId)}
-		>
+		<div class="grid-header-group" class:draggable={column.options.moveable}>
 			{#if column.columns.some((c) => c.state.visible === true)}
 				<div class="grid-header-group-cell">
 					<div class="group-header-content">
@@ -152,7 +144,6 @@
 				style:--width={column.state.size.width + 'px'}
 				style:--min-width={column.state.size.minWidth + 'px'}
 				style:--max-width={column.state.size.maxWidth + 'px'}
-				draggable={column.options.moveable}
 			>
 				<!-- svelte-ignore a11y_click_events_have_key_events -->
 				<div
@@ -188,7 +179,8 @@
 										column,
 										value
 									});
-									datagrid.executeFullDataTransformation();
+									datagrid.processors.data.executeFullDataTransformation();
+
 								}}
 							/>
 						{/if}
@@ -202,7 +194,7 @@
 										column,
 										value: e.currentTarget.value
 									});
-									datagrid.executeFullDataTransformation();
+									datagrid.processors.data.executeFullDataTransformation();
 								}}
 							/>
 						{/if}
@@ -215,7 +207,8 @@
 										column,
 										value: e.currentTarget.value
 									});
-									datagrid.executeFullDataTransformation();
+									datagrid.processors.data.executeFullDataTransformation();
+
 								}}
 							>
 								<option value=""></option>
@@ -267,10 +260,10 @@
 			<div class="group-cell-content">
 				<button
 					class="group-expand-inline-toggle"
-					onclick={() => datagrid.toggleGroupRowIsExpanded(row)}
+					onclick={() => datagrid.rowManager.toggleGroupRowIsExpanded(row)}
 				>
 					<span class="expand-icon">
-						{datagrid.isGroupRowExpanded(row) ? '▼' : '▶'}
+						{datagrid.rowManager.isGroupRowExpanded(row) ? '▼' : '▶'}
 					</span>
 					<span class="group-value">
 						{row.groupValue[0]}
@@ -288,7 +281,7 @@
 	<div
 		class="grid-body-row group-row"
 		data-depth={row.depth}
-		data-expanded={datagrid.isGroupRowExpanded(row)}
+		data-expanded={datagrid.rowManager.isGroupRowExpanded(row)}
 	>
 		{#each flattenColumns(datagrid.columns) as column, columnIndex (columnIndex)}
 			{#if column.state.visible === true}
@@ -324,7 +317,7 @@
 	{:else if row.parentIndex}
 		{#if datagrid.rowPinning.isPinnedToTop(row.index) || datagrid.rowPinning.isPinnedToBottom(row.index)}
 			{#if datagrid.grouping.expandedGroups.has(datagrid
-					.getAllFlattenedRows(datagrid.groupedRowsCache)
+					.rowManager.getFlattenedRows(datagrid.groupedRowsCache)
 					.find((r) => r.index === row.parentIndex)?.groupId)}
 				{@render BasicRow(row)}
 			{/if}
@@ -341,7 +334,8 @@
 	value={datagrid.globalSearch.value}
 	oninput={(e) => {
 		datagrid.globalSearch.value = e.currentTarget.value;
-		datagrid.executeFullDataTransformation();
+		datagrid.processors.data.executeFullDataTransformation();
+
 	}}
 />
 
@@ -431,7 +425,7 @@
 			value={column.state.size.width}
 			oninput={(e) => {
 				datagrid.columnSizing.setColumnSize(column.columnId, Number(e.currentTarget.value));
-				datagrid.refreshColumnPinningOffsets();
+				datagrid.processors.column.refreshColumnPinningOffsets();
 			}}
 		/>
 	{/each}
@@ -760,5 +754,4 @@
 	.draggable:hover .drag-handle {
 		opacity: 1;
 	}
-
 </style>
