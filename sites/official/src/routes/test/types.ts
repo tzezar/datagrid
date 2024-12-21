@@ -1,37 +1,3 @@
-import type { AnyColumn, ColumnId } from "./datagrid/core/helpers/column-creators";
-
-
-
-
-
-
-export type Row<T> = {
-  index: number;
-  groupId: string | null;
-  parentId: string | null;
-  original: T;
-  depth: number;
-  isExpanded?: boolean;
-  aggregates: {
-    [columnId: string]: {
-      sum?: number;
-      count?: number;
-      min?: number;
-      max?: number;
-      mean?: number;
-    };
-  };
-  columnId: ColumnId;
-}
-
-export type Cell<T> = {
-  id: string,
-  getValue: () => any,
-  renderValue: () => any,
-  row: Row<T>,
-  column: AnyColumn<T>,
-  getContext<T>(): T
-}
 
 
 export interface User {

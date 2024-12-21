@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type AnyColumn } from './datagrid/core/helpers/column-creators';
-	import type { Row, User } from './types';
+	import type { User } from './types';
 	import { isGroupColumn } from './datagrid/core/column-guards';
 	import type {
 		ColumnId,
@@ -22,13 +22,13 @@
 		onSort
 	} from './datagrid/core/utils.svelte';
 	import { userColumns } from './columns.svelte';
+	import ColumnFilter from './datagrid/prebuilt/native/column-filter.svelte';
+	import './datagrid/styles.css';
 
 	let { data } = $props();
 
 	const datagrid = new Datagrid(userColumns, data.users);
-	$effect(() => {
-		console.log($state.snapshot(datagrid.rowPinning.getPinnedRowIds()));
-	});
+
 
 	function handleGroupByChange(event: Event) {
 		const select = event.target as HTMLSelectElement;
@@ -53,104 +53,62 @@
 		datagrid.refreshColumnPinningOffsets();
 	};
 
-	
-	datagrid.columnGrouping.createGroupColumn('New Group', null);
-
-	
+	// datagrid.columnGrouping.createGroupColumn('New Group', null);
 </script>
 
-{#snippet Ordering(columns: AnyColumn<any>[])}
-	{#each columns as column}
+{#snippet GroupControls(column: AnyColumn<User>)}
+	<div class="text-muted-foreground flex flex-row gap-2 text-xs">
+		<button onclick={() => datagrid.columnOrdering.moveColumnUp(column)}>UP</button>
+		<button onclick={() => datagrid.columnOrdering.moveColumnDown(column)}>DOWN</button>
+		<select
+			class="w-full"
+			value={column.parentColumnId || ''}
+			onchange={(e) => {
+				const targetGroupId = e.currentTarget.value;
+				if (targetGroupId === column.parentColumnId) return;
+
+				if (column.type === 'group') {
+					const targetGroup = datagrid.columnOrdering
+						.getGroupColumns()
+						.find((group) => group.columnId === targetGroupId);
+
+					if (targetGroup && isDescendantOf(targetGroup, column)) {
+						console.warn('Cannot move a group into its own descendant');
+						e.currentTarget.value = column.parentColumnId || '';
+						return;
+					}
+				}
+
+				datagrid.columnOrdering.moveColumnToGroup(column, targetGroupId);
+			}}
+		>
+			<option value="">Root Level</option>
+			{#each datagrid.columnOrdering
+				.getGroupColumns()
+				.filter((groupCol) => column.type !== 'group' || (groupCol !== column && !isDescendantOf(groupCol, column))) as groupColumn}
+				<option value={groupColumn.columnId} disabled={groupColumn === column}>
+					{groupColumn.header}
+				</option>
+			{/each}
+		</select>
+	</div>
+{/snippet}
+
+{#snippet Ordering(columns: AnyColumn<User>[])}
+	{#each columns as column (column.columnId)}
 		{#if isGroupColumn(column)}
 			<div class="border p-2">
 				<div class="font-bold underline">
 					{column.header}
+					<button onclick={() => datagrid.columnGrouping.deleteGroupColumn(column)}>X</button>
 				</div>
-				<div class="text-muted-foreground flex flex-row gap-2 text-xs">
-					<button onclick={() => datagrid.columnOrdering.moveColumnUp(column)}>UP</button>
-					<button onclick={() => datagrid.columnOrdering.moveColumnDown(column)}>DOWN</button>
-					<select
-						class="w-full"
-						value={column.parentColumnId || ''}
-						onchange={(e) => {
-							const targetGroupId = e.currentTarget.value;
-							// Prevent moving column to its current group
-							if (targetGroupId === column.parentColumnId) {
-								return;
-							}
-
-							// Prevent moving a group into itself or its children
-							if (column.type === 'group') {
-								const targetGroup = datagrid.columnOrdering
-									.getGroupColumns()
-									.find((group) => group.columnId === targetGroupId);
-
-								if (targetGroup && isDescendantOf(targetGroup, column)) {
-									console.warn('Cannot move a group into its own descendant');
-									e.currentTarget.value = column.parentColumnId || '';
-									return;
-								}
-							}
-
-							datagrid.columnOrdering.moveColumnToGroup(column, targetGroupId);
-						}}
-					>
-						<option value="">Root Level</option>
-						{#each datagrid.columnOrdering
-							.getGroupColumns()
-							.filter((groupCol) => column.type !== 'group' || (groupCol !== column && !isDescendantOf(groupCol, column))) as groupColumn}
-							// Filter out self and descendant groups if this is a group column
-							<option value={groupColumn.columnId} disabled={groupColumn === column}>
-								{groupColumn.header}
-							</option>
-						{/each}
-					</select>
-				</div>
+				{@render GroupControls(column)}
 				{@render Ordering(column.columns)}
 			</div>
 		{:else}
 			<div>
 				<div>{column.header}</div>
-				<div class="text-muted-foreground flex flex-row gap-2 text-xs">
-					<button onclick={() => datagrid.columnOrdering.moveColumnUp(column)}>UP</button>
-					<button onclick={() => datagrid.columnOrdering.moveColumnDown(column)}>DOWN</button>
-					<select
-						class="w-full"
-						value={column.parentColumnId || ''}
-						onchange={(e) => {
-							const targetGroupId = e.currentTarget.value;
-							// Prevent moving column to its current group
-							if (targetGroupId === column.parentColumnId) {
-								return;
-							}
-
-							// Prevent moving a group into itself or its children
-							if (column.type === 'group') {
-								const targetGroup = datagrid.columnOrdering
-									.getGroupColumns()
-									.find((group) => group.columnId === targetGroupId);
-
-								if (targetGroup && isDescendantOf(targetGroup, column)) {
-									console.warn('Cannot move a group into its own descendant');
-									e.currentTarget.value = column.parentColumnId || '';
-									return;
-								}
-							}
-
-							datagrid.columnOrdering.moveColumnToGroup(column, targetGroupId);
-						}}
-					>
-						<option value="">Root Level</option>
-						{#each datagrid.columnOrdering
-							.getGroupColumns()
-							.filter((groupCol) => column.type !== 'group' || (groupCol !== column && !isDescendantOf(groupCol, column))) as groupColumn}
-							// Filter out self and descendant groups if this is a group column
-							<option value={groupColumn.columnId} disabled={groupColumn === column}>
-								{groupColumn.header}
-							</option>
-						{/each}
-					</select>
-				</div>
+				{@render GroupControls(column)}
 			</div>
 		{/if}
 	{/each}
@@ -200,67 +158,7 @@
 					{/if}
 				</div>
 				<div class="w-full">
-					{#if column.options.filterable !== false}
-						{#if column?._meta?.filterType === 'number'}
-							<input
-								type="number"
-								class="column-filter-input w-full"
-								value={datagrid.filtering.getConditionValue(column.columnId)}
-								oninput={(e) => {
-									const value = e.currentTarget.value === '' ? null : +e.currentTarget.value;
-									datagrid.filtering.updateFilterCondition({
-										column,
-										value
-									});
-									datagrid.executeFullDataTransformation();
-									datagrid.recomputeFacetedValues(
-										datagrid.filteredOriginalRowsCache,
-										datagrid.columns
-									);
-								}}
-							/>
-						{/if}
-						{#if column?._meta?.filterType === 'text'}
-							<input
-								type="text"
-								class="column-filter-input w-full"
-								value={datagrid.filtering.getConditionValue(column.columnId)}
-								oninput={(e) => {
-									datagrid.filtering.updateFilterCondition({
-										column,
-										value: e.currentTarget.value
-									});
-									datagrid.executeFullDataTransformation();
-									datagrid.recomputeFacetedValues(
-										datagrid.filteredOriginalRowsCache,
-										datagrid.columns
-									);
-								}}
-							/>
-						{/if}
-						{#if column?._meta?.filterType === 'select'}
-							<select
-								class="w-full"
-								value={datagrid.filtering.getConditionValue(column.columnId)}
-								oninput={(e) => {
-									datagrid.filtering.updateFilterCondition({
-										column,
-										value: e.currentTarget.value
-									});
-									datagrid.executeFullDataTransformation();
-									datagrid.recomputeFacetedValues(
-										datagrid.filteredOriginalRowsCache,
-										datagrid.columns
-									);
-								}}
-							>
-								<option value=""></option>
-								{#each column._meta.filterOptions as option}
-									<option value={option.value}>{option.label}</option>
-								{/each}
-							</select>
-						{/if}
-					{/if}
+					<ColumnFilter {datagrid} {column} />
 				</div>
 			</div>
 		{/if}
@@ -277,6 +175,7 @@
 		{#if column.cell && typeof column.cell === 'function'}
 			{@const cellContent = column.cell(row)}
 			{#if cellContent.component}
+				<!-- svelte-ignore svelte_component_deprecated -->
 				<svelte:component this={cellContent.component} {...cellContent.props} {datagrid} />
 			{/if}
 		{:else}
@@ -293,9 +192,12 @@
 		style:--max-width={column.state.size.maxWidth + 'px'}
 	>
 		{#if column._meta?.showInGroupRow}
-			{@const cellContent = column.cell(row)}
-			{#if cellContent.component}
-				<svelte:component this={cellContent.component} {...cellContent.props} {datagrid} />
+			{#if column.cell && typeof column.cell === 'function'}
+				{@const cellContent = column.cell(row)}
+				{#if cellContent.component}
+					<!-- svelte-ignore svelte_component_deprecated -->
+					<svelte:component this={cellContent.component} {...cellContent.props} {datagrid} />
+				{/if}
 			{/if}
 		{/if}
 
@@ -359,9 +261,11 @@
 		{@render GroupRow(row)}
 	{:else if row.parentIndex}
 		{#if datagrid.rowPinning.isPinnedToTop(row.index) || datagrid.rowPinning.isPinnedToBottom(row.index)}
-			{#if datagrid.grouping.expandedGroups.has(datagrid
-					.getAllFlattenedRows(datagrid.groupedRowsCache)
-					.find((r) => r.index === row.parentIndex)?.groupId)}
+			<!-- typescript hack -->
+			{@const flattenedRow = datagrid
+				.getAllFlattenedRows(datagrid.groupedRowsCache)
+				.find((r) => r.index === row.parentIndex) as GridGroupRow<User>}
+			{#if datagrid.grouping.expandedGroups.has(flattenedRow?.groupId)}
 				{@render BasicRow(row)}
 			{/if}
 		{:else}
@@ -512,242 +416,3 @@
 		{/each}
 	</select>
 </div>
-
-<style>
-	:root {
-		--border-color: orange;
-		--border-width: 1px;
-	}
-
-	.grid-wrapper {
-		width: 100%;
-		height: 400px;
-		overflow: auto;
-		border: var(--border-width) solid var(--border-color);
-		box-sizing: border-box;
-	}
-
-	.grid {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		min-width: max-content;
-		height: 100%;
-	}
-
-	.grid-header,
-	.grid-body {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-	}
-
-	/* Row styles */
-	.grid-header-row,
-	.grid-body-row {
-		display: flex;
-		flex-direction: row;
-		border-bottom: var(--border-width) solid var(--border-color);
-		width: 100%;
-	}
-
-	/* Cell styles */
-	.grid-header-cell,
-	.grid-body-cell {
-		width: var(--width);
-		min-width: var(--min-width);
-		max-width: var(--max-width);
-		flex-shrink: 0;
-		padding: 8px;
-		margin: 0;
-		line-height: 1;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		position: relative;
-		box-sizing: border-box;
-		/* Move border to pseudo-element */
-		&:not(:last-child)::after {
-			content: '';
-			position: absolute;
-			right: 0;
-			top: 0;
-			bottom: 0;
-			width: var(--border-width);
-			background-color: var(--border-color);
-		}
-	}
-
-	/* Group styles */
-	.grid-header-group {
-		display: flex;
-		flex-direction: column;
-		/* Remove direct border */
-		position: relative;
-		/* Add border using pseudo-element */
-		&:not(:last-child)::after {
-			content: '';
-			position: absolute;
-			right: 0;
-			top: 0;
-			bottom: 0;
-			width: var(--border-width);
-			background-color: var(--border-color);
-		}
-	}
-
-	.grid-header-group-cell {
-		width: 100%;
-		padding: 8px;
-		margin: 0;
-		line-height: 1;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		border-bottom: var(--border-width) solid var(--border-color);
-		box-sizing: border-box;
-	}
-
-	/* Handle nested group borders */
-	.grid-header-group .grid-header-row {
-		border-bottom: none;
-		width: 100%;
-	}
-
-	.grid-header-group .grid-header-cell {
-		border-bottom: none;
-	}
-
-	.grid-header-cell {
-		gap: 0.5rem;
-		display: flex;
-		flex-direction: column;
-	}
-
-	/* Fix for group headers spanning multiple columns */
-	.grid-header-group {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.grid-header-group .grid-header-group-cell {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	/* Fix for nested header rows in groups */
-	.grid-header-group .grid-header-row {
-		display: flex;
-		flex-direction: row;
-	}
-
-	/* Optional: Add some padding and visual hierarchy */
-	.grid-header-cell,
-	.grid-body-cell,
-	.grid-header-group-cell {
-		padding: 8px 8px;
-	}
-
-	.grid-header-group-cell {
-		font-weight: bold;
-	}
-
-	/* Fix for the width calculations */
-	.grid-header-group {
-		display: flex;
-		flex-direction: column;
-		box-sizing: border-box;
-	}
-
-	.sortable {
-		cursor: pointer;
-		user-select: none;
-	}
-
-	.sortable:hover {
-		background-color: rgba(0, 0, 0, 0.05);
-	}
-
-	.header-content {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		justify-content: space-between;
-	}
-
-	.sort-indicator {
-		display: flex;
-		align-items: center;
-		opacity: 0.5;
-	}
-
-	.sortable:hover .sort-indicator {
-		opacity: 1;
-	}
-
-	.grid-header-cell[data-sort-direction='asc'] .sort-indicator,
-	.grid-header-cell[data-sort-direction='desc'] .sort-indicator {
-		opacity: 1;
-	}
-
-	/* TODO: change coloring */
-	.group-expand-inline-toggle {
-		display: flex;
-		align-items: center;
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: 0;
-		margin: 0;
-		gap: 0.5rem;
-		flex-grow: 1;
-	}
-
-	.group-expand-inline-toggle:hover {
-		background-color: rgba(0, 0, 0, 0.05);
-	}
-
-	.expand-icon {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 20px;
-		color: #666;
-	}
-
-	.group-value {
-		font-weight: 600;
-		color: #333;
-		flex-grow: 1;
-	}
-
-	.group-items-count {
-		color: #666;
-		font-size: 0.8em;
-		margin-left: auto;
-	}
-
-	.group-row {
-		background-color: var(--grid-row-even-background);
-	}
-
-	.group-row[data-expanded='true'] {
-		background-color: var(--grid-row-odd-background);
-	}
-
-	.group-cell {
-		display: flex;
-		align-items: center;
-	}
-
-	/* Filtering */
-	.column-filter-input {
-		background-color: hsl(var(--grid-row-odd-background));
-		border-radius: 0.25rem;
-		border: 1px solid hsl(var(--grid-border));
-		padding: 0 0.5rem;
-		height: 1.25rem;
-		color: hsl(var(--grid-text-color));
-	}
-</style>

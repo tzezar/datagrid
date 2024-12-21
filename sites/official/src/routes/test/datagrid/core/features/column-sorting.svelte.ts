@@ -2,6 +2,6 @@ import type { SortConfig } from "../types";
 
 
 
-export class Sorting {
+export class DataSorting {
     sortConfigs: SortConfig[] = $state([]);
 }

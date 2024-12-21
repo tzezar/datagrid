@@ -1,6 +1,6 @@
 
 // More specific types for different kinds of values
-import type { AccessorFn, CellValue, Cell, ColumnId, GetGroupValue, GetValueFn, HeaderCell } from "../types";
+import type { AccessorFn, CellValue, Cell, ColumnId, GetGroupValue, GetValueFn, HeaderCell, FormatterFn, AggregationFn } from "../types";
 import { DEFAULT_COLUMN_SIZE } from "./constants";
 
 // Helper type to get nested key paths
@@ -18,8 +18,10 @@ export interface AccessorColumn<TOriginalRow> {
   parentColumnId: string | null;
   accessorKey: DotNestedKeys<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
+  formatter?: FormatterFn<TOriginalRow>
+  aggregationFn?: AggregationFn<TOriginalRow>
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
-  cell?: Cell<TOriginalRow>
+  cell?: Cell;
   headerCell?: HeaderCell<TOriginalRow>
   options: {
     searchable: boolean,
@@ -53,8 +55,10 @@ export interface ComputedColumn<TOriginalRow> {
   accessorFn: AccessorFn<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
-  cell?: Cell<TOriginalRow>
+  cell?: Cell;
   headerCell?: HeaderCell<TOriginalRow>
+  formatter?: FormatterFn<TOriginalRow>
+  aggregationFn?: AggregationFn<TOriginalRow>
 
   options: {
     searchable: boolean
@@ -85,7 +89,7 @@ export interface DisplayColumn<TOriginalRow> {
   header: string;
   columnId: string;
   parentColumnId: string | null;
-  cell: Cell<TOriginalRow>,
+  cell: Cell
   headerCell?: HeaderCell<TOriginalRow>
 
   options: {
@@ -121,7 +125,7 @@ export interface GroupColumn<TOriginalRow> {
   columnId: string;
   parentColumnId: string | null;
   columns: AnyColumn<TOriginalRow>[];
-  cell?: Cell<TOriginalRow>,
+  cell?: Cell,
   options: {
     searchable: null
     groupable: null,
@@ -154,14 +158,16 @@ export type AnyColumn<TOriginalRow> =
   | GroupColumn<TOriginalRow>;
 
 
+export type ParentColumnId = string | null;
+
 type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOriginalRow>> = {
   header: string,
   columnId: ColumnId,
-  parentColumnId: string | null,
+  parentColumnId?: ParentColumnId
   accessorKey: TKey,
   getValueFn: (row: TOriginalRow) => CellValue,
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
-  cell?: Cell<TOriginalRow>
+  cell?: Cell
   headerCell?: HeaderCell<TOriginalRow>
   options?: {
     searchable?: boolean
@@ -171,19 +177,32 @@ type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOrigina
     pinnable?: boolean
     moveable?: boolean
   }
+  state?: {
+    size?: {
+      width?: number,
+      minWidth?: number,
+      maxWidth?: number,
+      grow?: boolean
+    }
+    visible?: boolean
+    pinning?: {
+      position?: 'left' | 'right' | 'none'
+      offset?: number
+    }
+  }
   _meta?: any
 }
 
 type CreateComputeColumnProps<TOriginalRow> = {
   header: string,
   columnId: ColumnId,
-  parentColumnId: string | null,
+  parentColumnId?: ParentColumnId
 
   accessorFn: (row: TOriginalRow) => CellValue,
   getValueFn: (row: TOriginalRow) => CellValue,
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
 
-  cell?: Cell<TOriginalRow>
+  cell?: Cell
   headerCell?: HeaderCell<TOriginalRow>
 
   options?: {
@@ -194,14 +213,27 @@ type CreateComputeColumnProps<TOriginalRow> = {
     pinnable?: boolean
     moveable?: boolean
   },
+  state?: {
+    size?: {
+      width?: number,
+      minWidth?: number,
+      maxWidth?: number,
+      grow?: boolean
+    },
+    visible?: boolean,
+    pinning?: {
+      position?: 'left' | 'right' | 'none'
+      offset?: number
+    }
+  },
   _meta?: any
 }
 
 type CreateDisplayColumnProps<TOriginalRow> = {
   header: string,
   columnId: ColumnId,
-  parentColumnId: string | null,
-  cell: Cell<TOriginalRow>
+  parentColumnId?: ParentColumnId
+  cell: Cell,
   headerCell?: HeaderCell<TOriginalRow>
   options?: {
     searchable?: false
@@ -211,6 +243,19 @@ type CreateDisplayColumnProps<TOriginalRow> = {
     pinnable?: boolean
     moveable?: boolean
   },
+  state?: {
+    size?: {
+      width?: number,
+      minWidth?: number,
+      maxWidth?: number,
+      grow?: boolean
+    },
+    visible?: boolean,
+    pinning?: {
+      position?: 'left' | 'right' | 'none'
+      offset?: number
+    }
+  },
   _meta?: any
 }
 
@@ -218,11 +263,9 @@ type CreateGroupColumnProps<TOriginalRow> = {
   header: string,
   headerCell?: HeaderCell<TOriginalRow>
   columnId: ColumnId,
-  parentColumnId: string | null,
+  parentColumnId?: ParentColumnId
   columns: AnyColumn<TOriginalRow>[],
   _meta?: any,
-
-
 }
 
 // Helper functions with improved type inference
@@ -230,11 +273,12 @@ export function createAccessorColumn<
   TOriginalRow extends Record<string, any>,
   TKey extends DotNestedKeys<TOriginalRow>
 >(
-  { header, accessorKey, columnId,  getValueFn: getValue, options, _meta = {}, state, ...rest }: CreateAccessorColumnProps<TOriginalRow, TKey>,
+  { header, accessorKey, columnId, getValueFn: getValue, options, _meta = {}, state, ...rest }: CreateAccessorColumnProps<TOriginalRow, TKey>,
 ): AccessorColumn<TOriginalRow> {
   return {
     type: 'accessor',
     columnId,
+    parentColumnId: rest.parentColumnId || null,
     header,
     accessorKey,
     getValueFn: getValue,
@@ -267,6 +311,7 @@ export function createComputedColumn<TOriginalRow extends Record<string, any>>(
     type: 'computed',
     header,
     columnId,
+    parentColumnId: rest.parentColumnId || null,
     accessorFn,
     getValueFn: getValue,
     options: {
@@ -291,12 +336,13 @@ export function createComputedColumn<TOriginalRow extends Record<string, any>>(
 }
 
 export function createDisplayColumn<TOriginalRow extends Record<string, any>>(
-  { header, cell, columnId, _meta, options, state }: CreateDisplayColumnProps<TOriginalRow>,
+  { header, cell, columnId, _meta, options, state, ...rest }: CreateDisplayColumnProps<TOriginalRow>,
 ): DisplayColumn<TOriginalRow> {
   return {
     type: 'display',
     header,
     columnId,
+    parentColumnId: rest.parentColumnId || null,
     cell,
     options: {
       searchable: null,
@@ -314,7 +360,9 @@ export function createDisplayColumn<TOriginalRow extends Record<string, any>>(
         offset: 0
       }
     },
-    _meta
+    _meta,
+    ...rest
+
   };
 }
 
@@ -325,6 +373,7 @@ export function createColumnGroup<TOriginalRow extends Record<string, any>>(
   return {
     type: 'group',
     columnId,
+    parentColumnId: rest.parentColumnId || null,
     header,
     _meta,
     columns,

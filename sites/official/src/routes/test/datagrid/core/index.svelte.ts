@@ -2,7 +2,7 @@ import { sort } from "fast-sort";
 import { isGroupColumn } from "./column-guards";
 import { Grouping } from "./features/grouping.svelte";
 import { Pagination } from "./features/pagination.svelte";
-import { Sorting } from "./features/sorting.svelte";
+import { DataSorting } from "./features/column-sorting.svelte";
 import type { AccessorColumn, AnyColumn, ComputedColumn, GroupColumn } from "./helpers/column-creators";
 import type { GridBasicRow, GridGroupRow, GridRow } from "./types";
 import { findColumnById, getSearchableColumns, isColumnSortable, isGridGroupRow } from "./utils.svelte";
@@ -17,15 +17,18 @@ import { ColumnFaceting } from "./features/column-faceting.svelte";
 import { RowPinning } from "./features/row-pinning.svelte";
 import { ColumnOrdering } from "./features/column-ordering.svelte";
 import { ColumnGrouping } from "./features/column-grouping.svelte";
+import { Fullscreen } from "./features/fullscreen.svelte";
 
 export class Datagrid<TOriginalRow> {
     original = $state.raw({
         columns: [] as AnyColumn<TOriginalRow>[],
         data: [] as TOriginalRow[]
     });
+    columns: AnyColumn<TOriginalRow>[] = $state([]);
+
 
     pagination = new Pagination(this);
-    sorting = new Sorting();
+    sorting = new DataSorting();
     grouping = new Grouping();
     filtering = new Filtering();
     globalSearch = new GlobalSearch();
@@ -41,9 +44,9 @@ export class Datagrid<TOriginalRow> {
     rowSelection = new RowSelection();
     rowPinning = new RowPinning(this);
 
-    columns: AnyColumn<TOriginalRow>[] = $state([]);
+    fullscreen = new Fullscreen();
 
-
+    // Caches
     filteredOriginalRowsCache: TOriginalRow[] = $state.raw([]);
     processedRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
     paginatedRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
@@ -67,30 +70,6 @@ export class Datagrid<TOriginalRow> {
     }
 
 
-    updateColumnGroups() {
-        const updateGroupColumn = (column: GroupColumn<TOriginalRow>) => {
-            // Recalculate group column width based on child columns
-            const totalWidth = column.columns.reduce((sum, col) => {
-                return sum + (col.state.size.width || 0);
-            }, 0);
-            
-            column.state.size.width = totalWidth;
-            
-            // Recursively update nested groups
-            column.columns.forEach(col => {
-                if (col.type === 'group') {
-                    updateGroupColumn(col as GroupColumn<TOriginalRow>);
-                }
-            });
-        };
-
-        this.columns.forEach(column => {
-            if (column.type === 'group') {
-                updateGroupColumn(column as GroupColumn<TOriginalRow>);
-            }
-        });
-    }
-
     recomputeFacetedValues(rows: TOriginalRow[], columns: AnyColumn<TOriginalRow>[]) {
         this.columnFaceting.calculateFacets(rows, columns);
     }
@@ -102,7 +81,6 @@ export class Datagrid<TOriginalRow> {
             if (col.state.pinning.position === 'none') {
                 col.state.pinning.offset = 0;
             } else {
-                // TODO type it properly
                 col.state.pinning.offset = this.columnPinning.getOffset(col.columnId, col.state.pinning.position);
             }
 
@@ -112,9 +90,12 @@ export class Datagrid<TOriginalRow> {
     };
 
     getSelectedRows(): TOriginalRow[] {
-        // TODO type it properly
-        return Array.from(this.rowSelection.selectedRowIds).map(id => this.original.data.find(row => row.id === id))
+        return Array.from(this.rowSelection.selectedRowIds)
+            .map(id => this.original.data.find(row => row.id === id))
+            .filter((row): row is TOriginalRow => row !== undefined); // Type guard for filtering
     }
+
+
 
     getPageCount(data: Array<any>): number {
         return Math.ceil(data.length / this.pagination.pageSize);
@@ -122,30 +103,63 @@ export class Datagrid<TOriginalRow> {
 
     executeFullDataTransformation() {
         // Global search first
+        let totalTime = performance.now();
+
+        let timeStart = performance.now();
         let filteredOriginalRows = this.filterOriginalRowsWithGlobalSearch(this.original.data);
+        console.log('Filtering took', performance.now() - timeStart);
         // Filter original data
+
+        timeStart = performance.now();
         filteredOriginalRows = this.filterOriginalRowsWithColumnFilters(filteredOriginalRows);
+        console.log('Filtering took', performance.now() - timeStart);
+        timeStart = performance.now();
         this.filteredOriginalRowsCache = filteredOriginalRows;
+        console.log('Filtering took', performance.now() - timeStart);
         // Recompute faceted values
 
         // Sort original data
+        timeStart = performance.now();
         const sortedOriginalRows = this.sortOriginalRows(filteredOriginalRows);
+        console.log('Sorting took', performance.now() - timeStart);
         // Create hierarchical groups
+        timeStart = performance.now();
         const groupedRows = this.createHierarchicalData(sortedOriginalRows);
-        this.groupedRowsCache = groupedRows;
-        // Flatten the hierarchical data, respecting expanded states
-        const flattenedRows = this.flattenExpandedHierarchicalData(groupedRows);
+        console.log('Grouping took', performance.now() - timeStart);
 
+        timeStart = performance.now();
+        this.groupedRowsCache = groupedRows;
+        console.log('Grouping took', performance.now() - timeStart);
+        // Flatten the hierarchical data, respecting expanded states
+        timeStart = performance.now();
+        const flattenedRows = this.flattenExpandedHierarchicalData(groupedRows);
+        console.log('Flattening took', performance.now() - timeStart);
+
+        timeStart = performance.now();
         this.flattenedRowsCache = this.getAllFlattenedRows(this.groupedRowsCache);
+        console.log('Flattening took', performance.now() - timeStart);
+        timeStart = performance.now();
         this.processedRowsCache = flattenedRows
+        console.log('Flattening took', performance.now() - timeStart);
 
         // Some performance hit
+        timeStart = performance.now();
         this.rowPinning.updatePinnedRows();
+        console.log('Pinning took', performance.now() - timeStart);
 
+        timeStart = performance.now();
         this.pagination.pageCount = this.getPageCount(flattenedRows);
+        console.log('Pagination took', performance.now() - timeStart);
+        
         // Paginate the flattened rows
+        timeStart = performance.now();
         this.paginatedRowsCache = this.paginateFlattenedGridRows(flattenedRows);
+        console.log('Setting paginatedRowsCache took', performance.now() - timeStart);
+        console.log('Total time', performance.now() - totalTime);
     }
+
+
+
 
     getAllFlattenedRows(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
         const flattened: GridRow<TOriginalRow>[] = [];
@@ -349,7 +363,23 @@ export class Datagrid<TOriginalRow> {
         return sort(data).by(sortInstructions as any);
     }
 
+
+
+
+    assignParentColumnIds(columns: AnyColumn<TOriginalRow>[], parentColumnId: string | null = null) {
+        columns.forEach(column => {
+            if (isGroupColumn(column)) {
+                const groupColumn = column as GroupColumn<TOriginalRow>;
+                this.assignParentColumnIds(groupColumn.columns, groupColumn.columnId);
+            }
+            column.parentColumnId = parentColumnId;
+        })
+    }
+
+
     transformColumns = (columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] => {
+        this.assignParentColumnIds(columns);
+
         const groupByColumns = this.grouping.groupByColumns;
 
         // Completely rework the column transformation
@@ -368,7 +398,6 @@ export class Datagrid<TOriginalRow> {
         // Return grouped columns first, followed by non-grouped columns
         return [...groupedColumns, ...nonGroupedColumns];
     };
-
 
     toggleGroupRowIsExpanded(row: GridGroupRow<TOriginalRow>) {
         if (this.isGroupRowExpanded(row)) {

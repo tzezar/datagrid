@@ -7,13 +7,14 @@ export type GetValueFn<TOriginalRow> = (row: TOriginalRow) => CellValue;
 export type GetGroupValue<TOriginalRow> = (row: TOriginalRow) => CellValue;
 export type CellValue = Primitive | Record<string, any> | Array<any>;
 
-export type Cell<TOriginalRow> = (row: TOriginalRow) =>
-    | string
-    | HTMLElement
-    | {
-        component: Component,
-        props: { row: TOriginalRow }
-    }
+
+
+export type Cell = (props: any) => {
+    component: Component<any>,
+    props: object
+} | string | HTMLElement
+
+
 
 export type HeaderCell<TOriginalRow> = (row: TOriginalRow) =>
     | string
@@ -25,6 +26,8 @@ export type HeaderCell<TOriginalRow> = (row: TOriginalRow) =>
 
 
 export type AccessorFn<TOriginalRow> = (row: TOriginalRow) => CellValue;
+export type FormatterFn<TOriginalRow> = (row: TOriginalRow) => CellValue;
+export type AggregationFn<TOriginalRow> = (rows: TOriginalRow[]) => CellValue;
 
 export type GridGroupRow<TOriginalRow> = {
     index: string;
@@ -130,3 +133,5 @@ export interface SearchState {
 export type FilteringState<TOriginalRow> = {
     conditions: FilterCondition<TOriginalRow>[];
 }
+
+
