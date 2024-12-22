@@ -6,83 +6,167 @@ import type { GridBasicRow, GridRow } from "../types";
 import { findColumnById, getSearchableColumns, isColumnSortable, isGridGroupRow } from "../utils.svelte";
 
 
+export class PerformanceMetrics {
+    metrics: { label: string, value: number }[] = [];
 
-export class DataProcessor<TOriginalRow> {
-    datagrid: Datagrid<TOriginalRow>;
-    constructor(datagrid: Datagrid<TOriginalRow>) {
+    add(label: string, value: number) {
+        this.metrics.push({ label, value: Number(value) });
+    }
+
+    print() {
+        console.log('');
+        console.log('Performance Summary:');
+        this.metrics.forEach(({ label, value }) => {
+            console.log(`${value.toFixed(2)}ms - ${label}`);
+        });
+        console.log(`Total processing time: ${this.getTotalTime()}ms`);
+    }
+
+    clear() {
+        this.metrics = [];
+    }
+
+    getTotalTime() {
+        return Number(this.metrics.reduce((acc, metric) => acc + metric.value, 0).toFixed(2));
+    }
+
+    measure(operation: () => void, name: string) {
+        const timeStart = performance.now();
+        operation();
+        const duration = performance.now() - timeStart;
+        this.add(name, duration);
+        console.log(`${duration.toFixed(2)}ms - ${name}`);
+    }
+}
+
+class DataTransformationPipeline<T> {
+    private steps: Array<[string, (data: T) => T]> = [];
+    private initialData: T | null = null;
+    private readonly datagrid: Datagrid<any>;
+
+    constructor(datagrid: Datagrid<any>) {
         this.datagrid = datagrid;
     }
 
-    executeFullDataTransformation() {
-        // Global search first
-        let data = this.datagrid.original.data;
-        let timeStart = performance.now();
-        if (this.datagrid.globalSearch.value !== '') {
-            data = this.filterOriginalRowsWithGlobalSearch(data);
-        }
-        console.log(`Global search took ${performance.now() - timeStart}ms`)
-        timeStart = performance.now();
-        if (this.datagrid.filtering.conditions.length > 0) {
-            data = this.filterOriginalRowsWithColumnFilters(data);
-        }
-        console.log(`Filtering took ${performance.now() - timeStart}ms`)
-        this.datagrid.cache.filteredOriginalRowsCache = data;
-
-
-        // Recompute faceted values
-        // Sort original data
-        timeStart = performance.now();
-        if (this.datagrid.sorting.sortConfigs.length > 0) {
-            data = this.sortOriginalRows(data);
-        }
-        console.log(`Sorting took ${performance.now() - timeStart}ms`)
-        this.datagrid.cache.sortedOriginalRowsCache = data;
-
-
-        if (this.datagrid.grouping.groupByColumns.length > 0) {
-            // Create hierarchical groups
-            timeStart = performance.now();
-
-            // ! should only be done when grouping changes or when data changes or when sorting or filtering changes
-            // ! not on group expansion or pagination
-
-            const groupedRows = this.datagrid.cache.getGroupedRowsCache(data);
-            console.log(`Grouping took ${performance.now() - timeStart}ms`)
-            // Flatten the hierarchical data, respecting expanded states
-            timeStart = performance.now();
-            const flattenedRows = this.flattenExpandedHierarchicalData(groupedRows);
-            console.log(`Flattening expanded hierarchies took ${performance.now() - timeStart}ms`)
-            timeStart = performance.now();
-            this.datagrid.cache.flattenedRowsCache = this.datagrid.rowManager.getFlattenedRows(this.datagrid.cache.groupedRowsCache);
-            console.log(`Flattening took ${performance.now() - timeStart}ms`)
-            this.datagrid.cache.processedRowsCache = flattenedRows
-            // Some performance hit
-            timeStart = performance.now();
-            this.datagrid.rowPinning.updatePinnedRows();
-            console.log(`Pinning took ${performance.now() - timeStart}ms`)
-            this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(flattenedRows);
-            // Paginate the flattened rows
-            timeStart = performance.now();
-            this.datagrid.cache.paginatedRowsCache = this.paginateGridRows(flattenedRows);
-            console.log(`Pagination took ${performance.now() - timeStart}ms`)
-            return
-        }
-
-
-        timeStart = performance.now();
-        // transform data into rows
-        this.datagrid.cache.processedRowsCache = this.transformOriginalRowsIntoGridBasicRows(data);
-        console.log(`Transformation took ${performance.now() - timeStart}ms`)
-        console.log(this.datagrid.cache.processedRowsCache)
-        this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(data);
-
-        // paginate 
-        timeStart = performance.now();
-        this.datagrid.cache.paginatedRowsCache = this.paginateGridRows(this.datagrid.cache.processedRowsCache);
-        console.log(`Pagination took ${performance.now() - timeStart}ms`)
-
+    setInitialData(data: T): this {
+        this.initialData = data;
+        return this;
     }
 
+    addStep(name: string, transform: (data: T) => T): this {
+        this.steps.push([name, transform]);
+        return this;
+    }
+
+    execute(metrics: PerformanceMetrics): T {
+        if (this.initialData === null) {
+            throw new Error('Pipeline execution failed: no initial data provided');
+        }
+
+        return this.steps.reduce((result: T, [name, transform]) => {
+            let transformedResult: T;
+            metrics.measure(() => {
+                transformedResult = transform(result);
+            }, name);
+            return transformedResult!;
+        }, this.initialData);
+    }
+}
+
+export class DataProcessor<TOriginalRow> {
+    datagrid: Datagrid<TOriginalRow>;
+    metrics: PerformanceMetrics;
+    constructor(datagrid: Datagrid<TOriginalRow>) {
+        this.datagrid = datagrid;
+        this.metrics = new PerformanceMetrics();
+    }
+
+    executeFullDataTransformation(): void {
+        this.metrics.clear();
+
+        const transformationPipeline = new DataTransformationPipeline<TOriginalRow[]>(this.datagrid);
+
+        const transformedData = transformationPipeline
+            .addStep('Global Search', () =>
+                this.datagrid.globalSearch.value !== ''
+                    ? this.filterOriginalRowsWithGlobalSearch(this.datagrid.original.data)
+                    : this.datagrid.original.data
+            )
+            .addStep('Column Filtering', (previousData) =>
+                this.datagrid.filtering.conditions.length > 0
+                    ? this.filterOriginalRowsWithColumnFilters(previousData)
+                    : previousData
+            )
+            .addStep('Sorting', (previousData) => {
+                if (this.datagrid.sorting.sortConfigs.length > 0) {
+                    const sortedData = this.sortOriginalRows(previousData);
+                    this.datagrid.cache.sortedOriginalRows = sortedData;
+                    return sortedData;
+                }
+                return previousData;
+            })
+            .execute(this.metrics);
+
+        // Cache filtered results
+        this.datagrid.cache.filteredOriginalRows = transformedData;
+
+        // Process grouped or regular data
+        if (this.datagrid.grouping.groupByColumns.length > 0) {
+            this.processGroupedData(transformedData);
+        } else {
+            this.processRegularData(transformedData);
+        }
+
+        if (this.datagrid.config.measurePerformance) {
+            this.metrics.print();
+        }
+    }
+
+    private processGroupedData(data: TOriginalRow[]): void {
+        const pipeline = new DataTransformationPipeline<GridRow<TOriginalRow>[]>(this.datagrid);
+
+        pipeline
+            .addStep('Grouping', () => {
+                const groupedRows = this.datagrid.cache.getOrComputeGroupedRowsCache(data);
+                this.datagrid.cache.groupedRowsCache = groupedRows;
+                return groupedRows;
+            })
+            .addStep('Flattening', (groupedRows) => {
+                const flattenedRows = this.flattenExpandedHierarchicalData(groupedRows);
+                this.datagrid.cache.flattenedRowsCache = this.datagrid.rowManager.getFlattenedRows(groupedRows);
+                this.datagrid.cache.rows = flattenedRows;
+                return flattenedRows;
+            })
+            .addStep('Row Pinning', (flattenedRows) => {
+                this.datagrid.rowPinning.updatePinnedRows();
+                return flattenedRows;
+            })
+            .addStep('Pagination', (flattenedRows) => {
+                this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(flattenedRows);
+                const paginatedRows = this.paginateGridRows(flattenedRows);
+                this.datagrid.cache.paginatedRowsCache = paginatedRows;
+                return paginatedRows;
+            })
+            .execute(this.metrics);
+    }
+
+    private processRegularData(data: TOriginalRow[]): void {
+        const pipeline = new DataTransformationPipeline<GridRow<TOriginalRow>[]>(this.datagrid);
+
+        pipeline
+            .addStep('Data Transformation', () => {
+                const basicRows = this.transformOriginalRowsIntoGridBasicRows(data);
+                this.datagrid.cache.rows = basicRows;
+                this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(data);
+                return basicRows;
+            })
+            .addStep('Pagination', (basicRows) => {
+                const paginatedRows = this.paginateGridRows(basicRows);
+                this.datagrid.cache.paginatedRowsCache = paginatedRows;
+                return paginatedRows;
+            })
+            .execute(this.metrics);
+    }
 
     filterOriginalRowsWithGlobalSearch(data: TOriginalRow[]): TOriginalRow[] {
         if (!this.datagrid.globalSearch.value) return data;

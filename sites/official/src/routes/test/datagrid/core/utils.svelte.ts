@@ -78,7 +78,6 @@ export function isDescendantOf(possibleDescendant: GroupColumn<any>, ancestor: G
 }
 // Handle sort click with multi-column support
 export function onSort(datagrid: Datagrid<any>, column: AnyColumn<any>, event: MouseEvent) {
-    const timeStart = performance.now();
     if (!column.options.sortable) return;
 
     const columnId = column.columnId || column.header;
@@ -113,7 +112,6 @@ export function onSort(datagrid: Datagrid<any>, column: AnyColumn<any>, event: M
         }
     }
     datagrid.processors.data.executeFullDataTransformation();
-    console.log('onSort', performance.now() - timeStart);
 }
 
 // Get sort index for display
@@ -182,3 +180,9 @@ export const isColumnSortable = <TOriginalRow>(
 };
 
 
+export const measurePerformance = (operation: any, name: string) => {
+    const timeStart = performance.now();
+    operation();
+    let duration = (performance.now() - timeStart).toFixed(2);
+    console.log(`${duration}ms - ${name}`) 
+}

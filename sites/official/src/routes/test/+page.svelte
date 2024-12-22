@@ -48,6 +48,7 @@
 
 		datagrid.grouping.groupByColumns = newGroupBy;
 		datagrid.pagination.goToFirstPage();
+		datagrid.cache.invalidateGroupedRowsCache();
 		datagrid.processors.data.executeFullDataTransformation();
 	}
 

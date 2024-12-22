@@ -22,7 +22,6 @@ export class RowManager<TOriginalRow> {
         }
         // invalide flatten cache
         this.datagrid.processors.data.executeFullDataTransformation();
-        
     }
 
     getFlattenedRows(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
@@ -34,7 +33,7 @@ export class RowManager<TOriginalRow> {
                 flattened.push(...this.getFlattenedRows(row.children));
             }
         }
-        return flattened;
+        return flattened
     }
 
 }

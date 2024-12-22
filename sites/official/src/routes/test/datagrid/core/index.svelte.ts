@@ -31,34 +31,39 @@ export type DatagridConfig<TOriginalRow> = {
 export class DatagridCacheManager<TOriginalRow> {
     datagrid: Datagrid<TOriginalRow>;
 
-    filteredOriginalRowsCache: TOriginalRow[] = $state.raw([]);
-    sortedOriginalRowsCache: TOriginalRow[] = $state.raw([]);
 
-
-
-
-
-
-
-    processedRowsCache: GridRow<TOriginalRow>[] | null = $state.raw([]);
-    paginatedRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
+    filteredOriginalRows: TOriginalRow[] = $state.raw([]);
+    sortedOriginalRows: TOriginalRow[] = $state.raw([]);
     groupedRowsCache: GridRow<TOriginalRow>[] | null = $state.raw(null);
-    flattenedRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
+    flattenedRowsCache: GridRow<TOriginalRow>[] | null = $state.raw([]);
 
+    _rows: GridRow<TOriginalRow>[] | null = $state.raw([]);
+    paginatedRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
 
     invalidateGroupedRowsCache() {
         this.groupedRowsCache = null;
+        this.flattenedRowsCache = null;
+        this._rows = null;
     }
-    getGroupedRowsCache(data: TOriginalRow[]): GridRow<TOriginalRow>[] {
+
+    getOrComputeGroupedRowsCache(data: TOriginalRow[]): GridRow<TOriginalRow>[] {
         if (this.groupedRowsCache === null) {
             this.groupedRowsCache = this.datagrid.processors.data.createHierarchicalData(data);
-        } 
+        }
         return this.groupedRowsCache;
+    }
+
+    get rows(): GridRow<TOriginalRow>[] {
+        return this._rows || []
+    }
+    set rows(rows: GridRow<TOriginalRow>[]) {
+        this._rows = rows;
     }
 
 
     constructor(datagrid: Datagrid<TOriginalRow>) {
         this.datagrid = datagrid;
+
     }
 
 
@@ -86,6 +91,10 @@ export class Datagrid<TOriginalRow> {
         columnGrouping: new ColumnGroupingFeature(this)
     }
 
+    config = {
+        measurePerformance: true
+    }
+
 
 
 
@@ -109,7 +118,7 @@ export class Datagrid<TOriginalRow> {
     fullscreen = new FullscreenFeature();
 
     // Cache
- 
+
 
     constructor(config: DatagridConfig<TOriginalRow>) {
         this.validateInputs(config);
@@ -134,7 +143,7 @@ export class Datagrid<TOriginalRow> {
 
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
-        this.columnFaceting.calculateFacets(this.cache.filteredOriginalRowsCache, this.columns);
+        this.columnFaceting.calculateFacets(this.cache.filteredOriginalRows, this.columns);
 
         this.globalSearch.fuseInstance = this.globalSearch.initializeFuseInstance(this.original.data, this.columns.map(col => col.columnId as string))
     }
