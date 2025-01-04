@@ -1,7 +1,7 @@
 
 
 
-export class Fullscreen {
+export class FullscreenFeature {
     isFullscreen: boolean = $state(false);
 
     toggleFullscreen() {

@@ -1,7 +1,7 @@
 import type { AccessorColumn, AnyColumn, ComputedColumn } from "../helpers/column-creators";
 import type { Datagrid } from "../index.svelte";
 
-export class ColumnFaceting<TOriginalRow> {
+export class ColumnFacetingFeature<TOriginalRow> {
     datagrid: Datagrid<TOriginalRow>;
     numericFacets: Record<string, { min: number, max: number }> = $state({});
     categoricalFacets: Record<string, { 

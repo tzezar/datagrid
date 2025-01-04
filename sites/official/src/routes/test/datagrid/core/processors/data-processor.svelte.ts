@@ -1,356 +1,204 @@
 import { sort } from "fast-sort";
 import { isGroupColumn } from "../column-guards";
-import type { AccessorColumn, ComputedColumn } from "../helpers/column-creators";
 import type { Datagrid } from "../index.svelte";
-import type { GridBasicRow, GridRow } from "../types";
-import { findColumnById, getSearchableColumns, isColumnSortable, isGridGroupRow } from "../utils.svelte";
+import type { GridRow } from "../types";
+import { findColumnById, isColumnSortable } from "../utils.svelte";
+import type { PerformanceMetrics } from "../helpers/performance-metrics.svelte";
 
 
-export class PerformanceMetrics {
-    metrics: { label: string, value: number }[] = [];
 
-    add(label: string, value: number) {
-        this.metrics.push({ label, value: Number(value) });
-    }
 
-    print() {
-        console.log('');
-        console.log('Performance Summary:');
-        this.metrics.forEach(({ label, value }) => {
-            console.log(`${value.toFixed(2)}ms - ${label}`);
-        });
-        console.log(`Total processing time: ${this.getTotalTime()}ms`);
-    }
 
-    clear() {
-        this.metrics = [];
-    }
-
-    getTotalTime() {
-        return Number(this.metrics.reduce((acc, metric) => acc + metric.value, 0).toFixed(2));
-    }
-
-    measure(operation: () => void, name: string) {
-        const timeStart = performance.now();
-        operation();
-        const duration = performance.now() - timeStart;
-        this.add(name, duration);
-        console.log(`${duration.toFixed(2)}ms - ${name}`);
-    }
-}
-
-class DataTransformationPipeline<T> {
-    private steps: Array<[string, (data: T) => T]> = [];
-    private initialData: T | null = null;
-    private readonly datagrid: Datagrid<any>;
-
-    constructor(datagrid: Datagrid<any>) {
-        this.datagrid = datagrid;
-    }
-
-    setInitialData(data: T): this {
-        this.initialData = data;
-        return this;
-    }
-
-    addStep(name: string, transform: (data: T) => T): this {
-        this.steps.push([name, transform]);
-        return this;
-    }
-
-    execute(metrics: PerformanceMetrics): T {
-        if (this.initialData === null) {
-            throw new Error('Pipeline execution failed: no initial data provided');
-        }
-
-        return this.steps.reduce((result: T, [name, transform]) => {
-            let transformedResult: T;
-            metrics.measure(() => {
-                transformedResult = transform(result);
-            }, name);
-            return transformedResult!;
-        }, this.initialData);
-    }
-}
-
-export class DataProcessor<TOriginalRow> {
-    datagrid: Datagrid<TOriginalRow>;
-    metrics: PerformanceMetrics;
-    constructor(datagrid: Datagrid<TOriginalRow>) {
-        this.datagrid = datagrid;
-        this.metrics = new PerformanceMetrics();
+// Main data processor
+export class DataProcessor<TRow> {
+    private readonly metrics: PerformanceMetrics;
+    constructor(private readonly datagrid: Datagrid<TRow>) {
+        this.metrics = datagrid.metrics;
     }
 
     executeFullDataTransformation(): void {
         this.metrics.clear();
 
-        const transformationPipeline = new DataTransformationPipeline<TOriginalRow[]>(this.datagrid);
+        // Apply transformations directly
+        let data = this.datagrid.original.data;
 
-        const transformedData = transformationPipeline
-            .addStep('Global Search', () =>
-                this.datagrid.globalSearch.value !== ''
-                    ? this.filterOriginalRowsWithGlobalSearch(this.datagrid.original.data)
-                    : this.datagrid.original.data
-            )
-            .addStep('Column Filtering', (previousData) =>
-                this.datagrid.filtering.conditions.length > 0
-                    ? this.filterOriginalRowsWithColumnFilters(previousData)
-                    : previousData
-            )
-            .addStep('Sorting', (previousData) => {
-                if (this.datagrid.sorting.sortConfigs.length > 0) {
-                    const sortedData = this.sortOriginalRows(previousData);
-                    this.datagrid.cache.sortedOriginalRows = sortedData;
-                    return sortedData;
-                }
-                return previousData;
-            })
-            .execute(this.metrics);
+        // Apply global search if value is set
+        if (this.datagrid.globalSearch.value !== '') {
+            this.metrics.measure('Global Search', () => {
+                data = this.applyGlobalSearch(data);
+            });
+        }
+
+        if (this.datagrid.filtering.conditions.length > 0) {
+            this.metrics.measure('Column Filtering', () => {
+                data = this.applyColumnFilters(data);
+            });
+        }
+
+        if (this.datagrid.sorting.sortConfigs.length > 0) {
+            this.metrics.measure('Sorting', () => {
+                data = this.applySorting(data);
+                this.datagrid.cache.sortedOriginalRows = data;
+            });
+        }
 
         // Cache filtered results
-        this.datagrid.cache.filteredOriginalRows = transformedData;
+        this.datagrid.cache.filteredOriginalRows = data;
 
         // Process grouped or regular data
         if (this.datagrid.grouping.groupByColumns.length > 0) {
-            this.processGroupedData(transformedData);
+            this.processGroupedData(data);
         } else {
-            this.processRegularData(transformedData);
+            this.processRegularData(data);
         }
 
         if (this.datagrid.config.measurePerformance) {
-            this.metrics.print();
+            this.datagrid.metrics.print();
         }
     }
 
-    private processGroupedData(data: TOriginalRow[]): void {
-        const pipeline = new DataTransformationPipeline<GridRow<TOriginalRow>[]>(this.datagrid);
-
-        pipeline
-            .addStep('Grouping', () => {
-                const groupedRows = this.datagrid.cache.getOrComputeGroupedRowsCache(data);
-                this.datagrid.cache.groupedRowsCache = groupedRows;
-                return groupedRows;
-            })
-            .addStep('Flattening', (groupedRows) => {
-                const flattenedRows = this.flattenExpandedHierarchicalData(groupedRows);
-                this.datagrid.cache.flattenedRowsCache = this.datagrid.rowManager.getFlattenedRows(groupedRows);
-                this.datagrid.cache.rows = flattenedRows;
-                return flattenedRows;
-            })
-            .addStep('Row Pinning', (flattenedRows) => {
-                this.datagrid.rowPinning.updatePinnedRows();
-                return flattenedRows;
-            })
-            .addStep('Pagination', (flattenedRows) => {
-                this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(flattenedRows);
-                const paginatedRows = this.paginateGridRows(flattenedRows);
-                this.datagrid.cache.paginatedRowsCache = paginatedRows;
-                return paginatedRows;
-            })
-            .execute(this.metrics);
-    }
-
-    private processRegularData(data: TOriginalRow[]): void {
-        const pipeline = new DataTransformationPipeline<GridRow<TOriginalRow>[]>(this.datagrid);
-
-        pipeline
-            .addStep('Data Transformation', () => {
-                const basicRows = this.transformOriginalRowsIntoGridBasicRows(data);
-                this.datagrid.cache.rows = basicRows;
-                this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(data);
-                return basicRows;
-            })
-            .addStep('Pagination', (basicRows) => {
-                const paginatedRows = this.paginateGridRows(basicRows);
-                this.datagrid.cache.paginatedRowsCache = paginatedRows;
-                return paginatedRows;
-            })
-            .execute(this.metrics);
-    }
-
-    filterOriginalRowsWithGlobalSearch(data: TOriginalRow[]): TOriginalRow[] {
-        if (!this.datagrid.globalSearch.value) return data;
-
+    private applyGlobalSearch(data: TRow[]): TRow[] {
         const searchValue = this.datagrid.globalSearch.value.toLowerCase();
-        const searchableColumns = getSearchableColumns(this.datagrid.columns);
+        const searchableColumns = this.datagrid.columns.filter(col =>
+            !isGroupColumn(col) && col.searchable !== false);
 
-        // Fuzzy search
         if (this.datagrid.globalSearch.fuzzy) {
-            const fuseInstance = this.datagrid.globalSearch.fuseInstance;
-            if (!fuseInstance) throw new Error('Fuse instance is null or undefined');
-            return fuseInstance.search(searchValue).map((result) => result.item);
+            const fuse = this.datagrid.globalSearch.fuseInstance;
+            if (!fuse) throw new Error('Fuse instance is not initialized');
+            return fuse.search(searchValue).map(result => result.item);
         }
 
-        // Cache the column accessor functions for searchable columns
-        const accessorCache = new Map<string, (item: TOriginalRow) => any>();
-        searchableColumns.forEach((column) => {
-            // Ensure type safety by accessing the correct getValueFn
-            accessorCache.set(column.columnId, column.getValueFn);
-        });
-
-        // Column-level search
-        return data.filter((item) =>
-            searchableColumns.some((col) => {
-                const accessor = accessorCache.get(col.columnId);
-                if (!accessor) return false;
-
-                const value = accessor(item);
-                return String(value).toLowerCase().includes(searchValue);
-            })
+        return data.filter(item =>
+            searchableColumns.some(column =>
+                String(column.getValueFn(item))
+                    .toLowerCase()
+                    .includes(searchValue)
+            )
         );
     }
 
-    filterOriginalRowsWithColumnFilters(data: TOriginalRow[]): TOriginalRow[] {
-        // Filter out inactive conditions (empty value)
-        const activeConditions = this.datagrid.filtering.conditions.filter(condition => condition.value !== '');
+    private applyColumnFilters(data: TRow[]): TRow[] {
+        const activeFilters = this.datagrid.filtering.conditions
+            .filter(condition => condition.value !== '');
 
-        if (activeConditions.length === 0) return data;
-
-        const isRowMatching = (row: TOriginalRow): boolean => {
-            return activeConditions.every(condition =>
-                this.datagrid.filtering.evaluateCondition(condition.getValueFn(row), condition)
-            );
-        };
-
-        return data.filter(isRowMatching);
+        return data.filter(row =>
+            activeFilters.every(filter =>
+                this.datagrid.filtering.evaluateCondition(
+                    filter.getValueFn(row),
+                    filter
+                )
+            )
+        );
     }
 
+    private applySorting(data: TRow[]): TRow[] {
+        const sortInstructions = this.datagrid.sorting.sortConfigs
+            .map(config => {
+                const column = findColumnById(this.datagrid.original.columns, config.id);
+                if (!column || isGroupColumn(column) || !isColumnSortable(column)) {
+                    return null;
+                }
 
-
-    paginateGridRows(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
-        const startIndex = (this.datagrid.pagination.page - 1) * this.datagrid.pagination.pageSize;
-        const endIndex = startIndex + this.datagrid.pagination.pageSize;
-        return data.slice(startIndex, endIndex);
-    }
-
-
-    transformOriginalRowsIntoGridBasicRows(
-        rows: TOriginalRow[],
-        parentIndex: string | null = null
-    ): GridRow<TOriginalRow>[] {
-        const gridRows: GridBasicRow<TOriginalRow>[] = [];
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            const gridRow: GridRow<TOriginalRow> = {
-                // Always use a hyphenated index with parent index
-                index: parentIndex
-                    ? `${parentIndex}-${i + 1}`
-                    : `${i + 1}`,
-                parentIndex: parentIndex,
-                original: row
-            };
-            gridRows.push(gridRow);
-        }
-        return gridRows;
-    }
-
-
-    createHierarchicalData(data: TOriginalRow[]): GridRow<TOriginalRow>[] {
-        const groupByColumns = this.datagrid.grouping.groupByColumns;
-
-        if (groupByColumns.length < 1) return this.transformOriginalRowsIntoGridBasicRows(data);
-
-        const columnAccessors = groupByColumns.map(col => {
-            let column = findColumnById(this.datagrid.columns, col);
-            if (!column) throw new Error(`Column ${col} not found`);
-            column = column as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>;
-            return column.getValueFn;
-        })
-
-        const recursiveGroup = (
-            rows: TOriginalRow[],
-            columnIndex: number,
-            parentGroupKeys: Record<string, any> = {},
-            parentIndex: string = ''
-        ): GridRow<TOriginalRow>[] => {
-            if (columnIndex >= groupByColumns.length) {
-                return this.transformOriginalRowsIntoGridBasicRows(rows, parentIndex);
-            }
-
-            const currentAccessor = columnAccessors[columnIndex];
-            const groupedData: Record<string, TOriginalRow[]> = {};
-
-            // Efficient grouping
-            rows.forEach((row) => {
-                // TODO some workaround for ts types, need to improve
-                // Prefer getGroupValue if it exists, fall back to default accessor
-                const column = findColumnById(this.datagrid.original.columns, groupByColumns[columnIndex]) as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>;
-                const groupKey = column?.getGroupValueFn
-                    ? String(column.getGroupValueFn(row) ?? 'Unknown')
-                    : String(currentAccessor(row) ?? 'Unknown');
-
-                (groupedData[groupKey] = groupedData[groupKey] || []).push(row);
-            });
-
-
-            return Object.entries(groupedData).map(([groupKey, groupRows], groupIndex) => {
-                const currentGroupKeys = {
-                    ...parentGroupKeys,
-                    [groupByColumns[columnIndex]]: groupKey
-                };
-
-                const currentIndex = parentIndex
-                    ? `${parentIndex}-${groupIndex + 1}`
-                    : `${groupIndex + 1}`;
-
-                const groupId = Object.values(currentGroupKeys).join('|');
-
-                return {
-                    index: currentIndex,
-                    groupId: groupId,
-                    groupKey: groupByColumns[columnIndex],
-                    groupValue: [groupKey],
-                    depth: columnIndex,
-                    isExpanded: false,
-                    children: recursiveGroup(
-                        groupRows,
-                        columnIndex + 1,
-                        currentGroupKeys,
-                        currentIndex
-                    )
-                };
-            });
-        };
-
-        return recursiveGroup(data, 0);
-    }
-
-    sortOriginalRows(data: TOriginalRow[]): TOriginalRow[] {
-        if (this.datagrid.sorting.sortConfigs.length === 0) return data;
-
-        type SortInstruction = {
-            asc?: (row: TOriginalRow) => any;
-            desc?: (row: TOriginalRow) => any;
-        };
-        const sortInstructions: SortInstruction[] = [];
-
-        for (const sortConfig of this.datagrid.sorting.sortConfigs) {
-            let column = findColumnById(this.datagrid.original.columns, sortConfig.id);
-            if (!column || isGroupColumn(column)) continue;
-            column = isColumnSortable(column);
-            if (!column) continue;
-            const getValueFn = (row: TOriginalRow) => column.getValueFn(row);
-            const sortInstruction: SortInstruction = sortConfig.desc
-                ? { desc: getValueFn }
-                : { asc: getValueFn };
-
-            sortInstructions.push(sortInstruction);
-        }
+                const getValueFn = (row: TRow) => column.getValueFn(row);
+                return config.desc ? { desc: getValueFn } : { asc: getValueFn };
+            })
+            .filter(Boolean);
 
         return sort(data).by(sortInstructions as any);
     }
 
+    private processGroupedData(data: TRow[]): void {
+        // Create grouped structure
+        let groupedRows: GridRow<TRow>[];
+        this.metrics.measure('Grouping', () => {
+            groupedRows = this.createHierarchicalData(data);
+            this.datagrid.cache.groupedRowsCache = groupedRows;
+        });
 
-    flattenExpandedHierarchicalData(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
-        const flattened: GridRow<TOriginalRow>[] = [];
+        // Flatten groups
+        let flattenedRows: GridRow<TRow>[];
+        this.metrics.measure('Flattening', () => {
+            flattenedRows = this.flattenGroups(groupedRows!);
+            this.datagrid.cache.flattenedRowsCache = this.datagrid.rowManager.flattenGridRows(groupedRows!);
+            this.datagrid.cache.rows = flattenedRows;
+        });
 
-        for (const row of data) {
+        // Update pinned rows and pagination
+        this.datagrid.rowPinning.updatePinnedRows();
+        this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(flattenedRows!);
+        this.datagrid.cache.paginatedRowsCache = this.paginateRows(flattenedRows!);
+    }
+
+    private processRegularData(data: TRow[]): void {
+        // Transform into basic rows
+        let basicRows: GridRow<TRow>[];
+
+        this.metrics.measure('Data Transformation', () => {
+            basicRows = this.createBasicRows(data);
+            this.datagrid.cache.rows = basicRows;
+            if (this.datagrid.rowPinning.rowIdsPinnedTop.size > 0 || this.datagrid.rowPinning.rowIdsPinnedBottom.size > 0) {
+                this.metrics.measure('Row Pinning', () => {
+                    this.datagrid.rowPinning.updatePinnedRows();
+                });
+            }
+            this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(data);
+        });
+
+        // Apply pagination
+        this.datagrid.cache.paginatedRowsCache = this.paginateRows(basicRows!);
+    }
+
+    createHierarchicalData(data: TRow[]): GridRow<TRow>[] {
+        const groupCols = this.datagrid.grouping.groupByColumns;
+        if (!groupCols.length) return this.createBasicRows(data);
+
+        const groupByLevel = (
+            rows: TRow[],
+            depth: number,
+            parentPath = ''
+        ): GridRow<TRow>[] => {
+            if (depth >= groupCols.length) {
+                return this.createBasicRows(rows, parentPath);
+            }
+
+            const groups = new Map<string, TRow[]>();
+            const column = findColumnById(this.datagrid.columns, groupCols[depth]);
+            if (!column || isGroupColumn(column)) {
+                throw new Error(`Invalid group column: ${groupCols[depth]}`);
+            }
+
+            // Group rows by current column
+            rows.forEach(row => {
+                const groupKey = String(column.getGroupValueFn?.(row) ?? column.getValueFn(row) ?? 'Unknown');
+                const group = groups.get(groupKey) ?? [];
+                group.push(row);
+                groups.set(groupKey, group);
+            });
+
+            // Create group rows
+            return Array.from(groups.entries()).map(([key, groupRows], index) => ({
+                index: parentPath ? `${parentPath}-${index + 1}` : String(index + 1),
+                groupId: `${parentPath}|${key}`,
+                groupKey: groupCols[depth],
+                groupValue: [key],
+                depth,
+                isExpanded: false,
+                children: groupByLevel(groupRows, depth + 1, `${parentPath}${index + 1}`)
+            }));
+        };
+
+        return groupByLevel(data, 0);
+    }
+
+    private flattenGroups(rows: GridRow<TRow>[]): GridRow<TRow>[] {
+        const flattened: GridRow<TRow>[] = [];
+
+        for (const row of rows) {
             flattened.push(row);
 
-            if (isGridGroupRow(row)) {
-                // Only flatten children if the group row is expanded
+            if ('groupId' in row && 'children' in row) {
                 if (this.datagrid.grouping.expandedGroups.has(row.groupId)) {
-                    flattened.push(...this.flattenExpandedHierarchicalData(row.children));
+                    flattened.push(...this.flattenGroups(row.children));
                 }
             }
         }
@@ -358,7 +206,17 @@ export class DataProcessor<TOriginalRow> {
         return flattened;
     }
 
+    private createBasicRows(rows: TRow[], parentIndex?: string): GridRow<TRow>[] {
+        return rows.map((row, i) => ({
+            index: parentIndex ? `${parentIndex}-${i + 1}` : String(i + 1),
+            parentIndex: parentIndex ?? null,
+            original: row
+        }));
+    }
 
-
-
+    private paginateRows(rows: GridRow<TRow>[]): GridRow<TRow>[] {
+        const { page, pageSize } = this.datagrid.pagination;
+        const start = (page - 1) * pageSize;
+        return rows.slice(start, start + pageSize);
+    }
 }

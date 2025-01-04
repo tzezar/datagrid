@@ -2,7 +2,7 @@ import type { Datagrid } from "../index.svelte";
 import { filterOutGroupColumns, flattenColumns } from "../utils.svelte";
 
 
-export class ColumnVisibility<TOriginalRow> {
+export class ColumnVisibilityFeature<TOriginalRow> {
     datagrid: Datagrid<TOriginalRow>;
 
     constructor(datagrid: Datagrid<TOriginalRow>) {

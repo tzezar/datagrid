@@ -2,7 +2,7 @@ import type { Datagrid } from "../index.svelte";
 
 
 
-export class PaginationFeature<TOrginalRow> {
+export class PaginationFeatureFeature<TOrginalRow> {
     datagrid: Datagrid<TOrginalRow>
 
     page = $state(1);

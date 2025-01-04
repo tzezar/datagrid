@@ -1,6 +1,6 @@
 import Fuse from "fuse.js";
 
-export class GlobalSearch {
+export class GlobalSearchFeature {
 
     value = $state('');
     delay = $state(300);

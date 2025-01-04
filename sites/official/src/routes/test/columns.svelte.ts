@@ -7,10 +7,12 @@ export const userColumns: AnyColumn<User>[] = [
     createDisplayColumn({
         header: 'Actions',
         columnId: 'actions',
-        cell: (props) => {
+        cell: (row) => {
             return {
                 component: ActionsCell,
-                props
+                props: {
+                    row
+                }
             }
         },
         options: { sortable: false },

@@ -5,7 +5,7 @@ import type { Datagrid } from "../index.svelte";
 import type { AnyColumn } from '../helpers/column-creators';
 import { filterOutGroupColumns, flattenColumns } from '../utils.svelte';
 
-export class Exporting<T> {
+export class ExportingFeature<T> {
     private datagrid: Datagrid<T>;
     fileName: string = $state('table');
 

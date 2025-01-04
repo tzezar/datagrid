@@ -3,7 +3,7 @@ import type { Datagrid } from "../index.svelte";
 
 
 
-export class RowSelection<TOriginalRow> {
+export class RowSelectionFeature<TOriginalRow> {
     datagrid: Datagrid<TOriginalRow>;
     selectedRowIds: SvelteSet<string> = $state(new SvelteSet());
 

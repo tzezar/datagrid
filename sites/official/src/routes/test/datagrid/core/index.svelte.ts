@@ -1,24 +1,25 @@
-import { Grouping as GroupingFeature } from "./features/grouping.svelte";
-import { PaginationFeature } from "./features/pagination.svelte";
-import { Sorting as DataSortingFeature } from "./features/sorting.svelte";
+import { GroupingFeature as GroupingFeature } from "./features/grouping.svelte";
+import { PaginationFeatureFeature } from "./features/pagination.svelte";
+import { SortingFeature as DataSortingFeature } from "./features/sorting.svelte";
 import type { AnyColumn } from "./helpers/column-creators";
-import type { GridRow } from "./types";
-import { Filtering as FilteringFeature } from "./features/column-filtering.svelte";
-import { GlobalSearch as GlobalSearchFeature } from "./features/global-search.svelte";
-import { ColumnSizing as ColumnSizingFeature } from "./features/column-sizing.svelte";
-import { ColumnVisibility as ColumnVisibilityFeature } from "./features/column-visibility.svelte";
-import { RowExpanding as RowExpandingFeature } from "./features/row-expanding.svelte";
-import { RowSelection as RowSelectionFeature } from "./features/row-selection.svelte";
-import { ColumnPinning as ColumnPinningFeature } from "./features/column-pinning.svelte";
-import { ColumnFaceting as ColumnFacetingFeature } from "./features/column-faceting.svelte";
-import { RowPinning as RowPinningFeatures } from "./features/row-pinning.svelte";
-import { ColumnOrdering as ColumnOrderingFeature } from "./features/column-ordering.svelte";
-import { ColumnGrouping as ColumnGroupingFeature } from "./features/column-grouping.svelte";
-import { Fullscreen as FullscreenFeature } from "./features/fullscreen.svelte";
+import { ColumnFilteringFeature as FilteringFeature } from "./features/column-filtering.svelte";
+import { GlobalSearchFeature as GlobalSearchFeature } from "./features/global-search.svelte";
+import { ColumnSizingFeature as ColumnSizingFeature } from "./features/column-sizing.svelte";
+import { ColumnVisibilityFeature as ColumnVisibilityFeature } from "./features/column-visibility.svelte";
+import { RowExpandingFeature as RowExpandingFeature } from "./features/row-expanding.svelte";
+import { RowSelectionFeature as RowSelectionFeature } from "./features/row-selection.svelte";
+import { ColumnPinningFeature as ColumnPinningFeature } from "./features/column-pinning.svelte";
+import { ColumnFacetingFeature as ColumnFacetingFeature } from "./features/column-faceting.svelte";
+import { RowPinningFeature as RowPinningFeatures } from "./features/row-pinning.svelte";
+import { ColumnOrderingFeature as ColumnOrderingFeature } from "./features/column-ordering.svelte";
+import { ColumnGroupingFeature as ColumnGroupingFeature } from "./features/column-grouping.svelte";
+import { FullscreenFeature as FullscreenFeature } from "./features/fullscreen.svelte";
 import { RowManager } from "./managers/row-manager.svelte";
 import { ColumnManager } from "./managers/column-manager.svelte";
 import { DataProcessor } from "./processors/data-processor.svelte";
 import { ColumnProcessor } from "./processors/column-processor.svelte";
+import { DatagridCacheManager } from "./managers/cache-manager.svelte";
+import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 
 export type DatagridConfig<TOriginalRow> = {
     columns: AnyColumn<TOriginalRow>[];
@@ -27,78 +28,31 @@ export type DatagridConfig<TOriginalRow> = {
     event?: object
 }
 
-
-export class DatagridCacheManager<TOriginalRow> {
-    datagrid: Datagrid<TOriginalRow>;
-
-
-    filteredOriginalRows: TOriginalRow[] = $state.raw([]);
-    sortedOriginalRows: TOriginalRow[] = $state.raw([]);
-    groupedRowsCache: GridRow<TOriginalRow>[] | null = $state.raw(null);
-    flattenedRowsCache: GridRow<TOriginalRow>[] | null = $state.raw([]);
-
-    _rows: GridRow<TOriginalRow>[] | null = $state.raw([]);
-    paginatedRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
-
-    invalidateGroupedRowsCache() {
-        this.groupedRowsCache = null;
-        this.flattenedRowsCache = null;
-        this._rows = null;
-    }
-
-    getOrComputeGroupedRowsCache(data: TOriginalRow[]): GridRow<TOriginalRow>[] {
-        if (this.groupedRowsCache === null) {
-            this.groupedRowsCache = this.datagrid.processors.data.createHierarchicalData(data);
-        }
-        return this.groupedRowsCache;
-    }
-
-    get rows(): GridRow<TOriginalRow>[] {
-        return this._rows || []
-    }
-    set rows(rows: GridRow<TOriginalRow>[]) {
-        this._rows = rows;
-    }
-
-
-    constructor(datagrid: Datagrid<TOriginalRow>) {
-        this.datagrid = datagrid;
-
-    }
-
-
-
+const defaultConfig = {
+    measurePerformance: false
 }
 
+
 export class Datagrid<TOriginalRow> {
+    readonly metrics = new PerformanceMetrics();
+
     original = $state.raw({
         columns: [] as AnyColumn<TOriginalRow>[],
         data: [] as TOriginalRow[]
     });
     columns: AnyColumn<TOriginalRow>[] = $state([]);
 
-    rowManager = new RowManager(this);
-    columnManager = new ColumnManager(this);
-
-    cache = new DatagridCacheManager(this);
-
     processors = {
         data: new DataProcessor(this),
         column: new ColumnProcessor(this)
     }
+    cache = new DatagridCacheManager(this);
+    rowManager = new RowManager(this);
+    columnManager = new ColumnManager(this);
 
-    features = {
-        columnGrouping: new ColumnGroupingFeature(this)
-    }
+    config = defaultConfig
 
-    config = {
-        measurePerformance: true
-    }
-
-
-
-
-    pagination = new PaginationFeature(this);
+    pagination = new PaginationFeatureFeature(this);
     sorting = new DataSortingFeature();
     grouping = new GroupingFeature();
     filtering = new FilteringFeature();
@@ -116,9 +70,6 @@ export class Datagrid<TOriginalRow> {
     rowPinning = new RowPinningFeatures(this);
 
     fullscreen = new FullscreenFeature();
-
-    // Cache
-
 
     constructor(config: DatagridConfig<TOriginalRow>) {
         this.validateInputs(config);

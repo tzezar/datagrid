@@ -317,7 +317,7 @@
 	{:else if row.parentIndex}
 		{#if datagrid.rowPinning.isPinnedToTop(row.index) || datagrid.rowPinning.isPinnedToBottom(row.index)}
 			{#if datagrid.grouping.expandedGroups.has(datagrid
-					.rowManager.getFlattenedRows(datagrid.groupedRowsCache)
+					.rowManager.flattenGridRows(datagrid.groupedRowsCache)
 					.find((r) => r.index === row.parentIndex)?.groupId)}
 				{@render BasicRow(row)}
 			{/if}

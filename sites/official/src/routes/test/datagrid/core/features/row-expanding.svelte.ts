@@ -3,7 +3,7 @@ import type { Datagrid } from "../index.svelte";
 
 
 
-export class RowExpanding<TOriginalRow> {
+export class RowExpandingFeature<TOriginalRow> {
     datagrid: Datagrid<TOriginalRow>;
 
     expandedRowIds: SvelteSet<string> = $state(new SvelteSet());

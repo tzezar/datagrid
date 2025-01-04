@@ -1,22 +1,15 @@
 import type { Component } from "svelte";
 import type { AccessorColumn, ComputedColumn } from "./helpers/column-creators";
-import type { Datagrid } from "./index.svelte";
 
 
 
-export type DatagridFeature<TOriginalRow> = {
-    name: string;
-    initialize: (datagrid: Datagrid<TOriginalRow>) => void;
-    destroy?: () => void;
-    // Allow any additional properties
-    [key: string]: any;
-}
-
-
-
-
-
-
+// export type DatagridFeature<TOriginalRow> = {
+//     name: string;
+//     initialize: (datagrid: Datagrid<TOriginalRow>) => void;
+//     destroy?: () => void;
+//     // Allow any additional properties
+//     [key: string]: any;
+// }
 
 
 
@@ -25,7 +18,8 @@ type Primitive = string | number | boolean | null | undefined;
 export type GetValueFn<TOriginalRow> = (row: TOriginalRow) => CellValue;
 export type GetGroupValue<TOriginalRow> = (row: TOriginalRow) => CellValue;
 export type CellValue = Primitive | Record<string, any> | Array<any>;
-
+export type RowIdentifier = string | number;
+export type RowPinningPosition = 'top' | 'bottom' | false;
 
 
 export type Cell = (props: any) => {

@@ -12,6 +12,7 @@
 }
 
 .grid {
+    
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -24,6 +25,13 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+}
+
+.grid-header {
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+    background-color: var(--grid-header-background);
 }
 
 /* Row styles */
@@ -233,4 +241,27 @@
     padding: 0 0.5rem;
     height: 1.25rem;
     color: hsl(var(--grid-text-color));
+}
+
+
+/* Pinned column styles */
+.grid-header-cell[data-pinned="left"],
+.grid-body-cell[data-pinned="left"] {
+  position: sticky;
+  left: var(--pin-left-offset, 0);
+  z-index: 2;
+  background-color: white; /* Or your desired background color */
+}
+
+.grid-header-cell[data-pinned="right"],
+.grid-body-cell[data-pinned="right"] {
+  position: sticky;
+  right: var(--pin-right-offset, 0);
+  z-index: 2;
+  background-color: white;
+}
+
+/* Ensure pinned headers stay above regular cells */
+.grid-header-cell[data-pinned] {
+  z-index: 3;
 }

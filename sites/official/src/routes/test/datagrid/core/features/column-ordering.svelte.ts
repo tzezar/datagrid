@@ -3,7 +3,7 @@ import type { Datagrid } from "../index.svelte";
 import { filterGroupColumns, flattenColumns } from "../utils.svelte";
 
 // Add to your existing ColumnOrdering class
-export class ColumnOrdering<TOriginalRow> {
+export class ColumnOrderingFeature<TOriginalRow> {
     private datagrid: Datagrid<TOriginalRow>;
 
     constructor(datagrid: Datagrid<TOriginalRow>) {

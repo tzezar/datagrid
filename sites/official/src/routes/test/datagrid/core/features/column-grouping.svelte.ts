@@ -3,7 +3,7 @@ import type { Datagrid } from "../index.svelte";
 
 
 
-export class ColumnGrouping<TOriginalRow> {
+export class ColumnGroupingFeature<TOriginalRow> {
     private datagrid: Datagrid<TOriginalRow>;
 
     constructor(datagrid: Datagrid<TOriginalRow>) {

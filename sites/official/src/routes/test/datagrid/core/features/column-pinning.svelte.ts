@@ -2,7 +2,7 @@ import type { AnyColumn } from "../helpers/column-creators";
 import type { Datagrid } from "../index.svelte";
 import type { ColumnId, PinningPosition } from "../types";
 
-export class ColumnPinning {
+export class ColumnPinningFeature {
     datagrid: Datagrid<any>;
 
     constructor(datagrid: Datagrid<any>) {
