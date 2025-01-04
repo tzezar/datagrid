@@ -1,7 +1,7 @@
 
 // More specific types for different kinds of values
 import { DEFAULT_COLUMN_SIZE } from "../defaults";
-import type { AccessorFn, CellValue, Cell, ColumnId, GetGroupValue, GetValueFn, HeaderCell, FormatterFn, AggregationFn } from "../types";
+import type { AccessorFn, CellValue, Cell, ColumnId, GetGroupValue, GetValueFn, HeaderCell, FormatterFn, AggregationConfig } from "../types";
 
 // Helper type to get nested key paths
 type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
@@ -19,7 +19,7 @@ export interface AccessorColumn<TOriginalRow> {
   accessorKey: DotNestedKeys<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
   formatter?: FormatterFn<TOriginalRow>
-  aggregationFn?: AggregationFn<TOriginalRow>
+  aggregate?: AggregationConfig;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   cell?: Cell;
   headerCell?: HeaderCell<TOriginalRow>
@@ -58,7 +58,7 @@ export interface ComputedColumn<TOriginalRow> {
   cell?: Cell;
   headerCell?: HeaderCell<TOriginalRow>
   formatter?: FormatterFn<TOriginalRow>
-  aggregationFn?: AggregationFn<TOriginalRow>
+  aggregate?: AggregationConfig;
 
   options: {
     searchable: boolean
@@ -167,6 +167,7 @@ type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOrigina
   accessorKey: TKey,
   getValueFn: (row: TOriginalRow) => CellValue,
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
+  aggregate?: AggregationConfig;
   cell?: Cell
   headerCell?: HeaderCell<TOriginalRow>
   options?: {
@@ -200,6 +201,7 @@ type CreateComputeColumnProps<TOriginalRow> = {
 
   accessorFn: (row: TOriginalRow) => CellValue,
   getValueFn: (row: TOriginalRow) => CellValue,
+  aggregate?: AggregationConfig;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
 
   cell?: Cell
@@ -321,6 +323,7 @@ export function createComputedColumn<TOriginalRow extends Record<string, any>>(
       filterable: options?.filterable ?? true,
       pinnable: options?.pinnable ?? true,
       moveable: options?.moveable ?? true,
+      
     },
     state: {
       size: DEFAULT_COLUMN_SIZE,

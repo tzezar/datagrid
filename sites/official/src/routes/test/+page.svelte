@@ -35,14 +35,8 @@
 		columns: userColumns,
 		data: data.users
 	});
-	datagrid.grouping.groupByColumns = ['role']
-	datagrid.processors.data.executeFullDataTransformation()
-
-	$effect(() => {
-		console.log($state.snapshot(datagrid.cache.paginatedRows));
-		console.log($state.snapshot(flattenColumns(datagrid.columns)));
-	})
-
+	datagrid.grouping.groupByColumns = ['role'];
+	datagrid.processors.data.executeFullDataTransformation();
 </script>
 
 {#snippet HeaderCell(column: (typeof Datagrid.prototype.columns)[0])}
@@ -135,7 +129,6 @@
 				{/if}
 			{/if}
 		{/if}
-
 		{#if column.columnId === row.groupKey}
 			<div class="group-cell-content">
 				<button
@@ -152,6 +145,22 @@
 				<span class="group-items-count">
 					({row.children.length} items)
 				</span>
+			</div>
+		{:else if row.aggregations.some((agg) => agg.columnId === column.columnId)}
+			<div class="group-cell-content">
+				<div class="group-cell-content-value">
+					{#each row.aggregations.filter((agg) => agg.columnId === column.columnId) as aggregation}
+						<p>
+							{aggregation.type}: {#if aggregation.type === 'percentChange'}
+								{aggregation.value.toFixed(2)}%
+							{:else if typeof aggregation.value === 'number'}
+								{aggregation.value.toLocaleString()}
+							{:else}
+								{aggregation.value}
+							{/if}
+						</p>
+					{/each}
+				</div>
 			</div>
 		{/if}
 	</div>

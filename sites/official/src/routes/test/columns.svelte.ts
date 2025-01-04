@@ -52,6 +52,7 @@ export const userColumns: AnyColumn<User>[] = [
         columnId: 'id',
         getValueFn: (row) => row.id,
         options: { sortable: true },
+        aggregate: 'count',
         _meta: {
             filterType: 'number'
         }
@@ -61,7 +62,9 @@ export const userColumns: AnyColumn<User>[] = [
         accessorKey: 'firstName',
         columnId: 'firstName',
         getValueFn: (row) => row.firstName,
-        options: { sortable: true, aggregationMethod: 'count' },
+        options: {
+            sortable: true, 
+        },
         _meta: {
             filterType: 'text'
         }
@@ -72,6 +75,28 @@ export const userColumns: AnyColumn<User>[] = [
         columnId: 'age',
         accessorKey: 'profile.age',
         getValueFn: (row) => row.profile.age,
+        aggregate: [
+            'sum',
+            {
+                type: 'custom',
+                fn: (values) => {
+                    // Moving average
+                    const window = 3;
+                    return values
+                        .slice(-window)
+                        .reduce((sum, val) => sum + val, 0) / window;
+                }
+            },
+            {
+                type: 'custom',
+                fn: (values) => {
+                    // Year-over-year growth
+                    const thisYear = values.slice(-12).reduce((sum, val) => sum + val, 0);
+                    const lastYear = values.slice(-24, -12).reduce((sum, val) => sum + val, 0);
+                    return ((thisYear - lastYear) / lastYear) * 100;
+                }
+            }
+        ],
         options: { sortable: true },
         _meta: {
             filterType: 'number'

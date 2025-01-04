@@ -1,26 +1,74 @@
 import { sort } from "fast-sort";
 import { isGroupColumn } from "../column-guards";
 import type { Datagrid } from "../index.svelte";
-import type { GridRow } from "../types";
+import type { Aggregation, AggregationFn, GridRow } from "../types";
 import { findColumnById, flattenColumns, isColumnSortable } from "../utils.svelte";
 import type { PerformanceMetrics } from "../helpers/performance-metrics.svelte";
 import type { AccessorColumn, ComputedColumn } from "../helpers/column-creators";
+import { aggregationFunctions } from "../helpers/aggregation-functions";
 
-const aggregationMethods = {
-    sum: (values: number[]) => values.reduce((acc, val) => acc + val, 0),
-    avg: (values: number[]) => values.reduce((acc, val) => acc + val, 0) / values.length || 0,
-    min: (values: number[]) => Math.min(...values),
-    max: (values: number[]) => Math.max(...values),
-    count: (values: number[]) => values.length,
-};
 
+
+
+
+// export const aggregationFunctions = {
+//     sum: (getValue: (row: any) => number) => 
+//         (getLeafRows: () => Row<any>[]): number => 
+//             getLeafRows().reduce((sum, row) => sum + (getValue(row.original) || 0), 0),
+
+//     min: (getValue: (row: any) => number) =>
+//         (getLeafRows: () => Row<any>[]): number =>
+//             Math.min(...getLeafRows().map(row => getValue(row.original))),
+
+//     max: (getValue: (row: any) => number) =>
+//         (getLeafRows: () => Row<any>[]): number =>
+//             Math.max(...getLeafRows().map(row => getValue(row.original))),
+
+//     extent: (getValue: (row: any) => number) =>
+//         (getLeafRows: () => Row<any>[]): [number, number] => {
+//             const values = getLeafRows().map(row => getValue(row.original));
+//             return [Math.min(...values), Math.max(...values)];
+//         },
+
+//     mean: (getValue: (row: any) => number) =>
+//         (getLeafRows: () => Row<any>[]): number => {
+//             const rows = getLeafRows();
+//             return rows.reduce((sum, row) => sum + getValue(row.original), 0) / rows.length;
+//         },
+
+//     median: (getValue: (row: any) => number) =>
+//         (getLeafRows: () => Row<any>[]): number => {
+//             const values = getLeafRows()
+//                 .map(row => getValue(row.original))
+//                 .sort((a, b) => a - b);
+//             const mid = Math.floor(values.length / 2);
+//             return values.length % 2 !== 0 
+//                 ? values[mid] 
+//                 : (values[mid - 1] + values[mid]) / 2;
+//         },
+
+//     unique: (getValue: (row: any) => any) =>
+//         (getLeafRows: () => Row<any>[]): any[] =>
+//             Array.from(new Set(getLeafRows().map(row => getValue(row.original)))),
+
+//     uniqueCount: (getValue: (row: any) => any) =>
+//         (getLeafRows: () => Row<any>[]): number =>
+//             new Set(getLeafRows().map(row => getValue(row.original))).size,
+
+//     count: () =>
+//         (getLeafRows: () => Row<any>[]): number =>
+//             getLeafRows().length,
+// };
 
 
 // Main data processor
 export class DataProcessor<TRow> {
     private readonly metrics: PerformanceMetrics;
+    private customAggregationFns: Map<string, AggregationFn>;
+
     constructor(private readonly datagrid: Datagrid<TRow>) {
         this.metrics = datagrid.metrics;
+        this.customAggregationFns = new Map();
     }
 
     executeFullDataTransformation(): void {
@@ -154,34 +202,100 @@ export class DataProcessor<TRow> {
         this.datagrid.cache.paginatedRows = this.paginateRows(basicRows!);
     }
 
+    // Register custom aggregation function
+    registerAggregationFn(name: string, fn: AggregationFn): void {
+        this.customAggregationFns.set(name, fn);
+    }
+
+    // Get aggregation function
+    private getAggregationFn(aggregateType: string | { type: string, fn?: AggregationFn }): AggregationFn | null {
+        if (typeof aggregateType === 'string') {
+            return aggregationFunctions[aggregateType] || this.customAggregationFns.get(aggregateType) || null;
+        }
+
+        if (aggregateType.fn) {
+            return aggregateType.fn;
+        }
+
+        return aggregationFunctions[aggregateType.type] ||
+            this.customAggregationFns.get(aggregateType.type) ||
+            null;
+    }
+
+
+    private calculateAggregations(
+        column: AccessorColumn<TRow> | ComputedColumn<TRow>,
+        groupRows: TRow[]
+    ): Aggregation[] {
+        const config = column.aggregate;
+        if (!config) return [];
+
+        // Handle array of aggregations
+        if (Array.isArray(config)) {
+            return config.map(aggConfig => {
+                const aggType = typeof aggConfig === 'string' ? aggConfig : aggConfig.type;
+                const aggFn = this.getAggregationFn(aggConfig);
+                if (!aggFn) return null;
+
+                const values = groupRows.map(row => column.getValueFn(row));
+                return {
+                    type: aggType,
+                    value: aggFn(values),
+                    columnId: column.columnId
+                };
+            }).filter((agg): agg is Aggregation => agg !== null);
+        }
+
+        // Handle single aggregation
+        const aggType = typeof config === 'string' ? config : config.type;
+        const aggFn = this.getAggregationFn(config);
+        if (!aggFn) return [];
+
+        const values = groupRows.map(row => column.getValueFn(row));
+        return [{
+            type: aggType,
+            value: aggFn(values),
+            columnId: column.columnId
+        }];
+    }
+
     createHierarchicalData(data: TRow[]): GridRow<TRow>[] {
         const groupCols = this.datagrid.grouping.groupByColumns;
         if (!groupCols.length) return this.createBasicRows(data);
-    
+
         const groupByLevel = (
             rows: TRow[],
             depth: number,
             parentPath = ''
         ): GridRow<TRow>[] => {
             const groups = new Map<string, TRow[]>();
-    
+
             if (depth >= groupCols.length) return this.createBasicRows(rows, parentPath);
-    
+
             const column = findColumnById(flattenColumns(this.datagrid.columns), groupCols[depth]);
+
             if (!column) throw new Error(`Invalid group column: ${groupCols[depth]}`);
-    
-            // Group rows by the current column
+            if (isGroupColumn(column)) throw new Error(`Cannot group by group column: ${groupCols[depth]}`);
+            if (column.type === 'display') throw new Error(`Cannot group by display column: ${groupCols[depth]}`);
+
+            // Group rows by current column
             rows.forEach(row => {
                 const groupKey = String(column.getValueFn(row) ?? 'Unknown');
                 const group = groups.get(groupKey) ?? [];
                 group.push(row);
                 groups.set(groupKey, group);
             });
-    
+
             // Create group rows with aggregation
             return Array.from(groups.entries()).map(([key, groupRows], index) => {
-                const aggregatedValues = this.computeAggregations(groupRows);
-    
+                const aggregations = flattenColumns(this.datagrid.columns)
+                    .filter(col =>
+                        (col.type === 'accessor' || col.type === 'computed') &&
+                        col.aggregate
+                    )
+                    .flatMap(col => this.calculateAggregations(col, groupRows));
+
+
                 return {
                     index: parentPath ? `${parentPath}-${index + 1}` : String(index + 1),
                     identifier: depth === 0 ? key : `${parentPath}|${key}`,
@@ -189,28 +303,16 @@ export class DataProcessor<TRow> {
                     groupValue: [key],
                     depth,
                     isExpanded: false,
-                    aggregatedValues, // Add aggregated values
                     children: groupByLevel(groupRows, depth + 1, `${parentPath}${index + 1}`),
+                    aggregations
                 };
             });
         };
-    
+
         return groupByLevel(data, 0);
     }
 
-    private computeAggregations(groupRows: TRow[]): Record<string, any> {
-        const aggregations: Record<string, any> = {};
 
-        flattenColumns(this.datagrid.columns).forEach(column => {
-            const aggregationMethod = column.options.aggregationMethod as keyof typeof aggregationMethods;
-            if (aggregationMethod && aggregationMethods[aggregationMethod]) {
-                const values = groupRows.map(row => column.getValueFn(row)).filter(value => value != null) as number[];
-                aggregations[column.id] = aggregationMethods[aggregationMethod](values);
-            }
-        });
-
-        return aggregations;
-    }
 
     private flattenGroups(rows: GridRow<TRow>[]): GridRow<TRow>[] {
         const flattened: GridRow<TRow>[] = [];

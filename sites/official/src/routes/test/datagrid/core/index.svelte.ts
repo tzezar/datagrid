@@ -29,7 +29,7 @@ export type DatagridConfig<TOriginalRow> = {
 }
 
 const defaultConfig = {
-    measurePerformance: false,
+    measurePerformance: true,
     createBasicRowIdentifier: (row: any) => row.id,
     createBasicRowIndex: (row: any, parentIndex: string| null, index: number) => parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
 }

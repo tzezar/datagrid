@@ -49,7 +49,29 @@ export type HeaderCell<TOriginalRow> = (row: TOriginalRow) =>
 
 export type AccessorFn<TOriginalRow> = (row: TOriginalRow) => CellValue;
 export type FormatterFn<TOriginalRow> = (row: TOriginalRow) => CellValue;
-export type AggregationFn<TOriginalRow> = (rows: TOriginalRow[]) => CellValue;
+
+export type Aggregation = {
+    type: string;
+    value: number;
+    columnId: ColumnId;
+};
+
+export type AggregationFn = (values: any[]) => any;
+export type BaseAggregationConfig = 
+    | 'sum' 
+    | 'min' 
+    | 'max' 
+    | 'extent' 
+    | 'mean' 
+    | 'median' 
+    | 'unique' 
+    | 'uniqueCount' 
+    | 'count' 
+    | { type: string; fn?: AggregationFn };
+
+export type AggregationConfig = BaseAggregationConfig | BaseAggregationConfig[];
+
+
 
 export type GridGroupRow<TOriginalRow> = {
     index: string;
@@ -58,7 +80,7 @@ export type GridGroupRow<TOriginalRow> = {
     groupValue: any[];
     depth: number;
     children: GridRow<TOriginalRow>[];
-    // aggregates: {label: value: number, columnId: ColumnId}[];
+    aggregations: Aggregation[];
 };
 export type GridBasicRow<TOriginalRow> = {
     identifier: GridRowIdentifier;
