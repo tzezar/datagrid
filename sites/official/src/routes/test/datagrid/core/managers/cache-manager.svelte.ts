@@ -1,41 +1,66 @@
 import type { Datagrid } from "../index.svelte";
 import type { GridRow } from "../types";
 
+/**
+ * Manages cache for a datagrid, including sorted, filtered, and grouped rows.
+ * Provides methods to invalidate and update caches when data changes.
+ * 
+ * @template TOriginalRow The type of the original row data.
+ */
 export class DatagridCacheManager<TOriginalRow> {
+    /**
+     * The datagrid instance associated with this cache manager.
+     * @type {Datagrid<TOriginalRow>}
+     */
     datagrid: Datagrid<TOriginalRow>;
 
+    /**
+     * Cached sorted data. Null if the cache is invalid.
+     * @type {TOriginalRow[] | null}
+     */
+    sortedData: TOriginalRow[] | null = $state.raw(null);
 
-    filteredOriginalRows: TOriginalRow[] = $state.raw([]);
-    sortedOriginalRows: TOriginalRow[] = $state.raw([]);
-    groupedRowsCache: GridRow<TOriginalRow>[] | null = $state.raw(null);
-    
-    flattenedRowsCache: GridRow<TOriginalRow>[] | null = $state.raw([]);
-    _rows: GridRow<TOriginalRow>[] | null = $state.raw([]);
-    paginatedRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
+    /**
+     * Cached filtered data. Null if the cache is invalid.
+     * @type {TOriginalRow[] | null}
+     */
+    filteredData: TOriginalRow[] | null = $state.raw(null);
 
-    invalidateGroupedRowsCache() {
-        this.groupedRowsCache = null;
-        this.flattenedRowsCache = null;
-        this._rows = null;
-    }
+    /**
+     * Cached hierarchical rows. Null if the cache is invalid.
+     * @type {GridRow<TOriginalRow>[] | null}
+     * @private
+     */
+    hierarchicalRows: GridRow<TOriginalRow>[] | null = $state.raw(null);
 
-    getOrComputeGroupedRowsCache(data: TOriginalRow[]): GridRow<TOriginalRow>[] {
-        if (this.groupedRowsCache === null) {
-            this.groupedRowsCache = this.datagrid.processors.data.createHierarchicalData(data);
-        }
-        return this.groupedRowsCache;
-    }
+    /**
+     * Either grouped rows that are flattened or basic rows when there is no grouping.
+     * Null if the cache is invalid.
+     * @type {GridRow<TOriginalRow>[] | null}
+     */
+    rows: GridRow<TOriginalRow>[] | null = $state.raw(null);
 
-    get rows(): GridRow<TOriginalRow>[] {
-        return this._rows || []
-    }
-    set rows(rows: GridRow<TOriginalRow>[]) {
-        this._rows = rows;
-    }
+    /**
+     * Cached paginated rows. Null if the cache is invalid.
+     * @type {GridRow<TOriginalRow>[] | null}
+     * @private
+     */
+    paginatedRows: GridRow<TOriginalRow>[] | null = $state(null);
 
-
+    /**
+     * Creates an instance of DatagridCacheManager.
+     * 
+     * @param {Datagrid<TOriginalRow>} datagrid The datagrid instance to manage.
+     */
     constructor(datagrid: Datagrid<TOriginalRow>) {
         this.datagrid = datagrid;
+    }
 
+    /**
+     * Invalidates the cache for grouped rows, forcing a recalculation.
+     */
+    invalidateGroupedRowsCache(): void {
+        this.hierarchicalRows = null;
+        this.rows = null;
     }
 }

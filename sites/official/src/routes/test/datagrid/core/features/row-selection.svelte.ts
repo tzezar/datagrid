@@ -1,34 +1,38 @@
 import { SvelteSet } from "svelte/reactivity";
 import type { Datagrid } from "../index.svelte";
+import type { GridBasicRowIdentifier } from "../types";
 
 
 
 export class RowSelectionFeature<TOriginalRow> {
     datagrid: Datagrid<TOriginalRow>;
-    selectedRowIds: SvelteSet<string> = $state(new SvelteSet());
+    selectedBasicRowIdentifiers: SvelteSet<GridBasicRowIdentifier> = new SvelteSet()
 
     constructor(datagrid: Datagrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 
+    selectRow(identifier: GridBasicRowIdentifier) {
+        this.selectedBasicRowIdentifiers.add(identifier);
+    }
+    unselectRow(identifier: GridBasicRowIdentifier) {
+        this.selectedBasicRowIdentifiers.delete(identifier);
+    }
+
 
     toggleRowSelection(identifier: string) {
-        if (this.selectedRowIds.has(identifier)) {
-            this.selectedRowIds.delete(identifier);
-        } else {
-            this.selectedRowIds.add(identifier);
-        }
+        if (this.selectedBasicRowIdentifiers.has(identifier)) this.unselectRow(identifier);
+        else this.selectRow(identifier);
     }
 
     isRowSelected(identifier: string) {
-        return this.selectedRowIds.has(identifier);
+        return this.selectedBasicRowIdentifiers.has(identifier);
     }
 
-    getSelectedRows(): TOriginalRow[] {
-        return Array.from(this.selectedRowIds)
-            .map(id => this.datagrid.original.data.find(row => row.id === id))
+    getSelectedOriginalRows(): TOriginalRow[] {
+        return Array.from(this.selectedBasicRowIdentifiers)
+            .map(id => this.datagrid.original.data.find(row => this.datagrid.config.createBasicRowIdentifier(row) === id))
             .filter((row): row is TOriginalRow => row !== undefined); // Type guard for filtering
     }
-
 
 }

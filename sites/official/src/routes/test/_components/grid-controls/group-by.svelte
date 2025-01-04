@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Datagrid } from '../../datagrid/core/index.svelte';
 	import type { ColumnId } from '../../datagrid/core/types';
-	import { findColumnById } from '../../datagrid/core/utils.svelte';
+	import { findColumnById, flattenColumns } from '../../datagrid/core/utils.svelte';
 
 	let { datagrid }: { datagrid: Datagrid<any> } = $props();
 
@@ -38,7 +38,7 @@
 		height: 140px;
 		`}
 	>
-		{#each datagrid.columns as column}
+		{#each flattenColumns(datagrid.columns).filter(col => col.type !== 'group') as column}
 			<option value={column.columnId} disabled={column?.options?.groupable === false}>
 				{column.header}
 			</option>

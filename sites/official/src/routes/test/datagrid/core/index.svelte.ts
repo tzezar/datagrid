@@ -29,7 +29,9 @@ export type DatagridConfig<TOriginalRow> = {
 }
 
 const defaultConfig = {
-    measurePerformance: false
+    measurePerformance: false,
+    createBasicRowIdentifier: (row: any) => row.id,
+    createBasicRowIndex: (row: any, parentIndex: string| null, index: number) => parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
 }
 
 
@@ -94,7 +96,7 @@ export class Datagrid<TOriginalRow> {
 
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
-        this.columnFaceting.calculateFacets(this.cache.filteredOriginalRows, this.columns);
+        this.columnFaceting.calculateFacets(this.cache.sortedData, this.columns);
 
         this.globalSearch.fuseInstance = this.globalSearch.initializeFuseInstance(this.original.data, this.columns.map(col => col.columnId as string))
     }

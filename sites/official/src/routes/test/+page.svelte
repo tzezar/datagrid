@@ -35,15 +35,15 @@
 		columns: userColumns,
 		data: data.users
 	});
+	datagrid.grouping.groupByColumns = ['role']
+	datagrid.processors.data.executeFullDataTransformation()
+
 	$effect(() => {
-		console.log($state.snapshot(datagrid.rowPinning.rowIdsPinnedTop))
-		console.log($state.snapshot(datagrid.rowPinning.getTopRows()))
+		console.log($state.snapshot(datagrid.cache.paginatedRows));
+		console.log($state.snapshot(flattenColumns(datagrid.columns)));
 	})
+
 </script>
-
-
-
-
 
 {#snippet HeaderCell(column: (typeof Datagrid.prototype.columns)[0])}
 	{#if isGroupColumn(column)}
@@ -65,13 +65,14 @@
 		{#if column.state.visible === true}
 			<div
 				class="grid-header-cell"
-				data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
+				data-pinned={column.state.pinning.position !== 'none'
+					? column.state.pinning.position
+					: null}
 				style:--pin-left-offset={column.state.pinning.offset + 'px'}
 				style:--pin-right-offset={column.state.pinning.offset + 'px'}
 				style:--width={column.state.size.width + 'px'}
 				style:--min-width={column.state.size.minWidth + 'px'}
 				style:--max-width={column.state.size.maxWidth + 'px'}
-				
 			>
 				<div
 					class="header-content {column.options.sortable ? 'sortable' : ''}"
@@ -194,12 +195,13 @@
 	{#if isGridGroupRow(row)}
 		{@render GroupRow(row)}
 	{:else if row.parentIndex}
-		{#if datagrid.rowPinning.isPinnedToTop(row.index) || datagrid.rowPinning.isPinnedToBottom(row.index)}
+		<!-- Render group childrens -->
+		{#if datagrid.rowPinning.isPinned(row.index)}
 			<!-- typescript hack -->
 			{@const flattenedRow = datagrid.rowManager
-				.flattenGridRows(datagrid.cache.groupedRowsCache || [])
+				.flattenGridRows(datagrid.cache.hierarchicalRows || [])
 				.find((r) => r.index === row.parentIndex) as GridGroupRow<User>}
-			{#if datagrid.grouping.expandedGroups.has(flattenedRow?.groupId)}
+			{#if datagrid.grouping.expandedGroups.has(flattenedRow?.identifier)}
 				{@render BasicRow(row)}
 			{/if}
 		{:else}
@@ -229,20 +231,17 @@
 			</div>
 		</div>
 		<div class="grid-body">
-			<!-- {#each datagrid.processedRowsCache as row (row.index)}
+			<!-- {#each datagrid.cache.__paginatedRows || [] as row (row.index)}
 				{@render Row(row)}
 			{/each} -->
-			<!-- Top pinned rows -->
 			{#each datagrid.rowPinning.getTopRows() as row (row.index)}
 				{@render Row(row)}
 			{/each}
 
-			<!-- Center (unpinned) rows -->
 			{#each datagrid.rowPinning.getCenterRows() as row (row.index)}
 				{@render Row(row)}
 			{/each}
 
-			<!-- Bottom pinned rows -->
 			{#each datagrid.rowPinning.getBottomRows() as row (row.index)}
 				{@render Row(row)}
 			{/each}

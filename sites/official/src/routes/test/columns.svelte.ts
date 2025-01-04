@@ -61,7 +61,7 @@ export const userColumns: AnyColumn<User>[] = [
         accessorKey: 'firstName',
         columnId: 'firstName',
         getValueFn: (row) => row.firstName,
-        options: { sortable: true },
+        options: { sortable: true, aggregationMethod: 'count' },
         _meta: {
             filterType: 'text'
         }

@@ -18,7 +18,15 @@ type Primitive = string | number | boolean | null | undefined;
 export type GetValueFn<TOriginalRow> = (row: TOriginalRow) => CellValue;
 export type GetGroupValue<TOriginalRow> = (row: TOriginalRow) => CellValue;
 export type CellValue = Primitive | Record<string, any> | Array<any>;
-export type RowIdentifier = string | number;
+
+
+export type GridRowIdentifier = GridGroupRowIdentifier | GridBasicRowIdentifier
+
+export type GridGroupRowIdentifier = string
+export type GridBasicRowIdentifier = string | number
+
+
+
 export type RowPinningPosition = 'top' | 'bottom' | false;
 
 
@@ -38,19 +46,22 @@ export type HeaderCell<TOriginalRow> = (row: TOriginalRow) =>
     }
 
 
+
 export type AccessorFn<TOriginalRow> = (row: TOriginalRow) => CellValue;
 export type FormatterFn<TOriginalRow> = (row: TOriginalRow) => CellValue;
 export type AggregationFn<TOriginalRow> = (rows: TOriginalRow[]) => CellValue;
 
 export type GridGroupRow<TOriginalRow> = {
     index: string;
-    groupId: string;
+    identifier: GridGroupRowIdentifier; // GroupId
     groupKey: string;
     groupValue: any[];
     depth: number;
     children: GridRow<TOriginalRow>[];
+    // aggregates: {label: value: number, columnId: ColumnId}[];
 };
 export type GridBasicRow<TOriginalRow> = {
+    identifier: GridRowIdentifier;
     index: string;
     parentIndex: string | null;
     original: TOriginalRow;

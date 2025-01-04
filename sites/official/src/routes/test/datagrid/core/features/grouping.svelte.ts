@@ -1,7 +1,7 @@
 import { SvelteSet } from "svelte/reactivity";
-import type { ColumnId } from "../types";
+import type { ColumnId, GridGroupRowIdentifier } from "../types";
 
 export class GroupingFeature {
-    groupByColumns: ColumnId[] = [];
-    expandedGroups: SvelteSet<string> = new SvelteSet([]);
+    groupByColumns: ColumnId[] = $state([]);
+    expandedGroups: SvelteSet<GridGroupRowIdentifier> = $state(new SvelteSet([]))
 }

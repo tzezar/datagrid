@@ -1,7 +1,7 @@
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-svelte";
 import { isGroupColumn } from "./column-guards";
 import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn, GroupColumn } from "./helpers/column-creators";
-import type { CellValue, GridGroupRow, GridRow, SortableColumn } from "./types";
+import type { CellValue, ColumnId, GridBasicRow, GridGroupRow, GridRow, SortableColumn } from "./types";
 import type { Datagrid } from "./index.svelte";
 
 
@@ -51,7 +51,11 @@ export function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
     return flattened;
 }
 
-export const filterOutGroupColumns = <TOriginalRow>(columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] => {
+export const filterOutDisplayColumns = <TOriginalRow>(columns: AnyColumn<TOriginalRow>[]): (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow> | GroupColumn<TOriginalRow>)[] => {
+    return columns.filter(column => column.type !== 'display')
+}
+
+export const filterOutGroupColumns = <TOriginalRow>(columns: AnyColumn<TOriginalRow>[]): (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow> | DisplayColumn<TOriginalRow>)[] => {
     return columns.filter(column => column.type !== 'group')
 }
 
@@ -61,16 +65,16 @@ export const filterGroupColumns = <TOriginalRow>(columns: AnyColumn<TOriginalRow
 
 
 // Find column by ID in nested structure
-export function findColumnById<TOriginalRow>(columns: AnyColumn<TOriginalRow>[], id: string): AnyColumn<TOriginalRow> | null {
+export function findColumnById<TOriginalRow>(columns: AnyColumn<TOriginalRow>[], id: ColumnId): AnyColumn<TOriginalRow> | null {
     const flatColumns = flattenColumns(columns);
     return flatColumns.find((col) => col.columnId === id || col.header === id) ?? null;
 }
 export function isDescendantOf(possibleDescendant: GroupColumn<any>, ancestor: GroupColumn<any>): boolean {
     if (!possibleDescendant) return false;
-    
+
     // Check direct children
     if (ancestor.columns.includes(possibleDescendant)) return true;
-    
+
     // Recursively check children of group columns
     return ancestor.columns
         .filter((col): col is GroupColumn<any> => col.type === 'group')
@@ -180,9 +184,11 @@ export const isColumnSortable = <TOriginalRow>(
 };
 
 
-export const measurePerformance = (operation: any, name: string) => {
-    const timeStart = performance.now();
-    operation();
-    let duration = (performance.now() - timeStart).toFixed(2);
-    console.log(`${duration}ms - ${name}`) 
+// Helper to check if a row is a group row
+export function isGroupRow<TOriginalRow>(row: GridRow<TOriginalRow>): row is GridGroupRow<TOriginalRow> {
+    return 'children' in row;
+}
+
+export function isBasicRow<TOriginalRow>(row: GridRow<TOriginalRow>): row is GridBasicRow<TOriginalRow> {
+    return 'original' in row;
 }

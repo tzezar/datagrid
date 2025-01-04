@@ -315,7 +315,7 @@
 	{#if isGridGroupRow(row)}
 		{@render GroupRow(row)}
 	{:else if row.parentIndex}
-		{#if datagrid.rowPinning.isPinnedToTop(row.index) || datagrid.rowPinning.isPinnedToBottom(row.index)}
+		{#if datagrid.rowPinning.isPinnedTop(row.index) || datagrid.rowPinning.isPinnedBottom(row.index)}
 			{#if datagrid.grouping.expandedGroups.has(datagrid
 					.rowManager.flattenGridRows(datagrid.groupedRowsCache)
 					.find((r) => r.index === row.parentIndex)?.groupId)}

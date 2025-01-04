@@ -1,12 +1,12 @@
 import { SvelteSet } from "svelte/reactivity";
 import type { Datagrid } from "../index.svelte";
-import type { GridGroupRow, GridRow, RowIdentifier as RowId, RowPinningPosition } from "../types";
+import type { GridGroupRow, GridRow, GridRowIdentifier, RowPinningPosition } from "../types";
+import { isGroupRow } from "../utils.svelte";
 
 export class RowPinningFeature<TOriginalRow> {
     datagrid: Datagrid<TOriginalRow>;
-    rowIdsPinnedTop: SvelteSet<RowId> = new SvelteSet([]);
-    rowIdsPinnedBottom: SvelteSet<RowId> = new SvelteSet([]);
-
+    rowIdsPinnedTop: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
+    rowIdsPinnedBottom: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
 
     // Cache for pinned rows
     private topRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
@@ -27,10 +27,10 @@ export class RowPinningFeature<TOriginalRow> {
 
         for (let i = 0; i < this.datagrid.cache.rows.length; i++) {
             const row = this.datagrid.cache.rows[i];
-            const id = this.datagrid.rowManager.getRowId(row);
-            if (this.rowIdsPinnedTop.has(id)) {
+            const rowIdentifier = this.datagrid.rowManager.getRowIdentifier(row);
+            if (this.rowIdsPinnedTop.has(rowIdentifier)) {
                 pinnedTop.push(row);
-            } else if (this.rowIdsPinnedBottom.has(id)) {
+            } else if (this.rowIdsPinnedBottom.has(rowIdentifier)) {
                 pinnedBottom.push(row);
             } else {
                 unpinned.push(row);
@@ -38,48 +38,51 @@ export class RowPinningFeature<TOriginalRow> {
         }
 
         this.topRowsCache = pinnedTop;
-        // this.centerRowsCache = unpinned;
         this.bottomRowsCache = pinnedBottom;
-
-        // ? this one preserve the order
-        // // Iterate through all pinned top rows
-        // for (const rowIndex of this.rowIdsPinnedTop) {
-        //     const row = this.findRow(rowIndex);
-        //     if (row) pinnedTop.push(row);
-        // }
-
-        // // Iterate through all pinned bottom rows
-        // for (const rowIndex of this.rowIdsPinnedBottom) {
-        //     const row = this.findRow(rowIndex);
-        //     if (row) pinnedBottom.push(row);
-        // }
-
-        // // Iterate through all rows to populate unpinned array
-        // this.datagrid.cache.rows.forEach(row => {
-        //     const id = this.isGroupRow(row) ? row.groupId : row.index;
-        //     if (!this.rowIdsPinnedTop.has(id) && !this.rowIdsPinnedBottom.has(id)) {
-        //         unpinned.push(row);
-        //     }
-        // });
     }
 
-    // Apply row pinning to the processed rows while maintaining group structure
-    applyRowPinning(rows: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
+    updatePinnedRowsInOrder() {
+        const pinnedTop: GridRow<TOriginalRow>[] = [];
+        const pinnedBottom: GridRow<TOriginalRow>[] = [];
+        const unpinned: GridRow<TOriginalRow>[] = [];
+
+        for (const rowIndex of this.rowIdsPinnedTop) {
+            const row = this.datagrid.rowManager.findRowByIdentifier(rowIndex);
+            if (row) pinnedTop.push(row);
+        }
+
+        // Iterate through all pinned bottom rows
+        for (const rowIndex of this.rowIdsPinnedBottom) {
+            const row = this.datagrid.rowManager.findRowByIdentifier(rowIndex);
+            if (row) pinnedBottom.push(row);
+        }
+
+        // Iterate through all rows to populate unpinned array
+        this.datagrid.cache.rows.forEach(row => {
+            const id = this.datagrid.rowManager.getRowIdentifier(row);
+            if (!this.rowIdsPinnedTop.has(id) && !this.rowIdsPinnedBottom.has(id)) {
+                unpinned.push(row);
+            }
+        });
+    }
+
+    // ? Apply row pinning to the processed rows while maintaining group structure
+    // ? This might be usefull later for virtualized datagrid that requires to pass data as one big array instead splitted into top, bottom, center rows
+    getRowsAsArrayInPinnedOrder(rows: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
         const pinnedTop: GridRow<TOriginalRow>[] = [];
         const pinnedBottom: GridRow<TOriginalRow>[] = [];
         const unpinned: GridRow<TOriginalRow>[] = [];
 
         const processRow = (row: GridRow<TOriginalRow>) => {
-            const rowId = this.isGroupRow(row) ? row.groupId : row.index;
+            const rowId = this.datagrid.rowManager.getRowIdentifier(row);
             const pinningState = this.getPinningState(rowId);
 
-            if (this.isGroupRow(row)) {
+            if (isGroupRow(row)) {
                 // Create a new group row with processed children
                 const processedRow: GridGroupRow<TOriginalRow> = {
                     ...row,
                     children: [...row.children] // Create a new array for children
                 };
-
                 if (pinningState === 'top') {
                     pinnedTop.push(processedRow);
                 } else if (pinningState === 'bottom') {
@@ -104,72 +107,41 @@ export class RowPinningFeature<TOriginalRow> {
     }
 
 
-    // Get rows pinned to the top
+    /**
+     * Get rows pinned to the top
+     */
     getTopRows(): GridRow<TOriginalRow>[] {
         return this.topRowsCache;
     }
 
-    // Get unpinned rows (center)
+    /**
+     * Get unpinned rows (center)
+     */
     getCenterRows(): GridRow<TOriginalRow>[] {
-        return this.datagrid.cache.paginatedRowsCache.filter(row => {
-            const id = this.datagrid.rowManager.getRowId(row);
-            return !this.isPinnedToTop(id) && !this.isPinnedToBottom(id);
+        return this.datagrid.cache.paginatedRows.filter(row => {
+            const id = this.datagrid.rowManager.getRowIdentifier(row);
+            return !this.isPinnedTop(id) && !this.isPinnedBottom(id);
         });
     }
 
-    // Get rows pinned to the bottom
+    /**
+     * Get rows pinned to the bottom
+     */
     getBottomRows(): GridRow<TOriginalRow>[] {
         return this.bottomRowsCache;
     }
 
-
-
-    // Helper to check if a row is a group row
-    private isGroupRow(row: GridRow<TOriginalRow>): row is GridGroupRow<TOriginalRow> {
-        return 'groupId' in row;
-    }
-
-    // Helper to get all descendant row IDs of a group
-    private getAllDescendantIndices(row: GridGroupRow<TOriginalRow>): string[] {
-        const ids: string[] = [];
-        for (const child of row.children) {
-            if (this.isGroupRow(child)) {
-                ids.push(child.groupId);
-                ids.push(...this.getAllDescendantIndices(child));
-            } else {
-                ids.push(child.index);
-            }
-        }
-
-        return ids;
-    }
-
-
-    pinRow(rowIdentifier: RowId, position: RowPinningPosition) {
-        if (position === 'top') {
-            this.pinToTop(rowIdentifier);
-        } else if (position === 'bottom') {
-            this.pinToBottom(rowIdentifier);
-        } else {
-            this.unpin(rowIdentifier);
-        }
-    }
-
-
     // Pin a row or group to the top
-    pinToTop(rowIdentifier: RowId) {
-
-        let row = this.datagrid.rowManager.findRowById(rowIdentifier);
-        console.log(row)
-
+    pinTop(rowIdentifier: GridRowIdentifier) {
+        let row = this.datagrid.rowManager.findRowByIdentifier(rowIdentifier);
         if (!row) return;
 
-        if (this.isGroupRow(row)) {
+        if (isGroupRow(row)) {
             row = row as GridGroupRow<TOriginalRow>;
             // Pin the group itself
             this.rowIdsPinnedTop.add(row.index);
             // Pin all descendants
-            const descendantIndices = this.getAllDescendantIndices(row);
+            const descendantIndices = this.datagrid.rowManager.getAllDescendantIndices(row);
             descendantIndices.forEach(id => this.rowIdsPinnedTop.add(id));
         } else {
             this.rowIdsPinnedTop.add(rowIdentifier);
@@ -181,15 +153,15 @@ export class RowPinningFeature<TOriginalRow> {
     }
 
     // Pin a row or group to the bottom
-    pinToBottom(rowIndex: RowId) {
-        const row = this.datagrid.rowManager.findRowById(rowIndex);
+    pinBottom(rowIndex: GridRowIdentifier) {
+        const row = this.datagrid.rowManager.findRowByIdentifier(rowIndex);
         if (!row) return;
 
-        if (this.isGroupRow(row)) {
+        if (isGroupRow(row)) {
             // Pin the group itself
             this.rowIdsPinnedBottom.add(row.index);
             // Pin all descendants
-            const descendantIds = this.getAllDescendantIndices(row);
+            const descendantIds = this.datagrid.rowManager.getAllDescendantIndices(row);
             descendantIds.forEach(id => this.rowIdsPinnedBottom.add(id));
         } else {
             this.rowIdsPinnedBottom.add(rowIndex);
@@ -200,36 +172,17 @@ export class RowPinningFeature<TOriginalRow> {
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 
-    // Helper to find a row by ID in the processed rows
-    private findRow(rowIdentifier: RowId): GridRow<TOriginalRow> | undefined {
-        const findInRows = (rows: GridRow<TOriginalRow>[]): GridRow<TOriginalRow> | undefined => {
-            for (const row of rows) {
-                if (this.isGroupRow(row)) {
-                    if (row.index === rowIdentifier) return row;
-                    const found = findInRows(row.children);
-                    if (found) return found;
-                } else {
-                    if (row.index === rowIdentifier) return row;
-                }
-            }
-            return undefined;
-        };
-
-        if (this.datagrid.grouping.groupByColumns.length === 0) return findInRows(this.datagrid.cache.rows || []);
-        return findInRows(this.datagrid.rowManager.flattenGridRows(this.datagrid.cache.groupedRowsCache || []));
-    }
-
     // Unpin a row or group
-    unpin(rowId: RowId) {
-        const row = this.findRow(rowId);
+    unpin(rowId: GridRowIdentifier) {
+        const row = this.datagrid.rowManager.findRowByIdentifier(rowId);
         if (!row) return;
 
-        if (this.isGroupRow(row)) {
+        if (isGroupRow(row)) {
             // Unpin the group itself
-            this.rowIdsPinnedTop.delete(row.groupId);
-            this.rowIdsPinnedBottom.delete(row.groupId);
+            this.rowIdsPinnedTop.delete(row.identifier);
+            this.rowIdsPinnedBottom.delete(row.identifier);
             // Unpin all descendants
-            const descendantIds = this.getAllDescendantIndices(row);
+            const descendantIds = this.datagrid.rowManager.getAllDescendantIndices(row);
             descendantIds.forEach(id => {
                 this.rowIdsPinnedTop.delete(id);
                 this.rowIdsPinnedBottom.delete(id);
@@ -242,14 +195,16 @@ export class RowPinningFeature<TOriginalRow> {
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 
-    // Check if a row is pinned to top
-    isPinnedToTop(rowId: RowId): boolean {
+    isPinnedTop(rowId: GridRowIdentifier): boolean {
         return this.rowIdsPinnedTop.has(rowId);
     }
 
-    // Check if a row is pinned to bottom
-    isPinnedToBottom(rowId: RowId): boolean {
+    isPinnedBottom(rowId: GridRowIdentifier): boolean {
         return this.rowIdsPinnedBottom.has(rowId);
+    }
+
+    isPinned(rowId: GridRowIdentifier): boolean {
+        return this.isPinnedTop(rowId) || this.isPinnedBottom(rowId);
     }
 
     /**
@@ -261,9 +216,9 @@ export class RowPinningFeature<TOriginalRow> {
      * - `'bottom'` if the row is pinned to the bottom.
      * - `false` if the row is not pinned.
      */
-    getPinningState(rowId: string): RowPinningPosition {
-        if (this.isPinnedToTop(rowId)) return 'top';
-        if (this.isPinnedToBottom(rowId)) return 'bottom';
+    getPinningState(rowId: GridRowIdentifier): RowPinningPosition {
+        if (this.isPinnedTop(rowId)) return 'top';
+        if (this.isPinnedBottom(rowId)) return 'bottom';
         return false;
     }
 
@@ -275,18 +230,12 @@ export class RowPinningFeature<TOriginalRow> {
     }
 
     // Get all pinned row IDs
-    getPinnedRowIds() {
+    getIdentifiersOfPinnedRows() {
         return {
             top: Array.from(this.rowIdsPinnedTop),
             bottom: Array.from(this.rowIdsPinnedBottom)
         };
     }
 
-    // getRowsPinnedToTop(): GridRow<TOriginalRow>[] {
-    //     return this.datagrid.cache.paginatedRowsCache.filter(row => this.isPinnedToTop(row.index));
-    // }
-    // getRowsPinnedToBottom(): GridRow<TOriginalRow>[] {
-    //     return this.datagrid.cache.paginatedRowsCache.filter(row => this.isPinnedToBottom(row.index));
-    // }
 
 }

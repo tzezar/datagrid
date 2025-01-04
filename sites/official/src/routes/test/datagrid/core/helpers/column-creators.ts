@@ -1,7 +1,7 @@
 
 // More specific types for different kinds of values
+import { DEFAULT_COLUMN_SIZE } from "../defaults";
 import type { AccessorFn, CellValue, Cell, ColumnId, GetGroupValue, GetValueFn, HeaderCell, FormatterFn, AggregationFn } from "../types";
-import { DEFAULT_COLUMN_SIZE } from "./constants";
 
 // Helper type to get nested key paths
 type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
