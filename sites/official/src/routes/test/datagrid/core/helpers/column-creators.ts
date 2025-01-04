@@ -83,6 +83,27 @@ export interface ComputedColumn<TOriginalRow> {
   }
   _meta: any;
 }
+// <!-- TODO: simplify this -->
+// {#snippet Row(row: GridRow<User>)}
+// 	{#if isGridGroupRow(row)}
+// 		{@render GroupRow(row)}
+// 	{:else if row.parentIndex}
+// 		<!-- Render group childrens -->
+// 		{#if datagrid.rowPinning.isPinned(row.index)}
+// 			<!-- typescript hack -->
+// 			{@const flattenedRow = datagrid.rowManager
+// 				.flattenGridRows(datagrid.cache.hierarchicalRows || [])
+// 				.find((r) => r.index === row.parentIndex) as GridGroupRow<User>}
+// 			{#if datagrid.grouping.expandedGroups.has(flattenedRow?.identifier)}
+// 				{@render BasicRow(row)}
+// 			{/if}
+// 		{:else}
+// 			{@render BasicRow(row)}
+// 		{/if}
+// 	{:else}
+// 		{@render BasicRow(row)}
+// 	{/if}
+// {/snippet}
 
 export interface DisplayColumn<TOriginalRow> {
   type: 'display';

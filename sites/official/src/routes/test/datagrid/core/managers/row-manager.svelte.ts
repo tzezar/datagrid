@@ -39,12 +39,8 @@ export class RowManager<TOriginalRow> {
 
     }
 
-    findRowByIndex(index: string): GridRow<TOriginalRow> | undefined {
-        return this.datagrid.cache.rows.find(row => row.index === index);
-    }
-
     findRowByIdentifier(identifier: GridRowIdentifier): GridRow<TOriginalRow> | undefined {
-        return this.getFlatGridBasicRows(this.datagrid.cache.rows).find(row => row.identifier === identifier);
+        return (this.datagrid.cache.rows || []).find(row => row.identifier === identifier);
     }
 
     // new
@@ -79,7 +75,7 @@ export class RowManager<TOriginalRow> {
             if (isGridGroupRow(row)) {
                 flattened.push(row);
                 flattened.push(...this.getFlatGridGroupRows(row.children));
-            } 
+            }
         }
         return flattened;
     }
@@ -91,12 +87,12 @@ export class RowManager<TOriginalRow> {
 
 
 
-    getAllDescendantIndices(row: GridGroupRow<TOriginalRow>): string[] {
+    getAllDescendantIndifiers(row: GridGroupRow<TOriginalRow>): string[] {
         const ids: string[] = [];
         for (const child of row.children) {
             if (isGroupRow(child)) {
                 ids.push(child.identifier);
-                ids.push(...this.getAllDescendantIndices(child));
+                ids.push(...this.getAllDescendantIndifiers(child));
             } else {
                 ids.push(child.index);
             }
@@ -104,7 +100,19 @@ export class RowManager<TOriginalRow> {
 
         return ids;
     }
+    getAllDescendantIndices(row: GridGroupRow<TOriginalRow>): string[] {
+        const ids: string[] = [];
+        for (const child of row.children) {
+            if (isGroupRow(child)) {
+                ids.push(child.identifier);
+                ids.push(...this.getAllDescendantIndifiers(child));
+            } else {
+                ids.push(child.index);
+            }
+        }
 
+        return ids;
+    }
 
 }
 

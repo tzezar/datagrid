@@ -223,20 +223,20 @@ export class DataProcessor<TRow> {
     }
 
 
-    private calculateAggregations(
+    private calculateAggregations( 
         column: AccessorColumn<TRow> | ComputedColumn<TRow>,
         groupRows: TRow[]
     ): Aggregation[] {
         const config = column.aggregate;
         if (!config) return [];
-
+    
         // Handle array of aggregations
         if (Array.isArray(config)) {
             return config.map(aggConfig => {
                 const aggType = typeof aggConfig === 'string' ? aggConfig : aggConfig.type;
                 const aggFn = this.getAggregationFn(aggConfig);
                 if (!aggFn) return null;
-
+    
                 const values = groupRows.map(row => column.getValueFn(row));
                 return {
                     type: aggType,
@@ -245,12 +245,12 @@ export class DataProcessor<TRow> {
                 };
             }).filter((agg): agg is Aggregation => agg !== null);
         }
-
+    
         // Handle single aggregation
         const aggType = typeof config === 'string' ? config : config.type;
         const aggFn = this.getAggregationFn(config);
         if (!aggFn) return [];
-
+    
         const values = groupRows.map(row => column.getValueFn(row));
         return [{
             type: aggType,
@@ -258,26 +258,26 @@ export class DataProcessor<TRow> {
             columnId: column.columnId
         }];
     }
-
+    
     createHierarchicalData(data: TRow[]): GridRow<TRow>[] {
         const groupCols = this.datagrid.grouping.groupByColumns;
         if (!groupCols.length) return this.createBasicRows(data);
-
+    
         const groupByLevel = (
             rows: TRow[],
             depth: number,
             parentPath = ''
         ): GridRow<TRow>[] => {
             const groups = new Map<string, TRow[]>();
-
+    
             if (depth >= groupCols.length) return this.createBasicRows(rows, parentPath);
-
+    
             const column = findColumnById(flattenColumns(this.datagrid.columns), groupCols[depth]);
-
+    
             if (!column) throw new Error(`Invalid group column: ${groupCols[depth]}`);
             if (isGroupColumn(column)) throw new Error(`Cannot group by group column: ${groupCols[depth]}`);
             if (column.type === 'display') throw new Error(`Cannot group by display column: ${groupCols[depth]}`);
-
+    
             // Group rows by current column
             rows.forEach(row => {
                 const groupKey = String(column.getValueFn(row) ?? 'Unknown');
@@ -285,7 +285,7 @@ export class DataProcessor<TRow> {
                 group.push(row);
                 groups.set(groupKey, group);
             });
-
+    
             // Create group rows with aggregation
             return Array.from(groups.entries()).map(([key, groupRows], index) => {
                 const aggregations = flattenColumns(this.datagrid.columns)
@@ -293,9 +293,11 @@ export class DataProcessor<TRow> {
                         (col.type === 'accessor' || col.type === 'computed') &&
                         col.aggregate
                     )
-                    .flatMap(col => this.calculateAggregations(col, groupRows));
-
-
+                    .flatMap(col => {
+                        col = col as AccessorColumn<TRow> | ComputedColumn<TRow>;
+                        return this.calculateAggregations(col, groupRows); // Ensure we return Aggregation[]
+                    });
+    
                 return {
                     index: parentPath ? `${parentPath}-${index + 1}` : String(index + 1),
                     identifier: depth === 0 ? key : `${parentPath}|${key}`,
@@ -304,13 +306,14 @@ export class DataProcessor<TRow> {
                     depth,
                     isExpanded: false,
                     children: groupByLevel(groupRows, depth + 1, `${parentPath}${index + 1}`),
-                    aggregations
+                    aggregations: aggregations // Ensure aggregations is properly set
                 };
             });
         };
-
+    
         return groupByLevel(data, 0);
     }
+    
 
 
 

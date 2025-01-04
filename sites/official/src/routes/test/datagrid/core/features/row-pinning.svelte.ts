@@ -118,7 +118,7 @@ export class RowPinningFeature<TOriginalRow> {
      * Get unpinned rows (center)
      */
     getCenterRows(): GridRow<TOriginalRow>[] {
-        return this.datagrid.cache.paginatedRows.filter(row => {
+        return (this.datagrid.cache.paginatedRows || []).filter(row => {
             const id = this.datagrid.rowManager.getRowIdentifier(row);
             return !this.isPinnedTop(id) && !this.isPinnedBottom(id);
         });
@@ -139,9 +139,9 @@ export class RowPinningFeature<TOriginalRow> {
         if (isGroupRow(row)) {
             row = row as GridGroupRow<TOriginalRow>;
             // Pin the group itself
-            this.rowIdsPinnedTop.add(row.index);
+            this.rowIdsPinnedTop.add(row.identifier);
             // Pin all descendants
-            const descendantIndices = this.datagrid.rowManager.getAllDescendantIndices(row);
+            const descendantIndices = this.datagrid.rowManager.getAllDescendantIndifiers(row);
             descendantIndices.forEach(id => this.rowIdsPinnedTop.add(id));
         } else {
             this.rowIdsPinnedTop.add(rowIdentifier);
@@ -159,9 +159,9 @@ export class RowPinningFeature<TOriginalRow> {
 
         if (isGroupRow(row)) {
             // Pin the group itself
-            this.rowIdsPinnedBottom.add(row.index);
+            this.rowIdsPinnedBottom.add(row.identifier);
             // Pin all descendants
-            const descendantIds = this.datagrid.rowManager.getAllDescendantIndices(row);
+            const descendantIds = this.datagrid.rowManager.getAllDescendantIndifiers(row);
             descendantIds.forEach(id => this.rowIdsPinnedBottom.add(id));
         } else {
             this.rowIdsPinnedBottom.add(rowIndex);
@@ -182,7 +182,7 @@ export class RowPinningFeature<TOriginalRow> {
             this.rowIdsPinnedTop.delete(row.identifier);
             this.rowIdsPinnedBottom.delete(row.identifier);
             // Unpin all descendants
-            const descendantIds = this.datagrid.rowManager.getAllDescendantIndices(row);
+            const descendantIds = this.datagrid.rowManager.getAllDescendantIndifiers(row);
             descendantIds.forEach(id => {
                 this.rowIdsPinnedTop.delete(id);
                 this.rowIdsPinnedBottom.delete(id);

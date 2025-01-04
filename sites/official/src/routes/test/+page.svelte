@@ -3,21 +3,16 @@
 	import type { User } from './types';
 	import { isGroupColumn } from './datagrid/core/column-guards';
 	import type {
-		ColumnId,
 		GridBasicRow,
 		GridGroupRow,
 		GridRow,
-		PinningPosition
 	} from './datagrid/core/types';
 	import { Datagrid } from './datagrid/core/index.svelte';
 	import {
-		filterOutGroupColumns,
-		findColumnById,
 		flattenColumns,
 		getCellContent,
 		getSortIcon,
 		getSortIndex,
-		isDescendantOf,
 		isGridGroupRow,
 		onSort
 	} from './datagrid/core/utils.svelte';
@@ -103,7 +98,7 @@
 	>
 		{#if column.cell && typeof column.cell === 'function'}
 			{@const cellContent = column.cell(row)}
-			{#if cellContent.component}
+			{#if cellContent && typeof cellContent === 'object' && 'component' in cellContent}
 				<!-- svelte-ignore svelte_component_deprecated -->
 				<svelte:component this={cellContent.component} {...cellContent.props} {datagrid} />
 			{/if}
@@ -123,7 +118,7 @@
 		{#if column._meta?.showInGroupRow}
 			{#if column.cell && typeof column.cell === 'function'}
 				{@const cellContent = column.cell(row)}
-				{#if cellContent.component}
+				{#if cellContent && typeof cellContent === 'object' && 'component' in cellContent}
 					<!-- svelte-ignore svelte_component_deprecated -->
 					<svelte:component this={cellContent.component} {...cellContent.props} {datagrid} />
 				{/if}
@@ -202,24 +197,11 @@
 <!-- TODO: simplify this -->
 {#snippet Row(row: GridRow<User>)}
 	{#if isGridGroupRow(row)}
-		{@render GroupRow(row)}
-	{:else if row.parentIndex}
-		<!-- Render group childrens -->
-		{#if datagrid.rowPinning.isPinned(row.index)}
-			<!-- typescript hack -->
-			{@const flattenedRow = datagrid.rowManager
-				.flattenGridRows(datagrid.cache.hierarchicalRows || [])
-				.find((r) => r.index === row.parentIndex) as GridGroupRow<User>}
-			{#if datagrid.grouping.expandedGroups.has(flattenedRow?.identifier)}
-				{@render BasicRow(row)}
-			{/if}
-		{:else}
-			{@render BasicRow(row)}
-		{/if}
+	  {@render GroupRow(row)}
 	{:else}
-		{@render BasicRow(row)}
+	  {@render BasicRow(row)}
 	{/if}
-{/snippet}
+  {/snippet}
 
 <input
 	type="text"

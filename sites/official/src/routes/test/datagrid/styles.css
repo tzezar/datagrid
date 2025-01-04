@@ -1,5 +1,5 @@
 :root {
-    --border-color: orange;
+    --border-color: hsl(var(--grid-border));
     --border-width: 1px;
 }
 
@@ -31,9 +31,12 @@
     position: sticky;
     top: 0;
     z-index: 10000;
-    background-color: var(--grid-header-background);
 }
 
+
+.grid-header-row {
+    background-color: hsl(var(--grid-header-background));
+}
 /* Row styles */
 .grid-header-row,
 .grid-body-row {
@@ -221,11 +224,11 @@
 }
 
 .group-row {
-    background-color: var(--grid-row-even-background);
+    background-color: hsl(var(--grid-row-even-background))
 }
 
 .group-row[data-expanded='true'] {
-    background-color: var(--grid-row-odd-background);
+    background-color: hsl(var(--grid-row-odd-background))
 }
 
 .group-cell {

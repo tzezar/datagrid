@@ -1,18 +1,6 @@
 import type { Component } from "svelte";
 import type { AccessorColumn, ComputedColumn } from "./helpers/column-creators";
 
-
-
-// export type DatagridFeature<TOriginalRow> = {
-//     name: string;
-//     initialize: (datagrid: Datagrid<TOriginalRow>) => void;
-//     destroy?: () => void;
-//     // Allow any additional properties
-//     [key: string]: any;
-// }
-
-
-
 export type ColumnId = string;
 type Primitive = string | number | boolean | null | undefined;
 export type GetValueFn<TOriginalRow> = (row: TOriginalRow) => CellValue;

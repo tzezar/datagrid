@@ -36,9 +36,9 @@ export class DatagridCacheManager<TOriginalRow> {
     /**
      * Either grouped rows that are flattened or basic rows when there is no grouping.
      * Null if the cache is invalid.
-     * @type {GridRow<TOriginalRow>[] | null}
+     * @type {GridRow<TOriginalRow>[] }
      */
-    rows: GridRow<TOriginalRow>[] | null = $state.raw(null);
+    rows: GridRow<TOriginalRow>[] = $state.raw([]);
 
     /**
      * Cached paginated rows. Null if the cache is invalid.
@@ -61,6 +61,6 @@ export class DatagridCacheManager<TOriginalRow> {
      */
     invalidateGroupedRowsCache(): void {
         this.hierarchicalRows = null;
-        this.rows = null;
+        this.rows = [];
     }
 }
