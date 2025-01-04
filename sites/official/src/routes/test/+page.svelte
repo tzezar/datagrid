@@ -1,12 +1,9 @@
 <script lang="ts">
+	import './datagrid/styles.css';
 	import { type AnyColumn } from './datagrid/core/helpers/column-creators';
 	import type { User } from './types';
 	import { isGroupColumn } from './datagrid/core/column-guards';
-	import type {
-		GridBasicRow,
-		GridGroupRow,
-		GridRow,
-	} from './datagrid/core/types';
+	import type { GridBasicRow, GridGroupRow, GridRow } from './datagrid/core/types';
 	import { Datagrid } from './datagrid/core/index.svelte';
 	import {
 		flattenColumns,
@@ -18,11 +15,7 @@
 	} from './datagrid/core/utils.svelte';
 	import { userColumns } from './columns.svelte';
 	import ColumnFilter from './datagrid/prebuilt/native/column-filter.svelte';
-	import './datagrid/styles.css';
-	import GroupBy from './_components/grid-controls/group-by.svelte';
-	import ColumnVisibility from './_components/grid-controls/column-visibility.svelte';
-	import ColumnOrdering from './_components/grid-controls/column-ordering.svelte';
-	import ColumnPinning from './_components/grid-controls/column-pinning.svelte';
+	import GridControls from './_components/grid-controls/grid-controls.svelte';
 
 	let { data } = $props();
 
@@ -30,8 +23,6 @@
 		columns: userColumns,
 		data: data.users
 	});
-	datagrid.grouping.groupByColumns = ['role'];
-	datagrid.processors.data.executeFullDataTransformation();
 </script>
 
 {#snippet HeaderCell(column: (typeof Datagrid.prototype.columns)[0])}
@@ -194,14 +185,13 @@
 	{/if}
 {/snippet}
 
-<!-- TODO: simplify this -->
 {#snippet Row(row: GridRow<User>)}
 	{#if isGridGroupRow(row)}
-	  {@render GroupRow(row)}
+		{@render GroupRow(row)}
 	{:else}
-	  {@render BasicRow(row)}
+		{@render BasicRow(row)}
 	{/if}
-  {/snippet}
+{/snippet}
 
 <input
 	type="text"
@@ -239,38 +229,51 @@
 		</div>
 	</div>
 </div>
-<div class="pagination">
-	<button
-		disabled={datagrid.pagination.canGoToPrevPage()}
-		onclick={() => datagrid.refresh(() => datagrid.pagination.goToPrevPage())}
-	>
-		Prev
-	</button>
-	<span>
-		Page {datagrid.pagination.page} of {datagrid.pagination.pageCount}
-	</span>
-	<button
-		disabled={datagrid.pagination.canGoToNextPage()}
-		onclick={() => datagrid.refresh(() => datagrid.pagination.goToNextPage())}
-	>
-		Next
-	</button>
-	<select
-		value={datagrid.pagination.pageSize}
-		onchange={(e) => {
-			datagrid.refresh(() => {
-				datagrid.pagination.pageSize = Number(e.currentTarget.value);
-				datagrid.pagination.goToFirstPage();
-			});
-		}}
-	>
-		{#each datagrid.pagination.pageSizes as pageSize}
-			<option value={pageSize}>{pageSize}</option>
-		{/each}
-	</select>
+
+<div>
+	<div class="flex flex-col md:flex-row gap-2 justify-center md:justify-between p-3 pagination-container items-center"> 
+		<div class="md:w-1/3 text-xs text-muted-foreground"> <!-- Ensuring each div is 1 grid cell -->
+			<span>
+				Showing {datagrid.pagination.pageSize * (datagrid.pagination.page - 1)} to {datagrid
+					.pagination.pageSize * datagrid.pagination.page} of {(datagrid.cache.rows || []).length} rows
+			</span>
+		</div>
+		<div class="md:w-1/3 flex justify-between"> <!-- Ensure this is a flex container within a grid column -->
+			<button
+				class="pagination-button"
+				disabled={datagrid.pagination.canGoToPrevPage()}
+				onclick={() => datagrid.refresh(() => datagrid.pagination.goToPrevPage())}
+			>
+				Prev
+			</button>
+			<span>
+				Page {datagrid.pagination.page} of {datagrid.pagination.pageCount}
+			</span>
+			<button
+				class="pagination-button"
+				disabled={datagrid.pagination.canGoToNextPage()}
+				onclick={() => datagrid.refresh(() => datagrid.pagination.goToNextPage())}
+			>
+				Next
+			</button>
+		</div>
+		<div class="md:w-1/3 flex justify-end">
+			<select
+				value={datagrid.pagination.pageSize}
+				onchange={(e) => {
+					datagrid.refresh(() => {
+						datagrid.pagination.pageSize = Number(e.currentTarget.value);
+						datagrid.pagination.goToFirstPage();
+					});
+				}}
+			>
+				{#each datagrid.pagination.pageSizes as pageSize}
+					<option value={pageSize}>{pageSize}</option>
+				{/each}
+			</select>
+		</div>
+	</div>
 </div>
 
-<ColumnOrdering {datagrid} />
-<ColumnPinning {datagrid} />
-<ColumnVisibility {datagrid} />
-<GroupBy {datagrid} />
+
+<GridControls {datagrid} />

@@ -268,3 +268,13 @@
 .grid-header-cell[data-pinned] {
   z-index: 3;
 }
+
+
+.pagination-container {
+    background-color: hsl(var(--grid-header-background));
+    border: var(--border-width) solid var(--border-color);
+
+}
+
+
+
