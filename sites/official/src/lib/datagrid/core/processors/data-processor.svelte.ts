@@ -1,67 +1,12 @@
 import { sort } from "fast-sort";
 import { isGroupColumn } from "../column-guards";
 import type { Datagrid } from "../index.svelte";
-import type { Aggregation, AggregationFn, GridRow } from "../types";
-import { findColumnById, flattenColumns, isColumnSortable } from "../utils.svelte";
+import type { Aggregation, AggregationFn, GridGroupRow, GridRow } from "../types";
+import { findColumnById, flattenColumns, isColumnSortable, isGridGroupRow } from "../utils.svelte";
 import type { PerformanceMetrics } from "../helpers/performance-metrics.svelte";
 import type { AccessorColumn, ComputedColumn } from "../helpers/column-creators";
 import { aggregationFunctions } from "../helpers/aggregation-functions";
 
-
-
-
-
-// export const aggregationFunctions = {
-//     sum: (getValue: (row: any) => number) => 
-//         (getLeafRows: () => Row<any>[]): number => 
-//             getLeafRows().reduce((sum, row) => sum + (getValue(row.original) || 0), 0),
-
-//     min: (getValue: (row: any) => number) =>
-//         (getLeafRows: () => Row<any>[]): number =>
-//             Math.min(...getLeafRows().map(row => getValue(row.original))),
-
-//     max: (getValue: (row: any) => number) =>
-//         (getLeafRows: () => Row<any>[]): number =>
-//             Math.max(...getLeafRows().map(row => getValue(row.original))),
-
-//     extent: (getValue: (row: any) => number) =>
-//         (getLeafRows: () => Row<any>[]): [number, number] => {
-//             const values = getLeafRows().map(row => getValue(row.original));
-//             return [Math.min(...values), Math.max(...values)];
-//         },
-
-//     mean: (getValue: (row: any) => number) =>
-//         (getLeafRows: () => Row<any>[]): number => {
-//             const rows = getLeafRows();
-//             return rows.reduce((sum, row) => sum + getValue(row.original), 0) / rows.length;
-//         },
-
-//     median: (getValue: (row: any) => number) =>
-//         (getLeafRows: () => Row<any>[]): number => {
-//             const values = getLeafRows()
-//                 .map(row => getValue(row.original))
-//                 .sort((a, b) => a - b);
-//             const mid = Math.floor(values.length / 2);
-//             return values.length % 2 !== 0 
-//                 ? values[mid] 
-//                 : (values[mid - 1] + values[mid]) / 2;
-//         },
-
-//     unique: (getValue: (row: any) => any) =>
-//         (getLeafRows: () => Row<any>[]): any[] =>
-//             Array.from(new Set(getLeafRows().map(row => getValue(row.original)))),
-
-//     uniqueCount: (getValue: (row: any) => any) =>
-//         (getLeafRows: () => Row<any>[]): number =>
-//             new Set(getLeafRows().map(row => getValue(row.original))).size,
-
-//     count: () =>
-//         (getLeafRows: () => Row<any>[]): number =>
-//             getLeafRows().length,
-// };
-
-
-// Main data processor
 export class DataProcessor<TRow> {
     private readonly metrics: PerformanceMetrics;
     private customAggregationFns: Map<string, AggregationFn>;
@@ -97,8 +42,11 @@ export class DataProcessor<TRow> {
             });
         }
 
-        // Cache filtered results
+        // Cache sorted/filtered results
         this.datagrid.cache.sortedData = data;
+
+        // Clear hierarchical cache when data changes
+        this.datagrid.cache.hierarchicalRows = null;
 
         // Process grouped or regular data
         if (this.datagrid.grouping.groupByColumns.length > 0) {
@@ -161,26 +109,43 @@ export class DataProcessor<TRow> {
         return sort(data).by(sortInstructions as any);
     }
 
-    private processGroupedData(data: TRow[]): void {
-        // Create grouped structure
-        let groupedRows: GridRow<TRow>[];
-        this.metrics.measure('Grouping', () => {
-            groupedRows = this.createHierarchicalData(data);
-            this.datagrid.cache.hierarchicalRows = groupedRows;
+    flattenGridRows(data: GridRow<TRow>[]): GridRow<TRow>[] {
+        const flattened: GridRow<TRow>[] = [];
+
+        for (const row of data) {
+            flattened.push(row);
+            if (isGridGroupRow(row)) {
+                flattened.push(...this.flattenGridRows(row.children));
+            }
+        }
+        return flattened
+    }
+
+    processGroupedData(data: TRow[]): void {
+        // Create grouped structure only if not already cached
+        let groupedRows = this.datagrid.cache.hierarchicalRows;
+        
+        if (!groupedRows) {
+            this.metrics.measure('Grouping', () => {
+                groupedRows = this.createHierarchicalData(data);
+                this.datagrid.cache.hierarchicalRows = groupedRows;
+            });
+        }
+
+        // Get only visible rows based on expansion state
+        const visibleRows = this.getVisibleRows();
+        
+        // Update cache and pagination
+        this.metrics.measure('Cache Update', () => {
+            this.datagrid.cache.rows = visibleRows;
+            this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(visibleRows);
+            this.datagrid.cache.paginatedRows = this.paginateRows(visibleRows);
         });
 
-        // Flatten groups
-        let flattenedRows: GridRow<TRow>[];
-        this.metrics.measure('Flattening', () => {
-            flattenedRows = this.flattenGroups(groupedRows!);
-            this.datagrid.cache.rows = this.datagrid.rowManager.flattenGridRows(groupedRows!);
-            this.datagrid.cache.rows = flattenedRows;
-        });
-
-        // Update pinned rows and pagination
-        this.datagrid.rowPinning.updatePinnedRows();
-        this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(flattenedRows!);
-        this.datagrid.cache.paginatedRows = this.paginateRows(flattenedRows!);
+        // Update pinned rows if needed
+        if (this.datagrid.rowPinning) {
+            this.datagrid.rowPinning.updatePinnedRows();
+        }
     }
 
     private processRegularData(data: TRow[]): void {
@@ -197,6 +162,7 @@ export class DataProcessor<TRow> {
                 this.datagrid.rowPinning.updatePinnedRows();
             });
         }
+        this.datagrid.pagination.visibleRowsCount = data!.length;
         this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(data);
         // Apply pagination
         this.datagrid.cache.paginatedRows = this.paginateRows(basicRows!);
@@ -223,20 +189,20 @@ export class DataProcessor<TRow> {
     }
 
 
-    private calculateAggregations( 
+    private calculateAggregations(
         column: AccessorColumn<TRow> | ComputedColumn<TRow>,
         groupRows: TRow[]
     ): Aggregation[] {
         const config = column.aggregate;
         if (!config) return [];
-    
+
         // Handle array of aggregations
         if (Array.isArray(config)) {
             return config.map(aggConfig => {
                 const aggType = typeof aggConfig === 'string' ? aggConfig : aggConfig.type;
                 const aggFn = this.getAggregationFn(aggConfig);
                 if (!aggFn) return null;
-    
+
                 const values = groupRows.map(row => column.getValueFn(row));
                 return {
                     type: aggType,
@@ -245,12 +211,12 @@ export class DataProcessor<TRow> {
                 };
             }).filter((agg): agg is Aggregation => agg !== null);
         }
-    
+
         // Handle single aggregation
         const aggType = typeof config === 'string' ? config : config.type;
         const aggFn = this.getAggregationFn(config);
         if (!aggFn) return [];
-    
+
         const values = groupRows.map(row => column.getValueFn(row));
         return [{
             type: aggType,
@@ -258,34 +224,38 @@ export class DataProcessor<TRow> {
             columnId: column.columnId
         }];
     }
-    
+
     createHierarchicalData(data: TRow[]): GridRow<TRow>[] {
         const groupCols = this.datagrid.grouping.groupByColumns;
         if (!groupCols.length) return this.createBasicRows(data);
-    
+
         const groupByLevel = (
             rows: TRow[],
             depth: number,
             parentPath = ''
         ): GridRow<TRow>[] => {
             const groups = new Map<string, TRow[]>();
-    
+
             if (depth >= groupCols.length) return this.createBasicRows(rows, parentPath);
-    
+
             const column = findColumnById(flattenColumns(this.datagrid.columns), groupCols[depth]);
-    
+
             if (!column) throw new Error(`Invalid group column: ${groupCols[depth]}`);
             if (isGroupColumn(column)) throw new Error(`Cannot group by group column: ${groupCols[depth]}`);
             if (column.type === 'display') throw new Error(`Cannot group by display column: ${groupCols[depth]}`);
-    
-            // Group rows by current column
+
+            // Group rows by current column using getGroupValueFn if available
             rows.forEach(row => {
-                const groupKey = String(column.getValueFn(row) ?? 'Unknown');
+                const groupValue = column.getGroupValueFn
+                    ? column.getGroupValueFn(row)
+                    : column.getValueFn(row);
+
+                const groupKey = String(groupValue ?? 'Unknown');
                 const group = groups.get(groupKey) ?? [];
                 group.push(row);
                 groups.set(groupKey, group);
             });
-    
+
             // Create group rows with aggregation
             return Array.from(groups.entries()).map(([key, groupRows], index) => {
                 const aggregations = flattenColumns(this.datagrid.columns)
@@ -295,9 +265,9 @@ export class DataProcessor<TRow> {
                     )
                     .flatMap(col => {
                         col = col as AccessorColumn<TRow> | ComputedColumn<TRow>;
-                        return this.calculateAggregations(col, groupRows); // Ensure we return Aggregation[]
+                        return this.calculateAggregations(col, groupRows);
                     });
-    
+
                 return {
                     index: parentPath ? `${parentPath}-${index + 1}` : String(index + 1),
                     identifier: depth === 0 ? key : `${parentPath}|${key}`,
@@ -306,28 +276,29 @@ export class DataProcessor<TRow> {
                     depth,
                     isExpanded: false,
                     children: groupByLevel(groupRows, depth + 1, `${parentPath}${index + 1}`),
-                    aggregations: aggregations // Ensure aggregations is properly set
+                    aggregations: aggregations
                 };
             });
         };
-    
+
         return groupByLevel(data, 0);
     }
-    
 
+    private isGroupRow(row: GridRow<TRow>): row is GridGroupRow<TRow> {
+        return 'groupKey' in row && 'children' in row;
+    }
 
-
-    private flattenGroups(rows: GridRow<TRow>[]): GridRow<TRow>[] {
+    private flattenExpandedGroups(rows: GridRow<TRow>[]): GridRow<TRow>[] {
         const flattened: GridRow<TRow>[] = [];
+        
         for (const row of rows) {
             flattened.push(row);
-            if ('groupKey' in row && 'children' in row) {
-                if (this.datagrid.grouping.expandedGroups.has(row.identifier)) {
-                    flattened.push(...this.flattenGroups(row.children));
-                }
+            
+            if (this.isGroupRow(row) && this.datagrid.grouping.expandedGroups.has(row.identifier)) {
+                flattened.push(...this.flattenExpandedGroups(row.children));
             }
         }
-
+        
         return flattened;
     }
 
@@ -345,4 +316,42 @@ export class DataProcessor<TRow> {
         const start = (page - 1) * pageSize;
         return rows.slice(start, start + pageSize);
     }
+
+
+    // Handlers
+    
+    handleGroupExpansion(): void {
+        const hierarchicalRows = this.datagrid.cache.hierarchicalRows;
+        if (!hierarchicalRows) {
+            this.processGroupedData(this.datagrid.cache.sortedData || []);
+            return;
+        }
+
+        this.metrics.measure('Group Expansion', () => {
+            const visibleRows = this.getVisibleRows();
+            this.datagrid.cache.rows = visibleRows;
+            this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(visibleRows);
+            this.datagrid.cache.paginatedRows = this.paginateRows(visibleRows);
+        });
+    }
+
+    handlePaginationChange(): void {
+        const visibleRows = this.getVisibleRows();
+        this.metrics.measure('Pagination', () => {
+            this.datagrid.cache.paginatedRows = this.paginateRows(visibleRows);
+        });
+    }
+
+    // New method to get only the visible rows based on group expansion state
+    private getVisibleRows(): GridRow<TRow>[] {
+        if (!this.datagrid.cache.hierarchicalRows) {
+            return this.datagrid.cache.rows;
+        }
+
+        return this.flattenExpandedGroups(this.datagrid.cache.hierarchicalRows);
+    }
+
+
+
+
 }

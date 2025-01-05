@@ -7,18 +7,12 @@
 	import * as Select from '$lib/components/ui/select/index.js';
 	import Input from '$lib/components/ui/input/input.svelte';
 
-	let pageSizes = datagrid.pagination.pageSizes.map((pageSize) => {
+	let pageSizes = datagrid.pagination.pageSizes.map((pageSize: number) => {
 		return {
 			value: pageSize.toString(),
 			label: pageSize.toString()
 		};
 	});
-
-	let value = $state('');
-
-	const triggerContent = $derived(
-		pageSizes.find((f) => f.value === value)?.label ?? 'Default per page'
-	);
 </script>
 
 {#snippet prevButton()}
@@ -26,7 +20,12 @@
 		class="h-6"
 		size="sm"
 		disabled={datagrid.pagination.canGoToPrevPage()}
-		onclick={() => datagrid.refresh(() => datagrid.pagination.goToPrevPage())}
+		onclick={() =>
+			datagrid.refresh(() => datagrid.pagination.goToPrevPage(), {
+				recalculateAll: false,
+				recalculateGroups: false,
+				recalculatePagination: true
+			})}
 	>
 		<ChevronLeftRounded />
 	</Button>
@@ -37,7 +36,12 @@
 		class="h-6"
 		size="sm"
 		disabled={datagrid.pagination.canGoToNextPage()}
-		onclick={() => datagrid.refresh(() => datagrid.pagination.goToNextPage())}
+		onclick={() =>
+			datagrid.refresh(() => datagrid.pagination.goToNextPage(), {
+				recalculateAll: false,
+				recalculateGroups: false,
+				recalculatePagination: true
+			})}
 	>
 		<ChevronRightRounded />
 	</Button>
@@ -48,10 +52,9 @@
 		type="single"
 		name="perPage"
 		value={String(datagrid.pagination.pageSize)}
-		onValueChange={(e) => {
-			datagrid.refresh(() => {
-				datagrid.pagination.pageSize = Number(e);
-				datagrid.pagination.goToFirstPage();
+		onValueChange={(value: string) => {
+			datagrid.refresh(() => datagrid.pagination.setPageSize(Number(value)), {
+				recalculatePagination: true
 			});
 		}}
 	>
@@ -71,8 +74,10 @@
 
 {#snippet status()}
 	<span class="text-muted-foreground hidden text-xs md:block md:w-1/3">
-		Showing {datagrid.pagination.pageSize * (datagrid.pagination.page - 1)} to {datagrid.pagination
-			.pageSize * datagrid.pagination.page} of {(datagrid.cache.rows || []).length} rows
+		Showing {datagrid.pagination.pageSize * (datagrid.pagination.page - 1) + 1} : {Math.min(
+			datagrid.pagination.pageSize * datagrid.pagination.page,
+			datagrid.pagination.visibleRowsCount
+		)} of {datagrid.pagination.visibleRowsCount} rows
 	</span>
 {/snippet}
 
@@ -95,7 +100,7 @@
 
 <div>
 	<div
-		class="pagination-container flex flex-row items-center  gap-2 p-3 md:flex-row justify-between"
+		class="pagination-container flex flex-row items-center justify-between gap-2 p-3 md:flex-row"
 	>
 		{@render status()}
 		<div class="flex place-items-center justify-center gap-2 md:w-1/3">

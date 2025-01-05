@@ -7,6 +7,7 @@
 	import Pagination from '$lib/datagrid/prebuilt/shadcn-svelte/controls/pagination.svelte';
 	import DatagridSettingsDropdown from '$lib/datagrid/prebuilt/shadcn-svelte/controls/settings/datagrid-settings-dropdown.svelte';
 	import GlobalSearch from '$lib/datagrid/prebuilt/shadcn-svelte/controls/global-search.svelte';
+	import GroupBy from '$lib/datagrid/prebuilt/shadcn-svelte/controls/group-by.svelte';
 
 	let { data } = $props();
 
@@ -41,3 +42,5 @@
 </div>
 
 <Pagination {datagrid} />
+
+<GroupBy {datagrid} />

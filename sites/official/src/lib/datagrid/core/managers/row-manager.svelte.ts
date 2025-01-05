@@ -20,24 +20,16 @@ export class RowManager<TOriginalRow> {
         } else {
             this.datagrid.grouping.expandedGroups.add(row.identifier);
         }
-        // invalide flatten cache
-        this.datagrid.processors.data.executeFullDataTransformation();
+
+         // Only invalidate the flattened view cache
+         this.datagrid.cache.invalidateGroupedRowsCache();
+
+         // Use the new optimized method instead of full transformation
+         this.datagrid.processors.data.handleGroupExpansion();
     }
 
-    // TODO Move this out
-    flattenGridRows(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
-        const flattened: GridRow<TOriginalRow>[] = [];
 
-        for (const row of data) {
-            flattened.push(row);
-            if (isGridGroupRow(row)) {
-                flattened.push(...this.flattenGridRows(row.children));
-            }
-        }
 
-        return flattened
-
-    }
 
     findRowByIdentifier(identifier: GridRowIdentifier): GridRow<TOriginalRow> | undefined {
         return (this.datagrid.cache.rows || []).find(row => row.identifier === identifier);

@@ -2,15 +2,16 @@ import type { Datagrid } from "../index.svelte";
 
 
 
-export class PaginationFeatureFeature<TOrginalRow> {
-    datagrid: Datagrid<TOrginalRow>
+export class PaginationFeature<TOriginalRow> {
+    datagrid: Datagrid<TOriginalRow>;
 
     page = $state(1);
     pageSize = $state(10);
     pageSizes = $state([10, 20, 50, 100, 100000]);
-    pageCount: number = $state(0)
-    
-    constructor(datagrid: Datagrid<TOrginalRow>) {
+    pageCount: number = $state(0);
+    visibleRowsCount: number = $state(0);
+
+    constructor(datagrid: Datagrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 
@@ -23,6 +24,7 @@ export class PaginationFeatureFeature<TOrginalRow> {
     }
 
     goToPage(page: number): void {
+        if (page === this.page) return;
         this.page = page;
     }
 
@@ -53,4 +55,11 @@ export class PaginationFeatureFeature<TOrginalRow> {
         return Math.ceil(data.length / this.pageSize);
     }
 
+    setPageSize(newSize: number): void {
+        if (newSize === this.pageSize) return;
+        this.pageSize = newSize;
+        // When changing page size, we need to recalculate pagination
+        // and make sure we're on a valid page
+        this.goToClosestPage();
+    }
 }

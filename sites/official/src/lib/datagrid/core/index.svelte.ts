@@ -1,5 +1,5 @@
 import { GroupingFeature as GroupingFeature } from "./features/grouping.svelte";
-import { PaginationFeatureFeature } from "./features/pagination.svelte";
+import { PaginationFeature } from "./features/pagination.svelte";
 import { SortingFeature as DataSortingFeature } from "./features/sorting.svelte";
 import type { AnyColumn } from "./helpers/column-creators";
 import { ColumnFilteringFeature as FilteringFeature } from "./features/column-filtering.svelte";
@@ -31,7 +31,7 @@ export type DatagridConfig<TOriginalRow> = {
 const defaultConfig = {
     measurePerformance: true,
     createBasicRowIdentifier: (row: any) => row.id,
-    createBasicRowIndex: (row: any, parentIndex: string| null, index: number) => parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
+    createBasicRowIndex: (row: any, parentIndex: string | null, index: number) => parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
 }
 
 
@@ -54,7 +54,7 @@ export class Datagrid<TOriginalRow> {
 
     config = defaultConfig
 
-    pagination = new PaginationFeatureFeature(this);
+    pagination = new PaginationFeature(this);
     sorting = new DataSortingFeature();
     grouping = new GroupingFeature();
     filtering = new FilteringFeature();
@@ -101,11 +101,33 @@ export class Datagrid<TOriginalRow> {
         this.globalSearch.fuseInstance = this.globalSearch.initializeFuseInstance(this.original.data, this.columns.map(col => col.columnId as string))
     }
 
-    refresh(operation: () => void): void {
+    /**
+       * Performs a refresh with different levels of data recalculation
+       */
+    refresh(operation: () => void, options: {
+        recalculateAll?: boolean;
+        recalculateGroups?: boolean;
+        recalculatePagination?: boolean;
+    } = {}): void {
         const timeStart = performance.now();
+
         operation();
-        this.processors.data.executeFullDataTransformation();
-        console.log(`Operation took ${performance.now() - timeStart}ms`)
+
+        const {
+            recalculateAll = false,
+            recalculateGroups = false,
+            recalculatePagination = true
+        } = options;
+
+        if (recalculateAll) {
+            this.processors.data.executeFullDataTransformation();
+        } else if (recalculateGroups) {
+            this.processors.data.handleGroupExpansion();
+        } else if (recalculatePagination) {
+            this.processors.data.handlePaginationChange();
+        }
+
+        console.log(`Operation took ${performance.now() - timeStart}ms`);
     }
 
 }
