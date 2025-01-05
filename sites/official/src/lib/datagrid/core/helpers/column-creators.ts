@@ -312,6 +312,7 @@ export function createAccessorColumn<
       filterable: options?.filterable ?? true,
       pinnable: options?.pinnable ?? true,
       moveable: options?.moveable ?? true,
+      hideable: options?.hideable ?? true,
     },
     state: {
       size: DEFAULT_COLUMN_SIZE,

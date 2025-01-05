@@ -14,17 +14,37 @@ export class ColumnGroupingFeature<TOriginalRow> {
         return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     }
 
-    createGroupColumn(header: string, parentColumnId: string | null): void {
+    createGroupColumn(columnIds: string[], header: string): void {
+        const groupColumnId = this.generateRandomColumnId();
+
+        // Move the selected columns into the new group
+        const selectedColumns = this.datagrid.columns.filter(column =>
+            columnIds.includes(column.columnId)
+        );
+
+        selectedColumns.forEach(column => {
+            column.parentColumnId = groupColumnId;
+        });
+
+        // Create the group column
         const groupColumn = createColumnGroup({
             header,
-            columnId: this.generateRandomColumnId(),
-            parentColumnId,
-            columns: [],
+            columnId: groupColumnId,
+            parentColumnId: null,
+            columns: selectedColumns,
         });
+
+        // Remove the selected columns from the root level
+        this.datagrid.columns = this.datagrid.columns.filter(
+            column => !columnIds.includes(column.columnId)
+        );
+
+        // Add the new group column to the root level
         this.datagrid.columns.push(groupColumn as GroupColumn<TOriginalRow>);
+
+        // Refresh column offsets
         this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
-
 
     renameGroupColumn(column: any, newHeader: string): void {
         column.header = newHeader;

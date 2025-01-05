@@ -1,5 +1,3 @@
-//@ts-nocheck
-
 import Root, {
 	type ButtonProps,
 	type ButtonSize,

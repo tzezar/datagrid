@@ -3,7 +3,7 @@
 	--border-width: 1px;
 }
 
-
+/* GRID */
 
 /* grid-wrapper and grid has to be this way, idk why */
 .grid-wrapper {
@@ -15,15 +15,6 @@
 }
 
 .grid {
-	/* display: flex;
-	flex-direction: column;
-	max-height: 600px;
-	width: 100%;
-	min-width: max-content;
-	height: 100%;  */
-	/* background-color: hsl(var(--grid-row-even-background));
-	color: hsl(var(--grid-text-color)); */
-
 	height: 100%;
 	flex-grow: 0;
 	max-height: 600px;
@@ -32,24 +23,27 @@
 	overflow: auto;
 	position: relative;
 }
-.grid-header,
-.grid-body {
+
+
+/* GRID HEADER */
+
+.grid-header {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-}
-
-.grid-header {
 	position: sticky;
 	top: -1px;
-	z-index: 10000;
+	z-index: 40;
 }
 
 .grid-header-row {
 	background-color: hsl(var(--grid-header-background));
+	display: flex;
+	flex-direction: row;
+	border-bottom: var(--border-width) solid var(--border-color);
+	width: 100%;
 }
-/* Row styles */
-.grid-header-row,
+
 .grid-body-row {
 	display: flex;
 	flex-direction: row;
@@ -57,8 +51,38 @@
 	width: 100%;
 }
 
-/* Cell styles */
-.grid-header-cell,
+.grid-body {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.grid-header-cell {
+	width: var(--width);
+    background-color: hsl(var(--grid-header-background));
+	min-width: var(--min-width);
+	max-width: var(--max-width);
+	flex-shrink: 0;
+	padding: 8px;
+	margin: 0;
+	line-height: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	position: relative;
+	box-sizing: border-box;
+	/* Move border to pseudo-element */
+	&:not(:last-child)::after {
+		content: '';
+		position: absolute;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		width: var(--border-width);
+		background-color: var(--border-color);
+	}
+}
+
 .grid-body-cell {
 	width: var(--width);
     background-color: hsl(var(--grid-header-background));
@@ -84,6 +108,7 @@
 		background-color: var(--border-color);
 	}
 }
+
 
 /* Group styles */
 .grid-header-group {

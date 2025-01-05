@@ -1,5 +1,3 @@
-//@ts-nocheck
-
 import Root from "./toggle.svelte";
 export {
 	toggleVariants,
