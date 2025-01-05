@@ -8,10 +8,10 @@
 </script>
 
 {#if isGroupColumn(column)}
-	<div class="grid-header-group">
+	<div class="grid-header-group ">
 		{#if column.columns.some((c) => c.state.visible === true)}
-			<div class="grid-header-group-cell">{column.header}</div>
-			<div class="grid-header-row">
+			<div class="">{column.header}</div>
+			<div class="flex flex-row grow ">
 				{#each column.columns ?? [] as subColumn (subColumn.header)}
 					{#if subColumn.state.visible === true}
 						<HeaderCell {datagrid} column={subColumn} />
@@ -34,7 +34,7 @@
 			style:--max-width={column.state.size.maxWidth + 'px'}
 		>
 			<div
-				class="header-content {column.options.sortable ? 'sortable' : ''}"
+				class="grid-header-cell-content {column.options.sortable ? 'sortable' : ''}"
 				onclick={(e) => onSort(datagrid, column, e)}
 			>
 				<span>{column.header}</span>

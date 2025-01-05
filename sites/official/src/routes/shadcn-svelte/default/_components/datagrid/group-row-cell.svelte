@@ -22,7 +22,7 @@ style:--max-width={column.state.size.maxWidth + 'px'}
     {/if}
 {/if}
 {#if column.columnId === row.groupKey}
-    <div class="group-cell-content">
+    <div class="">
         <button
             class="group-expand-inline-toggle"
             onclick={() => datagrid.rowManager.toggleGroupRowExpansion(row)}
@@ -39,8 +39,8 @@ style:--max-width={column.state.size.maxWidth + 'px'}
         </span>
     </div>
 {:else if row.aggregations.some((agg) => agg.columnId === column.columnId)}
-    <div class="group-cell-content">
-        <div class="group-cell-content-value">
+    <div class="">
+        <div class="">
             {#each row.aggregations.filter((agg) => agg.columnId === column.columnId) as aggregation}
                 <p>
                     {aggregation.type}: {#if aggregation.type === 'percentChange'}

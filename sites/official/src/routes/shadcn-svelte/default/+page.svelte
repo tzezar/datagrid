@@ -25,9 +25,16 @@
 	<DatagridSettingsDropdown {datagrid} />
 </div>
 <div class="grid-wrapper">
-	<div class="grid">
-		<div class="grid-header">
+	<div class="grid-container">
+		<!-- <div class="grid-header">
 			<div class="grid-header-row">
+				{#each datagrid.columns as column (column.header)}
+					<HeaderCell {datagrid} {column} />
+				{/each}
+			</div>
+		</div> -->
+		<div class="flex">
+			<div class="flex flex-row">
 				{#each datagrid.columns as column (column.header)}
 					<HeaderCell {datagrid} {column} />
 				{/each}
