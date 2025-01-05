@@ -1,6 +1,6 @@
 import ActionsCell from "./_components/cells/cell-actions.svelte";
 import CellRowPinning from "./_components/cells/cell-row-pinning.svelte";
-import { createAccessorColumn, createColumnGroup, createComputedColumn, createDisplayColumn, type AnyColumn } from "../../lib/datagrid/core/helpers/column-creators";
+import { createAccessorColumn, createColumnGroup, createComputedColumn, createDisplayColumn, type AnyColumn } from "$lib/datagrid/core/helpers/column-creators";
 import SelectRowCell from "./_components/cells/cell-select-row.svelte";
 import type { User } from "./generate-users";
 

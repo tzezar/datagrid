@@ -1,7 +1,7 @@
 
 <script lang="ts">
-	import type { Datagrid } from '../../../../lib/datagrid/core/index.svelte';
-	import { filterOutGroupColumns, flattenColumns } from '../../../../lib/datagrid/core/utils.svelte';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import { filterOutGroupColumns, flattenColumns } from '$lib/datagrid/core/utils.svelte';
 
 	let { datagrid }: { datagrid: Datagrid<any> } = $props();
 </script>

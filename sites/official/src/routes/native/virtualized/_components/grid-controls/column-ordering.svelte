@@ -1,9 +1,9 @@
 
 <script lang="ts">
-	import type { Datagrid } from '../../../../lib/datagrid/core/index.svelte';
-	import { isDescendantOf } from '../../../../lib/datagrid/core/utils.svelte';
-	import { isGroupColumn } from '../../../../lib/datagrid/core/column-guards';
-	import type { AnyColumn } from '../../../../lib/datagrid/core/helpers/column-creators';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import { isDescendantOf } from '$lib/datagrid/core/utils.svelte';
+	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
+	import type { AnyColumn } from '$lib/datagrid/core/helpers/column-creators';
 
 	let { datagrid }: { datagrid: Datagrid<any> } = $props();
 </script>

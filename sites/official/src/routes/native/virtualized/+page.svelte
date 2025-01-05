@@ -6,6 +6,8 @@
 	import HeaderCell from './_components/datagrid/header-cell.svelte';
 	import Row from './_components/datagrid/row.svelte';
 	import Pagination from './_components/datagrid/pagination.svelte';
+	import { VirtualList } from 'svelte-virtuallists';
+	import type { GridRow } from '$lib/datagrid/core/types';
 
 	let { data } = $props();
 
@@ -24,31 +26,23 @@
 	}}
 />
 
-<div class="grid-wrapper">
-	<div class="grid">
+<div class="w-[200px] h-[250px] relative overflow-auto">
+	<div class="o">
 		<div class="grid-header">
-			<div class="grid-header-row">
+			<div class="grid-header-row w-max">
 				{#each datagrid.columns as column (column.header)}
 					<HeaderCell {datagrid} {column} />
 				{/each}
 			</div>
 		</div>
-		<div class="grid-body">
-			{#each datagrid.cache.paginatedRows || [] as row (row.index)}
-				<Row {datagrid} {row} />
-			{/each}
-			<!-- {#each datagrid.rowPinning.getTopRows() as row (row.index)}
-				<Row {datagrid} {row} />
-			{/each}
-
-			{#each datagrid.rowPinning.getCenterRows() as row (row.index)}
-				<Row {datagrid} {row} />
-			{/each}
-
-			{#each datagrid.rowPinning.getBottomRows() as row (row.index)}
-				<Row {datagrid} {row} />
-			{/each} -->
-		</div>
+		<div class="w-max">
+			<VirtualList items={datagrid.cache.paginatedRows} style="height:100px" isTable={false}>
+				{#snippet header()}{/snippet}
+				{#snippet vl_slot({ item, index }: { item: GridRow<any>; index: number })}
+					<Row {datagrid} row={item} />
+					{/snippet}
+				</VirtualList>
+			</div>
 	</div>
 </div>
 
