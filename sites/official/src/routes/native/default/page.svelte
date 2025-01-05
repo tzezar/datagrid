@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { type AnyColumn } from '../../lib/datagrid/core/helpers/column-creators';
+	import { type AnyColumn } from '$lib/datagrid/core/helpers/column-creators';
 	import type { User } from './types';
-	import { isGroupColumn } from '../../lib/datagrid/core/column-guards';
+	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
 	import type {
 		ColumnId,
 		GridBasicRow,
 		GridGroupRow,
 		GridRow,
 		PinningPosition
-	} from '../../lib/datagrid/core/types';
-	import { Datagrid } from '../../lib/datagrid/core/index.svelte';
+	} from '$lib/datagrid/core/types';
+	import { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import {
 		filterOutGroupColumns,
 		findColumnById,
@@ -19,7 +19,7 @@
 		getSortIndex,
 		isGridGroupRow,
 		onSort
-	} from '../../lib/datagrid/core/utils.svelte';
+	} from '$lib/datagrid/core/utils.svelte';
 	import { VirtualList } from 'svelte-virtuallists';
 	import { userColumns } from './columns.svelte';
 
@@ -342,7 +342,7 @@
 <div class="grid-wrapper">
 	<div class="grid">
 		<VirtualList
-			items={datagrid.paginatedRowsCache}
+			items={datagrid.cache.paginatedRows}
 			class="list-table"
 			style="height:600px"
 			isTable={true}

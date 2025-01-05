@@ -3,6 +3,9 @@
 	--border-width: 1px;
 }
 
+
+
+/* grid-wrapper and grid has to be this way, idk why */
 .grid-wrapper {
 	width: 100%;
 	height: 400px;
@@ -12,16 +15,23 @@
 }
 
 .grid {
-	/* position: relative; */
+	/* display: flex;
+	flex-direction: column;
+	max-height: 600px;
+	width: 100%;
+	min-width: max-content;
+	height: 100%;  */
+	/* background-color: hsl(var(--grid-row-even-background));
+	color: hsl(var(--grid-text-color)); */
 
+	height: 100%;
+	flex-grow: 0;
+	max-height: 600px;
 	display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 100%;
-    min-width: max-content;
-    height: 100%;
+	flex-direction: column;
+	overflow: auto;
+	position: relative;
 }
-
 .grid-header,
 .grid-body {
 	display: flex;

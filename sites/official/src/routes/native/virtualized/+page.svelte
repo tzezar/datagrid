@@ -1,50 +1,53 @@
 <script lang="ts">
-	import '$lib/datagrid/styles.css';
+	import type {
+		GridRow,
+	} from '$lib/datagrid/core/types';
 	import { Datagrid } from '$lib/datagrid/core/index.svelte';
-	import { userColumns } from './columns.svelte';
-	import GridControls from './_components/grid-controls/grid-controls.svelte';
-	import HeaderCell from './_components/datagrid/header-cell.svelte';
-	import Row from './_components/datagrid/row.svelte';
-	import Pagination from './_components/datagrid/pagination.svelte';
 	import { VirtualList } from 'svelte-virtuallists';
-	import type { GridRow } from '$lib/datagrid/core/types';
+	import { userColumns } from './columns.svelte';
+	import Pagination from './_components/datagrid/pagination.svelte';
+	import type { User } from './generate-users';
+	import Row from './_components/datagrid/row.svelte';
+	import '$lib/datagrid/styles.css';
+	import HeaderCell from './_components/datagrid/header-cell.svelte';
+	import GlobalSearch from './_components/grid-controls/global-search.svelte';
 
-	let { data } = $props();
+	let { data }: { data: { users: User[] } } = $props();
 
 	const datagrid = new Datagrid({
 		columns: userColumns,
 		data: data.users
 	});
+
 </script>
 
-<input
-	type="text"
-	value={datagrid.globalSearch.value}
-	oninput={(e) => {
-		datagrid.globalSearch.value = e.currentTarget.value;
-		datagrid.processors.data.executeFullDataTransformation();
-	}}
-/>
 
-<div class="w-[200px] h-[250px] relative overflow-auto">
-	<div class="o">
-		<div class="grid-header">
-			<div class="grid-header-row w-max">
-				{#each datagrid.columns as column (column.header)}
-					<HeaderCell {datagrid} {column} />
-				{/each}
-			</div>
-		</div>
-		<div class="w-max">
-			<VirtualList items={datagrid.cache.paginatedRows} style="height:100px" isTable={false}>
-				{#snippet header()}{/snippet}
-				{#snippet vl_slot({ item, index }: { item: GridRow<any>; index: number })}
-					<Row {datagrid} row={item} />
-					{/snippet}
-				</VirtualList>
-			</div>
+
+<GlobalSearch {datagrid} />
+<div class="grid-wrapper">
+	<div class="grid">
+		<VirtualList
+			items={datagrid.cache.paginatedRows}
+			class="list-table"
+			style="height:600px"
+			isTable={true}
+		>
+			{#snippet header()}
+				<div class="grid-header">
+					<div class="grid-header-row">
+						{#each datagrid.columns as column (column.header)}
+							<HeaderCell {datagrid} {column} />
+						{/each}
+					</div>
+				</div>
+			{/snippet}
+			{#snippet vl_slot({ item, index }: { item: GridRow<any>; index: number })}
+				<!-- {@render Row(item)} -->
+				<Row {datagrid} row={item} />
+			{/snippet}
+		</VirtualList>
 	</div>
 </div>
 
-<Pagination {datagrid} />
-<GridControls {datagrid} />
+<Pagination {datagrid} /> 
+

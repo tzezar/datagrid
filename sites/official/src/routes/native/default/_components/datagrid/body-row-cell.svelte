@@ -1,7 +1,8 @@
 <script lang="ts">
-	import type { Datagrid } from '../../../../lib/datagrid/core/index.svelte';
-	import type { GridBasicRow } from '../../../../lib/datagrid/core/types';
-	import { getCellContent } from '../../../../lib/datagrid/core/utils.svelte';
+	import type { Datagrid } from "$lib/datagrid/core/index.svelte";
+	import type { GridBasicRow } from "$lib/datagrid/core/types";
+	import { getCellContent } from "$lib/datagrid/core/utils.svelte";
+
 
 	let { datagrid, column, row }: { datagrid: Datagrid<any>; column: any; row: GridBasicRow<any> } =
 		$props();

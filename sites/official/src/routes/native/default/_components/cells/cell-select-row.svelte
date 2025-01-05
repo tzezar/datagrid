@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Datagrid } from '../../../../lib/datagrid/core/index.svelte';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 
 	let { row, datagrid }: { row: any; datagrid: Datagrid<any> } = $props();
 </script>

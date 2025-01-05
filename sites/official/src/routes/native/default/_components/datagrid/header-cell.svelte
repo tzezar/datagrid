@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { Datagrid } from '../../../../lib/datagrid/core/index.svelte';
-	import { isGroupColumn } from '../../../../lib/datagrid/core/column-guards';
-	import { getSortIcon, getSortIndex, onSort } from '../../../../lib/datagrid/core/utils.svelte';
-	import ColumnFilter from '../../../../lib/datagrid/prebuilt/native/column-filter.svelte';
+	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import { getSortIcon, getSortIndex, onSort } from '$lib/datagrid/core/utils.svelte';
+	import ColumnFilter from '$lib/datagrid/prebuilt/native/column-filter.svelte';
 	let { datagrid, column }: { datagrid: Datagrid<any>; column: any } = $props();
 	import HeaderCell from './header-cell.svelte';
 </script>

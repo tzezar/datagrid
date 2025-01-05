@@ -6,6 +6,7 @@
 	import HeaderCell from './_components/datagrid/header-cell.svelte';
 	import Row from './_components/datagrid/row.svelte';
 	import Pagination from './_components/datagrid/pagination.svelte';
+	import GlobalSearch from './_components/grid-controls/global-search.svelte';
 
 	let { data } = $props();
 
@@ -15,15 +16,7 @@
 	});
 </script>
 
-<input
-	type="text"
-	value={datagrid.globalSearch.value}
-	oninput={(e) => {
-		datagrid.globalSearch.value = e.currentTarget.value;
-		datagrid.processors.data.executeFullDataTransformation();
-	}}
-/>
-
+<GlobalSearch {datagrid} />
 <div class="grid-wrapper">
 	<div class="grid">
 		<div class="grid-header">
