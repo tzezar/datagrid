@@ -14,7 +14,7 @@
 			value
 		});
 		datagrid.processors.data.executeFullDataTransformation();
-		datagrid.columnFaceting.calculateFacets(datagrid.cache.sortedData, datagrid.columns);
+		datagrid.columnFaceting.calculateFacets((datagrid.cache.sortedData || []), datagrid.columns);
 	}
 
 </script>

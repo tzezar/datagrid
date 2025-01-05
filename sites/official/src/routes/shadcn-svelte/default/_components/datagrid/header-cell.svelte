@@ -7,7 +7,6 @@
 		getSortIndex,
 		onSort
 	} from '$lib/datagrid/core/utils.svelte';
-	import PlayArrowRounded from '$lib/datagrid/icons/material-symbols/play-arrow-rounded.svelte';
 	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';
 	import SortAscending from '$lib/datagrid/icons/tabler/sort-ascending.svelte';
 	import SortDescending from '$lib/datagrid/icons/tabler/sort-descending.svelte';
@@ -40,15 +39,11 @@
 			style:--min-width={column.state.size.minWidth + 'px'}
 			style:--max-width={column.state.size.maxWidth + 'px'}
 		>
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div
 				class="grid-header-cell-content {column.options.sortable ? 'sortable' : ''}"
 				onclick={(e) => onSort(datagrid, column, e)}
-				onkeypress={(e) => {
-					if (e.key === 'Enter') {
-						onSort(datagrid, column, e);
-					}
-				}}
 			>
 				<span class="grid-header-cell-content-header">{column.header}</span>
 				{#if column.options.sortable}

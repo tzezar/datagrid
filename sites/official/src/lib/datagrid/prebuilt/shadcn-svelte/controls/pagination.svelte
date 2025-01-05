@@ -17,6 +17,7 @@
 
 {#snippet prevButton()}
 	<Button
+		variant="secondary"
 		class="h-6"
 		size="sm"
 		disabled={datagrid.pagination.canGoToPrevPage()}
@@ -33,6 +34,7 @@
 
 {#snippet nextButton()}
 	<Button
+		variant="secondary"
 		class="h-6"
 		size="sm"
 		disabled={datagrid.pagination.canGoToNextPage()}
@@ -85,7 +87,7 @@
 	<span class="flex items-center gap-2 text-nowrap text-xs">
 		<!-- <span class="hidden md:block"> Page </span> -->
 		<Input
-			class="h-6 w-full max-w-[180px]"
+			class="pagination-page-input h-6 w-full max-w-[180px] "
 			type="text"
 			value={datagrid.pagination.page}
 			oninput={(e) => {
@@ -98,9 +100,7 @@
 	</span>
 {/snippet}
 
-<div
-	class="pagination-container  flex flex-row items-center justify-between gap-2 p-3 md:flex-row"
->
+<div class="pagination-container flex flex-row items-center justify-between gap-2 p-3 md:flex-row">
 	{@render status()}
 	<div class="flex place-items-center justify-center gap-2 md:w-1/3">
 		{@render prevButton()}

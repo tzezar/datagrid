@@ -3,7 +3,6 @@ import { isGroupColumn } from "./column-guards";
 import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn, GroupColumn } from "./helpers/column-creators";
 import type { CellValue, ColumnId, GridBasicRow, GridGroupRow, GridRow, SortableColumn } from "./types";
 import type { Datagrid } from "./index.svelte";
-import ArrowDropDownRounded from "../icons/material-symbols/arrow-drop-down-rounded.svelte";
 import PlayArrowRounded from "../icons/material-symbols/play-arrow-rounded.svelte";
 
 
