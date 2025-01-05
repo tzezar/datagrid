@@ -12,7 +12,7 @@
 
 {#snippet GroupRow(row: GridGroupRow<any>)}
 	<div
-		class="grid-group-row"
+		class="grid-body-group-row"
 		data-depth={row.depth}
 		data-expanded={datagrid.rowManager.isGroupRowExpanded(row)}
 	>

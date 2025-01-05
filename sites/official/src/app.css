@@ -67,7 +67,6 @@
 
 
 		--grid-border-width: 1px;
-
 		--grid-border: 0 0% 20%;
 		--grid-header: 0 0% 9%;
 		--grid-header-cell: 0 0% 9%;
@@ -76,10 +75,11 @@
 		--grid-body: 0 0% 40%;
 		--grid-body-row-even: 0 0% 30%;
 		--grid-body-row-odd: 0 0% 20%;
-		--grid-body-cell: 0 0% 40%;
-		--grid-footer: 0 0% 40%;
+		--grid-body-cell: 0 0% 9%;
+		--grid-footer: 0 0% 9%;
 		--grid-pinned-cell: 0 0% 40%;
 
+		--grid-pagination: 0 0% 9%;
 
 
 

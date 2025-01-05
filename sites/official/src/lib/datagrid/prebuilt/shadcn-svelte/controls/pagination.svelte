@@ -98,18 +98,16 @@
 	</span>
 {/snippet}
 
-<div>
-	<div
-		class="pagination-container flex flex-row items-center justify-between gap-2 p-3 md:flex-row"
-	>
-		{@render status()}
-		<div class="flex place-items-center justify-center gap-2 md:w-1/3">
-			{@render prevButton()}
-			{@render currentPage()}
-			{@render nextButton()}
-		</div>
-		<div class="flex justify-end md:w-1/3">
-			{@render perPageSelect()}
-		</div>
+<div
+	class="pagination-container  flex flex-row items-center justify-between gap-2 p-3 md:flex-row"
+>
+	{@render status()}
+	<div class="flex place-items-center justify-center gap-2 md:w-1/3">
+		{@render prevButton()}
+		{@render currentPage()}
+		{@render nextButton()}
+	</div>
+	<div class="flex justify-end md:w-1/3">
+		{@render perPageSelect()}
 	</div>
 </div>

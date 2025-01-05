@@ -6,6 +6,7 @@
 	import {
 		filterOutGroupColumns,
 		flattenColumns,
+		getSortDirection,
 		getSortIcon,
 		getSortIndex,
 		isDescendantOf,
@@ -29,6 +30,9 @@
 	import Settings from '$lib/datagrid/icons/material-symbols/settings.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import SortDescending from '$lib/datagrid/icons/tabler/sort-descending.svelte';
+	import SortAscending from '$lib/datagrid/icons/tabler/sort-ascending.svelte';
+	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';
 
 	function handleColumnPinningChange(column: any, position: PinningPosition) {
 		datagrid.columnPinning.changeColumnPinningPosition(column, position);
@@ -56,11 +60,17 @@
 				<DropdownMenu.Item closeOnSelect={false} onclick={(e) => onSort(datagrid, column, e)}>
 					{#if column.options.sortable}
 						<div class="sort-indicator">
-							{#if getSortIndex(datagrid, column)}
-								<span class="sort-index">{getSortIndex(datagrid, column)}</span>
+							{#if getSortDirection(datagrid, column) === 'desc'}
+								<SortDescending />
+							{:else if getSortDirection(datagrid, column) === 'asc'}
+								<SortAscending />
+							{:else if getSortDirection(datagrid, column) === 'intermediate'}
+								<ArrowsSort />
 							{/if}
-							<!-- svelte-ignore svelte_component_deprecated -->
-							<svelte:component this={getSortIcon(datagrid, column)} class="sort-icon" size={14} />
+
+							{#if getSortIndex(datagrid, column)}
+								<span class="text-xs">{getSortIndex(datagrid, column)}</span>
+							{/if}
 						</div>
 					{/if}
 					<span>{column.header}</span>
@@ -72,7 +82,6 @@
 		</DropdownMenu.SubContent>
 	</DropdownMenu.Sub>
 {/snippet}
-
 
 <!-- GROUPING MENU -->
 
@@ -162,17 +171,18 @@
 {#snippet ordering(columns: AnyColumn<any>[])}
 	{#each columns as column (column.columnId)}
 		{#if isGroupColumn(column)}
-			<div class="text-sm font-bold p-2 m-2 border">
-				<div class='flex justify-between items-center'>
-
+			<div class="m-2 border p-2 text-sm font-bold">
+				<div class="flex items-center justify-between">
 					{column.header}
-					<button onclick={() => datagrid.columnGrouping.deleteGroupColumn(column)}><DeleteOutline/></button>
+					<button onclick={() => datagrid.columnGrouping.deleteGroupColumn(column)}
+						><DeleteOutline /></button
+					>
 				</div>
 				{@render columnGroupControls(column)}
 				{@render ordering(column.columns)}
 			</div>
 		{:else}
-			<div class="p-2 m-2 border">
+			<div class="m-2 border p-2">
 				<span class="text-xs font-bold">{column.header}</span>
 				{@render columnGroupControls(column)}
 			</div>
@@ -186,7 +196,7 @@
 			<MoveUp class="mr-2 size-4" />
 			<span>Reordering</span>
 		</DropdownMenu.SubTrigger>
-		<DropdownMenu.SubContent class='overflow-auto max-h-[400px]'>
+		<DropdownMenu.SubContent class="max-h-[400px] overflow-auto">
 			<DropdownMenu.Sub>
 				<DropdownMenu.SubTrigger>
 					<MoveUp class="mr-2 size-4" />

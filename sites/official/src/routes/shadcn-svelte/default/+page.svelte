@@ -17,37 +17,29 @@
 	});
 </script>
 
-
-
-
-<div class='flex justify-end'>
-	<GlobalSearch {datagrid} />
-	<DatagridSettingsDropdown {datagrid} />
-</div>
-<div class="grid-wrapper">
-	<div class="grid-container">
-		<!-- <div class="grid-header">
-			<div class="grid-header-row">
-				{#each datagrid.columns as column (column.header)}
-					<HeaderCell {datagrid} {column} />
-				{/each}
+<div>
+	<div class="flex justify-end">
+		<GlobalSearch {datagrid} />
+		<DatagridSettingsDropdown {datagrid} />
+	</div>
+	<div class="grid-wrapper">
+		<div class="grid-container">
+			<div class="grid-header">
+				<div class="grid-header-row">
+					{#each datagrid.columns as column (column.header)}
+						<HeaderCell {datagrid} {column} />
+					{/each}
+				</div>
 			</div>
-		</div> -->
-		<div class="flex">
-			<div class="flex flex-row">
-				{#each datagrid.columns as column (column.header)}
-					<HeaderCell {datagrid} {column} />
+			<div class="grid-body">
+				{#each datagrid.cache.paginatedRows || [] as row (row.index)}
+					<Row {datagrid} {row} />
 				{/each}
 			</div>
 		</div>
-		<div class="grid-body">
-			{#each datagrid.cache.paginatedRows || [] as row (row.index)}
-				<Row {datagrid} {row} />
-			{/each}
+		<div class='grid-footer-container'>
+			<Pagination {datagrid} />
+			<GroupBy {datagrid} />
 		</div>
 	</div>
 </div>
-
-<Pagination {datagrid} />
-
-<GroupBy {datagrid} />

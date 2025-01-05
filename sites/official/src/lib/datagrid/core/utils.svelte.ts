@@ -1,8 +1,10 @@
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-svelte";
+import {  ArrowUp, ArrowUpDown } from "lucide-svelte";
 import { isGroupColumn } from "./column-guards";
 import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn, GroupColumn } from "./helpers/column-creators";
 import type { CellValue, ColumnId, GridBasicRow, GridGroupRow, GridRow, SortableColumn } from "./types";
 import type { Datagrid } from "./index.svelte";
+import ArrowDropDownRounded from "../icons/material-symbols/arrow-drop-down-rounded.svelte";
+import PlayArrowRounded from "../icons/material-symbols/play-arrow-rounded.svelte";
 
 
 
@@ -130,13 +132,22 @@ export const getSortIndex = (datagrid: Datagrid<any>, column: AnyColumn<any>): n
 // Get sort icon based on sort state
 export const getSortIcon = (datagrid: Datagrid<any>, column: AnyColumn<any>) => {
     column = column as SortableColumn<any>;
-
     if (!column.options.sortable) return null;
     const columnId = column.columnId || column.header;
     const sortConfig = datagrid.sorting.sortConfigs.find((config) => config.id === columnId);
     if (!sortConfig) return ArrowUpDown;
-    return sortConfig.desc ? ArrowDown : ArrowUp;
+    return sortConfig.desc ? PlayArrowRounded : ArrowUp;
 };
+
+export const getSortDirection = (datagrid: Datagrid<any>, column: AnyColumn<any>): 'desc' | 'asc' | 'intermediate' | null => {
+    column = column as SortableColumn<any>;
+    if (!column.options.sortable) return null;
+    const columnId = column.columnId || column.header;
+    const sortConfig = datagrid.sorting.sortConfigs.find((config) => config.id === columnId);
+    if (!sortConfig) return 'intermediate';
+    return sortConfig.desc ? 'desc' : 'asc';
+};
+
 
 export const isGridGroupRow = <TOriginalRow,>(
     row: GridRow<TOriginalRow>
