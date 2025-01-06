@@ -11,4 +11,6 @@
 	};
 </script>
 
-<button onclick={handleClick}><LayoutNavbarExpandFilled /></button>
+<button onclick={handleClick}>
+	<LayoutNavbarExpandFilled class={`${datagrid.rowExpanding.isRowExpanded(row.index) ? 'rotate-180' : ''} transition-all`} />
+</button>

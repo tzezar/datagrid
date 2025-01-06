@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { AnyColumn } from '$lib/datagrid/core/helpers/column-creators';
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import type { GridGroupRow } from '$lib/datagrid/core/types';
 	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
@@ -6,7 +7,7 @@
 	import ExpandLess from '$lib/datagrid/icons/material-symbols/expand-less.svelte';
 	import OutlineKeyboardArrowUp from '$lib/datagrid/icons/material-symbols/outline-keyboard-arrow-up.svelte';
 
-	let { datagrid, column, row }: { datagrid: Datagrid<any>; column: any; row: GridGroupRow<any> } =
+	let { datagrid, column, row }: { datagrid: Datagrid<any>; column: AnyColumn<any>; row: GridGroupRow<any> } =
 		$props();
 </script>
 

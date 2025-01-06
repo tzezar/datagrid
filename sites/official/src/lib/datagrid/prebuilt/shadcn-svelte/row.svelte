@@ -25,7 +25,7 @@
 {/snippet}
 
 {#snippet BasicRow(row: GridBasicRow<any>)}
-	<div class="grid-body-row">
+	<div class="grid-body-row" >
 		{#each flattenColumns(datagrid.columns) as column (column.header)}
 			{#if column.state.visible === true}
 				<BodyRowCell {datagrid} {column} {row} />
