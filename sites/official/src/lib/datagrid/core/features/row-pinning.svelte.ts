@@ -136,6 +136,8 @@ export class RowPinningFeature<TOriginalRow> {
         let row = this.datagrid.rowManager.findRowByIdentifier(rowIdentifier);
         if (!row) return;
 
+
+
         if (isGroupRow(row)) {
             row = row as GridGroupRow<TOriginalRow>;
             // Pin the group itself
@@ -144,17 +146,19 @@ export class RowPinningFeature<TOriginalRow> {
             const descendantIndices = this.datagrid.rowManager.getAllDescendantIndifiers(row);
             descendantIndices.forEach(id => this.rowIdsPinnedTop.add(id));
         } else {
-            this.rowIdsPinnedTop.add(rowIdentifier);
+            if (this.isPinnedTop(rowIdentifier)) this.rowIdsPinnedTop.delete(rowIdentifier);
+            else this.rowIdsPinnedTop.add(rowIdentifier);
+            
         }
-
+        
         // Remove from bottom pins if necessary
         this.rowIdsPinnedBottom.delete(rowIdentifier);
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 
     // Pin a row or group to the bottom
-    pinBottom(rowIndex: GridRowIdentifier) {
-        const row = this.datagrid.rowManager.findRowByIdentifier(rowIndex);
+    pinBottom(rowIdentifier: GridRowIdentifier) {
+        const row = this.datagrid.rowManager.findRowByIdentifier(rowIdentifier);
         if (!row) return;
 
         if (isGroupRow(row)) {
@@ -164,11 +168,12 @@ export class RowPinningFeature<TOriginalRow> {
             const descendantIds = this.datagrid.rowManager.getAllDescendantIndifiers(row);
             descendantIds.forEach(id => this.rowIdsPinnedBottom.add(id));
         } else {
-            this.rowIdsPinnedBottom.add(rowIndex);
+            if (this.isPinnedBottom(rowIdentifier)) this.rowIdsPinnedBottom.delete(rowIdentifier);
+            else this.rowIdsPinnedBottom.add(rowIdentifier);
         }
 
         // Remove from top pins if necessary
-        this.rowIdsPinnedTop.delete(rowIndex);
+        this.rowIdsPinnedTop.delete(rowIdentifier);
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 

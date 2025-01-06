@@ -28,9 +28,6 @@ export class RowManager<TOriginalRow> {
          this.datagrid.processors.data.handleGroupExpansion();
     }
 
-
-
-
     findRowByIdentifier(identifier: GridRowIdentifier): GridRow<TOriginalRow> | undefined {
         return (this.datagrid.cache.rows || []).find(row => row.identifier === identifier);
     }

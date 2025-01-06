@@ -2,12 +2,12 @@
 	import '$lib/datagrid/styles.css';
 	import { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import { userColumns } from './columns.svelte';
-	import HeaderCell from './_components/datagrid/header-cell.svelte';
-	import Row from './_components/datagrid/row.svelte';
 	import Pagination from '$lib/datagrid/prebuilt/shadcn-svelte/controls/pagination.svelte';
 	import DatagridSettingsDropdown from '$lib/datagrid/prebuilt/shadcn-svelte/controls/settings/datagrid-settings-dropdown.svelte';
 	import GlobalSearch from '$lib/datagrid/prebuilt/shadcn-svelte/controls/global-search.svelte';
 	import GroupBy from '$lib/datagrid/prebuilt/shadcn-svelte/controls/group-by.svelte';
+	import HeaderCell from '$lib/datagrid/prebuilt/shadcn-svelte/header-cell.svelte';
+	import Row from '$lib/datagrid/prebuilt/shadcn-svelte/row.svelte';
 
 	let { data } = $props();
 
@@ -32,9 +32,20 @@
 				</div>
 			</div>
 			<div class="grid-body">
-				{#each datagrid.cache.paginatedRows || [] as row (row.index)}
+				{#each datagrid.rowPinning.getTopRows() as row (row.index)}
+				<Row {datagrid} {row} />
+			{/each}
+
+			{#each datagrid.rowPinning.getCenterRows() as row (row.index)}
+				<Row {datagrid} {row} />
+			{/each}
+
+			{#each datagrid.rowPinning.getBottomRows() as row (row.index)}
+				<Row {datagrid} {row} />
+			{/each}
+				<!-- {#each datagrid.cache.paginatedRows || [] as row (row.index)}
 					<Row {datagrid} {row} />
-				{/each}
+				{/each} -->
 			</div>
 		</div>
 		<div class='grid-footer-container'>

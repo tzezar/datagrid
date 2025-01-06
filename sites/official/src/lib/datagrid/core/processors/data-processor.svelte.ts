@@ -124,7 +124,7 @@ export class DataProcessor<TRow> {
     processGroupedData(data: TRow[]): void {
         // Create grouped structure only if not already cached
         let groupedRows = this.datagrid.cache.hierarchicalRows;
-        
+
         if (!groupedRows) {
             this.metrics.measure('Grouping', () => {
                 groupedRows = this.createHierarchicalData(data);
@@ -134,7 +134,7 @@ export class DataProcessor<TRow> {
 
         // Get only visible rows based on expansion state
         const visibleRows = this.getVisibleRows();
-        
+
         // Update cache and pagination
         this.metrics.measure('Cache Update', () => {
             this.datagrid.cache.rows = visibleRows;
@@ -142,10 +142,8 @@ export class DataProcessor<TRow> {
             this.datagrid.cache.paginatedRows = this.paginateRows(visibleRows);
         });
 
-        // Update pinned rows if needed
-        if (this.datagrid.rowPinning) {
-            this.datagrid.rowPinning.updatePinnedRows();
-        }
+        // this has to run always
+        this.datagrid.rowPinning.updatePinnedRows();
     }
 
     private processRegularData(data: TRow[]): void {
@@ -157,11 +155,12 @@ export class DataProcessor<TRow> {
             this.datagrid.cache.rows = basicRows;
 
         });
-        if (this.datagrid.rowPinning.rowIdsPinnedTop.size > 0 || this.datagrid.rowPinning.rowIdsPinnedBottom.size > 0) {
-            this.metrics.measure('Row Pinning', () => {
-                this.datagrid.rowPinning.updatePinnedRows();
-            });
-        }
+
+        // this has to run always
+        this.metrics.measure('Row Pinning', () => {
+            this.datagrid.rowPinning.updatePinnedRows();
+        });
+
         this.datagrid.pagination.visibleRowsCount = data!.length;
         this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(data);
         // Apply pagination
@@ -290,15 +289,15 @@ export class DataProcessor<TRow> {
 
     private flattenExpandedGroups(rows: GridRow<TRow>[]): GridRow<TRow>[] {
         const flattened: GridRow<TRow>[] = [];
-        
+
         for (const row of rows) {
             flattened.push(row);
-            
+
             if (this.isGroupRow(row) && this.datagrid.grouping.expandedGroups.has(row.identifier)) {
                 flattened.push(...this.flattenExpandedGroups(row.children));
             }
         }
-        
+
         return flattened;
     }
 
@@ -319,7 +318,7 @@ export class DataProcessor<TRow> {
 
 
     // Handlers
-    
+
     handleGroupExpansion(): void {
         const hierarchicalRows = this.datagrid.cache.hierarchicalRows;
         if (!hierarchicalRows) {

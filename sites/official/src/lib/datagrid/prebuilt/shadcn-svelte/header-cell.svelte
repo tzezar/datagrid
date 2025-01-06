@@ -16,7 +16,7 @@
 </script>
 
 {#if isGroupColumn(column)}
-	<div class="grid-header-group">
+	<div class="grid-header-group text-xs font-medium">
 		{#if column.columns.some((c) => c.state.visible === true)}
 			<div class="grid-header-group-header">{column.header}</div>
 			<div class="flex grow flex-row">
@@ -31,7 +31,7 @@
 {:else}
 	{#if column.state.visible === true}
 		<div
-			class="grid-header-cell"
+			class="grid-header-cell text-xs font-medium"
 			data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 			style:--pin-left-offset={column.state.pinning.offset + 'px'}
 			style:--pin-right-offset={column.state.pinning.offset + 'px'}

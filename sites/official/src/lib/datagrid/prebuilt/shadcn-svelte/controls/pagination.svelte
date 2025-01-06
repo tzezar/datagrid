@@ -18,7 +18,7 @@
 {#snippet prevButton()}
 	<Button
 		variant="secondary"
-		class="h-6"
+		class="size-6"
 		size="sm"
 		disabled={datagrid.pagination.canGoToPrevPage()}
 		onclick={() =>
@@ -35,7 +35,8 @@
 {#snippet nextButton()}
 	<Button
 		variant="secondary"
-		class="h-6"
+		class="size-6"
+
 		size="sm"
 		disabled={datagrid.pagination.canGoToNextPage()}
 		onclick={() =>
@@ -60,8 +61,8 @@
 			});
 		}}
 	>
-		<Select.Trigger class="h-6 w-max max-w-[180px]">
-			{datagrid.pagination.pageSize} per page
+		<Select.Trigger class="h-6 w-max max-w-[180px] text-xs p-2">
+			<span class='pr-2'>{datagrid.pagination.pageSize} per page</span>
 		</Select.Trigger>
 		<Select.Content>
 			<Select.Group>
@@ -84,10 +85,10 @@
 {/snippet}
 
 {#snippet currentPage()}
-	<span class="flex items-center gap-2 text-nowrap text-xs">
+	<span class="flex items-center gap-1 text-nowrap text-xs">
 		<!-- <span class="hidden md:block"> Page </span> -->
 		<Input
-			class="pagination-page-input h-6 w-full max-w-[180px] "
+			class="pagination-page-input h-6 w-full max-w-[180px] p-2 text-xs"
 			type="text"
 			value={datagrid.pagination.page}
 			oninput={(e) => {
