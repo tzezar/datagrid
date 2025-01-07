@@ -40,7 +40,7 @@
 		<div class="grid-container">
 			<div class="grid-header">
 				<div class="grid-header-row">
-					{#each datagrid.columns as column (column)}
+					{#each datagrid.columnManager.getColumnsInOrder() as column (column)}
 						<HeaderCell {datagrid} {column} />
 					{/each}
 				</div>

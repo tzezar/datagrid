@@ -152,16 +152,18 @@ export class ColumnManager<TOriginalRow> {
 
 
     getColumnsPinnedToLeft(): AnyColumn<TOriginalRow>[] {
-        return this.datagrid.columnManager.getFlattenColumns().filter(col => col.state.pinning.position === 'left' || this.datagrid.grouping.groupByColumns.includes(col.columnId))
+        return this.datagrid.columnManager.getActualColumns().filter(col => col.state.pinning.position === 'left' || this.datagrid.grouping.groupByColumns.includes(col.columnId))
     }
     getColumnsPinnedToRight(): AnyColumn<TOriginalRow>[] {
-        return this.datagrid.columnManager.getFlattenColumns().filter(col => col.state.pinning.position === 'right')
+        return this.datagrid.columnManager.getActualColumns().filter(col => col.state.pinning.position === 'right')
     }
     getColumnsPinnedToNone(): AnyColumn<TOriginalRow>[] {
         return this.datagrid.columnManager.getActualColumns().filter(col => col.state.pinning.position === 'none').filter(col => !this.datagrid.grouping.groupByColumns.includes(col.columnId))
     }
 
     getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
-        return [...this.getColumnsPinnedToLeft(), ...this.getColumnsPinnedToNone(), ...this.getColumnsPinnedToRight()]
+        const cols = [...this.createHierarchicalColumns(this.getColumnsPinnedToLeft()), ...this.createHierarchicalColumns(this.getColumnsPinnedToNone()), ...this.createHierarchicalColumns(this.getColumnsPinnedToRight())]
+        console.log(cols)
+        return cols
     }
 }

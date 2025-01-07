@@ -16,7 +16,7 @@
 		data-depth={row.depth}
 		data-expanded={datagrid.rowManager.isGroupRowExpanded(row)}
 	>
-		{#each flattenColumns(datagrid.columns) as column, columnIndex (columnIndex)}
+		{#each flattenColumns(datagrid.columnManager.getColumnsInOrder()) as column, columnIndex (columnIndex)}
 			{#if column.state.visible === true}
 				<GroupRowCell {datagrid} {column} {row} />
 			{/if}
@@ -26,7 +26,7 @@
 
 {#snippet BasicRow(row: GridBasicRow<any>)}
 	<div class="grid-body-row" >
-		{#each flattenColumns(datagrid.columns) as column (column)}
+		{#each flattenColumns(datagrid.columnManager.getColumnsInOrder()) as column (column)}
 			{#if column.state.visible === true}
 				<BodyRowCell {datagrid} {column} {row} />
 			{/if}
