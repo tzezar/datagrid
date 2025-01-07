@@ -74,15 +74,93 @@ export class ColumnManager<TOriginalRow> {
     }
 
 
+    createHierarchicalColumns(filteredFlatColumns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
+        // Make a copy of the filteredFlatColumns to avoid mutating the original
+        const copiedColumns = [...filteredFlatColumns];
+        const newColumns: AnyColumn<TOriginalRow>[] = [];
+        const allFlatColumns = flattenColumns(this.datagrid.columns);
+        const processedRootColumns = new Set<string>(); // Track processed root columns
+    
+        const findInNewColumn = (column: AnyColumn<TOriginalRow>, columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow> | null => {
+            for (let col of columns) {
+                if (col.columnId === column.parentColumnId) {
+                    return col;
+                }
+                if (col.type === 'group' && col.columns) {
+                    const found = findInNewColumn(column, col.columns);
+                    if (found) {
+                        return found;
+                    }
+                }
+            }
+            return null;
+        };
+    
+        const buildHierarchy = (column: AnyColumn<TOriginalRow>): AnyColumn<TOriginalRow> => {
+            if (column.parentColumnId === null) {
+                return { ...column };
+            }
+    
+            const parentColumn = allFlatColumns.find(col => col.columnId === column.parentColumnId);
+            if (!parentColumn) {
+                throw new Error(`Parent column ${column.parentColumnId} not found`);
+            }
+    
+            let copy = { ...parentColumn };
+            copy.columns = [column];
+    
+            if (copy.parentColumnId) {
+                return buildHierarchy(copy);
+            }
+            return copy;
+        };
+    
+        // Remove duplicate columns and merge them
+        const mergedColumns = copiedColumns.filter((col, index, self) =>
+            index === self.findIndex((t) => t.columnId === col.columnId)
+        );
+    
+        // Process columns in order, handling parent-child relationships
+        for (const column of mergedColumns) {
+            const parentColumn = findInNewColumn(column, newColumns);
+            
+            if (parentColumn) {
+                // Add column to existing parent
+                parentColumn.columns.push({ ...column });
+            } else {
+                // Build hierarchy for new root column
+                const hierarchicalColumn = buildHierarchy(column);
+                
+                // Only add root columns that haven't been processed yet
+                if (!processedRootColumns.has(hierarchicalColumn.columnId)) {
+                    processedRootColumns.add(hierarchicalColumn.columnId);
+                    newColumns.push(hierarchicalColumn);
+                } else {
+                    // If root column exists, find it and merge any new children
+                    const existingRoot = newColumns.find(col => col.columnId === hierarchicalColumn.columnId);
+                    if (existingRoot && existingRoot.columns && hierarchicalColumn.columns) {
+                        existingRoot.columns.push(...hierarchicalColumn.columns);
+                    }
+                }
+            }
+        }
+    
+        return newColumns;
+    }
+
+
+
+
     getColumnsPinnedToLeft(): AnyColumn<TOriginalRow>[] {
-        return this.datagrid.columnManager.getFlattenColumns().filter(col => col.state.pinning.position === 'left')
+        return this.datagrid.columnManager.getFlattenColumns().filter(col => col.state.pinning.position === 'left' || this.datagrid.grouping.groupByColumns.includes(col.columnId))
     }
     getColumnsPinnedToRight(): AnyColumn<TOriginalRow>[] {
-        return this.datagrid.columnManager.getFlattenColumns().filter(col => col.state.pinning.position === 'right')  
+        return this.datagrid.columnManager.getFlattenColumns().filter(col => col.state.pinning.position === 'right')
     }
     getColumnsPinnedToNone(): AnyColumn<TOriginalRow>[] {
-        return this.datagrid.columnManager.getFlattenColumns().filter(col => col.state.pinning.position === 'none')  
+        return this.datagrid.columnManager.getActualColumns().filter(col => col.state.pinning.position === 'none').filter(col => !this.datagrid.grouping.groupByColumns.includes(col.columnId))
     }
+
     getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
         return [...this.getColumnsPinnedToLeft(), ...this.getColumnsPinnedToNone(), ...this.getColumnsPinnedToRight()]
     }
