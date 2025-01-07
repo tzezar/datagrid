@@ -6,6 +6,12 @@ import { isColumnFilterable } from "../utils.svelte";
 
 export class ColumnFilteringFeature<TOriginalRow> {
     conditions: FilterCondition<TOriginalRow>[] = $state([])
+    showColumnFiltering: boolean = $state(false);
+
+    toggleColumnFiltering() {
+        this.showColumnFiltering = !this.showColumnFiltering;
+    }
+
 
     getConditionValue(columnId: string): any {
         const condition = this.conditions.find(c => c.columnId === columnId);

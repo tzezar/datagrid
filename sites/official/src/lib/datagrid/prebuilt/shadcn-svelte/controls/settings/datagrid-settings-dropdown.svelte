@@ -305,7 +305,7 @@
 {/snippet}
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger class={buttonVariants({ variant: 'outline' })}>
+	<DropdownMenu.Trigger class={`${buttonVariants({ variant: 'outline' })} rounded-none`}>
 		<Settings />
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-56">

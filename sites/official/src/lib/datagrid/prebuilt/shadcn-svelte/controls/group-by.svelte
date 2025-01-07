@@ -34,7 +34,7 @@
 
 
 <Select.Root type="multiple" name="groupByColumn" value={datagrid.grouping.groupByColumns} onValueChange={(values) => handleGroupByChange(values)}>
-	<Select.Trigger class="w-[180px] rounded-none border-l-0 border-b-0">
+	<Select.Trigger class="w-[180px] rounded-none">
 		Group data by column
 	</Select.Trigger>
 	<Select.Content>

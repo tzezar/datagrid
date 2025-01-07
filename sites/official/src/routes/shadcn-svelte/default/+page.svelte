@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { flip } from 'svelte/animate';
 	import '$lib/datagrid/styles.css';
 	import { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import { userColumns } from './columns.svelte';
@@ -9,8 +8,9 @@
 	import GroupBy from '$lib/datagrid/prebuilt/shadcn-svelte/controls/group-by.svelte';
 	import HeaderCell from '$lib/datagrid/prebuilt/shadcn-svelte/header-cell.svelte';
 	import Row from '$lib/datagrid/prebuilt/shadcn-svelte/row.svelte';
-	import { cubicInOut } from 'svelte/easing';
-	import { fade, fly } from 'svelte/transition';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import FilterAlt from '$lib/datagrid/icons/material-symbols/filter-alt.svelte';
+	import FilterAltOff from '$lib/datagrid/icons/material-symbols/filter-alt-off.svelte';
 
 	let { data } = $props();
 
@@ -23,6 +23,14 @@
 <div>
 	<div class="flex justify-end">
 		<GlobalSearch {datagrid} />
+		<Button class='rounded-none' variant="outline" onclick={() => datagrid.filtering.toggleColumnFiltering()}>
+			{#if datagrid.filtering.showColumnFiltering}
+				<FilterAlt />
+			{:else}
+				<FilterAltOff />
+			{/if}
+		</Button>
+
 		<DatagridSettingsDropdown {datagrid} />
 	</div>
 	<div class="grid-wrapper">
@@ -36,42 +44,29 @@
 			</div>
 			<div class="grid-body">
 				{#each datagrid.rowPinning.getTopRows() as row (row.index)}
-					<div
-						in:fade={{ duration: 100, delay: 100 }}
-						animate:flip={{ easing: cubicInOut, duration: 200 }}
-					>
-						<Row {datagrid} {row} />
-					</div>
+					<Row {datagrid} {row} />
 				{/each}
 
 				{#each datagrid.rowPinning.getCenterRows() as row (row.identifier)}
-					<div
+					<!-- <div
 						in:fade={{ duration: 100, delay: 100 }}
 						animate:flip={{ easing: cubicInOut, duration: 200 }}
-					>
-						<Row {datagrid} {row} />
-					</div>
+					> -->
+					<Row {datagrid} {row} />
+					<!-- </div> -->
 				{/each}
 
 				{#each datagrid.rowPinning.getBottomRows() as row (row.index)}
-					<div
-						in:fade={{ duration: 100, delay: 100 }}
-						animate:flip={{ easing: cubicInOut, duration: 200 }}
-					>
-						<Row {datagrid} {row} />
-					</div>
+					<Row {datagrid} {row} />
 				{/each}
 			</div>
 		</div>
 		<div class="grid-footer-container">
 			<Pagination {datagrid} />
-			<GroupBy {datagrid} />
 		</div>
 	</div>
+	<GroupBy {datagrid} />
 </div>
 
 <style>
-	.grid-body > div {
-		will-change: transform;
-	}
 </style>

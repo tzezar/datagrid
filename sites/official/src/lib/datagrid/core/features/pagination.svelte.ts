@@ -7,7 +7,7 @@ export class PaginationFeature<TOriginalRow> {
 
     page = $state(1);
     pageSize = $state(10);
-    pageSizes = $state([10, 20, 50, 100, 100000]);
+    pageSizes = $state([10, 20, 50, 100]);
     pageCount: number = $state(0);
     visibleRowsCount: number = $state(0);
 

@@ -7,6 +7,7 @@
 
 <Input
 	type="text"
+	class='rounded-none br-none'
 	value={datagrid.globalSearch.value}
 	oninput={(e) => {
 		datagrid.globalSearch.value = e.currentTarget.value;

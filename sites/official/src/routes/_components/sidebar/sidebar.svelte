@@ -7,7 +7,10 @@
 
 <div class="flex w-full flex-col">
 	<div class="flex w-full flex-col gap-8 p-8">
-		<GroupTitle title="Headless" class="border-b-2 border-orange-400 pb-1 text-orange-400 text-lg" />
+		<GroupTitle
+			title="Headless"
+			class="border-b-2 border-orange-400 pb-1 text-lg text-orange-400"
+		/>
 		<Group>
 			<GroupTitle title="Quick start" />
 			<GroupItem disabled title="Installation" href={hrefs.headless.quickStart.installation} />
@@ -15,24 +18,36 @@
 		</Group>
 		<Group>
 			<GroupTitle title="Examples" />
-			<GroupItem title="Basic" href={hrefs.headless.examples.basic} />
-			<GroupItem title="Column filters" href={hrefs.headless.examples.columnFilters} />
-			<GroupItem title="Column filters faceted" href={hrefs.headless.examples.columnFiltersFaceted} />
-			<GroupItem title="Column ordering" href={hrefs.headless.examples.columnOrdering} />
-			<GroupItem title="Column pinning" href={hrefs.headless.examples.columnPinning} />
-			<GroupItem title="Column sizing" href={hrefs.headless.examples.columnSizing} />
-			<GroupItem title="Column visibility" href={hrefs.headless.examples.columnVisibility} />
-			<GroupItem title="Editable data" href={hrefs.headless.examples.editableData} />
-			<GroupItem title="Expanding" href={hrefs.headless.examples.expanding} />
-			<GroupItem title="Fully controlled" href={hrefs.headless.examples.fullyControlled} disabled/>
-			<GroupItem title="Grouping" href={hrefs.headless.examples.grouping} />
-			<GroupItem title="Pagination" href={hrefs.headless.examples.pagination} />
-			<GroupItem title="Pagination controlled" href={hrefs.headless.examples.paginationControlled} />
-			<GroupItem title="Row selection" href={hrefs.headless.examples.rowSelection} />
-			<GroupItem title="Sorting" href={hrefs.headless.examples.sorting} />
+			<GroupItem disabled title="Basic" href={hrefs.headless.examples.basic} />
+			<GroupItem disabled title="Column filters" href={hrefs.headless.examples.columnFilters} />
+			<GroupItem
+				disabled
+				title="Column filters faceted"
+				href={hrefs.headless.examples.columnFiltersFaceted}
+			/>
+			<GroupItem disabled title="Column ordering" href={hrefs.headless.examples.columnOrdering} />
+			<GroupItem disabled title="Column pinning" href={hrefs.headless.examples.columnPinning} />
+			<GroupItem disabled title="Column sizing" href={hrefs.headless.examples.columnSizing} />
+			<GroupItem
+				disabled
+				title="Column visibility"
+				href={hrefs.headless.examples.columnVisibility}
+			/>
+			<GroupItem disabled title="Editable data" href={hrefs.headless.examples.editableData} />
+			<GroupItem disabled title="Expanding" href={hrefs.headless.examples.expanding} />
+			<GroupItem disabled title="Fully controlled" href={hrefs.headless.examples.fullyControlled} />
+			<GroupItem disabled title="Grouping" href={hrefs.headless.examples.grouping} />
+			<GroupItem disabled title="Pagination" href={hrefs.headless.examples.pagination} />
+			<GroupItem
+				disabled
+				title="Pagination controlled"
+				href={hrefs.headless.examples.paginationControlled}
+			/>
+			<GroupItem disabled title="Row selection" href={hrefs.headless.examples.rowSelection} />
+			<GroupItem disabled title="Sorting" href={hrefs.headless.examples.sorting} />
 			<!-- <GroupItem title="Sub components" href={hrefs.headless.examples.subComponents} /> -->
-			<GroupItem title="Virtualization" href={hrefs.headless.examples.virtualization} />
-			<GroupItem title="Kitchen sink" href={hrefs.headless.examples.kitchenSink} />
+			<GroupItem disabled title="Virtualization" href={hrefs.headless.examples.virtualization} />
+			<GroupItem disabled title="Kitchen sink" href={hrefs.headless.examples.kitchenSink} />
 		</Group>
 		<!-- <Group>
 			<GroupTitle title="Feature APIs" />
@@ -46,7 +61,10 @@
 			<GroupItem title="Sorting manager" href={hrefs.headless.featureApis.sortingManager} />
 			<GroupItem title="Grid instance" href={hrefs.headless.featureApis.gridInstance} />
 		</Group> -->
-		<GroupTitle title="Shadcn svelte" class="border-b-2 border-orange-400 pb-1 text-orange-400 text-lg" />
+		<GroupTitle
+			title="Shadcn svelte"
+			class="border-b-2 border-orange-400 pb-1 text-lg text-orange-400"
+		/>
 		<Group>
 			<GroupTitle title="Quick start" />
 			<GroupItem disabled title="Installation" href={hrefs.headless.quickStart.installation} />
@@ -54,14 +72,22 @@
 		</Group>
 		<Group>
 			<GroupTitle title="Playground" />
-			<GroupItem disabled title="Perfomance showcase" href={hrefs.headless.quickStart.installation} />
+			<GroupItem
+				disabled
+				title="Perfomance showcase"
+				href={hrefs.headless.quickStart.installation}
+			/>
 		</Group>
 		<Group>
 			<GroupTitle title="Examples" />
-			<GroupItem  title="Basic" href={hrefs.shadcnSvelte.examples.basic} />
+			<GroupItem disabled title="Basic" href={hrefs.shadcnSvelte.examples.basic} />
 			<GroupItem disabled title="Column alignment" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Column filters" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Column filters faceted" href={hrefs.headless.quickStart.installation} />
+			<GroupItem
+				disabled
+				title="Column filters faceted"
+				href={hrefs.headless.quickStart.installation}
+			/>
 			<GroupItem disabled title="Column ordering" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Column pinning" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Column sizing" href={hrefs.headless.quickStart.installation} />
@@ -75,7 +101,11 @@
 			<GroupItem disabled title="Fully controlled" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Grouping" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Pagination" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Pagination controlled" href={hrefs.headless.quickStart.installation} />
+			<GroupItem
+				disabled
+				title="Pagination controlled"
+				href={hrefs.headless.quickStart.installation}
+			/>
 			<GroupItem disabled title="Row selection" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Scroll to top" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Sorting" href={hrefs.headless.quickStart.installation} />

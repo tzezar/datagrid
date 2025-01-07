@@ -44,7 +44,7 @@
 	{/if}
 	{#if column?._meta?.filterType === 'select'}
 		<select
-			class="w-full"
+			class="w-full column-filter-input "
 			value={datagrid.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {
 				handleColumnFilterChange(column, e.currentTarget.value);
