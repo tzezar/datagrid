@@ -6,7 +6,10 @@
 
 	let { datagrid }: { datagrid: Datagrid<any> } = $props();
 
+
 	function handleGroupByChange(values: string[]) {
+
+		console.log(values)
 
 		const newGroupBy: ColumnId[] = values
 			.map((option) => {
@@ -16,11 +19,19 @@
 				return option;
 			})
 			.filter((group): group is ColumnId => group !== null); // Type guard to filter out null values
-
+		
 		datagrid.grouping.groupByColumns = newGroupBy;
 		datagrid.pagination.goToFirstPage();
 		datagrid.cache.invalidateGroupedRowsCache();
 		datagrid.processors.data.executeFullDataTransformation();
+
+		for (const columnId of newGroupBy) {
+			let column = findColumnById(datagrid.columns, columnId)
+			if (column) {
+				datagrid.columnOrdering.moveColumnToStart(column);
+
+			}
+		}
 	}
 
 

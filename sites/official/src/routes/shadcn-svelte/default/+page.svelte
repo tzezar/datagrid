@@ -37,13 +37,13 @@
 		<div class="grid-container">
 			<div class="grid-header">
 				<div class="grid-header-row">
-					{#each datagrid.columns as column (column.header)}
+					{#each datagrid.columns as column (column)}
 						<HeaderCell {datagrid} {column} />
 					{/each}
 				</div>
 			</div>
 			<div class="grid-body">
-				{#each datagrid.rowPinning.getTopRows() as row (row.index)}
+				{#each datagrid.rowPinning.getTopRows() as row (row.identifier)}
 					<Row {datagrid} {row} />
 				{/each}
 
@@ -56,7 +56,7 @@
 					<!-- </div> -->
 				{/each}
 
-				{#each datagrid.rowPinning.getBottomRows() as row (row.index)}
+				{#each datagrid.rowPinning.getBottomRows() as row (row.identifier)}
 					<Row {datagrid} {row} />
 				{/each}
 			</div>

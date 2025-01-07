@@ -1,5 +1,6 @@
-import { createColumnGroup, type GroupColumn } from "../helpers/column-creators";
+import { createColumnGroup, type AnyColumn, type GroupColumn } from "../helpers/column-creators";
 import type { Datagrid } from "../index.svelte";
+import { flattenColumns } from "../utils.svelte";
 
 
 
@@ -10,41 +11,36 @@ export class ColumnGroupingFeature<TOriginalRow> {
         this.datagrid = datagrid;
     }
 
+    findParentColumnGroup(parentColumnId: string | null): GroupColumn<TOriginalRow> | null {
+        if (parentColumnId === null) return null;
+        const flattenedColumns = flattenColumns(this.datagrid.columns);
+        const groupColumn = flattenedColumns.find(col => col.columnId === parentColumnId);
+        if (groupColumn) {
+            return groupColumn as GroupColumn<TOriginalRow>;
+        }
+        return null
+    }
+
+    
+    isColumnWithinGroup(column: AnyColumn<TOriginalRow>): boolean {
+        return column.parentColumnId !== null;
+    }
+
     generateRandomColumnId(): string {
         return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     }
 
-    createGroupColumn(columnIds: string[], header: string): void {
-        const groupColumnId = this.generateRandomColumnId();
-
-        // Move the selected columns into the new group
-        const selectedColumns = this.datagrid.columns.filter(column =>
-            columnIds.includes(column.columnId)
-        );
-
-        selectedColumns.forEach(column => {
-            column.parentColumnId = groupColumnId;
-        });
-
-        // Create the group column
+    createGroupColumn(header: string, parentColumnId: string | null): void {
         const groupColumn = createColumnGroup({
             header,
-            columnId: groupColumnId,
-            parentColumnId: null,
-            columns: selectedColumns,
+            columnId: this.generateRandomColumnId(),
+            parentColumnId,
+            columns: [],
         });
-
-        // Remove the selected columns from the root level
-        this.datagrid.columns = this.datagrid.columns.filter(
-            column => !columnIds.includes(column.columnId)
-        );
-
-        // Add the new group column to the root level
         this.datagrid.columns.push(groupColumn as GroupColumn<TOriginalRow>);
-
-        // Refresh column offsets
         this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
+
 
     renameGroupColumn(column: any, newHeader: string): void {
         column.header = newHeader;
@@ -54,14 +50,14 @@ export class ColumnGroupingFeature<TOriginalRow> {
     deleteGroupColumn(groupColumn: GroupColumn<TOriginalRow>): void {
         // Get the children columns that need to be moved
         const childColumns = [...groupColumn.columns];
-        
+
         if (groupColumn.parentColumnId === null) {
             // Group is at root level
             // Remove the group from root level columns
             const groupIndex = this.datagrid.columns.findIndex(col => col === groupColumn);
             if (groupIndex !== -1) {
                 this.datagrid.columns.splice(groupIndex, 1);
-                
+
                 // Move all children to root level
                 childColumns.forEach(childColumn => {
                     childColumn.parentColumnId = null;
@@ -70,13 +66,13 @@ export class ColumnGroupingFeature<TOriginalRow> {
             }
         } else {
             // Group is nested within another group
-            const parentGroup = this.datagrid.columnOrdering.findParentGroup(groupColumn.parentColumnId);
+            const parentGroup = this.findParentColumnGroup(groupColumn.parentColumnId);
             if (parentGroup) {
                 // Find and remove the group from its parent
                 const groupIndex = parentGroup.columns.findIndex(col => col === groupColumn);
                 if (groupIndex !== -1) {
                     parentGroup.columns.splice(groupIndex, 1);
-                    
+
                     // Move all children to the parent group
                     childColumns.forEach(childColumn => {
                         childColumn.parentColumnId = parentGroup.columnId;
@@ -85,7 +81,7 @@ export class ColumnGroupingFeature<TOriginalRow> {
                 }
             }
         }
-    
+
         this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
 }

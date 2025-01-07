@@ -131,8 +131,8 @@
 
 {#snippet columnGroupControls(column: AnyColumn<any>)}
 	<div class="text-muted-foreground flex flex-row gap-2 text-xs">
-		<button onclick={() => datagrid.columnOrdering.moveColumnUp(column)}><MoveUp /></button>
-		<button onclick={() => datagrid.columnOrdering.moveColumnDown(column)}><MoveDown /></button>
+		<button onclick={() => datagrid.columnOrdering.moveLeftWithinGroup(column)}><MoveUp /></button>
+		<button onclick={() => datagrid.columnOrdering.moveRightWithinGroup(column)}><MoveDown /></button>
 		<select
 			id={`group-select-${column.columnId}`}
 			class="w-full"
@@ -142,7 +142,7 @@
 				if (targetGroupId === column.parentColumnId) return;
 
 				if (column.type === 'group') {
-					const targetGroup = datagrid.columnOrdering
+					const targetGroup = datagrid.columnManager
 						.getGroupColumns()
 						.find((group: GroupColumn<any>) => group.columnId === targetGroupId);
 
@@ -153,11 +153,11 @@
 					}
 				}
 
-				datagrid.columnOrdering.moveColumnToGroup(column, targetGroupId);
+				datagrid.columnOrdering.moveToGroup(column, targetGroupId);
 			}}
 		>
 			<option value="">Root Level</option>
-			{#each datagrid.columnOrdering
+			{#each datagrid.columnManager
 				.getGroupColumns()
 				.filter((groupCol: GroupColumn<any>) => column.type !== 'group' || (groupCol !== column && !isDescendantOf(groupCol, column))) as groupColumn}
 				<option value={groupColumn.columnId} disabled={groupColumn === column}>

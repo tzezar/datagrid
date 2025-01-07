@@ -10,8 +10,8 @@
 
 {#snippet ColumnGroupControls(column: AnyColumn<any>)}
 	<div class="text-muted-foreground flex flex-row gap-2 text-xs">
-		<button onclick={() => datagrid.columnOrdering.moveColumnUp(column)}>UP</button>
-		<button onclick={() => datagrid.columnOrdering.moveColumnDown(column)}>DOWN</button>
+		<button onclick={() => datagrid.columnOrdering.moveLeftWithinGroup(column)}>UP</button>
+		<button onclick={() => datagrid.columnOrdering.moveRightWithinGroup(column)}>DOWN</button>
 		<select
 			class="w-full"
 			value={column.parentColumnId || ''}
@@ -20,7 +20,7 @@
 				if (targetGroupId === column.parentColumnId) return;
 
 				if (column.type === 'group') {
-					const targetGroup = datagrid.columnOrdering
+					const targetGroup = datagrid.columnManager
 						.getGroupColumns()
 						.find((group) => group.columnId === targetGroupId);
 
@@ -31,11 +31,11 @@
 					}
 				}
 
-				datagrid.columnOrdering.moveColumnToGroup(column, targetGroupId);
+				datagrid.columnOrdering.moveToGroup(column, targetGroupId);
 			}}
 		>
 			<option value="">Root Level</option>
-			{#each datagrid.columnOrdering
+			{#each datagrid.columnManager
 				.getGroupColumns()
 				.filter((groupCol) => column.type !== 'group' || (groupCol !== column && !isDescendantOf(groupCol, column))) as groupColumn}
 				<option value={groupColumn.columnId} disabled={groupColumn === column}>
