@@ -19,14 +19,19 @@
 		data: data.users
 	});
 
-	console.log(datagrid.columnManager.getColumnWithGroupStructureAbove('country'))
-
+	$effect(() => {
+		console.log(datagrid.columnManager.getColumnsInOrder());
+	});
 </script>
 
 <div>
 	<div class="flex justify-end">
 		<GlobalSearch {datagrid} />
-		<Button class='rounded-none' variant="outline" onclick={() => datagrid.filtering.toggleColumnFiltering()}>
+		<Button
+			class="rounded-none"
+			variant="outline"
+			onclick={() => datagrid.filtering.toggleColumnFiltering()}
+		>
 			{#if datagrid.filtering.showColumnFiltering}
 				<FilterAlt />
 			{:else}

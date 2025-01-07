@@ -5,7 +5,7 @@ export const DATAGRID_DEFAULTS = {
 
 
 export const DEFAULT_COLUMN_SIZE = {
-    width: 120,
+    width: 200,
     minWidth: 60,
     maxWidth: 700,
     grow: false

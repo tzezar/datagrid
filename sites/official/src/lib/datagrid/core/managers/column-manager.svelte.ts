@@ -162,8 +162,7 @@ export class ColumnManager<TOriginalRow> {
     }
 
     getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
-        const cols = [...this.createHierarchicalColumns(this.getColumnsPinnedToLeft()), ...this.createHierarchicalColumns(this.getColumnsPinnedToNone()), ...this.createHierarchicalColumns(this.getColumnsPinnedToRight())]
-        console.log(cols)
+        const cols = [...this.getColumnsPinnedToLeft(), ...this.createHierarchicalColumns(this.getColumnsPinnedToNone()), ...this.createHierarchicalColumns(this.getColumnsPinnedToRight())]
         return cols
     }
 }

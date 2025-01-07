@@ -15,6 +15,8 @@
 	style:--width={column.state.size.width + 'px'}
 	style:--min-width={column.state.size.minWidth + 'px'}
 	style:--max-width={column.state.size.maxWidth + 'px'}
+	style:--pin-left-offset={column.state.pinning.offset + 'px'}
+	style:--pin-right-offset={column.state.pinning.offset + 'px'}
 >
 	{#if column.cell && typeof column.cell === 'function'}
 		{@const cellContent = column.cell(row)}
