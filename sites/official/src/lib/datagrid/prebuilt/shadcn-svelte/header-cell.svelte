@@ -54,9 +54,20 @@
 		return depth;
 	}
 
-	let maxGridDepth = findMaxDepth(datagrid.columns);
-	let currentDepth = getColumnDepth(column);
-	let blankCellsCount = !isGroupColumn(column) ? maxGridDepth - currentDepth : 0;
+	// Check if any child column is visible
+	function hasVisibleChildren(column: any): boolean {
+		if (!isGroupColumn(column)) return false;
+		return column.columns.some((col: any) => {
+			if (isGroupColumn(col)) {
+				return hasVisibleChildren(col);
+			}
+			return col.state.visible === true;
+		});
+	}
+
+	let maxGridDepth = $state(findMaxDepth(datagrid.columns))
+	let currentDepth = $state(getColumnDepth(column))
+	let blankCellsCount = $state(!isGroupColumn(column) ? maxGridDepth - currentDepth : 0)
 </script>
 
 {#if isGroupColumn(column)}
@@ -66,7 +77,7 @@
 		style:--min-width={column.state?.size?.minWidth + 'px'}
 		style:--max-width={column.state?.size?.maxWidth + 'px'}
 	>
-		{#if column.columns.some((c) => c.state.visible === true)}
+		{#if hasVisibleChildren(column)}
 			<div class="grid-header-group-header border-b px-2 py-1 text-center">{column.header}</div>
 			<div class="flex grow flex-row">
 				{#each column.columns ?? [] as subColumn (subColumn.columnId)}
@@ -89,8 +100,6 @@
 			style:--min-width={column.state.size.minWidth + 'px'}
 			style:--max-width={column.state.size.maxWidth + 'px'}
 		>
-			<!-- svelte-ignore a11y_click_events_have_key_events -->
-			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div
 				class="grid-header-cell-content {column.options.sortable ? 'sortable' : ''}"
 				onclick={(e) => onSort(datagrid, column, e)}
@@ -112,8 +121,6 @@
 				{/if}
 			</div>
 			{#if datagrid.filtering.showColumnFiltering}
-				<!-- ! This height class mathicn ColumnFilter height is important to prevent layout shifts when above column are present blank cells.
-				There has to be something rendered with given height as ColumnFilter to prevent growing blank cells. -->
 				<div class="h-6 w-full pt-1">
 					<ColumnFilter {datagrid} {column} />
 				</div>
