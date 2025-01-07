@@ -1,6 +1,9 @@
 import type { Component } from "svelte";
 import type { AccessorColumn, ComputedColumn } from "./helpers/column-creators";
 
+
+export type ColumnType = 'accessor' | 'computed' | 'display' | 'group';
+
 export type ColumnId = string;
 type Primitive = string | number | boolean | null | undefined;
 export type GetValueFn<TOriginalRow> = (row: TOriginalRow) => CellValue;

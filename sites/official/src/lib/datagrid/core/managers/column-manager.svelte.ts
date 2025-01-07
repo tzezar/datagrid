@@ -1,4 +1,5 @@
-import type { GroupColumn } from "../helpers/column-creators";
+import { isGroupColumn } from "../column-guards";
+import type { AnyColumn, GroupColumn } from "../helpers/column-creators";
 import type { Datagrid } from "../index.svelte";
 import { filterGroupColumns, flattenColumns } from "../utils.svelte";
 
@@ -16,4 +17,18 @@ export class ColumnManager<TOriginalRow> {
 
 
 
+    getFlattenColumns(): AnyColumn<TOriginalRow>[] {
+         const flattened: AnyColumn<any>[] = [];
+            for (const column of this.datagrid.columns) {
+                if (isGroupColumn(column)) {
+                    flattened.push(column);
+                    flattened.push(...flattenColumns(column.columns));
+                } else {
+                    flattened.push(column);
+                }
+            }
+            return flattened;
+    }
+
+    
 }

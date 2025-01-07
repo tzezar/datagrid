@@ -9,7 +9,7 @@ export const userColumns: AnyColumn<User>[] = [
     // Grouped columns for stats
     createAccessorColumn({
         header: 'Avg. Session (mins)23',
-        columnId: 'averageSessionDuration23',
+        columnId: 'averageSessionDuration2',
         accessorKey: 'stats.averageSessionDuration',
         getValueFn: (row) => row.stats.averageSessionDuration,
         options: { sortable: true, filterable: true },

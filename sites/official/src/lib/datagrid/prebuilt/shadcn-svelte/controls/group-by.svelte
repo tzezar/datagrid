@@ -1,15 +1,15 @@
 <script lang="ts">
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
-	import type { ColumnId } from '$lib/datagrid/core/types';
+	import type { ColumnId, ColumnType } from '$lib/datagrid/core/types';
 	import { findColumnById, flattenColumns } from '$lib/datagrid/core/utils.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
+	import { columnsWithGetters } from '$lib/datagrid/core/constants';
+	import type { AnyColumn } from '$lib/datagrid/core/helpers/column-creators';
 
 	let { datagrid }: { datagrid: Datagrid<any> } = $props();
 
-
 	function handleGroupByChange(values: string[]) {
-
-		console.log(values)
+		console.log(values);
 
 		const newGroupBy: ColumnId[] = values
 			.map((option) => {
@@ -19,35 +19,30 @@
 				return option;
 			})
 			.filter((group): group is ColumnId => group !== null); // Type guard to filter out null values
-		
+
 		datagrid.grouping.groupByColumns = newGroupBy;
 		datagrid.pagination.goToFirstPage();
 		datagrid.cache.invalidateGroupedRowsCache();
 		datagrid.processors.data.executeFullDataTransformation();
-
-		for (const columnId of newGroupBy) {
-			let column = findColumnById(datagrid.columns, columnId)
-			if (column) {
-				datagrid.columnOrdering.moveColumnToStart(column);
-
-			}
-		}
 	}
 
 
 	let columns = $derived(
-		flattenColumns(datagrid.columns)
-			.filter((col) => ['accessor', 'computed'].includes(col.type))
+		datagrid.columnManager
+			.getFlattenColumns()
+			.filter((col) => columnsWithGetters.includes(col.type as (typeof columnsWithGetters)[number]))
 			.filter((col) => col.options.groupable === true)
 	);
+	
 </script>
 
-
-
-<Select.Root type="multiple" name="groupByColumn" value={datagrid.grouping.groupByColumns} onValueChange={(values) => handleGroupByChange(values)}>
-	<Select.Trigger class="w-[180px] rounded-none">
-		Group data by column
-	</Select.Trigger>
+<Select.Root
+	type="multiple"
+	name="groupByColumn"
+	value={datagrid.grouping.groupByColumns}
+	onValueChange={(values) => handleGroupByChange(values)}
+>
+	<Select.Trigger class="w-[180px] rounded-none">Group data by column</Select.Trigger>
 	<Select.Content>
 		<Select.Group>
 			<Select.GroupHeading>Columns</Select.GroupHeading>

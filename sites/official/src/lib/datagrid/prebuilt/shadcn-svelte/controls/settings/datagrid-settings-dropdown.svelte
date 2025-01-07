@@ -132,7 +132,7 @@
 {#snippet columnGroupControls(column: AnyColumn<any>)}
 	<div class="text-muted-foreground flex flex-row gap-2 text-xs">
 		<button onclick={() => datagrid.columnOrdering.moveLeftWithinGroup(column)}><MoveUp /></button>
-		<button onclick={() => datagrid.columnOrdering.moveRightWithinGroup(column)}><MoveDown /></button>
+		<button onclick={() => datagrid.columnOrdering.moveColumnRight(column)}><MoveDown /></button>
 		<select
 			id={`group-select-${column.columnId}`}
 			class="w-full"
@@ -153,7 +153,7 @@
 					}
 				}
 
-				datagrid.columnOrdering.moveToGroup(column, targetGroupId);
+				datagrid.columnOrdering.moveColumnToGroup(column, targetGroupId);
 			}}
 		>
 			<option value="">Root Level</option>
