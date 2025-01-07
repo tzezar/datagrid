@@ -7,6 +7,16 @@ import type { User } from "./generate-users";
 
 export const userColumns: AnyColumn<User>[] = [
     // Grouped columns for stats
+    createAccessorColumn({
+        header: 'Avg. Session (mins)23',
+        columnId: 'averageSessionDuration23',
+        accessorKey: 'stats.averageSessionDuration',
+        getValueFn: (row) => row.stats.averageSessionDuration,
+        options: { sortable: true, filterable: true },
+        _meta: {
+            filterType: 'number'
+        }
+    }),
     createColumnGroup({
         header: 'Stats',
         columnId: 'stats',
