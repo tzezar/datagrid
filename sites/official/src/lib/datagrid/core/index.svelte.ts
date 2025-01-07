@@ -44,6 +44,11 @@ export class Datagrid<TOriginalRow> {
     });
     columns: AnyColumn<TOriginalRow>[] = $state([]);
 
+
+    columnsPinnedToLeft: AnyColumn<TOriginalRow>[] = $state([]);
+    columnsPinnedToRight: AnyColumn<TOriginalRow>[] = $state([]);
+
+
     processors = {
         data: new DataProcessor(this),
         column: new ColumnProcessor(this)

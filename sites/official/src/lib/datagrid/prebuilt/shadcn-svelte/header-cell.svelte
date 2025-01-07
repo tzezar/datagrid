@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Button from '$lib/components/ui/button/button.svelte';
 	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import {
@@ -91,6 +92,7 @@
 		{#each Array(blankCellsCount) as _, i}
 			<div class="grid-header-group grow-0 border-b border-r"></div>
 		{/each}
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
 			class="grid-header-cell text-xs font-medium"
 			data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
@@ -100,6 +102,7 @@
 			style:--min-width={column.state.size.minWidth + 'px'}
 			style:--max-width={column.state.size.maxWidth + 'px'}
 		>
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
 				class="grid-header-cell-content {column.options.sortable ? 'sortable' : ''}"
 				onclick={(e) => onSort(datagrid, column, e)}
@@ -125,6 +128,10 @@
 					<ColumnFilter {datagrid} {column} />
 				</div>
 			{/if}
+			<div>
+				<button onclick={() => datagrid.columnOrdering.moveColumnLeft(column)}>left</button>
+				<button onclick={() => datagrid.columnOrdering.moveColumnRight(column)}>right</button>
+			</div>
 		</div>
 	</div>
 {/if}

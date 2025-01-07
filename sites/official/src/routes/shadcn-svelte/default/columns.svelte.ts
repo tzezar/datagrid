@@ -8,15 +8,78 @@ import type { User } from "./generate-users";
 export const userColumns: AnyColumn<User>[] = [
     // Grouped columns for stats
     createAccessorColumn({
-        header: 'Avg. Session (mins)23',
-        columnId: 'averageSessionDuration2',
-        accessorKey: 'stats.averageSessionDuration',
-        getValueFn: (row) => row.stats.averageSessionDuration,
-        options: { sortable: true, filterable: true },
-        _meta: {
-            filterType: 'number'
-        }
+        header: 'ID',
+        columnId: 'id',
+        accessorKey: 'id',
+        getValueFn: (row) => row.id,
     }),
+    createAccessorColumn({
+        header: 'status',
+        columnId: 'status',
+        accessorKey: 'status',
+        getValueFn: (row) => row.status,
+    }),
+    createAccessorColumn({
+        header: 'role',
+        columnId: 'role',
+        accessorKey: 'role',
+        getValueFn: (row) => row.role,
+    }),
+
+    createColumnGroup({
+        header: 'Person',
+        columnId: 'person',
+        columns: [
+            createColumnGroup({
+                header: 'Personal Info',
+                columnId: 'personalInfo',
+                columns: [
+                    createAccessorColumn({
+                        header: 'First Name',
+                        columnId: 'firstName',
+                        accessorKey: 'firstName',
+                        getValueFn: (row) => row.firstName,
+                        options: {
+                            sortable: true
+                        }
+                    }),
+                    createAccessorColumn({
+                        header: 'Last Name',
+                        columnId: 'lastName',
+                        accessorKey: 'lastName',
+                        getValueFn: (row) => row.lastName,
+                        options: {
+                            sortable: true
+                        }
+                    }),
+                ]
+            }),
+            createColumnGroup({
+                header: 'Profile',
+                columnId: 'profile',
+                columns: [
+                    createAccessorColumn({
+                        header: 'Email',
+                        columnId: 'email',
+                        accessorKey: 'profile.email',
+                        getValueFn: (row) => row.profile.email,
+                        options: {
+                            sortable: true
+                        }
+                    }),
+                    createAccessorColumn({
+                        header: 'Country',
+                        columnId: 'country',
+                        accessorKey: 'profile.country',
+                        getValueFn: (row) => row.profile.country,
+                        options: {
+                            sortable: true
+                        }
+                    })
+                ]
+            })]
+    }),
+
     createColumnGroup({
         header: 'Stats',
         columnId: 'stats',
@@ -28,61 +91,23 @@ export const userColumns: AnyColumn<User>[] = [
                 getValueFn: (row) => row.stats.visits,
                 options: { sortable: true }
             }),
-            createAccessorColumn({
-                header: 'Visits2',
-                columnId: 'visits2',
-                accessorKey: 'stats.visits',
-                getValueFn: (row) => row.stats.visits,
+            createComputedColumn({
+                header: 'Last Login',
+                columnId: 'lastLogin',
+                accessorFn: (row) => row.stats.lastLogin.toLocaleString(),
+                getValueFn: (row) => row.stats.lastLogin,
                 options: { sortable: true }
             }),
-            createColumnGroup({
-                columnId: 'details',
-                header: 'Details',
-                columns: [
-                    createComputedColumn({
-                        header: 'Last Login',
-                        columnId: 'lastLogin',
-                        accessorFn: (row) => row.stats.lastLogin.toLocaleString(),
-                        getValueFn: (row) => row.stats.lastLogin,
-                        options: { sortable: true }
-                    }),
-                    createAccessorColumn({
-                        header: 'Avg. Session (mins)',
-                        columnId: 'averageSessionDuration',
-                        accessorKey: 'stats.averageSessionDuration',
-                        getValueFn: (row) => row.stats.averageSessionDuration,
-                        options: { sortable: true, filterable: true },
-                        _meta: {
-                            filterType: 'number'
-                        }
-                    }),
-                    createColumnGroup({
-                        columnId: 'details2',
-                        header: 'Details2',
-                        columns: [
-                            createComputedColumn({
-                                header: 'Last Login2',
-                                columnId: 'lastLogin2',
-                                accessorFn: (row) => row.stats.lastLogin.toLocaleString(),
-                                getValueFn: (row) => row.stats.lastLogin,
-                                options: { sortable: true }
-                            }),
-                            createAccessorColumn({
-                                header: 'Avg. Session (mins)2',
-                                columnId: 'averageSessionDuration2',
-                                accessorKey: 'stats.averageSessionDuration',
-                                getValueFn: (row) => row.stats.averageSessionDuration,
-                                options: { sortable: true, filterable: true },
-                                _meta: {
-                                    filterType: 'number'
-                                }
-                            })
-                        ]
-                    }),
-                ]
-            }),
-
+            createAccessorColumn({
+                header: 'Avg. Session (mins)',
+                columnId: 'averageSessionDuration',
+                accessorKey: 'stats.averageSessionDuration',
+                getValueFn: (row) => row.stats.averageSessionDuration,
+                options: { sortable: true, filterable: true },
+                _meta: {
+                    filterType: 'number'
+                }
+            })
         ]
     }),
-
 ];

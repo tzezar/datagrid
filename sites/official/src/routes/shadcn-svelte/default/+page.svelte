@@ -18,6 +18,9 @@
 		columns: userColumns,
 		data: data.users
 	});
+
+	console.log(datagrid.columnManager.getColumnWithGroupStructureAbove('country'))
+
 </script>
 
 <div>
