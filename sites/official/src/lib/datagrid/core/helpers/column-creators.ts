@@ -378,7 +378,7 @@ export function createDisplayColumn<TOriginalRow extends Record<string, any>>(
       moveable: options?.moveable ?? true,
     },
     state: {
-      size: DEFAULT_COLUMN_SIZE,
+      size: state?.size ?? DEFAULT_COLUMN_SIZE,
       visible: state?.visible ?? true,
       pinning: {
         position: state?.pinning?.position ?? 'none',

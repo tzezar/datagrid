@@ -32,6 +32,7 @@
 	import SortDescending from '$lib/datagrid/icons/tabler/sort-descending.svelte';
 	import SortAscending from '$lib/datagrid/icons/tabler/sort-ascending.svelte';
 	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';
+	import GroupBy from '../group-by.svelte';
 
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
 		datagrid.columnManager.handlers.changeColumnPinningPosition(column.columnId, position);
@@ -302,6 +303,15 @@
 	</DropdownMenu.Sub>
 {/snippet}
 
+
+{#snippet groupBy()}
+	<DropdownMenu.Item closeOnSelect={false}>
+			<!-- <GroupBy class="mr-2 size-4" /> -->
+			<GroupBy {datagrid} />
+	</DropdownMenu.Item>
+{/snippet}
+
+
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger class={`${buttonVariants({ variant: 'outline' })} rounded-none`}>
 		<Settings />
@@ -316,6 +326,7 @@
 				{@render freezing()}
 				{@render resizing()}
 				{@render visibility()}
+				{@render groupBy()}
 			</DropdownMenu.Group>
 			<!-- <DropdownMenu.Separator /> -->
 		</DropdownMenu.Group>

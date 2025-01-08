@@ -7,7 +7,8 @@
 
 <Input
 	type="text"
-	class='rounded-none br-none'
+	placeholder="Search"
+	class='rounded-none border-0 outline-none ring-0 border-l border-t focus-visible:ring-0'
 	value={datagrid.globalSearch.value}
 	oninput={(e) => {
 		datagrid.globalSearch.value = e.currentTarget.value;

@@ -4,7 +4,6 @@
 	import { findColumnById, flattenColumns } from '$lib/datagrid/core/utils.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { columnsWithGetters } from '$lib/datagrid/core/constants';
-	import type { AnyColumn } from '$lib/datagrid/core/helpers/column-creators';
 
 	let { datagrid }: { datagrid: Datagrid<any> } = $props();
 
@@ -42,7 +41,7 @@
 	value={datagrid.grouping.groupByColumns}
 	onValueChange={(values) => handleGroupByChange(values)}
 >
-	<Select.Trigger class="w-[180px] rounded-none">Group data by column</Select.Trigger>
+	<Select.Trigger class="h-full w-full rounded-none">Group data by column</Select.Trigger>
 	<Select.Content>
 		<Select.Group>
 			<Select.GroupHeading>Columns</Select.GroupHeading>

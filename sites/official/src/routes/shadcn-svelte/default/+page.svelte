@@ -21,7 +21,7 @@
 
 </script>
 
-<div>
+<div class='flex flex-col'>
 	<div class="flex justify-end">
 		<GlobalSearch {datagrid} />
 		<Button
@@ -61,10 +61,9 @@
 			</div>
 		</div>
 		<div class="grid-footer-container">
-			<Pagination {datagrid} />
 		</div>
 	</div>
-	<GroupBy {datagrid} />
+	<Pagination {datagrid} />
 </div>
 
 <style>
