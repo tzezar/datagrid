@@ -19,9 +19,6 @@
 		data: data.users
 	});
 
-	$effect(() => {
-		console.log('in order', $state.snapshot(datagrid.columnManager.getColumnsInOrder()));
-	});
 </script>
 
 <div>

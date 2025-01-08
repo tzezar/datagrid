@@ -11,9 +11,6 @@
 	let structuredColumns = $derived(flattenColumns(datagrid.columnManager.getColumnsInOrder()));
 	let leafColumns = $derived(flattenColumns(datagrid.columnManager.getColumnsInOrder()));
 
-
-	
-
 </script>
 
 {#snippet GroupRow(row: GridGroupRow<any>)}

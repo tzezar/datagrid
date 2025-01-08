@@ -50,7 +50,6 @@ export class ColumnProcessor<TOriginalRow> {
         const newColumns: AnyColumn<any>[] = [];
         for (let i = 0; i < columns.length; i++) {
             const col = columns[i];
-            console.log(col.state.pinning.position)
             if (col.state.pinning.position === 'none') {
                 col.state.pinning.offset = 0;
             } else {
@@ -60,12 +59,9 @@ export class ColumnProcessor<TOriginalRow> {
             newColumns.push(col);
         }
 
-        console.log('new cols', newColumns)
         const hierarchicalColumns = this.datagrid.columnManager.createHierarchicalColumns(newColumns);
-        console.log('new hierarchical cols', hierarchicalColumns)
         
         this.datagrid.columns = hierarchicalColumns
-        console.log('grid cols updated >>>>>>>>>>>', $state.snapshot(this.datagrid.columns))
     };
 
 }

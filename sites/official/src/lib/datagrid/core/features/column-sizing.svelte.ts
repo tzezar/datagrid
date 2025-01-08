@@ -15,8 +15,6 @@ export class ColumnSizingFeature<TOriginalRow> {
         // Find the column by ID
         const column = flatColumns.find(c => c.columnId === columnId);
 
-        console.log($state.snapshot(this.datagrid.columns))
-
         if (!column) {
             throw new Error(`Column ${columnId} not found`);
         }

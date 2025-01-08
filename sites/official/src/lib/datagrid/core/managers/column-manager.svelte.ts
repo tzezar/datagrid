@@ -169,9 +169,7 @@ export class ColumnManager<TOriginalRow> {
     getColumnsPinnedToLeft(): AnyColumn<TOriginalRow>[] {
         // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'left' || this.datagrid.grouping.groupByColumns.includes(col.columnId))
         // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'left')
-        console.log('grid cols', $state.snapshot(this.datagrid.columns))
-        let a =  flattenColumns(this.datagrid.columns).filter(col => col.state.pinning.position === 'left')
-        console.log('a', a)
+        let a =  flattenColumns(this.datagrid.columns).filter(col => col.state.pinning.position === 'left' || this.datagrid.grouping.groupByColumns.includes(col.columnId))
         return a
     }
     getColumnsPinnedToRight(): AnyColumn<TOriginalRow>[] {
@@ -198,7 +196,6 @@ export class ColumnManager<TOriginalRow> {
             if (!column) throw new Error(`Column ${columnId} not found`);
             this.datagrid.columnPinning.changeColumnPinningPosition(column, position);
             this.datagrid.processors.column.refreshColumnPinningOffsets();
-            console.log($state.snapshot(this.datagrid.columns))
         }
     }
 

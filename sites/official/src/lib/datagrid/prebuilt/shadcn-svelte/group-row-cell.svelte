@@ -9,6 +9,10 @@
 
 	let { datagrid, column, row }: { datagrid: Datagrid<any>; column: AnyColumn<any>; row: GridGroupRow<any> } =
 		$props();
+
+		console.log('column', column.columnId)
+		console.log('row', row.groupKey)
+
 </script>
 
 <div
@@ -26,7 +30,7 @@
 			{/if}
 		{/if}
 	{/if}
-	{#if column.columnId === row.groupKey}
+	{#if column.columnId == row.groupKey}
 		<div class="flex flex-col place-items-start justify-start gap-1">
 			<span class="text-muted-foreground flex place-items-center text-xs">
 				({row.children.length} items)
