@@ -8,6 +8,9 @@
 
 	let { datagrid, row }: { datagrid: Datagrid<any>; row: GridBasicRow<any> | GridGroupRow<any> } =
 		$props();
+
+	let structuredColumns = flattenColumns(datagrid.columnManager.getColumnsInOrder());
+	let leafColumns = flattenColumns(datagrid.columnManager.getColumnsInOrder());
 </script>
 
 {#snippet GroupRow(row: GridGroupRow<any>)}
@@ -16,7 +19,7 @@
 		data-depth={row.depth}
 		data-expanded={datagrid.rowManager.isGroupRowExpanded(row)}
 	>
-		{#each flattenColumns(datagrid.columnManager.getColumnsInOrder()) as column, columnIndex (columnIndex)}
+		{#each structuredColumns as column, columnIndex (columnIndex)}
 			{#if column.state.visible === true}
 				<GroupRowCell {datagrid} {column} {row} />
 			{/if}
@@ -26,7 +29,7 @@
 
 {#snippet BasicRow(row: GridBasicRow<any>)}
 	<div class="grid-body-row" >
-		{#each flattenColumns(datagrid.columnManager.getColumnsInOrder()) as column (column)}
+		{#each leafColumns as column (column)}
 			{#if column.state.visible === true}
 				<BodyRowCell {datagrid} {column} {row} />
 			{/if}

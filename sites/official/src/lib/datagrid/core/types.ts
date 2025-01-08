@@ -1,5 +1,5 @@
 import type { Component } from "svelte";
-import type { AccessorColumn, ComputedColumn } from "./helpers/column-creators";
+import type { AccessorColumn, ComputedColumn, DisplayColumn } from "./helpers/column-creators";
 
 
 export type ColumnType = 'accessor' | 'computed' | 'display' | 'group';
@@ -16,7 +16,7 @@ export type GridRowIdentifier = GridGroupRowIdentifier | GridBasicRowIdentifier
 export type GridGroupRowIdentifier = string
 export type GridBasicRowIdentifier = string | number
 
-
+export type LeafColumn<TOriginalRow> = AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow> | DisplayColumn<TOriginalRow>
 
 export type RowPinningPosition = 'top' | 'bottom' | false;
 

@@ -1,6 +1,7 @@
 import { isGroupColumn } from "../column-guards";
 import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn, GroupColumn } from "../helpers/column-creators";
 import type { Datagrid } from "../index.svelte";
+import type { LeafColumn, PinningPosition } from "../types";
 import { filterGroupColumns, findColumnById, flattenColumns } from "../utils.svelte";
 
 
@@ -28,7 +29,7 @@ export class ColumnManager<TOriginalRow> {
         return flattened;
     }
 
-    getActualColumns(): (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow> | DisplayColumn<TOriginalRow>)[] {
+    getLeafColumns(): LeafColumn<TOriginalRow>[] {
         return this.getFlattenColumns().filter(col => col.type !== 'group')
     }
 
@@ -75,94 +76,133 @@ export class ColumnManager<TOriginalRow> {
 
 
     createHierarchicalColumns(filteredFlatColumns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
-        // Make a copy of the filteredFlatColumns to avoid mutating the original
-        const copiedColumns = [...filteredFlatColumns];
-        const newColumns: AnyColumn<TOriginalRow>[] = [];
         const allFlatColumns = flattenColumns(this.datagrid.columns);
-        const processedRootColumns = new Set<string>(); // Track processed root columns
-    
-        const findInNewColumn = (column: AnyColumn<TOriginalRow>, columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow> | null => {
-            for (let col of columns) {
-                if (col.columnId === column.parentColumnId) {
-                    return col;
-                }
+        
+        // Helper function to find a column by ID in a hierarchical structure
+        const findColumnById = (
+            columnId: string,
+            columns: AnyColumn<TOriginalRow>[]
+        ): AnyColumn<TOriginalRow> | null => {
+            for (const col of columns) {
+                if (col.columnId === columnId) return col;
                 if (col.type === 'group' && col.columns) {
-                    const found = findInNewColumn(column, col.columns);
-                    if (found) {
-                        return found;
-                    }
+                    const found = findColumnById(columnId, col.columns);
+                    if (found) return found;
                 }
             }
             return null;
         };
     
-        const buildHierarchy = (column: AnyColumn<TOriginalRow>): AnyColumn<TOriginalRow> => {
-            if (column.parentColumnId === null) {
-                return { ...column };
-            }
-    
-            const parentColumn = allFlatColumns.find(col => col.columnId === column.parentColumnId);
-            if (!parentColumn) {
-                throw new Error(`Parent column ${column.parentColumnId} not found`);
-            }
-    
-            let copy = { ...parentColumn };
-            copy.columns = [column];
-    
-            if (copy.parentColumnId) {
-                return buildHierarchy(copy);
+        // Helper function to create a deep copy of a column
+        const deepCopyColumn = (column: AnyColumn<TOriginalRow>): AnyColumn<TOriginalRow> => {
+            const copy = { ...column };
+            if (copy.type === 'group' && copy.columns) {
+                copy.columns = copy.columns.map(col => deepCopyColumn(col));
             }
             return copy;
         };
     
-        // Remove duplicate columns and merge them
-        const mergedColumns = copiedColumns.filter((col, index, self) =>
-            index === self.findIndex((t) => t.columnId === col.columnId)
-        );
-    
-        // Process columns in order, handling parent-child relationships
-        for (const column of mergedColumns) {
-            const parentColumn = findInNewColumn(column, newColumns);
+        // Build the complete hierarchy for a column
+        const buildCompleteHierarchy = (
+            column: AnyColumn<TOriginalRow>,
+            processed: Set<string>
+        ): AnyColumn<TOriginalRow> => {
+            if (processed.has(column.columnId)) {
+                return deepCopyColumn(column);
+            }
             
-            if (parentColumn) {
-                // Add column to existing parent
-                parentColumn.columns.push({ ...column });
-            } else {
-                // Build hierarchy for new root column
-                const hierarchicalColumn = buildHierarchy(column);
+            processed.add(column.columnId);
+            let currentColumn = deepCopyColumn(column);
+    
+            if (currentColumn.parentColumnId) {
+                const parentColumn = allFlatColumns.find(
+                    col => col.columnId === currentColumn.parentColumnId
+                );
                 
-                // Only add root columns that haven't been processed yet
-                if (!processedRootColumns.has(hierarchicalColumn.columnId)) {
-                    processedRootColumns.add(hierarchicalColumn.columnId);
-                    newColumns.push(hierarchicalColumn);
-                } else {
-                    // If root column exists, find it and merge any new children
-                    const existingRoot = newColumns.find(col => col.columnId === hierarchicalColumn.columnId);
-                    if (existingRoot && existingRoot.columns && hierarchicalColumn.columns) {
-                        existingRoot.columns.push(...hierarchicalColumn.columns);
-                    }
+                if (!parentColumn) {
+                    throw new Error(`Parent column ${currentColumn.parentColumnId} not found`);
                 }
+    
+                const parent = deepCopyColumn(parentColumn);
+                parent.columns = [currentColumn];
+                return buildCompleteHierarchy(parent, processed);
+            }
+    
+            return currentColumn;
+        };
+    
+        // Process columns and build final hierarchy
+        const result: AnyColumn<TOriginalRow>[] = [];
+        const processedColumns = new Set<string>();
+    
+        // First pass: build initial hierarchies
+        for (const column of filteredFlatColumns) {
+            if (!processedColumns.has(column.columnId)) {
+                const hierarchy = buildCompleteHierarchy(column, new Set());
+                
+                // Check if we already have this root in our result
+                const existingRoot = result.find(col => col.columnId === hierarchy.columnId);
+                
+                if (existingRoot) {
+                    // Merge the hierarchies
+                    if (existingRoot.type === 'group' && hierarchy.type === 'group') {
+                        existingRoot.columns = existingRoot.columns || [];
+                        const newChild = hierarchy.columns?.[0];
+                        if (newChild && !findColumnById(newChild.columnId, existingRoot.columns)) {
+                            existingRoot.columns.push(newChild);
+                        }
+                    }
+                } else {
+                    result.push(hierarchy);
+                }
+                
+                processedColumns.add(column.columnId);
             }
         }
     
-        return newColumns;
+        return result;
     }
 
 
 
 
     getColumnsPinnedToLeft(): AnyColumn<TOriginalRow>[] {
-        return this.datagrid.columnManager.getActualColumns().filter(col => col.state.pinning.position === 'left' || this.datagrid.grouping.groupByColumns.includes(col.columnId))
+        // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'left' || this.datagrid.grouping.groupByColumns.includes(col.columnId))
+        // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'left')
+        console.log('grid cols', $state.snapshot(this.datagrid.columns))
+        let a =  flattenColumns(this.datagrid.columns).filter(col => col.state.pinning.position === 'left')
+        console.log('a', a)
+        return a
     }
     getColumnsPinnedToRight(): AnyColumn<TOriginalRow>[] {
-        return this.datagrid.columnManager.getActualColumns().filter(col => col.state.pinning.position === 'right')
+        return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'right')
     }
     getColumnsPinnedToNone(): AnyColumn<TOriginalRow>[] {
-        return this.datagrid.columnManager.getActualColumns().filter(col => col.state.pinning.position === 'none').filter(col => !this.datagrid.grouping.groupByColumns.includes(col.columnId))
+        return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'none').filter(col => !this.datagrid.grouping.groupByColumns.includes(col.columnId))
     }
+
 
     getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
         const cols = [...this.getColumnsPinnedToLeft(), ...this.createHierarchicalColumns(this.getColumnsPinnedToNone()), ...this.createHierarchicalColumns(this.getColumnsPinnedToRight())]
+        // const cols = [...this.getColumnsPinnedToLeft()]
         return cols
     }
+
+
+
+
+
+    handlers = {
+        changeColumnPinningPosition: (columnId: string, position: PinningPosition) => {
+            let column = findColumnById(this.datagrid.columns, columnId);
+            if (!column) throw new Error(`Column ${columnId} not found`);
+            this.datagrid.columnPinning.changeColumnPinningPosition(column, position);
+            this.datagrid.processors.column.refreshColumnPinningOffsets();
+            console.log($state.snapshot(this.datagrid.columns))
+        }
+    }
+
+
+
+
 }

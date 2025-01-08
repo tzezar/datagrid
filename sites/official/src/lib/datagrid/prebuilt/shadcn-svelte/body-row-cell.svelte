@@ -1,11 +1,10 @@
 <script lang="ts">
-	import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn } from "$lib/datagrid/core/helpers/column-creators";
 	import type { Datagrid } from "$lib/datagrid/core/index.svelte";
-	import type { GridBasicRow } from "$lib/datagrid/core/types";
+	import type { GridBasicRow, LeafColumn } from "$lib/datagrid/core/types";
 	import { getCellContent } from "$lib/datagrid/core/utils.svelte";
 
 
-	let { datagrid, column, row }: { datagrid: Datagrid<any>; column: (AccessorColumn<any> | ComputedColumn<any> | DisplayColumn<any>); row: GridBasicRow<any> } =
+	let { datagrid, column, row }: { datagrid: Datagrid<any>; column: LeafColumn<any>; row: GridBasicRow<any> } =
 		$props();
 </script>
 

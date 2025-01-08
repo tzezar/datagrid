@@ -1,6 +1,7 @@
 import { isGroupColumn } from "../column-guards";
 import type { AnyColumn, GroupColumn } from "../helpers/column-creators";
 import type { Datagrid } from "../index.svelte";
+import { flattenColumns } from "../utils.svelte";
 
 
 export class ColumnProcessor<TOriginalRow> {
@@ -9,7 +10,7 @@ export class ColumnProcessor<TOriginalRow> {
         this.datagrid = datagrid;
     }
 
-    
+
     transformColumns = (columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] => {
         this.assignParentColumnIds(columns);
 
@@ -44,9 +45,12 @@ export class ColumnProcessor<TOriginalRow> {
 
 
     refreshColumnPinningOffsets() {
+        // const columns = flattenColumns(this.datagrid.columns);
+        const columns = flattenColumns(this.datagrid.columns);
         const newColumns: AnyColumn<any>[] = [];
-        for (let i = 0; i < this.datagrid.columns.length; i++) {
-            const col = this.datagrid.columns[i];
+        for (let i = 0; i < columns.length; i++) {
+            const col = columns[i];
+            console.log(col.state.pinning.position)
             if (col.state.pinning.position === 'none') {
                 col.state.pinning.offset = 0;
             } else {
@@ -55,7 +59,13 @@ export class ColumnProcessor<TOriginalRow> {
 
             newColumns.push(col);
         }
-        this.datagrid.columns = newColumns;
+
+        console.log('new cols', newColumns)
+        const hierarchicalColumns = this.datagrid.columnManager.createHierarchicalColumns(newColumns);
+        console.log('new hierarchical cols', hierarchicalColumns)
+        
+        this.datagrid.columns = hierarchicalColumns
+        console.log('grid cols updated >>>>>>>>>>>', $state.snapshot(this.datagrid.columns))
     };
 
 }

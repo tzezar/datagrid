@@ -1,56 +1,15 @@
 <script lang="ts">
 	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
+	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/helpers/column-creators';
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
-	import {
-		onSort
-	} from '$lib/datagrid/core/utils.svelte';
+	import { onSort } from '$lib/datagrid/core/utils.svelte';
 	import ColumnFilter from '$lib/datagrid/prebuilt/native/column-filter.svelte';
 	import HeaderCell from './header-cell.svelte';
 	import SortingIndicator from './sorting-indicator.svelte';
 
 	let { datagrid, column }: { datagrid: Datagrid<any>; column: any } = $props();
 
-	// Find the deepest level of any column in the grid
-	function findMaxDepth(columns: any[]): number {
-		let maxDepth = 0;
-
-		function traverse(col: any, depth: number) {
-			if (isGroupColumn(col)) {
-				col.columns.forEach((subCol) => traverse(subCol, depth + 1));
-			} else {
-				maxDepth = Math.max(maxDepth, depth);
-			}
-		}
-
-		columns.forEach((col) => traverse(col, 0));
-		return maxDepth;
-	}
-
-	// Calculate current column's depth
-	function getColumnDepth(targetCol: any): number {
-		let depth = 0;
-
-		function findColumn(columns: any[], currentDepth: number): boolean {
-			for (const col of columns) {
-				if (col === targetCol) {
-					depth = currentDepth;
-					return true;
-				}
-				if (isGroupColumn(col)) {
-					if (findColumn(col.columns, currentDepth + 1)) {
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-
-		findColumn(datagrid.columns, 0);
-		return depth;
-	}
-
-	// Check if any child column is visible
-	function hasVisibleChildren(column: any): boolean {
+		function hasVisibleChildren(column: any): boolean {
 		if (!isGroupColumn(column)) return false;
 		return column.columns.some((col: any) => {
 			if (isGroupColumn(col)) {
@@ -60,20 +19,15 @@
 		});
 	}
 
-	let maxGridDepth = $state(findMaxDepth(datagrid.columns));
-	let currentDepth = $state(getColumnDepth(column));
-	console.log(currentDepth);
-
-	let blankCellsCount = $state(!isGroupColumn(column) ? maxGridDepth - currentDepth : 0);
 </script>
 
-{#if isGroupColumn(column)}
+{#snippet HeaderGroupCell(column: GroupColumn<any>)}
 	<div
 		class={`grid-header-group text-xs font-medium`}
 		data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 	>
 		{#if hasVisibleChildren(column)}
-			<div class="grid-header-group-header  text-center" >{column.header}</div>
+			<div class="grid-header-group-header text-center">{column.header}</div>
 			<div class="flex grow flex-row">
 				{#each column.columns ?? [] as subColumn (subColumn.columnId)}
 					<HeaderCell {datagrid} column={subColumn} />
@@ -81,13 +35,11 @@
 			</div>
 		{/if}
 	</div>
-{:else if column.state.visible === true}
-	<!-- {#each Array(blankCellsCount) as _, i}
-<div class="grid-header-group test border-r last:border-b"></div>
-{/each} -->
+{/snippet}
 
+{#snippet HeaderCellSnippet(column: AnyColumn<any>)}
 	<div
-		class={`grid-header-cell justify-end text-xs font-medium border-t h-fit self-end`}
+		class={`grid-header-cell h-fit justify-end self-end border-t text-xs font-medium`}
 		data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 		style:--pin-left-offset={column.state.pinning.offset + 'px'}
 		style:--pin-right-offset={column.state.pinning.offset + 'px'}
@@ -116,7 +68,15 @@
 			<button onclick={() => datagrid.columnOrdering.moveColumnRight(column)}>right</button>
 		</div>
 	</div>
+{/snippet}
+
+{#if isGroupColumn(column)}
+	{@render HeaderGroupCell(column)}
+{:else if column.state.visible === true}
+	{@render HeaderCellSnippet(column)}
 {/if}
+
+
 
 <style>
 	.test {

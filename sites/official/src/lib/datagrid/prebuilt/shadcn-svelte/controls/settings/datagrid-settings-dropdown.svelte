@@ -7,7 +7,6 @@
 		filterOutGroupColumns,
 		flattenColumns,
 		getSortDirection,
-		getSortIcon,
 		getSortIndex,
 		isDescendantOf,
 		onSort
@@ -34,15 +33,14 @@
 	import SortAscending from '$lib/datagrid/icons/tabler/sort-ascending.svelte';
 	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';
 
-	function handleColumnPinningChange(column: any, position: PinningPosition) {
-		datagrid.columnPinning.changeColumnPinningPosition(column, position);
-		datagrid.processors.column.refreshColumnPinningOffsets();
+	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
+		datagrid.columnManager.handlers.changeColumnPinningPosition(column.columnId, position);
 	}
 
-	const flattenColumnsWithoutGroups = filterOutGroupColumns(flattenColumns(datagrid.columns));
+	const leafColumns = datagrid.columnManager.getLeafColumns()
 
 	let sortableColumns = $derived(
-		flattenColumnsWithoutGroups.filter((column) => column.options.sortable === true)
+		leafColumns.filter((column) => column.options.sortable === true)
 	);
 
 	let selectedColumns: Record<string, boolean> = $state({});
@@ -219,7 +217,7 @@
 			<span>Freezing</span>
 		</DropdownMenu.SubTrigger>
 		<DropdownMenu.SubContent>
-			{#each flattenColumnsWithoutGroups as column}
+			{#each leafColumns as column}
 				<DropdownMenu.Item closeOnSelect={false} class="flex flex-row flex-nowrap gap-2">
 					<span>{column.header}</span>
 					<Select.Root
@@ -254,7 +252,7 @@
 			<span>Resizing</span>
 		</DropdownMenu.SubTrigger>
 		<DropdownMenu.SubContent>
-			{#each flattenColumnsWithoutGroups as column}
+			{#each leafColumns as column}
 				<DropdownMenu.Item closeOnSelect={false} class="flex flex-col">
 					<span>{column.header}</span>
 					<Slider

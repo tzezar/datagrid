@@ -44,7 +44,6 @@ export class Datagrid<TOriginalRow> {
     });
     columns: AnyColumn<TOriginalRow>[] = $state([]);
 
-
     columnsPinnedToLeft: AnyColumn<TOriginalRow>[] = $state([]);
     columnsPinnedToRight: AnyColumn<TOriginalRow>[] = $state([]);
 
@@ -95,7 +94,7 @@ export class Datagrid<TOriginalRow> {
     private initializeState(config: DatagridConfig<TOriginalRow>) {
         this.original.columns = config.columns;
         this.original.data = config.data;
-
+        
         this.columns = this.processors.column.transformColumns(this.original.columns);
         this.processors.data.executeFullDataTransformation();
 

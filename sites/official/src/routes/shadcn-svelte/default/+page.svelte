@@ -20,7 +20,7 @@
 	});
 
 	$effect(() => {
-		console.log(datagrid.columnManager.getColumnsInOrder());
+		console.log('in order', $state.snapshot(datagrid.columnManager.getColumnsInOrder()));
 	});
 </script>
 
@@ -54,14 +54,8 @@
 				{#each datagrid.rowPinning.getTopRows() as row (row.identifier)}
 					<Row {datagrid} {row} />
 				{/each}
-
 				{#each datagrid.rowPinning.getCenterRows() as row (row.identifier)}
-					<!-- <div
-						in:fade={{ duration: 100, delay: 100 }}
-						animate:flip={{ easing: cubicInOut, duration: 200 }}
-					> -->
 					<Row {datagrid} {row} />
-					<!-- </div> -->
 				{/each}
 
 				{#each datagrid.rowPinning.getBottomRows() as row (row.identifier)}
