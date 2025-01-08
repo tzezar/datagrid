@@ -64,8 +64,8 @@
 			</div>
 		{/if}
 		<div>
-			<button onclick={() => datagrid.columnOrdering.moveColumnLeft(column)}>left</button>
-			<button onclick={() => datagrid.columnOrdering.moveColumnRight(column)}>right</button>
+			<button onclick={() => datagrid.columnOrdering.moveLeft(column)}>left</button>
+			<button onclick={() => datagrid.columnOrdering.moveRight(column)}>right</button>
 		</div>
 	</div>
 {/snippet}

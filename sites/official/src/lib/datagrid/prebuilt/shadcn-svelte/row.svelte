@@ -1,5 +1,4 @@
 <script lang="ts">
-
 	import GroupRowCell from './group-row-cell.svelte';
 	import BodyRowCell from './body-row-cell.svelte';
 	import type { GridBasicRow, GridGroupRow } from '$lib/datagrid/core/types';
@@ -9,8 +8,12 @@
 	let { datagrid, row }: { datagrid: Datagrid<any>; row: GridBasicRow<any> | GridGroupRow<any> } =
 		$props();
 
-	let structuredColumns = flattenColumns(datagrid.columnManager.getColumnsInOrder());
-	let leafColumns = flattenColumns(datagrid.columnManager.getColumnsInOrder());
+	let structuredColumns = $derived(flattenColumns(datagrid.columnManager.getColumnsInOrder()));
+	let leafColumns = $derived(flattenColumns(datagrid.columnManager.getColumnsInOrder()));
+
+
+	
+
 </script>
 
 {#snippet GroupRow(row: GridGroupRow<any>)}
@@ -28,7 +31,7 @@
 {/snippet}
 
 {#snippet BasicRow(row: GridBasicRow<any>)}
-	<div class="grid-body-row" >
+	<div class="grid-body-row">
 		{#each leafColumns as column (column)}
 			{#if column.state.visible === true}
 				<BodyRowCell {datagrid} {column} {row} />

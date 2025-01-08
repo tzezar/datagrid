@@ -11,7 +11,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
     }
 
 
-    moveColumnLeft(column: AnyColumn<TOriginalRow>): void {
+    moveLeft(column: AnyColumn<TOriginalRow>): void {
         if (this.datagrid.columnGrouping.isColumnWithinGroup(column)) {
             const parentGroupColumn = this.datagrid.columnGrouping.findParentColumnGroup(column.parentColumnId);
             if (parentGroupColumn === null) return;
@@ -36,7 +36,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
 
     }
 
-    moveColumnRight(column: AnyColumn<TOriginalRow>): void {
+    moveRight(column: AnyColumn<TOriginalRow>): void {
         if (this.datagrid.columnGrouping.isColumnWithinGroup(column)) {
             const parentGroupColumn = this.datagrid.columnGrouping.findParentColumnGroup(column.parentColumnId);
             if (parentGroupColumn === null) return;
