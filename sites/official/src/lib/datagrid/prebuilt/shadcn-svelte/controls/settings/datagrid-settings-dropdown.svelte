@@ -28,7 +28,8 @@
 	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';
 	import GroupBy from '../group-by.svelte';
 	import AdGroupOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-outline-sharp.svelte';
-
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
+	import Header from '$lib/tzezars-datagrid/prebuilt/native/header.svelte';
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
 		datagrid.handlers.columnPinning.changeColumnPinningPosition(column.columnId, position);
 	}
@@ -134,7 +135,7 @@
 		</button>
 		<select
 			id={`group-select-${column.columnId}`}
-			class="w-full"
+			class="w-full min-w-[100px]"
 			value={column.parentColumnId || ''}
 			onchange={(e) => {
 				const targetGroupId = e.currentTarget.value;
@@ -170,39 +171,48 @@
 	</div>
 {/snippet}
 
-{#snippet ordering(columns: AnyColumn<any>[])}
-	{#each columns as column (column.columnId)}
-		{#if isGroupColumn(column)}
-			<div class="m-2 border p-2 text-sm font-bold">
-				<div class="flex items-center justify-between">
-					{column.header}
-					<button onclick={() => datagrid.columnGrouping.deleteGroupColumn(column)}
-						><DeleteOutline /></button
-					>
+{#snippet ordering(columns: AnyColumn<any>[], depth: number = 0)}
+	<div class="flex-col gap-4 flex">
+		{#each columns as column (column.columnId)}
+			{#if isGroupColumn(column)}
+				<div class="flex rounded-md border p-4 gap-4">
+					<div class="flex flex-col gap-2">
+						<div class="flex w-full flex-row justify-between gap-4">
+							<span class="text-xs font-bold">{column.header}</span>
+							<button onclick={() => datagrid.columnGrouping.deleteGroupColumn(column)}>
+								<DeleteOutline />
+							</button>
+						</div>
+						{@render columnGroupControls(column)}
+					</div>
+					{@render ordering(column.columns, depth + 1)}
 				</div>
-				{@render columnGroupControls(column)}
-				{@render ordering(column.columns)}
-			</div>
-		{:else}
-			<div class="m-2 border p-2">
-				<span class="text-xs font-bold">{column.header}</span>
-				{@render columnGroupControls(column)}
-			</div>
-		{/if}
-	{/each}
+			{:else}
+				<div class="flex flex-col gap-2 rounded-md border p-4">
+					<span class="text-xs font-bold">{column.header}</span>
+					{@render columnGroupControls(column)}
+				</div>
+			{/if}
+		{/each}
+	</div>
 {/snippet}
 
 {#snippet reordering()}
-	<DropdownMenu.Sub>
-		<DropdownMenu.SubTrigger>
-			<MoveUp class="mr-2 size-4" />
-			<span>Reordering</span>
-		</DropdownMenu.SubTrigger>
-		<DropdownMenu.SubContent class="max-h-[400px] overflow-auto">
-			<DropdownMenu.Separator />
-			{@render ordering(datagrid.columns)}
-		</DropdownMenu.SubContent>
-	</DropdownMenu.Sub>
+	<Dialog.Root open={true}>
+		<Dialog.Trigger class="w-full">
+			<DropdownMenu.Item closeOnSelect={false}>
+				<MoveUp class="mr-2 size-4" />
+				<span>Reordering</span>
+			</DropdownMenu.Item>
+		</Dialog.Trigger>
+		<Dialog.Content class="h-full overflow-auto max-w-4xl max-h-[80vh]">
+			<div class="h-full w-full overflow-auto">
+				<div style="" class="inline-block">
+					{@render ordering(datagrid.columns)}
+				</div>
+			</div>
+		</Dialog.Content>
+	</Dialog.Root>
 {/snippet}
 
 {#snippet freezing()}
