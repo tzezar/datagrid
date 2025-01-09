@@ -22,10 +22,10 @@
 </script>
 
 <div class='flex flex-col'>
-	<div class="flex justify-end">
+	<div class="flex justify-end top-bar">
 		<GlobalSearch {datagrid} />
 		<Button
-			class="rounded-none"
+			class="rounded-none border-b-0 border-r-0"
 			variant="outline"
 			onclick={() => datagrid.filtering.toggleColumnFiltering()}
 		>
@@ -67,4 +67,7 @@
 </div>
 
 <style>
+	.top-bar {
+		background-color: hsl(var(--grid-header));
+	}
 </style>

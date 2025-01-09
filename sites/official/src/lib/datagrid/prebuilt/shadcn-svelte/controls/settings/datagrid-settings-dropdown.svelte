@@ -305,12 +305,12 @@
 {/snippet}
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger class={`${buttonVariants({ variant: 'outline' })} rounded-none`}>
+	<DropdownMenu.Trigger class={`${buttonVariants({ variant: 'outline' })} rounded-none border-b-0`}>
 		<Settings />
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-56">
 		<DropdownMenu.Group>
-			<DropdownMenu.GroupHeading>Column options</DropdownMenu.GroupHeading>
+			<DropdownMenu.GroupHeading>Datagrid control center</DropdownMenu.GroupHeading>
 			<DropdownMenu.Separator />
 			<DropdownMenu.Group>
 				{@render sorting()}
