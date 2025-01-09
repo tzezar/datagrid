@@ -33,6 +33,8 @@
 	import Visibility from '$lib/datagrid/icons/material-symbols/visibility.svelte';
 	import ArrowMoveLeft from '$lib/datagrid/icons/tabler/arrow-move-left.svelte';
 	import ArrowMoveRight from '$lib/datagrid/icons/tabler/arrow-move-right.svelte';
+	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
+	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
 
 	let { datagrid, column }: { datagrid: Datagrid<any>; column: LeafColumn<any> } = $props();
 </script>
@@ -179,14 +181,41 @@
 				<ArrowMoveRight class="mr-2 size-4" />
 				<span>Move right</span>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				<Users class="mr-2 size-4" />
-				<span>Move to group or root</span>
-			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				<Users class="mr-2 size-4" />
-				<span>Create group</span>
-			</DropdownMenu.Item>
+
+			<DropdownMenu.Sub>
+				<DropdownMenu.SubTrigger>
+					<MoveUp class="mr-2 size-4" />
+					<span>Move to</span>
+				</DropdownMenu.SubTrigger>
+				<DropdownMenu.SubContent>
+					<DropdownMenu.Item
+						closeOnSelect={false}
+						onclick={() =>
+							datagrid.handlers.columnOrdering.moveColumnToGroup({
+								columnId: column.columnId,
+								targetGroupColumnId: ""
+							})}
+					>
+						<div class="flex flex-row gap-2">
+							<span>Root level</span>
+						</div>
+					</DropdownMenu.Item>
+					{#each datagrid.columnManager.getGroupColumns() as groupCol}
+						<DropdownMenu.Item
+							closeOnSelect={false}
+							onclick={() =>
+								datagrid.handlers.columnOrdering.moveColumnToGroup({
+									columnId: column.columnId,
+									targetGroupColumnId: groupCol.columnId
+								})}
+						>
+							<div class="flex flex-row gap-2">
+								<span>{groupCol.header}</span>
+							</div>
+						</DropdownMenu.Item>
+					{/each}
+				</DropdownMenu.SubContent>
+			</DropdownMenu.Sub>
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

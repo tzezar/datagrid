@@ -2,7 +2,7 @@ import { DEFAULT_COLUMN_SIZE } from "../defaults";
 import type { CreateGroupColumnProps, GroupColumn } from "./types";
 
 
-export function createColumnGroup<TOriginalRow extends Record<string, any>>(
+export function createColumnGroup<TOriginalRow>(
   { header, columns, columnId, _meta, ...rest }: CreateGroupColumnProps<TOriginalRow>
 ): GroupColumn<TOriginalRow> {
   return {

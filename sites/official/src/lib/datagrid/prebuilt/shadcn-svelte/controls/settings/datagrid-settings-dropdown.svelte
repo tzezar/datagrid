@@ -4,9 +4,12 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import {
+		findColumnById,
+		flattenColumns,
+		generateRandomColumnId,
 		getSortDirection,
 		getSortIndex,
-		isDescendantOf,
+		isDescendantOf
 	} from '$lib/datagrid/core/utils.svelte';
 	import Visibility from '$lib/datagrid/icons/material-symbols/visibility.svelte';
 	import VisibilityOff from '$lib/datagrid/icons/material-symbols/visibility-off.svelte';
@@ -32,6 +35,8 @@
 	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';
 	import GroupBy from '../group-by.svelte';
 	import { columns } from '../../../../../../routes/_components/columns.svelte';
+	import AdGroupOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-outline-sharp.svelte';
+	import { createColumnGroup } from '$lib/datagrid/core/column-creation/group-column-creator';
 
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
 		datagrid.columnManager.handlers.changeColumnPinningPosition(column.columnId, position);
@@ -53,7 +58,10 @@
 		</DropdownMenu.SubTrigger>
 		<DropdownMenu.SubContent>
 			{#each sortableColumns as column}
-				<DropdownMenu.Item closeOnSelect={false} onclick={(e) => datagrid.handlers.sorting.toggleColumnSorting( column, e)}>
+				<DropdownMenu.Item
+					closeOnSelect={false}
+					onclick={(e) => datagrid.handlers.sorting.toggleColumnSorting(column, e)}
+				>
 					{#if column.options.sortable}
 						<div class="sort-indicator">
 							{#if getSortDirection(datagrid, column) === 'desc'}
@@ -109,12 +117,9 @@
 					class="w-full"
 					disabled={!newGroupName || !Object.values(selectedColumns).some((v) => v)}
 					onclick={() => {
-						const columnsToGroup = Object.entries(selectedColumns)
-							.filter(([_, selected]) => selected)
-							.map(([columnId]) => columnId);
-
-						columnsToGroup.forEach((columnId) => {
-							datagrid.columnGrouping.createGroupColumn(columnId, newGroupName);
+						datagrid.handlers.columnGrouping.createGroup({
+							newGroupName,
+							selectedColumns
 						});
 
 						selectedColumns = {};
@@ -130,8 +135,12 @@
 
 {#snippet columnGroupControls(column: AnyColumn<any>)}
 	<div class="text-muted-foreground flex flex-row gap-2 text-xs">
-		<button onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}><MoveUp /></button>
-		<button onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}><MoveDown /></button>
+		<button onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
+			><MoveUp /></button
+		>
+		<button onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}
+			><MoveDown /></button
+		>
 		<select
 			id={`group-select-${column.columnId}`}
 			class="w-full"
@@ -152,7 +161,10 @@
 					}
 				}
 
-				datagrid.columnOrdering.moveColumnToGroup(column, targetGroupId);
+				datagrid.handlers.columnOrdering.moveColumnToGroup({
+					columnId: column.columnId,
+					targetGroupColumnId: targetGroupId
+				});
 			}}
 		>
 			<option value="">Root Level</option>
@@ -196,15 +208,6 @@
 			<span>Reordering</span>
 		</DropdownMenu.SubTrigger>
 		<DropdownMenu.SubContent class="max-h-[400px] overflow-auto">
-			<DropdownMenu.Sub>
-				<DropdownMenu.SubTrigger>
-					<MoveUp class="mr-2 size-4" />
-					<span>Create Group</span>
-				</DropdownMenu.SubTrigger>
-				<DropdownMenu.SubContent>
-					{@render newGroupCreationMenu()}
-				</DropdownMenu.SubContent>
-			</DropdownMenu.Sub>
 			<DropdownMenu.Separator />
 			{@render ordering(datagrid.columns)}
 		</DropdownMenu.SubContent>
@@ -324,6 +327,15 @@
 				{@render freezing()}
 				{@render resizing()}
 				{@render visibility()}
+				<DropdownMenu.Sub>
+					<DropdownMenu.SubTrigger>
+						<AdGroupOutlineSharp class="mr-2 size-4" />
+						<span>Create Group</span>
+					</DropdownMenu.SubTrigger>
+					<DropdownMenu.SubContent>
+						{@render newGroupCreationMenu()}
+					</DropdownMenu.SubContent>
+				</DropdownMenu.Sub>
 				{@render groupBy()}
 			</DropdownMenu.Group>
 			<!-- <DropdownMenu.Separator /> -->

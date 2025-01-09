@@ -1,7 +1,8 @@
+import { createColumnGroup } from "../column-creation/group-column-creator";
 import type { AnyColumn } from "../column-creation/types";
 import type { Datagrid } from "../index.svelte";
 import type { ColumnId, FilterableColumn, LeafColumn, PinningPosition } from "../types";
-import { findColumnById, isColumnFilterable } from "../utils.svelte";
+import { findColumnById, flattenColumns, generateRandomColumnId, isColumnFilterable } from "../utils.svelte";
 
 
 
@@ -168,6 +169,33 @@ export class HandlersManager {
         },
         moveRight: (columnId: ColumnId) => {
             this.datagrid.columnOrdering.moveRight(columnId)
+        },
+        moveColumnToGroup: ({ columnId, targetGroupColumnId }: { columnId: ColumnId, targetGroupColumnId: string }) => {
+            this.datagrid.columnOrdering.moveColumnToGroup({ columnId, targetGroupColumnId });
+        }
+    }
+    columnGrouping = {
+        createGroup: ({ newGroupName, selectedColumns }: { newGroupName: string, selectedColumns: Record<string, boolean> }) => {
+            const groupColumn = createColumnGroup({
+                header: newGroupName,
+                columnId: generateRandomColumnId(),
+                parentColumnId: null,
+                columns: []
+            });
+            this.datagrid.columns.push(groupColumn);
+
+            this.datagrid.processors.column.refreshColumnPinningOffsets();
+
+            const columnIdsToBeGrouped = Object.entries(selectedColumns)
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                .filter(([_, selected]) => selected)
+                .map(([columnId]) => columnId);
+
+            for (const columnId of columnIdsToBeGrouped) {
+                const column = findColumnById(flattenColumns(this.datagrid.columns), columnId);
+                if (!column) throw new Error(`Column ${columnId} not found`);
+                column.parentColumnId = groupColumn.columnId;
+            }
         }
     }
 }
