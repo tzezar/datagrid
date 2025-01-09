@@ -1,14 +1,14 @@
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { XMLBuilder } from 'fast-xml-parser';
-import type { Datagrid } from "../index.svelte";
+import type { DataGrid } from "../index.svelte";
 import type { AnyColumn } from "../column-creation/types";
 
 export class ExportingFeature<T> {
-    private datagrid: Datagrid<T>;
+    private datagrid: DataGrid<T>;
     fileName: string = $state('table');
 
-    constructor(datagrid: Datagrid<T>) {
+    constructor(datagrid: DataGrid<T>) {
         this.datagrid = datagrid;
     }
 
@@ -68,7 +68,7 @@ export class ExportingFeature<T> {
      * Prepares data for export by mapping rows and columns
      */
     private prepareData(): Record<string, unknown>[] {
-        return this.datagrid.original.data.map(row => {
+        return this.datagrid.initialState.data.map(row => {
             const rowData: Record<string, unknown> = {};
             this.datagrid.columnManager.getLeafColumns().forEach((column: AnyColumn<T>) => {
                 rowData[column.columnId as string] = row[column.columnId as keyof T];

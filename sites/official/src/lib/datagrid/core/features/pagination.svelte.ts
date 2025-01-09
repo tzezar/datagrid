@@ -1,9 +1,9 @@
-import type { Datagrid } from "../index.svelte";
+import type { DataGrid } from "../index.svelte";
 
 
 
 export class PaginationFeature<TOriginalRow> {
-    datagrid: Datagrid<TOriginalRow>;
+    datagrid: DataGrid<TOriginalRow>;
 
     page = $state(1);
     pageSize = $state(10);
@@ -11,7 +11,7 @@ export class PaginationFeature<TOriginalRow> {
     pageCount: number = $state(0);
     visibleRowsCount: number = $state(0);
 
-    constructor(datagrid: Datagrid<TOriginalRow>) {
+    constructor(datagrid: DataGrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 

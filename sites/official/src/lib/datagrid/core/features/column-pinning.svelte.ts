@@ -1,11 +1,11 @@
 import type { AnyColumn } from "../column-creation/types";
-import type { Datagrid } from "../index.svelte";
+import type { DataGrid } from "../index.svelte";
 import type { ColumnId, PinningPosition } from "../types";
 
 export class ColumnPinningFeature {
-    datagrid: Datagrid<any>;
+    datagrid: DataGrid<any>;
 
-    constructor(datagrid: Datagrid<any>) {
+    constructor(datagrid: DataGrid<any>) {
         this.datagrid = datagrid;
     }
 

@@ -1,10 +1,10 @@
 import { SvelteSet } from "svelte/reactivity";
-import type { Datagrid } from "../index.svelte";
+import type { DataGrid } from "../index.svelte";
 import type { GridGroupRow, GridRow, GridRowIdentifier, RowPinningPosition } from "../types";
 import { isGroupRow } from "../utils.svelte";
 
 export class RowPinningFeature<TOriginalRow> {
-    datagrid: Datagrid<TOriginalRow>;
+    datagrid: DataGrid<TOriginalRow>;
     rowIdsPinnedTop: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
     rowIdsPinnedBottom: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
 
@@ -13,7 +13,7 @@ export class RowPinningFeature<TOriginalRow> {
     private bottomRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
 
 
-    constructor(datagrid: Datagrid<TOriginalRow>) {
+    constructor(datagrid: DataGrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 
@@ -25,8 +25,8 @@ export class RowPinningFeature<TOriginalRow> {
 
 
 
-        for (let i = 0; i < this.datagrid.cache.rows.length; i++) {
-            const row = this.datagrid.cache.rows[i];
+        for (let i = 0; i < this.datagrid.cacheManager.rows.length; i++) {
+            const row = this.datagrid.cacheManager.rows[i];
             const rowIdentifier = this.datagrid.rowManager.getRowIdentifier(row);
             if (this.rowIdsPinnedTop.has(rowIdentifier)) {
                 pinnedTop.push(row);
@@ -58,7 +58,7 @@ export class RowPinningFeature<TOriginalRow> {
         }
 
         // Iterate through all rows to populate unpinned array
-        this.datagrid.cache.rows.forEach(row => {
+        this.datagrid.cacheManager.rows.forEach(row => {
             const id = this.datagrid.rowManager.getRowIdentifier(row);
             if (!this.rowIdsPinnedTop.has(id) && !this.rowIdsPinnedBottom.has(id)) {
                 unpinned.push(row);
@@ -118,7 +118,7 @@ export class RowPinningFeature<TOriginalRow> {
      * Get unpinned rows (center)
      */
     getCenterRows(): GridRow<TOriginalRow>[] {
-        return (this.datagrid.cache.paginatedRows || []).filter(row => {
+        return (this.datagrid.cacheManager.paginatedRows || []).filter(row => {
             const id = this.datagrid.rowManager.getRowIdentifier(row);
             return !this.isPinnedTop(id) && !this.isPinnedBottom(id);
         });

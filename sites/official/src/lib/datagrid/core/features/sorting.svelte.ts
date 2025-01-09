@@ -1,11 +1,11 @@
-import type { Datagrid } from "../index.svelte";
+import type { DataGrid } from "../index.svelte";
 import type { SortConfig } from "../types";
 
 export class SortingFeature {
-    datagrid: Datagrid<any>;
+    datagrid: DataGrid<any>;
     sortConfigs: SortConfig[] = $state([]);
 
-    constructor(datagrid: Datagrid<any>) {
+    constructor(datagrid: DataGrid<any>) {
         this.datagrid = datagrid;
     }
 

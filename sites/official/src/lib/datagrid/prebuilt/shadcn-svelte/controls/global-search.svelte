@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Input from '$lib/components/ui/input/input.svelte';
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 
-	let { datagrid }: { datagrid: Datagrid<any> } = $props();
+	let { datagrid }: { datagrid: DataGrid<any> } = $props();
 </script>
 
 <Input
@@ -13,7 +13,7 @@
 	oninput={(e) => {
 		datagrid.globalSearch.value = e.currentTarget.value;
 		datagrid.pagination.goToFirstPage();
-		datagrid.cache.invalidate('filteredData');
+		datagrid.cacheManager.invalidate('filteredData');
 		datagrid.processors.data.executeFullDataTransformation();
 	}}
 />

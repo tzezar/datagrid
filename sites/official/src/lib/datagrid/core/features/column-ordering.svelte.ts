@@ -1,12 +1,12 @@
 import { type AnyColumn, type GroupColumn } from "../column-creation/types";
-import type { Datagrid } from "../index.svelte";
+import type { DataGrid } from "../index.svelte";
 import type { ColumnId } from "../types";
 import { findColumnById } from "../utils.svelte";
 
 export class ColumnOrderingFeature<TOriginalRow> {
-    private datagrid: Datagrid<TOriginalRow>;
+    private datagrid: DataGrid<TOriginalRow>;
 
-    constructor(datagrid: Datagrid<TOriginalRow>) {
+    constructor(datagrid: DataGrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 

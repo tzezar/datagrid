@@ -1,23 +1,23 @@
 <script lang="ts">
 	import type { AnyColumn } from '$lib/datagrid/core/column-creation/types';
 	import type { FilterOperator } from '$lib/datagrid/core/types';
-	import type { Datagrid } from '../../core/index.svelte';
+	import type { DataGrid } from '../../core/index.svelte';
 
 	type Props = {
-		datagrid: Datagrid<any>;
+		datagrid: DataGrid<any>;
 		column: AnyColumn<any>;
 	};
 	let { datagrid, column }: Props = $props();
 
 	const handleColumnFilterChange = (column: AnyColumn<any>, value: any) => {
-		datagrid.handlers.filtering.updateFilterCondition({
+		datagrid.eventHandlers.filtering.updateFilterCondition({
 			column,
 			value
 		});
-		datagrid.cache.invalidate('filteredData');
+		datagrid.cacheManager.invalidate('filteredData');
 		datagrid.pagination.goToFirstPage();
 		datagrid.processors.data.executeFullDataTransformation();
-		datagrid.columnFaceting.calculateFacets(datagrid.cache.sortedData || [], datagrid.columns);
+		datagrid.columnFaceting.calculateFacets(datagrid.cacheManager.sortedData || [], datagrid.columns);
 	};
 	
 </script>

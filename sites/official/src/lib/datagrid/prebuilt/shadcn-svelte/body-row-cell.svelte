@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import type {
 		GridBasicRow,
 		LeafColumn
@@ -7,7 +7,7 @@
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
 
 	type Props = {
-		datagrid: Datagrid<any>;
+		datagrid: DataGrid<any>;
 		column: LeafColumn<any>;
 		row: GridBasicRow<any>;
 	};

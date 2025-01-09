@@ -1,7 +1,7 @@
 import { isGroupColumn } from "./helpers/column-guards";
 import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn, GroupColumn } from "./column-creation/types";
 import type { CellValue, ColumnId, CustomCellComponentWithProps, GridBasicRow, GridGroupRow, GridRow, SortableColumn } from "./types";
-import type { Datagrid } from "./index.svelte";
+import type { DataGrid } from "./index.svelte";
 
 
 export function getCellContent(column: AnyColumn<any>, row: any): CellValue | HTMLElement {
@@ -64,7 +64,7 @@ export function isDescendantOf(possibleDescendant: GroupColumn<any>, ancestor: G
 
 
 // Get sort index for display
-export const getSortIndex = (datagrid: Datagrid<any>, column: AnyColumn<any>): number | null => {
+export const getSortIndex = (datagrid: DataGrid<any>, column: AnyColumn<any>): number | null => {
     column = column as SortableColumn<any>;
     if (!column.options.sortable) return null;
     const columnId = column.columnId || column.header;
@@ -73,7 +73,7 @@ export const getSortIndex = (datagrid: Datagrid<any>, column: AnyColumn<any>): n
 };
 
 
-export const getSortDirection = (datagrid: Datagrid<any>, column: AnyColumn<any>): 'desc' | 'asc' | 'intermediate' | null => {
+export const getSortDirection = (datagrid: DataGrid<any>, column: AnyColumn<any>): 'desc' | 'asc' | 'intermediate' | null => {
     column = column as SortableColumn<any>;
     if (!column.options.sortable) return null;
     const columnId = column.columnId || column.header;

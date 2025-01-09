@@ -1,12 +1,12 @@
-import type { Datagrid } from "../index.svelte";
+import type { DataGrid } from "../index.svelte";
 import type { GridBasicRow, GridGroupRow, GridRow, GridRowIdentifier } from "../types";
 import { isGridGroupRow, isGroupRow } from "../utils.svelte";
 
 
 
 export class RowManager<TOriginalRow> {
-    datagrid: Datagrid<TOriginalRow>;
-    constructor(datagrid: Datagrid<TOriginalRow>) {
+    datagrid: DataGrid<TOriginalRow>;
+    constructor(datagrid: DataGrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 
@@ -22,14 +22,14 @@ export class RowManager<TOriginalRow> {
         }
 
          // Only invalidate the flattened view cache
-         this.datagrid.cache.invalidateGroupedRowsCache();
+         this.datagrid.cacheManager.invalidateGroupedRowsCache();
 
          // Use the new optimized method instead of full transformation
          this.datagrid.processors.data.handleGroupExpansion();
     }
 
     findRowByIdentifier(identifier: GridRowIdentifier): GridRow<TOriginalRow> | undefined {
-        return (this.datagrid.cache.rows || []).find(row => row.identifier === identifier);
+        return (this.datagrid.cacheManager.rows || []).find(row => row.identifier === identifier);
     }
 
     // new

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { columnsWithGetters } from '$lib/datagrid/core/constants';
 
-	let { datagrid }: { datagrid: Datagrid<any> } = $props();
+	let { datagrid }: { datagrid: DataGrid<any> } = $props();
 
 	let columns = $derived(
 		datagrid.columnManager
@@ -18,7 +18,7 @@
 	type="multiple"
 	name="groupByColumn"
 	value={datagrid.grouping.groupByColumns}
-	onValueChange={(values) => datagrid.handlers.grouping.change(values)}
+	onValueChange={(values) => datagrid.eventHandlers.grouping.change(values)}
 >
 	<Select.Trigger class="h-full w-full rounded-none">Group data by column</Select.Trigger>
 	<Select.Content>

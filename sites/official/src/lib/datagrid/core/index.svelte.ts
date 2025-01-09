@@ -1,68 +1,45 @@
-import type { AnyColumn } from "./column-creation/types";
+import type { AnyColumn as GenericColumn } from "./column-creation/types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { ColumnFacetingFeature, ColumnFilteringFeature, ColumnGroupingFeature, ColumnOrderingFeature, ColumnPinningFeature, ColumnSizingFeature, ColumnVisibilityFeature, FullscreenFeature, GlobalSearchFeature, GroupingFeature, PaginationFeature, RowExpandingFeature, RowPinningFeature, RowSelectionFeature, SortingFeature } from "./features";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
-export type DatagridConfig<TOriginalRow> = {
-    columns: AnyColumn<TOriginalRow>[];
+
+export type GridConfig<TOriginalRow> = {
+    columns: GenericColumn<TOriginalRow>[];
     data: TOriginalRow[];
 
     event?: object
 }
 
-
-const defaultConfig = {
-    measurePerformance: false,
-    createBasicRowIdentifier: (row: any) => row.id,
-    createBasicRowIndex: (row: any, parentIndex: string | null, index: number) => parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
-}
-
-export class Datagrid<TOriginalRow> {
+export class DataGrid<TOriginalRow> {
     readonly metrics = new PerformanceMetrics();
-
-    original = $state.raw({
-        columns: [] as AnyColumn<TOriginalRow>[],
+    initialState = $state.raw({
+        columns: [] as GenericColumn<TOriginalRow>[],
         data: [] as TOriginalRow[]
     });
-    columns: AnyColumn<TOriginalRow>[] = $state([]);
+    columns: GenericColumn<TOriginalRow>[] = $state([]);
 
-    handlers = new HandlersManager(this);
-
+    eventHandlers = new HandlersManager(this);
     processors = {
         data: new DataProcessor(this),
         column: new ColumnProcessor(this)
     }
-
-    feature = {
-        pagination: new PaginationFeature(this),
-        sorting: new SortingFeature(this),
-        grouping: new GroupingFeature(),
-        filtering: new ColumnFilteringFeature(),
-        globalSearch: new GlobalSearchFeature(),
-        columnSizing: new ColumnSizingFeature(this),
-        columnVisibility: new ColumnVisibilityFeature(this),
-        columnPinning: new ColumnPinningFeature(this),
-        columnFaceting: new ColumnFacetingFeature(this),
-        columnOrdering: new ColumnOrderingFeature(this),
-        columnGrouping: new ColumnGroupingFeature(this),
-        rowExpanding: new RowExpandingFeature(this),
-        rowSelection: new RowSelectionFeature(this),
-        rowPinning: new RowPinningFeature(this),
-        fullscreen: new FullscreenFeature()
-    }
-
-    cache = new DatagridCacheManager(this);
+    cacheManager = new DatagridCacheManager(this);
     rowManager = new RowManager(this);
     columnManager = new ColumnManager(this);
 
-    config = defaultConfig
+    config = {
+        measurePerformance: false,
+        createBasicRowIdentifier: (row: TOriginalRow) => (row as any).id,
+        createBasicRowIndex: (row: TOriginalRow, parentIndex: string | null, index: number) =>
+            parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
+    }
 
     pagination = new PaginationFeature(this);
     sorting = new SortingFeature(this);
     grouping = new GroupingFeature();
     filtering = new ColumnFilteringFeature();
     globalSearch = new GlobalSearchFeature();
-
     columnSizing = new ColumnSizingFeature(this);
     columnVisibility = new ColumnVisibilityFeature(this);
     columnPinning = new ColumnPinningFeature(this);
@@ -77,19 +54,19 @@ export class Datagrid<TOriginalRow> {
     fullscreen = new FullscreenFeature();
 
 
-    hooks = {
-        preProcessColumns: (action: any, columns: AnyColumn<TOriginalRow>[]) => {
+    lifecycleHooks = {
+        preProcessColumns: (action: any, columns: GenericColumn<TOriginalRow>[]) => {
             return action(columns);
         }
     }
 
-    constructor(config: DatagridConfig<TOriginalRow>, hook: any) {
-        this.validateInputs(config);
-        config.columns = this.hooks.preProcessColumns(hook, config.columns);
+    constructor(config: GridConfig<TOriginalRow>, hook: any) {
+        this.validateConfigInputs(config);
+        config.columns = this.lifecycleHooks.preProcessColumns(hook, config.columns);
         this.initializeState(config);
     }
 
-    private validateInputs({ columns, data }: DatagridConfig<TOriginalRow>) {
+    private validateConfigInputs({ columns, data }: GridConfig<TOriginalRow>) {
         if (!columns) throw new Error('Columns are required');
         if (!data) throw new Error('Data is required');
         if (!Array.isArray(data)) throw new Error('Data must be an array');
@@ -98,18 +75,17 @@ export class Datagrid<TOriginalRow> {
         if (data.length === 0) throw new Error('Data array must not be empty');
     }
 
-    private initializeState(config: DatagridConfig<TOriginalRow>) {
-        this.original.columns = config.columns;
-        this.original.data = config.data;
+    private initializeState(config: GridConfig<TOriginalRow>) {
+        this.initialState.columns = config.columns;
+        this.initialState.data = config.data;
 
-        this.columns = this.processors.column.transformColumns(this.original.columns);
+        this.columns = this.processors.column.transformColumns(this.initialState.columns);
         this.processors.data.executeFullDataTransformation();
-
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
-        this.columnFaceting.calculateFacets(this.cache.sortedData || [], this.columns);
+        this.columnFaceting.calculateFacets(this.cacheManager.sortedData || [], this.columns);
 
-        this.globalSearch.fuseInstance = this.globalSearch.initializeFuseInstance(this.original.data, this.columns.map(col => col.columnId as string))
+        this.globalSearch.fuseInstance = this.globalSearch.initializeFuseInstance(this.initialState.data, this.columns.map(col => col.columnId as string))
     }
 
     /**
@@ -138,7 +114,7 @@ export class Datagrid<TOriginalRow> {
             this.processors.data.handlePaginationChange();
         }
 
-        console.log(`Operation took ${performance.now() - timeStart}ms`);
+        if (this.config.measurePerformance) console.log(`Operation took ${performance.now() - timeStart}ms`);
     }
 
 

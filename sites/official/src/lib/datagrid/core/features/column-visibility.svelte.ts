@@ -1,10 +1,10 @@
-import type { Datagrid } from "../index.svelte";
+import type { DataGrid } from "../index.svelte";
 import type { ColumnId } from "../types";
 
 export class ColumnVisibilityFeature<TOriginalRow> {
-    datagrid: Datagrid<TOriginalRow>;
+    datagrid: DataGrid<TOriginalRow>;
 
-    constructor(datagrid: Datagrid<TOriginalRow>) {
+    constructor(datagrid: DataGrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 

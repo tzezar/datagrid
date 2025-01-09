@@ -1,11 +1,11 @@
 <script lang="ts">
 	
 	import type { AnyColumn } from "$lib/datagrid/core/column-creation/types";
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import type { GridGroupRow } from '$lib/datagrid/core/types';
 	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
 
-	let { datagrid, column, row }: { datagrid: Datagrid<any>; column: AnyColumn<any>; row: GridGroupRow<any> } =
+	let { datagrid, column, row }: { datagrid: DataGrid<any>; column: AnyColumn<any>; row: GridGroupRow<any> } =
 		$props();
 
 		console.log('column', column.columnId)

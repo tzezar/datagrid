@@ -4,7 +4,7 @@
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import MoreVert from '$lib/datagrid/icons/material-symbols/more-vert.svelte';
 	import { cn } from '$lib/utils';
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import SortAscending from '$lib/datagrid/icons/tabler/sort-ascending.svelte';
 	import SortDescending from '$lib/datagrid/icons/tabler/sort-descending.svelte';
 	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';
@@ -155,7 +155,7 @@
 		},
 	];
 
-	let { datagrid, column }: { datagrid: Datagrid<any>; column: AnyColumn<any> } = $props();
+	let { datagrid, column }: { datagrid: DataGrid<any>; column: AnyColumn<any> } = $props();
 </script>
 
 {#snippet FilterOperator(
@@ -164,7 +164,7 @@
 	{#each operators as operator}
 		<DropdownMenu.Item
 			onclick={() =>
-				datagrid.handlers.filtering.changeFilterOperator(column.columnId, operator.value)}
+				datagrid.eventHandlers.filtering.changeFilterOperator(column.columnId, operator.value)}
 		>
 			<operator.icon class="mr-2 size-4" />
 			<span>{operator.label}</span>
@@ -190,7 +190,7 @@
 						<DropdownMenu.Item
 							closeOnSelect={false}
 							onclick={() =>
-								datagrid.handlers.columnOrdering.moveColumnToGroup({
+								datagrid.eventHandlers.columnOrdering.moveColumnToGroup({
 									columnId: column.columnId,
 									targetGroupColumnId: ''
 								})}
@@ -203,7 +203,7 @@
 							<DropdownMenu.Item
 								closeOnSelect={false}
 								onclick={() =>
-									datagrid.handlers.columnOrdering.moveColumnToGroup({
+									datagrid.eventHandlers.columnOrdering.moveColumnToGroup({
 										columnId: column.columnId,
 										targetGroupColumnId: groupCol.columnId
 									})}
@@ -228,15 +228,15 @@
 				<DropdownMenu.GroupHeading>{column.header}</DropdownMenu.GroupHeading>
 				<DropdownMenu.Separator />
 
-				<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.unSortColumn(column)}>
+				<DropdownMenu.Item onclick={() => datagrid.eventHandlers.sorting.unSortColumn(column)}>
 					<ArrowsSort class="mr-2 size-4" />
 					<span>Clear sort</span>
 				</DropdownMenu.Item>
-				<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.sortColumnAscending(column)}>
+				<DropdownMenu.Item onclick={() => datagrid.eventHandlers.sorting.sortColumnAscending(column)}>
 					<SortAscending class="mr-2 size-4" />
 					<span>Sort ascending </span>
 				</DropdownMenu.Item>
-				<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.sortColumnDescending(column)}>
+				<DropdownMenu.Item onclick={() => datagrid.eventHandlers.sorting.sortColumnDescending(column)}>
 					<SortDescending class="mr-2 size-4" />
 					<span>Sort descending </span>
 				</DropdownMenu.Item>
@@ -267,7 +267,7 @@
 				</DropdownMenu.Sub>
 
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item onclick={() => datagrid.handlers.grouping.toggle(column.columnId)}>
+				<DropdownMenu.Item onclick={() => datagrid.eventHandlers.grouping.toggle(column.columnId)}>
 					{#if datagrid.grouping.isColumnWithinGroup(column.columnId)}
 						<AdGroupOffOutlineSharp class="mr-2 size-4" />
 						<span>Ungroup by {column.header}</span>
@@ -279,19 +279,19 @@
 				<DropdownMenu.Separator />
 
 				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'left')}
+					onclick={() => datagrid.eventHandlers.columnPinning.pinColumn(column.columnId, 'left')}
 				>
 					<FreezeColumn class="mr-2 size-4" />
 					<span>Pin to left</span>
 				</DropdownMenu.Item>
 				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'right')}
+					onclick={() => datagrid.eventHandlers.columnPinning.pinColumn(column.columnId, 'right')}
 				>
 					<FreezeColumn class="mr-2 size-4 rotate-180" />
 					<span>Pin to right</span>
 				</DropdownMenu.Item>
 				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'none')}
+					onclick={() => datagrid.eventHandlers.columnPinning.pinColumn(column.columnId, 'none')}
 				>
 					<ColumnsOff class="mr-2 size-4" />
 					<span>Unpin</span>
@@ -303,14 +303,14 @@
 				</DropdownMenu.Item>
 				<DropdownMenu.Separator />
 				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
+					onclick={() => datagrid.eventHandlers.columnOrdering.moveLeft(column.columnId)}
 					closeOnSelect={false}
 				>
 					<ArrowMoveLeft class="mr-2 size-4" />
 					<span>Move left</span>
 				</DropdownMenu.Item>
 				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}
+					onclick={() => datagrid.eventHandlers.columnOrdering.moveRight(column.columnId)}
 					closeOnSelect={false}
 				>
 					<ArrowMoveRight class="mr-2 size-4" />
@@ -326,7 +326,7 @@
 						<DropdownMenu.Item
 							closeOnSelect={false}
 							onclick={() =>
-								datagrid.handlers.columnOrdering.moveColumnToGroup({
+								datagrid.eventHandlers.columnOrdering.moveColumnToGroup({
 									columnId: column.columnId,
 									targetGroupColumnId: ''
 								})}
@@ -339,7 +339,7 @@
 							<DropdownMenu.Item
 								closeOnSelect={false}
 								onclick={() =>
-									datagrid.handlers.columnOrdering.moveColumnToGroup({
+									datagrid.eventHandlers.columnOrdering.moveColumnToGroup({
 										columnId: column.columnId,
 										targetGroupColumnId: groupCol.columnId
 									})}

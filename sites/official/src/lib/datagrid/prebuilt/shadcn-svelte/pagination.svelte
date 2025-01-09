@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { Datagrid } from "$lib/datagrid/core/index.svelte";
+	import type { DataGrid } from "$lib/datagrid/core/index.svelte";
 
 
-	let { datagrid }: { datagrid: Datagrid<any> } = $props();
+	let { datagrid }: { datagrid: DataGrid<any> } = $props();
 </script>
 
 
@@ -14,7 +14,7 @@
 			<!-- Ensuring each div is 1 grid cell -->
 			<span>
 				Showing {datagrid.pagination.pageSize * (datagrid.pagination.page - 1)} to {datagrid
-					.pagination.pageSize * datagrid.pagination.page} of {(datagrid.cache.rows || []).length} rows
+					.pagination.pageSize * datagrid.pagination.page} of {(datagrid.cacheManager.rows || []).length} rows
 			</span>
 		</div>
 		<div class="flex justify-between md:w-1/3">

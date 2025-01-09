@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { datagrid }: { datagrid: Datagrid<any> } = $props();
+	let { datagrid }: { datagrid: DataGrid<any> } = $props();
 
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
@@ -18,7 +18,7 @@
 	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/column-creation/types';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 	import MoveDown from '$lib/datagrid/icons/material-symbols/move-down.svelte';
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import DeleteOutline from '$lib/datagrid/icons/material-symbols/delete-outline.svelte';
 	import Settings from '$lib/datagrid/icons/material-symbols/settings.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
@@ -31,7 +31,7 @@
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
-		datagrid.handlers.columnPinning.changeColumnPinningPosition(column.columnId, position);
+		datagrid.eventHandlers.columnPinning.changeColumnPinningPosition(column.columnId, position);
 	}
 
 	const leafColumns = datagrid.columnManager.getLeafColumns();
@@ -52,7 +52,7 @@
 			{#each sortableColumns as column}
 				<DropdownMenu.Item
 					closeOnSelect={false}
-					onclick={(e) => datagrid.handlers.sorting.toggleColumnSorting(column, e)}
+					onclick={(e) => datagrid.eventHandlers.sorting.toggleColumnSorting(column, e)}
 				>
 					{#if column.options.sortable}
 						<div class="sort-indicator">
@@ -114,7 +114,7 @@
 				class="w-full"
 				disabled={!newGroupName || !Object.values(selectedColumns).some((v) => v)}
 				onclick={() => {
-					datagrid.handlers.columnGrouping.createGroup({
+					datagrid.eventHandlers.columnGrouping.createGroup({
 						newGroupName,
 						selectedColumns
 					});
@@ -131,10 +131,10 @@
 
 {#snippet columnGroupControls(column: AnyColumn<any>)}
 	<div class="text-muted-foreground flex flex-row gap-2 text-xs">
-		<button onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}>
+		<button onclick={() => datagrid.eventHandlers.columnOrdering.moveLeft(column.columnId)}>
 			<MoveUp />
 		</button>
-		<button onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}>
+		<button onclick={() => datagrid.eventHandlers.columnOrdering.moveRight(column.columnId)}>
 			<MoveDown />
 		</button>
 		<select
@@ -157,7 +157,7 @@
 					}
 				}
 
-				datagrid.handlers.columnOrdering.moveColumnToGroup({
+				datagrid.eventHandlers.columnOrdering.moveColumnToGroup({
 					columnId: column.columnId,
 					targetGroupColumnId: targetGroupId
 				});

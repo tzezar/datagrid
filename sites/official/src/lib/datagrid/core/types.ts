@@ -1,6 +1,6 @@
 import type { Component } from "svelte";
 import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn } from "./column-creation/types";
-import type { Datagrid } from "./index.svelte";
+import type { DataGrid } from "./index.svelte";
 
 
 export type ColumnType = 'accessor' | 'computed' | 'display' | 'group';
@@ -42,7 +42,7 @@ export type CustomCellComponentWithProps = {
 };
 
 export type CustomCellProps<TOriginalRow> = {
-    datagrid: Datagrid<any>;
+    datagrid: DataGrid<any>;
     column: AnyColumn<any>;
     row: GridBasicRow<TOriginalRow>
 }
@@ -51,7 +51,7 @@ export type CustomCell<TOriginalRow> = (props: CustomCellProps<TOriginalRow>) =>
 
 export type CustomHeaderCellProps = {
     column: AnyColumn<any>;
-    datagrid: Datagrid<any>;
+    datagrid: DataGrid<any>;
 }
 
 

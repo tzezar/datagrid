@@ -1,15 +1,15 @@
 import type { AccessorColumn, AnyColumn, ComputedColumn } from "../column-creation/types";
-import type { Datagrid } from "../index.svelte";
+import type { DataGrid } from "../index.svelte";
 
 export class ColumnFacetingFeature<TOriginalRow> {
-    datagrid: Datagrid<TOriginalRow>;
+    datagrid: DataGrid<TOriginalRow>;
     numericFacets: Record<string, { min: number, max: number }> = $state({});
     categoricalFacets: Record<string, { 
         uniqueValuesCount: number, 
         uniqueValues: any[] 
     }> = $state({});
 
-    constructor(datagrid: Datagrid<TOriginalRow>) {
+    constructor(datagrid: DataGrid<TOriginalRow>) {
         this.datagrid = datagrid
     }
 

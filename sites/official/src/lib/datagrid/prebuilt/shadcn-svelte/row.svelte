@@ -2,10 +2,10 @@
 	import GroupRowCell from './group-row-cell.svelte';
 	import BodyRowCell from './body-row-cell.svelte';
 	import type { GridBasicRow, GridGroupRow } from '$lib/datagrid/core/types';
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import { flattenColumns, isGridGroupRow } from '$lib/datagrid/core/utils.svelte';
 
-	let { datagrid, row }: { datagrid: Datagrid<any>; row: GridBasicRow<any> | GridGroupRow<any> } =
+	let { datagrid, row }: { datagrid: DataGrid<any>; row: GridBasicRow<any> | GridGroupRow<any> } =
 		$props();
 
 	let structuredColumns = $derived(flattenColumns(datagrid.columnManager.getColumnsInOrder()));

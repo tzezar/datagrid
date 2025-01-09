@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import ChevronLeftRounded from '$lib/datagrid/icons/material-symbols/chevron-left-rounded.svelte';
 	import ChevronRightRounded from '$lib/datagrid/icons/material-symbols/chevron-right-rounded.svelte';
-	let { datagrid }: { datagrid: Datagrid<any> } = $props();
+	let { datagrid }: { datagrid: DataGrid<any> } = $props();
 	import * as Select from '$lib/components/ui/select/index.js';
 	import Input from '$lib/components/ui/input/input.svelte';
 

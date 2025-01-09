@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '$lib/datagrid/styles.css';
-	import { Datagrid, type DatagridConfig } from '$lib/datagrid/core/index.svelte';
+	import { DataGrid, type GridConfig } from '$lib/datagrid/core/index.svelte';
 	import { userColumns, type Column } from './columns.svelte';
 	import Pagination from '$lib/datagrid/prebuilt/shadcn-svelte/controls/pagination.svelte';
 	import DatagridSettingsDropdown from '$lib/datagrid/prebuilt/shadcn-svelte/controls/settings/datagrid-settings-dropdown.svelte';
@@ -30,8 +30,8 @@
 		return columns;
 	};
 
-	class TzezarsDatagrid extends Datagrid<any> {
-		constructor(config: DatagridConfig<any>) {
+	class TzezarsDatagrid extends DataGrid<any> {
+		constructor(config: GridConfig<any>) {
 			super(config, handleDropdownMenu);
 		}
 	}

@@ -1,29 +1,29 @@
 <script lang="ts" generics="T">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 
-	let { datagrid, column }: { datagrid: Datagrid<any>; column: LeafColumn<any> } = $props();
+	let { datagrid, column }: { datagrid: DataGrid<any>; column: LeafColumn<any> } = $props();
 
 	type SelectionAction = 'selectAll' | 'deselectAll' | 'selectPage' | 'deselectPage'
 
 	const handleSelectionAction = (action: SelectionAction) => {
 		switch (action) {
 			case 'selectAll': {
-				datagrid.handlers.rowSelection.selectAllRows();
+				datagrid.eventHandlers.rowSelection.selectAllRows();
 				break;
 			}
 			case 'deselectAll': {
-				datagrid.handlers.rowSelection.unselectAllRows();
+				datagrid.eventHandlers.rowSelection.unselectAllRows();
 				break;
 			}
 			case 'selectPage': {
-				datagrid.handlers.rowSelection.selectRowsOnPage();
+				datagrid.eventHandlers.rowSelection.selectRowsOnPage();
 				break;
 			}
 			case 'deselectPage': {
-				datagrid.handlers.rowSelection.unselectRowsOnPage();
+				datagrid.eventHandlers.rowSelection.unselectRowsOnPage();
 				break;
 			}
 		}

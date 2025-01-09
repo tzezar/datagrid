@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
-	let { datagrid }: { datagrid: Datagrid<any> } = $props();
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+	let { datagrid }: { datagrid: DataGrid<any> } = $props();
 </script>
 
 <div class="flex flex-col place-items-start gap-2 pb-6">

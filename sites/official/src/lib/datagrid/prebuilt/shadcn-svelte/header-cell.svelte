@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import { isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import ColumnFilter from '$lib/datagrid/prebuilt/native/column-filter.svelte';
@@ -9,7 +9,7 @@
 	import HeaderCell from './header-cell.svelte';
 	import HeaderCellDropdown from './header-cell-dropdown.svelte';
 
-	let { datagrid, column }: { datagrid: Datagrid<any>; column: any } = $props();
+	let { datagrid, column }: { datagrid: DataGrid<any>; column: any } = $props();
 
 	function hasVisibleChildren(column: any): boolean {
 		if (!isGroupColumn(column)) return false;
@@ -55,7 +55,7 @@
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div
 			class="grid-header-cell-content items-end {column.options.sortable ? 'sortable' : ''}"
-			onclick={(e) => datagrid.handlers.sorting.toggleColumnSorting(column, e)}
+			onclick={(e) => datagrid.eventHandlers.sorting.toggleColumnSorting(column, e)}
 		>
 			{#if column.headerCell}
 				{@const cellContent = column.headerCell({ datagrid, column })}

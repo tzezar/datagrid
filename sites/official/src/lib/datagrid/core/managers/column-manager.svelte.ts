@@ -1,14 +1,14 @@
 import { isGroupColumn } from "../helpers/column-guards";
 import type { AnyColumn, GroupColumn } from "../column-creation/types";
-import type { Datagrid } from "../index.svelte";
+import type { DataGrid } from "../index.svelte";
 import type { LeafColumn } from "../types";
 import { findColumnById, flattenColumns } from "../utils.svelte";
 
 
 
 export class ColumnManager<TOriginalRow> {
-    datagrid: Datagrid<TOriginalRow>;
-    constructor(datagrid: Datagrid<TOriginalRow>) {
+    datagrid: DataGrid<TOriginalRow>;
+    constructor(datagrid: DataGrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 

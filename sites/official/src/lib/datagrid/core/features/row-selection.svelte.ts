@@ -1,14 +1,14 @@
 import { SvelteSet } from "svelte/reactivity";
-import type { Datagrid } from "../index.svelte";
+import type { DataGrid } from "../index.svelte";
 import type { GridRowIdentifier } from "../types";
 
 
 
 export class RowSelectionFeature<TOriginalRow> {
-    datagrid: Datagrid<TOriginalRow>;
+    datagrid: DataGrid<TOriginalRow>;
     selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier> = new SvelteSet()
 
-    constructor(datagrid: Datagrid<TOriginalRow>) {
+    constructor(datagrid: DataGrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 
@@ -30,7 +30,7 @@ export class RowSelectionFeature<TOriginalRow> {
 
     getSelectedOriginalRows(): TOriginalRow[] {
         return Array.from(this.selectedBasicRowIdentifiers)
-            .map(id => this.datagrid.original.data.find(row => this.datagrid.config.createBasicRowIdentifier(row) === id))
+            .map(id => this.datagrid.initialState.data.find(row => this.datagrid.config.createBasicRowIdentifier(row) === id))
             .filter((row): row is TOriginalRow => row !== undefined); // Type guard for filtering
     }
 

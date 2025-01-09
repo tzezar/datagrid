@@ -1,15 +1,15 @@
 import { createColumnGroup } from "../column-creation/group-column-creator";
 import type { AnyColumn } from "../column-creation/types";
-import type { Datagrid } from "../index.svelte";
+import type { DataGrid } from "../index.svelte";
 import type { ColumnId, FilterableColumn, FilterOperator, GridBasicRow, LeafColumn, PinningPosition } from "../types";
 import { findColumnById, flattenColumns, generateRandomColumnId, isColumnFilterable, isGroupRow } from "../utils.svelte";
 
 
 
 export class HandlersManager {
-    datagrid: Datagrid<any>;
+    datagrid: DataGrid<any>;
 
-    constructor(datagrid: Datagrid<any>) {
+    constructor(datagrid: DataGrid<any>) {
         this.datagrid = datagrid;
     }
 
@@ -91,7 +91,7 @@ export class HandlersManager {
     filtering = {
         changeFilterOperator: (columnId: string, operator: FilterOperator) => {
             this.datagrid.filtering.changeConditionOperator(columnId, operator);
-            this.datagrid.cache.invalidate('filteredData');
+            this.datagrid.cacheManager.invalidate('filteredData');
             this.datagrid.processors.data.executeFullDataTransformation();
         },
 
@@ -144,7 +144,7 @@ export class HandlersManager {
 
             this.datagrid.grouping.groupByColumns = newGroupBy;
             this.datagrid.pagination.goToFirstPage();
-            this.datagrid.cache.invalidateGroupedRowsCache();
+            this.datagrid.cacheManager.invalidateGroupedRowsCache();
             this.datagrid.processors.data.executeFullDataTransformation();
         },
         toggle: (columnId: ColumnId) => {
@@ -158,7 +158,7 @@ export class HandlersManager {
                 this.datagrid.grouping.groupByColumns = [...this.datagrid.grouping.groupByColumns, columnId];
             }
             this.datagrid.pagination.goToFirstPage();
-            this.datagrid.cache.invalidateGroupedRowsCache();
+            this.datagrid.cacheManager.invalidateGroupedRowsCache();
             this.datagrid.processors.data.executeFullDataTransformation();
         }
     }
@@ -212,23 +212,23 @@ export class HandlersManager {
     }
     rowSelection = {
         selectRowsOnPage: () => {
-            const rowsOnPage = (this.datagrid.cache.paginatedRows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
+            const rowsOnPage = (this.datagrid.cacheManager.paginatedRows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
             const ids = rowsOnPage.map(row => row.identifier);
             this.datagrid.rowSelection.selectRows(ids);
         },
         unselectRowsOnPage: () => {
-            const rowsOnPage = (this.datagrid.cache.paginatedRows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
+            const rowsOnPage = (this.datagrid.cacheManager.paginatedRows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
             const ids = rowsOnPage.map(row => row.identifier);
             this.datagrid.rowSelection.unselectRows(ids);
         },
         selectAllRows: () => {
-            const rows = (this.datagrid.cache.rows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
+            const rows = (this.datagrid.cacheManager.rows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
             const ids = rows.map(row => row.identifier);
             console.log(ids)
             this.datagrid.rowSelection.selectRows(ids);
         },
         unselectAllRows: () => {
-            const rows = (this.datagrid.cache.rows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
+            const rows = (this.datagrid.cacheManager.rows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
             const ids = rows.map(row => row.identifier);
             this.datagrid.rowSelection.unselectRows(ids);
         }
