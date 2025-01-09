@@ -1,7 +1,5 @@
 <script lang="ts">
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
-	import type { ColumnId, ColumnType } from '$lib/datagrid/core/types';
-	import { findColumnById, flattenColumns } from '$lib/datagrid/core/utils.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { columnsWithGetters } from '$lib/datagrid/core/constants';
 

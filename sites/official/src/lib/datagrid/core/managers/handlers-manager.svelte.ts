@@ -125,7 +125,7 @@ export class HandlersManager {
     }
     grouping = {
         change: (values: string[]) => {
-    
+
             const newGroupBy: ColumnId[] = values
                 .map((option) => {
                     const column = findColumnById(this.datagrid.columns, option);
@@ -134,8 +134,22 @@ export class HandlersManager {
                     return option;
                 })
                 .filter((group): group is ColumnId => group !== null); // Type guard to filter out null values
-    
+
             this.datagrid.grouping.groupByColumns = newGroupBy;
+            this.datagrid.pagination.goToFirstPage();
+            this.datagrid.cache.invalidateGroupedRowsCache();
+            this.datagrid.processors.data.executeFullDataTransformation();
+        },
+        toggle: (columnId: ColumnId) => {
+            const column = findColumnById(this.datagrid.columns, columnId);
+            if (!column) return;
+            if (column.options.groupable === false) return;
+
+            if (this.datagrid.grouping.groupByColumns.includes(columnId)) {
+                this.datagrid.grouping.groupByColumns = this.datagrid.grouping.groupByColumns.filter((id) => id !== columnId);
+            } else {
+                this.datagrid.grouping.groupByColumns = [...this.datagrid.grouping.groupByColumns, columnId];
+            }
             this.datagrid.pagination.goToFirstPage();
             this.datagrid.cache.invalidateGroupedRowsCache();
             this.datagrid.processors.data.executeFullDataTransformation();

@@ -26,6 +26,7 @@
 	import FilterX from '$lib/datagrid/icons/tabler/filter-x.svelte';
 	import FilterCog from '$lib/datagrid/icons/tabler/filter-cog.svelte';
 	import AdGroupOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-outline-sharp.svelte';
+	import AdGroupOffOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-off-outline-sharp.svelte';
 
 	let { datagrid, column }: { datagrid: Datagrid<any>; column: LeafColumn<any> } = $props();
 </script>
@@ -123,9 +124,14 @@
 			</DropdownMenu.Sub>
 
 			<DropdownMenu.Separator />
-			<DropdownMenu.Item>
-				<AdGroupOutlineSharp class="mr-2 size-4" />
-				<span>Group by {column.header}</span>
+			<DropdownMenu.Item onclick={() => datagrid.handlers.grouping.toggle(column.columnId)}>
+				{#if datagrid.grouping.isColumnWithinGroup(column.columnId)}
+					<AdGroupOffOutlineSharp class="mr-2 size-4" />
+					<span>Ungroup by {column.header}</span>
+				{:else}
+					<AdGroupOutlineSharp class="mr-2 size-4" />
+					<span>Group by {column.header}</span>
+				{/if}
 			</DropdownMenu.Item>
 			<DropdownMenu.Separator />
 
