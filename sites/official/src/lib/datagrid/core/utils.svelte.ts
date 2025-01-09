@@ -1,7 +1,7 @@
 import {  ArrowUp, ArrowUpDown } from "lucide-svelte";
 import { isGroupColumn } from "./column-guards";
 import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn, GroupColumn } from "./helpers/column-creators";
-import type { CellValue, ColumnId, GridBasicRow, GridGroupRow, GridRow, SortableColumn } from "./types";
+import type { CellValue, ColumnId, CustomCellComponentWithProps, GridBasicRow, GridGroupRow, GridRow, SortableColumn } from "./types";
 import type { Datagrid } from "./index.svelte";
 import PlayArrowRounded from "../icons/material-symbols/play-arrow-rounded.svelte";
 
@@ -201,4 +201,10 @@ export function isGroupRow<TOriginalRow>(row: GridRow<TOriginalRow>): row is Gri
 
 export function isBasicRow<TOriginalRow>(row: GridRow<TOriginalRow>): row is GridBasicRow<TOriginalRow> {
     return 'original' in row;
+}
+
+
+
+export function isCellComponent(value: any): value is CustomCellComponentWithProps {
+    return value && typeof value === 'object' && 'component' in value
 }

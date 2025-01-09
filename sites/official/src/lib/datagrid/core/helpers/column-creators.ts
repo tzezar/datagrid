@@ -21,8 +21,8 @@ export interface AccessorColumn<TOriginalRow> {
   formatter?: FormatterFn<TOriginalRow>
   aggregate?: AggregationConfig;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
-  cell?: CustomCell;
-  headerCell?: HeaderCell<TOriginalRow>
+  cell?: CustomCell<TOriginalRow>
+  headerCell?: HeaderCell
   options: {
     searchable: boolean,
     groupable: boolean,
@@ -56,8 +56,8 @@ export interface ComputedColumn<TOriginalRow> {
   accessorFn: AccessorFn<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
-  cell?: CustomCell;
-  headerCell?: HeaderCell<TOriginalRow>
+  cell?: CustomCell<TOriginalRow>
+  headerCell?: HeaderCell
   formatter?: FormatterFn<TOriginalRow>
   aggregate?: AggregationConfig;
 
@@ -111,8 +111,8 @@ export interface DisplayColumn<TOriginalRow> {
   header: string;
   columnId: string;
   parentColumnId: string | null;
-  cell: CustomCell
-  headerCell?: HeaderCell<TOriginalRow>
+  cell: CustomCell<TOriginalRow>
+  headerCell?: HeaderCell
 
   options: {
     searchable: null,
@@ -143,11 +143,11 @@ export interface DisplayColumn<TOriginalRow> {
 export interface GroupColumn<TOriginalRow> {
   type: 'group';
   header: string;
-  headerCell?: HeaderCell<TOriginalRow>
+  headerCell?: HeaderCell
   columnId: string;
   parentColumnId: string | null;
   columns: AnyColumn<TOriginalRow>[];
-  cell?: CustomCell,
+  cell?: CustomCell<TOriginalRow>
   options: {
     searchable: null
     groupable: null,
@@ -190,8 +190,8 @@ type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOrigina
   getValueFn: (row: TOriginalRow) => CellValue,
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   aggregate?: AggregationConfig;
-  cell?: CustomCell
-  headerCell?: HeaderCell<TOriginalRow>
+  cell?: CustomCell<TOriginalRow>
+  headerCell?: HeaderCell
   options?: {
     searchable?: boolean
     groupable?: boolean,
@@ -227,8 +227,8 @@ type CreateComputeColumnProps<TOriginalRow> = {
   aggregate?: AggregationConfig;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
 
-  cell?: CustomCell
-  headerCell?: HeaderCell<TOriginalRow>
+  cell?: CustomCell<TOriginalRow>
+  headerCell?: HeaderCell
 
   options?: {
     searchable?: boolean
@@ -258,8 +258,8 @@ type CreateDisplayColumnProps<TOriginalRow> = {
   header: string,
   columnId: ColumnId,
   parentColumnId?: ParentColumnId
-  cell: CustomCell,
-  headerCell?: HeaderCell<TOriginalRow>
+  cell: CustomCell<TOriginalRow>
+  headerCell?: HeaderCell
   options?: {
     searchable?: false
     groupable?: boolean,
@@ -286,7 +286,7 @@ type CreateDisplayColumnProps<TOriginalRow> = {
 
 type CreateGroupColumnProps<TOriginalRow> = {
   header: string,
-  headerCell?: HeaderCell<TOriginalRow>
+  headerCell?: HeaderCell
   columnId: ColumnId,
   parentColumnId?: ParentColumnId
   columns: AnyColumn<TOriginalRow>[],

@@ -22,31 +22,26 @@ export type LeafColumn<TOriginalRow> = AccessorColumn<TOriginalRow> | ComputedCo
 export type RowPinningPosition = 'top' | 'bottom' | false;
 
 
-
-
-
-
 export type CustomCellComponentWithProps = {
     component: Component<any>;
-    props: object;
+    props?: object;
 };
 
-export type CustomCellProps = {
+export type CustomCellProps<TOriginalRow> = {
     datagrid: Datagrid<any>;
     column: AnyColumn<any>;
-    row: GridBasicRow<any>;
+    row: GridBasicRow<TOriginalRow>;
 }
 
-export type CustomCell = (props: CustomCellProps) => string | HTMLElement | CustomCellComponentWithProps
+export type CustomCell<TOriginalRow> = (props: CustomCellProps<TOriginalRow>) => string | HTMLElement | CustomCellComponentWithProps
+
+export type CustomHeaderCellProps = {
+    column: AnyColumn<any>;
+    datagrid: Datagrid<any>;
+}
 
 
-export type HeaderCell<TOriginalRow> = (row: TOriginalRow) =>
-    | string
-    | HTMLElement
-    | {
-        component: Component,
-        props: { row: TOriginalRow }
-    }
+export type HeaderCell = (props: CustomHeaderCellProps) => string | HTMLElement | CustomCellComponentWithProps
 
 
 

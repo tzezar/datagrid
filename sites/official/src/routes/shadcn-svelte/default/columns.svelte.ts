@@ -4,16 +4,19 @@ import SelectRowCell from "./_components/cells/cell-select-row.svelte";
 import type { User } from "./generate-users";
 
 
+
+// const exampleFn = (value) => {
+//     console.log(value, value)
+// }
+
+
 export const userColumns: AnyColumn<User>[] = [
     createDisplayColumn({
         header: 'Actions',
         columnId: 'actions',
-        cell: (row) => {
+        cell: () => {
             return {
                 component: ActionsCell,
-                props: {
-                    row
-                }
             }
         },
         options: { sortable: false },
@@ -25,21 +28,29 @@ export const userColumns: AnyColumn<User>[] = [
                 grow: false
             }
         }
-        
+
     }),
     createDisplayColumn({
         header: 'Row Selection',
         columnId: 'selectRow',
-        cell: (row) => {
-            return {
-                component: SelectRowCell,
-                props: {
-                    row
-                }
-            }
-        },
+        cell: () => ({
+            component: SelectRowCell,
+        }),
         options: { sortable: false },
     }),
+
+    // createDisplayColumn({
+    //     header: 'Row Selection',
+    //     columnId: 'selectRow',
+    //     cell: ({ column, row, datagrid }) => ({
+    //         component: SelectRowCell,
+    //         props: {
+    //             test: 'test',
+    //             fn: ({value}) => exampleFn(value) 
+    //         }
+    //     }),
+    //     options: { sortable: false },
+    // }),
     createAccessorColumn({
         header: 'Id',
         columnId: 'id',
@@ -55,7 +66,7 @@ export const userColumns: AnyColumn<User>[] = [
         header: 'Status',
         columnId: 'status',
         accessorKey: 'status',
-        cell: ({row}) => `<span class="${row?.original.status}">${row?.original.status?.toUpperCase()}</span>`,
+        cell: ({ row }) => `<span class="${row?.original.status}">${row?.original.status?.toUpperCase()}</span>`,
         getValueFn: (row) => row.status,
         options: { sortable: true },
         _meta: {

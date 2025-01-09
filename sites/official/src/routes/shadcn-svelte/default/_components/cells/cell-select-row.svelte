@@ -1,9 +1,11 @@
 <script lang="ts">
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
-	import type { GridBasicRow } from '$lib/datagrid/core/types';
+	import type {
+		CustomCellProps,
+	} from '$lib/datagrid/core/types';
 
-	let { row, datagrid }: { row: GridBasicRow<any>; datagrid: Datagrid<any> } = $props();
+	let { column, datagrid, row }: CustomCellProps<any> = $props();
+
 </script>
 
 <div class="flex items-center">
