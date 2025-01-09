@@ -13,10 +13,6 @@
 
 </script>
 
-
-
-
-
 <div
     class="grid-body-cell"
     data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
