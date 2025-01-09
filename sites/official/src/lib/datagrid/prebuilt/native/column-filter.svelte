@@ -1,6 +1,5 @@
 <script lang="ts">
-	
-	import type { AnyColumn } from "$lib/datagrid/core/column-creation/types";
+	import type { AnyColumn } from '$lib/datagrid/core/column-creation/types';
 	import type { Datagrid } from '../../core/index.svelte';
 
 	type Props = {
@@ -10,17 +9,20 @@
 	let { datagrid, column }: Props = $props();
 
 	const handleColumnFilterChange = (column: AnyColumn<any>, value: any) => {
-		datagrid.filtering.updateFilterCondition({
+		datagrid.handlers.filtering.updateFilterCondition({
 			column,
 			value
 		});
 		datagrid.cache.invalidateFilteredDataCache();
 		datagrid.pagination.goToFirstPage();
 		datagrid.processors.data.executeFullDataTransformation();
-		datagrid.columnFaceting.calculateFacets((datagrid.cache.sortedData || []), datagrid.columns);
-	}
-
+		datagrid.columnFaceting.calculateFacets(datagrid.cache.sortedData || [], datagrid.columns);
+	};
 </script>
+
+{#snippet FilterOperator()}
+	<span class="text-muted-foreground text-[0.5rem]">Filter mode: equals</span>
+{/snippet}
 
 {#if column.options.filterable !== false}
 	{#if column?._meta?.filterType === 'number'}
@@ -33,6 +35,7 @@
 				handleColumnFilterChange(column, value);
 			}}
 		/>
+		{@render FilterOperator()}
 	{/if}
 	{#if column?._meta?.filterType === 'text'}
 		<input
@@ -41,13 +44,13 @@
 			value={datagrid.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {
 				handleColumnFilterChange(column, e.currentTarget.value);
-
 			}}
 		/>
+		{@render FilterOperator()}
 	{/if}
 	{#if column?._meta?.filterType === 'select'}
 		<select
-			class="w-full column-filter-input "
+			class="column-filter-input w-full"
 			value={datagrid.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {
 				handleColumnFilterChange(column, e.currentTarget.value);
@@ -58,7 +61,6 @@
 				<option value={option.value}>{option.label}</option>
 			{/each}
 		</select>
+		{@render FilterOperator()}
 	{/if}
 {/if}
-
-

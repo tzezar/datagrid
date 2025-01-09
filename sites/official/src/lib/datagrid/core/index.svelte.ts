@@ -20,6 +20,7 @@ import { DataProcessor } from "./processors/data-processor.svelte";
 import { ColumnProcessor } from "./processors/column-processor.svelte";
 import { DatagridCacheManager } from "./managers/cache-manager.svelte";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
+import { HandlersManager } from "./managers/handlers-manager.svelte";
 
 export type DatagridConfig<TOriginalRow> = {
     columns: AnyColumn<TOriginalRow>[];
@@ -46,6 +47,8 @@ export class Datagrid<TOriginalRow> {
 
     columnsPinnedToLeft: AnyColumn<TOriginalRow>[] = $state([]);
     columnsPinnedToRight: AnyColumn<TOriginalRow>[] = $state([]);
+    
+    handlers = new HandlersManager(this);
 
 
     processors = {
@@ -59,7 +62,7 @@ export class Datagrid<TOriginalRow> {
     config = defaultConfig
 
     pagination = new PaginationFeature(this);
-    sorting = new DataSortingFeature();
+    sorting = new DataSortingFeature(this);
     grouping = new GroupingFeature();
     filtering = new FilteringFeature();
     globalSearch = new GlobalSearchFeature();
@@ -133,5 +136,9 @@ export class Datagrid<TOriginalRow> {
 
         console.log(`Operation took ${performance.now() - timeStart}ms`);
     }
+
+
+
+
 
 }

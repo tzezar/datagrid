@@ -61,51 +61,14 @@ export function isDescendantOf(possibleDescendant: GroupColumn<any>, ancestor: G
         .some(childGroup => isDescendantOf(possibleDescendant, childGroup));
 }
 
-// TODO Move it somewhere else
-// Handle sort click with multi-column support
-export function onSort(datagrid: Datagrid<any>, column: AnyColumn<any>, event: MouseEvent) {
-    if (!column.options.sortable) return;
 
-    const columnId = column.columnId || column.header;
-    const existingIndex = datagrid.sorting.sortConfigs.findIndex(
-        (config) => config.id === columnId
-    );
-
-    if (!event.shiftKey) {
-        // Single column sort
-        if (existingIndex === -1) {
-            datagrid.sorting.sortConfigs = [{ id: columnId, desc: false, index: 0 }];
-        } else if (!datagrid.sorting.sortConfigs[existingIndex].desc) {
-            datagrid.sorting.sortConfigs = [{ id: columnId, desc: true, index: 0 }];
-        } else {
-            datagrid.sorting.sortConfigs = [];
-        }
-    } else {
-        // Multi-column sort
-        if (existingIndex === -1) {
-            datagrid.sorting.sortConfigs = [
-                ...datagrid.sorting.sortConfigs,
-                { id: columnId, desc: false, index: datagrid.sorting.sortConfigs.length }
-            ];
-        } else if (!datagrid.sorting.sortConfigs[existingIndex].desc) {
-            datagrid.sorting.sortConfigs = datagrid.sorting.sortConfigs.map((config, i) =>
-                i === existingIndex ? { ...config, desc: true } : config
-            );
-        } else {
-            datagrid.sorting.sortConfigs = datagrid.sorting.sortConfigs
-                .filter((_, i) => i !== existingIndex)
-                .map((config, i) => ({ ...config, index: i }));
-        }
-    }
-    datagrid.processors.data.executeFullDataTransformation();
-}
 
 // Get sort index for display
 export const getSortIndex = (datagrid: Datagrid<any>, column: AnyColumn<any>): number | null => {
     column = column as SortableColumn<any>;
     if (!column.options.sortable) return null;
     const columnId = column.columnId || column.header;
-    const sortConfig = datagrid.sorting.sortConfigs.find((config) => config.id === columnId);
+    const sortConfig = datagrid.sorting.sortConfigs.find((config) => config.columnId === columnId);
     return sortConfig ? sortConfig.index + 1 : null;
 };
 
@@ -114,7 +77,7 @@ export const getSortDirection = (datagrid: Datagrid<any>, column: AnyColumn<any>
     column = column as SortableColumn<any>;
     if (!column.options.sortable) return null;
     const columnId = column.columnId || column.header;
-    const sortConfig = datagrid.sorting.sortConfigs.find((config) => config.id === columnId);
+    const sortConfig = datagrid.sorting.sortConfigs.find((config) => config.columnId === columnId);
     if (!sortConfig) return 'intermediate';
     return sortConfig.desc ? 'desc' : 'asc';
 };

@@ -7,7 +7,6 @@
 		getSortDirection,
 		getSortIndex,
 		isDescendantOf,
-		onSort
 	} from '$lib/datagrid/core/utils.svelte';
 	import Visibility from '$lib/datagrid/icons/material-symbols/visibility.svelte';
 	import VisibilityOff from '$lib/datagrid/icons/material-symbols/visibility-off.svelte';
@@ -54,7 +53,7 @@
 		</DropdownMenu.SubTrigger>
 		<DropdownMenu.SubContent>
 			{#each sortableColumns as column}
-				<DropdownMenu.Item closeOnSelect={false} onclick={(e) => onSort(datagrid, column, e)}>
+				<DropdownMenu.Item closeOnSelect={false} onclick={(e) => datagrid.handlers.sorting.toggleColumnSorting( column, e)}>
 					{#if column.options.sortable}
 						<div class="sort-indicator">
 							{#if getSortDirection(datagrid, column) === 'desc'}

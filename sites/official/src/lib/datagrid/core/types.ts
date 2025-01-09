@@ -95,7 +95,7 @@ export type FilterableColumn<TOriginalRow> = AccessorColumn<TOriginalRow> | Comp
 
 
 export interface SortConfig {
-    id: string;
+    columnId: string;
     desc: boolean;
     index: number;
 }

@@ -4,7 +4,7 @@
 	import type { AnyColumn, GroupColumn } from "$lib/datagrid/core/column-creation/types";
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
-	import { isCellComponent, onSort } from '$lib/datagrid/core/utils.svelte';
+	import { isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import ColumnFilter from '$lib/datagrid/prebuilt/native/column-filter.svelte';
 	import HeaderCellDropdown from './header-cell-dropdown.svelte';
 	import HeaderCell from './header-cell.svelte';
@@ -53,7 +53,7 @@
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div
 			class="grid-header-cell-content items-end {column.options.sortable ? 'sortable' : ''}"
-			onclick={(e) => onSort(datagrid, column, e)}
+			onclick={(e) => datagrid.handlers.sorting.toggleColumnSorting(column, e)}
 		>
 			{#if column.headerCell}
 				{@const cellContent = column.headerCell({ datagrid, column })}
@@ -70,12 +70,12 @@
 					<SortingIndicator {datagrid} {column} />
 				{/if}
 				{#if column.options.showDropdownOptions}
-					<HeaderCellDropdown {column} />
+					<HeaderCellDropdown {datagrid} {column} />
 				{/if}
 			</div>
 		</div>
 		{#if datagrid.filtering.showColumnFiltering}
-			<div class="h-6 w-full pt-1">
+			<div class="h-9 w-full pt-1">
 				<ColumnFilter {datagrid} {column} />
 			</div>
 		{/if}

@@ -19,40 +19,47 @@
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import MoreVert from '$lib/datagrid/icons/material-symbols/more-vert.svelte';
 	import { cn } from '$lib/utils';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import SortAscending from '$lib/datagrid/icons/tabler/sort-ascending.svelte';
+	import SortDescending from '$lib/datagrid/icons/tabler/sort-descending.svelte';
+	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';
+	import FilterX from '$lib/datagrid/icons/tabler/filter-x.svelte';
+	import FilterCog from '$lib/datagrid/icons/tabler/filter-cog.svelte';
+	import AdGroupOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-outline-sharp.svelte';
 
-    let {column}: {column: LeafColumn<any>} = $props()
-
+	let { datagrid, column }: { datagrid: Datagrid<any>; column: LeafColumn<any> } = $props();
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger class={cn(buttonVariants({ variant: 'ghost' }), "size-4 p-2 ")} ><MoreVert /></DropdownMenu.Trigger>
+	<DropdownMenu.Trigger class={cn(buttonVariants({ variant: 'ghost' }), 'size-4 p-2 ')}>
+		<MoreVert />
+	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-56">
 		<DropdownMenu.Group>
-			<DropdownMenu.Item>
-				<User class="mr-2 size-4" />
+			<DropdownMenu.GroupHeading>{column.header}</DropdownMenu.GroupHeading>
+			<DropdownMenu.Separator />
+
+			<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.unSortColumn(column)}>
+				<ArrowsSort class="mr-2 size-4" />
 				<span>Clear sort</span>
-				<DropdownMenu.Shortcut>⇧⌘P</DropdownMenu.Shortcut>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				<CreditCard class="mr-2 size-4" />
-				<span>Sort {column.header} ascending </span>
-				<DropdownMenu.Shortcut>⌘B</DropdownMenu.Shortcut>
+			<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.sortColumnAscending(column)}>
+				<SortAscending class="mr-2 size-4" />
+				<span>Sort ascending </span>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				<Settings class="mr-2 size-4" />
-				<span>Sort {column.header} descending </span>
-				<DropdownMenu.Shortcut>⌘S</DropdownMenu.Shortcut>
+			<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.sortColumnDescending(column)}>
+				<SortDescending class="mr-2 size-4" />
+				<span>Sort descending </span>
 			</DropdownMenu.Item>
 			<DropdownMenu.Separator />
 			<DropdownMenu.Item>
-				<Keyboard class="mr-2 size-4" />
+				<FilterX class="mr-2 size-4" />
 				<span>Clear filter</span>
-				<DropdownMenu.Shortcut>⌘K</DropdownMenu.Shortcut>
 			</DropdownMenu.Item>
 			<DropdownMenu.Sub>
 				<DropdownMenu.SubTrigger>
-					<UserPlus class="mr-2 size-4" />
-					<span>Filter by {column.header}</span>
+					<FilterCog class="mr-2 size-4" />
+					<span>Filter operator</span>
 				</DropdownMenu.SubTrigger>
 				<DropdownMenu.SubContent>
 					<DropdownMenu.Item>
@@ -117,7 +124,7 @@
 
 			<DropdownMenu.Separator />
 			<DropdownMenu.Item>
-				<Users class="mr-2 size-4" />
+				<AdGroupOutlineSharp class="mr-2 size-4" />
 				<span>Group by {column.header}</span>
 			</DropdownMenu.Item>
 			<DropdownMenu.Separator />
@@ -144,19 +151,19 @@
 				<span>Show all columns</span>
 			</DropdownMenu.Item>
 			<DropdownMenu.Separator />
-            <DropdownMenu.Item>
+			<DropdownMenu.Item>
 				<Users class="mr-2 size-4" />
 				<span>Move left</span>
 			</DropdownMenu.Item>
-            <DropdownMenu.Item>
+			<DropdownMenu.Item>
 				<Users class="mr-2 size-4" />
 				<span>Move right</span>
 			</DropdownMenu.Item>
-            <DropdownMenu.Item>
+			<DropdownMenu.Item>
 				<Users class="mr-2 size-4" />
 				<span>Move to group or root</span>
 			</DropdownMenu.Item>
-            <DropdownMenu.Item>
+			<DropdownMenu.Item>
 				<Users class="mr-2 size-4" />
 				<span>Create group</span>
 			</DropdownMenu.Item>

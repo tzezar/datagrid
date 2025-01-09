@@ -7,25 +7,6 @@
 
 	let { datagrid }: { datagrid: Datagrid<any> } = $props();
 
-	function handleGroupByChange(values: string[]) {
-		console.log(values);
-
-		const newGroupBy: ColumnId[] = values
-			.map((option) => {
-				const column = findColumnById(datagrid.columns, option);
-				if (!column) return null;
-				if (column.options.groupable === false) return null;
-				return option;
-			})
-			.filter((group): group is ColumnId => group !== null); // Type guard to filter out null values
-
-		datagrid.grouping.groupByColumns = newGroupBy;
-		datagrid.pagination.goToFirstPage();
-		datagrid.cache.invalidateGroupedRowsCache();
-		datagrid.processors.data.executeFullDataTransformation();
-	}
-
-
 	let columns = $derived(
 		datagrid.columnManager
 			.getFlatColumns()
@@ -39,7 +20,7 @@
 	type="multiple"
 	name="groupByColumn"
 	value={datagrid.grouping.groupByColumns}
-	onValueChange={(values) => handleGroupByChange(values)}
+	onValueChange={(values) => datagrid.handlers.grouping.change(values)}
 >
 	<Select.Trigger class="h-full w-full rounded-none">Group data by column</Select.Trigger>
 	<Select.Content>
