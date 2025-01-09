@@ -19,6 +19,12 @@ export class ColumnFilteringFeature<TOriginalRow> {
         return condition?.operator;
     }
 
+    changeConditionOperator(columnId: string, operator: FilterOperator) {
+        const condition = this.conditions.find(c => c.columnId === columnId);
+        if (!condition) return;
+        condition.operator = operator;
+    }
+
     evaluateCondition(cellValue: any, condition: FilterCondition<TOriginalRow>): boolean {
         const value = condition.value;
         const valueTo = condition.valueTo;

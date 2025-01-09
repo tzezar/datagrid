@@ -36,9 +36,182 @@
 	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
 	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
 	import type { AnyColumn } from '$lib/datagrid/core/column-creation/types';
+	import {
+		numberFilterOperators,
+		selectFilterOperators,
+		stringFilterOperators
+	} from '$lib/datagrid/core/defaults';
+	import Equals from '$lib/datagrid/icons/filter-operators/equals.svelte';
+	import NotEquals from '$lib/datagrid/icons/filter-operators/not-equals.svelte';
+	import GreaterThan from '$lib/datagrid/icons/filter-operators/greater-than.svelte';
+	import LessThan from '$lib/datagrid/icons/filter-operators/less-than.svelte';
+	import GreateThanOrEqualTo from '$lib/datagrid/icons/filter-operators/greate-than-or-equal-to.svelte';
+	import LessThanOrEqualTo from '$lib/datagrid/icons/filter-operators/less-than-or-equal-to.svelte';
+	import Between from '$lib/datagrid/icons/filter-operators/between.svelte';
+	import Empty from '$lib/datagrid/icons/filter-operators/empty.svelte';
+	import NotEmpty from '$lib/datagrid/icons/filter-operators/not-empty.svelte';
+	import Contains from '$lib/datagrid/icons/filter-operators/contains.svelte';
+	import StartsWith from '$lib/datagrid/icons/filter-operators/starts-with.svelte';
+	import EndsWith from '$lib/datagrid/icons/filter-operators/ends-with.svelte';
+
+	type NumberFilterOperator = {
+		label: string;
+		value: (typeof numberFilterOperators)[number];
+		icon: any;
+	};
+
+	type StringFilterOperator = {
+		label: string;
+		value: (typeof stringFilterOperators)[number];
+		icon: any;
+	};
+
+	type SelectFilterOperator = {
+		label: string;
+		value: (typeof selectFilterOperators)[number];
+		icon: any;
+	};
+
+	const numberOperators: NumberFilterOperator[] = [
+		{
+			label: 'Equals',
+			value: 'equals',
+			icon: Equals
+		},
+		{
+			label: 'Not equals',
+			value: 'notEquals',
+			icon: NotEquals
+		},
+		{
+			label: 'Greater than',
+			value: 'greaterThan',
+			icon: GreaterThan
+		},
+		{
+			label: 'Less than',
+			value: 'lessThan',
+			icon: LessThan
+		},
+		{
+			label: 'Greater than or equal to',
+			value: 'greaterThanOrEqual',
+			icon: GreateThanOrEqualTo
+		},
+		{
+			label: 'Less than or equal to',
+			value: 'lessThanOrEqual',
+			icon: LessThanOrEqualTo
+		},
+		{
+			label: 'Between',
+			value: 'between',
+			icon: Between
+		},
+		{
+			label: 'Empty',
+			value: 'empty',
+			icon: Empty
+		},
+		{
+			label: 'Not empty',
+			value: 'notEmpty',
+			icon: NotEmpty
+		}
+	];
+
+	const stringOperators: StringFilterOperator[] = [
+		{
+			label: 'Equals',
+			value: 'equals',
+			icon: Equals
+		},
+		{
+			label: 'Not equals',
+			value: 'notEquals',
+			icon: NotEquals
+		},
+		{
+			label: 'Contains',
+			value: 'contains',
+			icon: Contains
+		},
+		{
+			label: 'Starts with',
+			value: 'startsWith',
+			icon: StartsWith
+		},
+		{
+			label: 'Ends with',
+			value: 'endsWith',
+			icon: EndsWith
+		},
+		{
+			label: 'Empty',
+			value: 'empty',
+			icon: Empty
+		},
+		{
+			label: 'Not empty',
+			value: 'notEmpty',
+			icon: NotEmpty
+		}
+	];
+
+	const selectOperators: SelectFilterOperator[] = [
+		{
+			label: 'Equals',
+			value: 'equals',
+			icon: Equals
+		},
+		{
+			label: 'Not equals',
+			value: 'notEquals',
+			icon: NotEquals
+		},
+		{
+			label: 'Contains',
+			value: 'contains',
+			icon: Contains
+		},
+		{
+			label: 'Starts with',
+			value: 'startsWith',
+			icon: StartsWith
+		},
+		{
+			label: 'Ends with',
+			value: 'endsWith',
+			icon: EndsWith
+		},
+		{
+			label: 'Empty',
+			value: 'empty',
+			icon: Empty
+		},
+		{
+			label: 'Not empty',
+			value: 'notEmpty',
+			icon: NotEmpty
+		}
+	];
 
 	let { datagrid, column }: { datagrid: Datagrid<any>; column: AnyColumn<any> } = $props();
 </script>
+
+{#snippet FilterOperator(
+	operators: (NumberFilterOperator | StringFilterOperator | SelectFilterOperator)[]
+)}
+	{#each operators as operator}
+		<DropdownMenu.Item
+			onclick={() =>
+				datagrid.handlers.filtering.changeFilterOperator(column.columnId, operator.value)}
+		>
+			<operator.icon class="mr-2 size-4" />
+			<span>{operator.label}</span>
+		</DropdownMenu.Item>
+	{/each}
+{/snippet}
 
 {#if isGroupColumn(column)}
 	<DropdownMenu.Root>
@@ -114,68 +287,23 @@
 					<span>Clear filter</span>
 				</DropdownMenu.Item>
 				<DropdownMenu.Sub>
-					<DropdownMenu.SubTrigger>
+					<DropdownMenu.SubTrigger
+						disabled={true}
+						class="aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+					>
 						<FilterCog class="mr-2 size-4" />
 						<span>Filter operator</span>
 					</DropdownMenu.SubTrigger>
 					<DropdownMenu.SubContent>
-						<DropdownMenu.Item>
-							<Mail class="mr-2 size-4" />
-							<span>Contains</span>
-						</DropdownMenu.Item>
-						<DropdownMenu.Item>
-							<MessageSquare class="mr-2 size-4" />
-							<span>Starts with</span>
-						</DropdownMenu.Item>
-						<DropdownMenu.Item>
-							<CirclePlus class="mr-2 size-4" />
-							<span>Ends with</span>
-						</DropdownMenu.Item>
-						<DropdownMenu.Separator />
-						<DropdownMenu.Item>
-							<MessageSquare class="mr-2 size-4" />
-							<span>Equals</span>
-						</DropdownMenu.Item>
-						<DropdownMenu.Item>
-							<MessageSquare class="mr-2 size-4" />
-							<span>Not equals</span>
-						</DropdownMenu.Item>
-
-						<DropdownMenu.Separator />
-						<DropdownMenu.Item>
-							<MessageSquare class="mr-2 size-4" />
-							<span>Between</span>
-						</DropdownMenu.Item><DropdownMenu.Item>
-							<MessageSquare class="mr-2 size-4" />
-							<span>Between inclusive</span>
-						</DropdownMenu.Item><DropdownMenu.Item>
-							<MessageSquare class="mr-2 size-4" />
-							<span>Greater than</span>
-						</DropdownMenu.Item><DropdownMenu.Item>
-							<MessageSquare class="mr-2 size-4" />
-							<span>Greater than or equal to</span>
-						</DropdownMenu.Item>
-						<DropdownMenu.Item>
-							<MessageSquare class="mr-2 size-4" />
-							<span>Less than</span>
-						</DropdownMenu.Item>
-
-						<DropdownMenu.Separator />
-
-						<DropdownMenu.Item>
-							<MessageSquare class="mr-2 size-4" />
-							<span>Less than or equal to</span>
-						</DropdownMenu.Item>
-
-						<DropdownMenu.Item>
-							<MessageSquare class="mr-2 size-4" />
-							<span>Empty</span>
-						</DropdownMenu.Item>
-
-						<DropdownMenu.Item>
-							<MessageSquare class="mr-2 size-4" />
-							<span>Not empty</span>
-						</DropdownMenu.Item>
+						{#if column._meta.filterType === 'number'}
+							{@render FilterOperator(numberOperators)}
+						{/if}
+						{#if column._meta.filterType === 'text'}
+							{@render FilterOperator(stringOperators)}
+						{/if}
+						{#if column._meta.filterType === 'select'}
+							{@render FilterOperator(selectOperators)}
+						{/if}
 					</DropdownMenu.SubContent>
 				</DropdownMenu.Sub>
 

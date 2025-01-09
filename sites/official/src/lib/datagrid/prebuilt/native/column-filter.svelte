@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { AnyColumn } from '$lib/datagrid/core/column-creation/types';
+	import type { FilterOperator } from '$lib/datagrid/core/types';
 	import type { Datagrid } from '../../core/index.svelte';
 
 	type Props = {
@@ -18,6 +19,10 @@
 		datagrid.processors.data.executeFullDataTransformation();
 		datagrid.columnFaceting.calculateFacets(datagrid.cache.sortedData || [], datagrid.columns);
 	};
+
+	
+
+	
 </script>
 
 {#snippet FilterOperator()}

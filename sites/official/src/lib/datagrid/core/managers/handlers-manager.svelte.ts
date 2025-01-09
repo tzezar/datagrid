@@ -1,7 +1,7 @@
 import { createColumnGroup } from "../column-creation/group-column-creator";
 import type { AnyColumn } from "../column-creation/types";
 import type { Datagrid } from "../index.svelte";
-import type { ColumnId, FilterableColumn, LeafColumn, PinningPosition } from "../types";
+import type { ColumnId, FilterableColumn, FilterOperator, LeafColumn, PinningPosition } from "../types";
 import { findColumnById, flattenColumns, generateRandomColumnId, isColumnFilterable } from "../utils.svelte";
 
 
@@ -89,6 +89,12 @@ export class HandlersManager {
 
     }
     filtering = {
+        changeFilterOperator: (columnId: string, operator: FilterOperator) => {
+            this.datagrid.filtering.changeConditionOperator(columnId, operator);
+            this.datagrid.cache.invalidateFilteredDataCache();
+            this.datagrid.processors.data.executeFullDataTransformation();
+        },
+
         updateFilterCondition: (props: {
             column: AnyColumn<any>,
             value: any,

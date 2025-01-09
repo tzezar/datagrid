@@ -30,6 +30,8 @@
 	import AdGroupOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-outline-sharp.svelte';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import Header from '$lib/tzezars-datagrid/prebuilt/native/header.svelte';
+	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
+	import { on } from 'svelte/events';
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
 		datagrid.handlers.columnPinning.changeColumnPinningPosition(column.columnId, position);
 	}
@@ -82,45 +84,49 @@
 <!-- GROUPING MENU -->
 
 {#snippet newGroupCreationMenu()}
-	<div class="column-group-menu">
-		<div class="group-menu-content">
-			<div class="group-menu-header">
-				<Input
-					type="text"
-					bind:value={newGroupName}
-					placeholder="Group Name"
-					class="group-name-input"
-				/>
-			</div>
+	<div class="flex flex-col gap-2 p-2">
+		<div class="">
+			<Input
+				type="text"
+				bind:value={newGroupName}
+				placeholder="Group Name"
+				class="group-name-input"
+			/>
+		</div>
 
-			<div class="column-list flex flex-col gap-2">
-				{#each datagrid.columns as column}
-					{#if !isGroupColumn(column)}
-						<label class="column-item">
-							<input type="checkbox" bind:checked={selectedColumns[column.columnId]} />
-							{column.header}
-						</label>
-					{/if}
-				{/each}
-			</div>
+		<div class=" flex flex-col gap-2">
+			{#each datagrid.columns as column}
+				{#if !isGroupColumn(column)}
+					<div class='flex flex-row gap-2 items-center'>
+						<Checkbox
+						id={column.columnId}
+						checked={selectedColumns[column.columnId]}
+						onCheckedChange={(checked) => (selectedColumns[column.columnId] = checked)}
+					/>
+					<label for={column.columnId} >
+						{column.header}
+					</label>
+					</div>
+				{/if}
+			{/each}
+		</div>
 
-			<div class="group-menu-footer">
-				<Button
-					class="w-full"
-					disabled={!newGroupName || !Object.values(selectedColumns).some((v) => v)}
-					onclick={() => {
-						datagrid.handlers.columnGrouping.createGroup({
-							newGroupName,
-							selectedColumns
-						});
+		<div class="group-menu-footer">
+			<Button
+				class="w-full"
+				disabled={!newGroupName || !Object.values(selectedColumns).some((v) => v)}
+				onclick={() => {
+					datagrid.handlers.columnGrouping.createGroup({
+						newGroupName,
+						selectedColumns
+					});
 
-						selectedColumns = {};
-						newGroupName = '';
-					}}
-				>
-					Create Group
-				</Button>
-			</div>
+					selectedColumns = {};
+					newGroupName = '';
+				}}
+			>
+				Create Group
+			</Button>
 		</div>
 	</div>
 {/snippet}
@@ -172,10 +178,10 @@
 {/snippet}
 
 {#snippet ordering(columns: AnyColumn<any>[], depth: number = 0)}
-	<div class="flex-col gap-4 flex">
+	<div class="flex flex-col gap-4">
 		{#each columns as column (column.columnId)}
 			{#if isGroupColumn(column)}
-				<div class="flex rounded-md border p-4 gap-4">
+				<div class="flex gap-4 rounded-md border p-4">
 					<div class="flex flex-col gap-2">
 						<div class="flex w-full flex-row justify-between gap-4">
 							<span class="text-xs font-bold">{column.header}</span>
@@ -205,7 +211,7 @@
 				<span>Reordering</span>
 			</DropdownMenu.Item>
 		</Dialog.Trigger>
-		<Dialog.Content class="h-full overflow-auto max-w-4xl max-h-[80vh]">
+		<Dialog.Content class="h-full max-h-[80vh] max-w-4xl overflow-auto">
 			<div class="h-full w-full overflow-auto">
 				<div style="" class="inline-block">
 					{@render ordering(datagrid.columns)}
