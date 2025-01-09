@@ -39,7 +39,7 @@
 	import { createColumnGroup } from '$lib/datagrid/core/column-creation/group-column-creator';
 
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
-		datagrid.columnManager.handlers.changeColumnPinningPosition(column.columnId, position);
+		datagrid.handlers.columnPinning.changeColumnPinningPosition(column.columnId, position);
 	}
 
 	const leafColumns = datagrid.columnManager.getLeafColumns();

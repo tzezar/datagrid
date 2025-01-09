@@ -162,6 +162,12 @@ export class HandlersManager {
             if (!column) return;
             column.state.pinning.position = position;
         },
+        changeColumnPinningPosition: (columnId: string, position: PinningPosition) => {
+            const column = findColumnById(this.datagrid.columns, columnId);
+            if (!column) throw new Error(`Column ${columnId} not found`);
+            this.datagrid.columnPinning.changeColumnPinningPosition(column, position);
+            this.datagrid.processors.column.refreshColumnPinningOffsets();
+        }
     }
     columnOrdering = {
         moveLeft: (columnId: ColumnId) => {
