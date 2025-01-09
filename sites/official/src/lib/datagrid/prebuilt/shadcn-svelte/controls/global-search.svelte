@@ -12,7 +12,7 @@
 	value={datagrid.globalSearch.value}
 	oninput={(e) => {
 		datagrid.globalSearch.value = e.currentTarget.value;
+		datagrid.pagination.goToFirstPage();
 		datagrid.processors.data.executeFullDataTransformation();
-
 	}}
 />
