@@ -198,7 +198,7 @@
 {/snippet}
 
 {#snippet reordering()}
-	<Dialog.Root open={true}>
+	<Dialog.Root>
 		<Dialog.Trigger class="w-full">
 			<DropdownMenu.Item closeOnSelect={false}>
 				<MoveUp class="mr-2 size-4" />
