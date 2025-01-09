@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
-
 	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import { isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import ColumnFilter from '$lib/datagrid/prebuilt/native/column-filter.svelte';
-	import HeaderCellDropdown from './header-cell-dropdown.svelte';
-	import HeaderCell from './header-cell.svelte';
 	import SortingIndicator from './sorting-indicator.svelte';
+	import HeaderCell from './header-cell.svelte';
+	import HeaderCellDropdown from './header-cell-dropdown.svelte';
 
 	let { datagrid, column }: { datagrid: Datagrid<any>; column: any } = $props();
 

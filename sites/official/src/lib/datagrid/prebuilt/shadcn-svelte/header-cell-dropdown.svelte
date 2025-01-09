@@ -1,22 +1,7 @@
 <script lang="ts">
-	import CirclePlus from 'lucide-svelte/icons/circle-plus';
-	import Cloud from 'lucide-svelte/icons/cloud';
-	import CreditCard from 'lucide-svelte/icons/credit-card';
-	import Github from 'lucide-svelte/icons/github';
-	import Keyboard from 'lucide-svelte/icons/keyboard';
-	import LifeBuoy from 'lucide-svelte/icons/life-buoy';
-	import LogOut from 'lucide-svelte/icons/log-out';
-	import Mail from 'lucide-svelte/icons/mail';
-	import MessageSquare from 'lucide-svelte/icons/message-square';
-	import Plus from 'lucide-svelte/icons/plus';
-	import Settings from 'lucide-svelte/icons/settings';
-	import User from 'lucide-svelte/icons/user';
-	import UserPlus from 'lucide-svelte/icons/user-plus';
-	import Users from 'lucide-svelte/icons/users';
 
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
-	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import MoreVert from '$lib/datagrid/icons/material-symbols/more-vert.svelte';
 	import { cn } from '$lib/utils';
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
@@ -30,7 +15,6 @@
 	import FreezeColumn from '$lib/datagrid/icons/tabler/freeze-column.svelte';
 	import ColumnsOff from '$lib/datagrid/icons/tabler/columns-off.svelte';
 	import VisibilityOff from '$lib/datagrid/icons/material-symbols/visibility-off.svelte';
-	import Visibility from '$lib/datagrid/icons/material-symbols/visibility.svelte';
 	import ArrowMoveLeft from '$lib/datagrid/icons/tabler/arrow-move-left.svelte';
 	import ArrowMoveRight from '$lib/datagrid/icons/tabler/arrow-move-right.svelte';
 	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
@@ -51,8 +35,8 @@
 	import Empty from '$lib/datagrid/icons/filter-operators/empty.svelte';
 	import NotEmpty from '$lib/datagrid/icons/filter-operators/not-empty.svelte';
 	import Contains from '$lib/datagrid/icons/filter-operators/contains.svelte';
-	import StartsWith from '$lib/datagrid/icons/filter-operators/starts-with.svelte';
 	import EndsWith from '$lib/datagrid/icons/filter-operators/ends-with.svelte';
+	import StartsWith from '$lib/datagrid/icons/filter-operators/starts-with.svelte';
 
 	type NumberFilterOperator = {
 		label: string;

@@ -1,8 +1,8 @@
 import { createColumnGroup } from "../column-creation/group-column-creator";
 import type { AnyColumn } from "../column-creation/types";
 import type { Datagrid } from "../index.svelte";
-import type { ColumnId, FilterableColumn, FilterOperator, LeafColumn, PinningPosition } from "../types";
-import { findColumnById, flattenColumns, generateRandomColumnId, isColumnFilterable } from "../utils.svelte";
+import type { ColumnId, FilterableColumn, FilterOperator, GridBasicRow, LeafColumn, PinningPosition } from "../types";
+import { findColumnById, flattenColumns, generateRandomColumnId, isColumnFilterable, isGroupRow } from "../utils.svelte";
 
 
 
@@ -209,5 +209,29 @@ export class HandlersManager {
                 column.parentColumnId = groupColumn.columnId;
             }
         }
+    }
+    rowSelection = {
+        selectRowsOnPage: () => {
+            const rowsOnPage = (this.datagrid.cache.paginatedRows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
+            const ids = rowsOnPage.map(row => row.identifier);
+            this.datagrid.rowSelection.selectRows(ids);
+        },
+        unselectRowsOnPage: () => {
+            const rowsOnPage = (this.datagrid.cache.paginatedRows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
+            const ids = rowsOnPage.map(row => row.identifier);
+            this.datagrid.rowSelection.unselectRows(ids);
+        },
+        selectAllRows: () => {
+            const rows = (this.datagrid.cache.rows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
+            const ids = rows.map(row => row.identifier);
+            console.log(ids)
+            this.datagrid.rowSelection.selectRows(ids);
+        },
+        unselectAllRows: () => {
+            const rows = (this.datagrid.cache.rows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
+            const ids = rows.map(row => row.identifier);
+            this.datagrid.rowSelection.unselectRows(ids);
+        }
+
     }
 }

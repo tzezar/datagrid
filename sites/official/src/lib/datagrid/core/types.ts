@@ -30,7 +30,7 @@ export type CustomCellComponentWithProps = {
 export type CustomCellProps<TOriginalRow> = {
     datagrid: Datagrid<any>;
     column: AnyColumn<any>;
-    row: GridBasicRow<TOriginalRow>;
+    row: GridBasicRow<TOriginalRow>
 }
 
 export type CustomCell<TOriginalRow> = (props: CustomCellProps<TOriginalRow>) => string | HTMLElement | CustomCellComponentWithProps

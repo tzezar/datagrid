@@ -4,9 +4,6 @@
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import type { GridGroupRow } from '$lib/datagrid/core/types';
 	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
-	import ChevronRightRounded from '$lib/datagrid/icons/material-symbols/chevron-right-rounded.svelte';
-	import ExpandLess from '$lib/datagrid/icons/material-symbols/expand-less.svelte';
-	import OutlineKeyboardArrowUp from '$lib/datagrid/icons/material-symbols/outline-keyboard-arrow-up.svelte';
 
 	let { datagrid, column, row }: { datagrid: Datagrid<any>; column: AnyColumn<any>; row: GridGroupRow<any> } =
 		$props();
@@ -24,7 +21,7 @@
 >
 	{#if column._meta?.showInGroupRow}
 		{#if column.cell && typeof column.cell === 'function'}
-			{@const cellContent = column.cell(row)}
+			{@const cellContent = column.cell({column, datagrid, row})}
 			{#if cellContent && typeof cellContent === 'object' && 'component' in cellContent}
 				<!-- svelte-ignore svelte_component_deprecated -->
 				<svelte:component this={cellContent.component} {...cellContent.props} {datagrid} />

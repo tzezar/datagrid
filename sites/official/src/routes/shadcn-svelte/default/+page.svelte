@@ -5,12 +5,11 @@
 	import Pagination from '$lib/datagrid/prebuilt/shadcn-svelte/controls/pagination.svelte';
 	import DatagridSettingsDropdown from '$lib/datagrid/prebuilt/shadcn-svelte/controls/settings/datagrid-settings-dropdown.svelte';
 	import GlobalSearch from '$lib/datagrid/prebuilt/shadcn-svelte/controls/global-search.svelte';
-	import GroupBy from '$lib/datagrid/prebuilt/shadcn-svelte/controls/group-by.svelte';
-	import HeaderCell from '$lib/datagrid/prebuilt/shadcn-svelte/header-cell.svelte';
 	import Row from '$lib/datagrid/prebuilt/shadcn-svelte/row.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import FilterAlt from '$lib/datagrid/icons/material-symbols/filter-alt.svelte';
 	import FilterAltOff from '$lib/datagrid/icons/material-symbols/filter-alt-off.svelte';
+	import HeaderCell from '$lib/datagrid/prebuilt/shadcn-svelte/header-cell.svelte';
 
 	let { data } = $props();
 

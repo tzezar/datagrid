@@ -34,4 +34,15 @@ export class RowSelectionFeature<TOriginalRow> {
             .filter((row): row is TOriginalRow => row !== undefined); // Type guard for filtering
     }
 
+
+    selectRows(identifiers: GridRowIdentifier[]) {
+        identifiers.forEach(identifier => this.selectRow(identifier));
+    }
+
+    unselectRows(identifiers: GridRowIdentifier[]) {
+        identifiers.forEach(identifier => this.unselectRow(identifier));
+    }
+
+
+    
 }
