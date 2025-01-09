@@ -1,25 +1,8 @@
-import {  ArrowUp, ArrowUpDown } from "lucide-svelte";
 import { isGroupColumn } from "./column-guards";
 import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn, GroupColumn } from "./helpers/column-creators";
 import type { CellValue, ColumnId, CustomCellComponentWithProps, GridBasicRow, GridGroupRow, GridRow, SortableColumn } from "./types";
 import type { Datagrid } from "./index.svelte";
-import PlayArrowRounded from "../icons/material-symbols/play-arrow-rounded.svelte";
 
-
-
-export function getCellValue(column: AnyColumn<any>, row: any): CellValue {
-    if (column.type === 'accessor') {
-        column = column as AccessorColumn<any>;
-        return column.getValueFn(row);
-    } else if (column.type === 'computed') {
-        column = column as ComputedColumn<any>;
-        return column.getValueFn(row);
-    } else if (column.type === 'display') {
-        throw new Error('Display columns are not supported')
-    } else if (column.type === 'group') {
-        throw new Error('Group columns are not supported');
-    }
-}
 
 export function getCellContent(column: AnyColumn<any>, row: any): CellValue | HTMLElement {
     if (column.type === 'accessor') {
@@ -58,19 +41,6 @@ export function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
     return flattened;
 }
 
-export const filterOutDisplayColumns = <TOriginalRow>(columns: AnyColumn<TOriginalRow>[]): (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow> | GroupColumn<TOriginalRow>)[] => {
-    return columns.filter(column => column.type !== 'display')
-}
-
-export const filterOutGroupColumns = <TOriginalRow>(columns: AnyColumn<TOriginalRow>[]): (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow> | DisplayColumn<TOriginalRow>)[] => {
-    return columns.filter(column => column.type !== 'group')
-}
-
-export const filterGroupColumns = <TOriginalRow>(columns: AnyColumn<TOriginalRow>[]): GroupColumn<TOriginalRow>[] => {
-    return columns.filter(column => column.type === 'group') as GroupColumn<TOriginalRow>[]
-}
-
-
 // Find column by ID in nested structure
 export function findColumnById<TOriginalRow>(columns: AnyColumn<TOriginalRow>[], id: ColumnId): AnyColumn<TOriginalRow> | null {
     const flatColumns = flattenColumns(columns);
@@ -87,6 +57,8 @@ export function isDescendantOf(possibleDescendant: GroupColumn<any>, ancestor: G
         .filter((col): col is GroupColumn<any> => col.type === 'group')
         .some(childGroup => isDescendantOf(possibleDescendant, childGroup));
 }
+
+// TODO Move it somewhere else
 // Handle sort click with multi-column support
 export function onSort(datagrid: Datagrid<any>, column: AnyColumn<any>, event: MouseEvent) {
     if (!column.options.sortable) return;
@@ -134,15 +106,6 @@ export const getSortIndex = (datagrid: Datagrid<any>, column: AnyColumn<any>): n
     return sortConfig ? sortConfig.index + 1 : null;
 };
 
-// Get sort icon based on sort state
-export const getSortIcon = (datagrid: Datagrid<any>, column: AnyColumn<any>) => {
-    column = column as SortableColumn<any>;
-    if (!column.options.sortable) return null;
-    const columnId = column.columnId || column.header;
-    const sortConfig = datagrid.sorting.sortConfigs.find((config) => config.id === columnId);
-    if (!sortConfig) return ArrowUpDown;
-    return sortConfig.desc ? PlayArrowRounded : ArrowUp;
-};
 
 export const getSortDirection = (datagrid: Datagrid<any>, column: AnyColumn<any>): 'desc' | 'asc' | 'intermediate' | null => {
     column = column as SortableColumn<any>;
@@ -161,23 +124,6 @@ export const isGridGroupRow = <TOriginalRow,>(
 };
 
 
-export const getSearchableColumns = <T>(columns: AnyColumn<T>[]): (AccessorColumn<T> | ComputedColumn<T>)[] => {
-    const searchableColumns = columns
-        .filter((column): column is AccessorColumn<T> | ComputedColumn<T> =>
-            column.type === 'accessor' || column.type === 'computed'
-        )
-        .filter(column => column.options?.searchable !== false);
-    return searchableColumns;
-};
-
-export const getSortableColumns = <T>(columns: AnyColumn<T>[]): (AccessorColumn<T> | ComputedColumn<T>)[] => {
-    const sortableColumns = columns
-        .filter((column): column is AccessorColumn<T> | ComputedColumn<T> =>
-            column.type === 'accessor' || column.type === 'computed'
-        )
-        .filter(column => column.options?.sortable !== false);
-    return sortableColumns;
-};
 
 
 
@@ -208,8 +154,6 @@ export function isGroupRow<TOriginalRow>(row: GridRow<TOriginalRow>): row is Gri
 export function isBasicRow<TOriginalRow>(row: GridRow<TOriginalRow>): row is GridBasicRow<TOriginalRow> {
     return 'original' in row;
 }
-
-
 
 export function isCellComponent(value: any): value is CustomCellComponentWithProps {
     return value && typeof value === 'object' && 'component' in value

@@ -4,8 +4,6 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import {
-		filterOutGroupColumns,
-		flattenColumns,
 		getSortDirection,
 		getSortIndex,
 		isDescendantOf,

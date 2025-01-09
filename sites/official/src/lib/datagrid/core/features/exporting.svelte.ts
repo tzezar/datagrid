@@ -3,7 +3,6 @@ import * as XLSX from 'xlsx';
 import { XMLBuilder } from 'fast-xml-parser';
 import type { Datagrid } from "../index.svelte";
 import type { AnyColumn } from '../helpers/column-creators';
-import { filterOutGroupColumns, flattenColumns } from '../utils.svelte';
 
 export class ExportingFeature<T> {
     private datagrid: Datagrid<T>;
@@ -71,7 +70,7 @@ export class ExportingFeature<T> {
     private prepareData(): Record<string, unknown>[] {
         return this.datagrid.original.data.map(row => {
             const rowData: Record<string, unknown> = {};
-            filterOutGroupColumns(flattenColumns(this.datagrid.columns)).forEach((column: AnyColumn<T>) => {
+            this.datagrid.columnManager.getLeafColumns().forEach((column: AnyColumn<T>) => {
                 rowData[column.columnId as string] = row[column.columnId as keyof T];
             });
             return rowData;

@@ -2,7 +2,7 @@ import { isGroupColumn } from "../column-guards";
 import type {  AnyColumn,  GroupColumn } from "../helpers/column-creators";
 import type { Datagrid } from "../index.svelte";
 import type { LeafColumn, PinningPosition } from "../types";
-import { filterGroupColumns, findColumnById, flattenColumns } from "../utils.svelte";
+import {  findColumnById, flattenColumns } from "../utils.svelte";
 
 
 
@@ -13,7 +13,7 @@ export class ColumnManager<TOriginalRow> {
     }
 
     getGroupColumns(): GroupColumn<TOriginalRow>[] {
-        return filterGroupColumns(flattenColumns(this.datagrid.columns));
+        return flattenColumns(this.datagrid.columns).filter(col => isGroupColumn(col));
     }
 
     getFlattenColumns(): AnyColumn<TOriginalRow>[] {
@@ -189,8 +189,6 @@ export class ColumnManager<TOriginalRow> {
         // const cols = [...this.getColumnsPinnedToLeft()]
         return cols
     }
-
-
 
 
 

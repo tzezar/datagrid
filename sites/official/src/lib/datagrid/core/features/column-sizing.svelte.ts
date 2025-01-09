@@ -1,6 +1,4 @@
 import type { Datagrid } from "../index.svelte";
-import { filterOutGroupColumns, flattenColumns } from "../utils.svelte";
-
 
 export class ColumnSizingFeature<TOriginalRow> {
     datagrid: Datagrid<TOriginalRow>;
@@ -10,7 +8,7 @@ export class ColumnSizingFeature<TOriginalRow> {
     }
 
     setColumnSize(columnId: string, width: number) {
-        const flatColumns = filterOutGroupColumns(flattenColumns(this.datagrid.columns));
+        const flatColumns = this.datagrid.columnManager.getLeafColumns();
 
         // Find the column by ID
         const column = flatColumns.find(c => c.columnId === columnId);

@@ -1,6 +1,4 @@
 import type { Datagrid } from "../index.svelte";
-import { filterOutGroupColumns, flattenColumns } from "../utils.svelte";
-
 
 export class ColumnVisibilityFeature<TOriginalRow> {
     datagrid: Datagrid<TOriginalRow>;
@@ -10,7 +8,7 @@ export class ColumnVisibilityFeature<TOriginalRow> {
     }
 
     toggleColumnVisibility(columnId: string) {
-        const flatColumns = filterOutGroupColumns(flattenColumns(this.datagrid.columns));
+        const flatColumns = this.datagrid.columnManager.getLeafColumns();
         // Find the column by ID
         const column = flatColumns.find(c => c.columnId === columnId);
 
