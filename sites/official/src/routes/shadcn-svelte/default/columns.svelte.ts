@@ -1,9 +1,12 @@
 import ActionsCell from "./_components/cells/cell-actions.svelte";
-import { createAccessorColumn, createColumnGroup, createComputedColumn, createDisplayColumn, type AnyColumn } from "../../../lib/datagrid/core/helpers/column-creators";
+
+import { type AnyColumn } from "$lib/datagrid/core/column-creation/types";
 import SelectRowCell from "./_components/cells/cell-select-row.svelte";
 import type { User } from "./generate-users";
 import RowSelectionHeader from "./_components/headers/row-selection-header.svelte";
 
+
+import { displayColumn, accessorColumn, columnGroup, computedColumn } from "$lib/datagrid/core/column-creation";
 
 
 // const exampleFn = (value) => {
@@ -12,7 +15,7 @@ import RowSelectionHeader from "./_components/headers/row-selection-header.svelt
 
 
 export const userColumns: AnyColumn<User>[] = [
-    createDisplayColumn({
+    displayColumn({
         header: 'Actions',
         columnId: 'actions',
         headerCell: () => ``,
@@ -32,7 +35,7 @@ export const userColumns: AnyColumn<User>[] = [
         }
 
     }),
-    createDisplayColumn({
+    displayColumn({
         header: 'Row Selection',
         headerCell: () => ({
             component: RowSelectionHeader
@@ -52,7 +55,7 @@ export const userColumns: AnyColumn<User>[] = [
         }
     }),
 
-    // createDisplayColumn({
+    // displayColumn({
     //     header: 'Row Selection',
     //     columnId: 'selectRow',
     //     cell: ({ column, row, datagrid }) => ({
@@ -64,7 +67,7 @@ export const userColumns: AnyColumn<User>[] = [
     //     }),
     //     options: { sortable: false },
     // }),
-    createAccessorColumn({
+    accessorColumn({
         header: 'Id',
         columnId: 'id',
         accessorKey: 'id',
@@ -75,7 +78,7 @@ export const userColumns: AnyColumn<User>[] = [
             filterType: 'number'
         }
     }),
-    createAccessorColumn({
+    accessorColumn({
         header: 'Status',
         columnId: 'status',
         accessorKey: 'status',
@@ -88,7 +91,7 @@ export const userColumns: AnyColumn<User>[] = [
             filterOptions: [{ label: 'active', value: 'active' }, { label: 'inactive', value: 'inactive' }, { label: 'pending', value: 'pending' }]
         }
     }),
-    createComputedColumn({
+    computedColumn({
         header: 'Full Name',
         columnId: 'fullName',
         accessorFn: (row) => `${row.firstName} ${row.lastName}`,
@@ -101,7 +104,7 @@ export const userColumns: AnyColumn<User>[] = [
         },
 
     }),
-    createAccessorColumn({
+    accessorColumn({
         header: 'Role',
         columnId: 'role',
         accessorKey: 'role',
@@ -113,15 +116,15 @@ export const userColumns: AnyColumn<User>[] = [
         }
     }),
 
-    createColumnGroup({
+    columnGroup({
         header: 'Person',
         columnId: 'person',
         columns: [
-            createColumnGroup({
+            columnGroup({
                 header: 'Personal Info',
                 columnId: 'personalInfo',
                 columns: [
-                    createAccessorColumn({
+                    accessorColumn({
                         header: 'First Name',
                         accessorKey: 'firstName',
                         columnId: 'firstName',
@@ -133,7 +136,7 @@ export const userColumns: AnyColumn<User>[] = [
                             filterType: 'text'
                         }
                     }),
-                    createAccessorColumn({
+                    accessorColumn({
                         header: 'Last Name',
                         columnId: 'lastName',
                         accessorKey: 'lastName',
@@ -142,7 +145,7 @@ export const userColumns: AnyColumn<User>[] = [
                             sortable: true
                         }
                     }),
-                    createAccessorColumn({
+                    accessorColumn({
                         header: 'Age',
                         columnId: 'age',
                         accessorKey: 'profile.age',
@@ -183,11 +186,11 @@ export const userColumns: AnyColumn<User>[] = [
                     }),
                 ]
             }),
-            createColumnGroup({
+            columnGroup({
                 header: 'Profile',
                 columnId: 'profile',
                 columns: [
-                    createAccessorColumn({
+                    accessorColumn({
                         header: 'Email',
                         columnId: 'email',
                         accessorKey: 'profile.email',
@@ -196,7 +199,7 @@ export const userColumns: AnyColumn<User>[] = [
                             sortable: true
                         }
                     }),
-                    createAccessorColumn({
+                    accessorColumn({
                         header: 'Country',
                         columnId: 'country',
                         accessorKey: 'profile.country',
@@ -209,25 +212,25 @@ export const userColumns: AnyColumn<User>[] = [
             })]
     }),
 
-    createColumnGroup({
+    columnGroup({
         header: 'Stats',
         columnId: 'stats',
         columns: [
-            createAccessorColumn({
+            accessorColumn({
                 header: 'Visits',
                 columnId: 'visits',
                 accessorKey: 'stats.visits',
                 getValueFn: (row) => row.stats.visits,
                 options: { sortable: true }
             }),
-            createComputedColumn({
+            computedColumn({
                 header: 'Last Login',
                 columnId: 'lastLogin',
                 accessorFn: (row) => row.stats.lastLogin.toLocaleString(),
                 getValueFn: (row) => row.stats.lastLogin,
                 options: { sortable: true }
             }),
-            createAccessorColumn({
+            accessorColumn({
                 header: 'Avg. Session (mins)',
                 columnId: 'averageSessionDuration',
                 accessorKey: 'stats.averageSessionDuration',

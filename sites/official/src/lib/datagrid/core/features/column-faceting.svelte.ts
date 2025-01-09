@@ -1,4 +1,4 @@
-import type { AccessorColumn, AnyColumn, ComputedColumn } from "../helpers/column-creators";
+import type { AccessorColumn, AnyColumn, ComputedColumn } from "../column-creation/types";
 import type { Datagrid } from "../index.svelte";
 
 export class ColumnFacetingFeature<TOriginalRow> {

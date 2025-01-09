@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { AnyColumn } from '../../core/helpers/column-creators';
+	
+	import type { AnyColumn } from "$lib/datagrid/core/column-creation/types";
 	import type { Datagrid } from '../../core/index.svelte';
 
 	type Props = {

@@ -1,5 +1,5 @@
 import { isGroupColumn } from "../column-guards";
-import type { AnyColumn, GroupColumn } from "../helpers/column-creators";
+import type { AnyColumn, GroupColumn } from "../column-creation/types";
 import type { Datagrid } from "../index.svelte";
 import { flattenColumns } from "../utils.svelte";
 

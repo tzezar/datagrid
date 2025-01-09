@@ -2,7 +2,7 @@ import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { XMLBuilder } from 'fast-xml-parser';
 import type { Datagrid } from "../index.svelte";
-import type { AnyColumn } from '../helpers/column-creators';
+import type { AnyColumn } from "../column-creation/types";
 
 export class ExportingFeature<T> {
     private datagrid: Datagrid<T>;

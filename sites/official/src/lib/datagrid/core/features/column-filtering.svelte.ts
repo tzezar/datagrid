@@ -1,4 +1,4 @@
-import type { AnyColumn } from "../helpers/column-creators";
+import type { AnyColumn } from "../column-creation/types";
 import type { FilterableColumn, FilterCondition, FilterOperator } from "../types";
 import { isColumnFilterable } from "../utils.svelte";
 

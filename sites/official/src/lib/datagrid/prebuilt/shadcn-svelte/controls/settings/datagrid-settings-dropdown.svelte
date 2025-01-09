@@ -19,7 +19,8 @@
 	import StabilizationLock from '$lib/datagrid/icons/material-symbols/stabilization-lock.svelte';
 	import Width from '$lib/datagrid/icons/material-symbols/width.svelte';
 	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
-	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/helpers/column-creators';
+	
+	import type { AnyColumn, GroupColumn } from "$lib/datagrid/core/column-creation/types";
 	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
 	import MoveDown from '$lib/datagrid/icons/material-symbols/move-down.svelte';
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';

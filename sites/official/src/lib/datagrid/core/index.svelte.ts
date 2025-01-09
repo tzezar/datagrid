@@ -1,7 +1,7 @@
 import { GroupingFeature as GroupingFeature } from "./features/grouping.svelte";
 import { PaginationFeature } from "./features/pagination.svelte";
 import { SortingFeature as DataSortingFeature } from "./features/sorting.svelte";
-import type { AnyColumn } from "./helpers/column-creators";
+import type { AnyColumn } from "./column-creation/types";
 import { ColumnFilteringFeature as FilteringFeature } from "./features/column-filtering.svelte";
 import { GlobalSearchFeature as GlobalSearchFeature } from "./features/global-search.svelte";
 import { ColumnSizingFeature as ColumnSizingFeature } from "./features/column-sizing.svelte";

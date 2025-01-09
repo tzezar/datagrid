@@ -1,5 +1,5 @@
 import type { Component } from "svelte";
-import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn } from "./helpers/column-creators";
+import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn } from "./column-creation/types";
 import type { Datagrid } from "./index.svelte";
 
 

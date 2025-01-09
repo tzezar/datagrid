@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
-	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/helpers/column-creators';
+	
+	import type { AnyColumn, GroupColumn } from "$lib/datagrid/core/column-creation/types";
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import { isCellComponent, onSort } from '$lib/datagrid/core/utils.svelte';

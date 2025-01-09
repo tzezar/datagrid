@@ -1,4 +1,4 @@
-import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn, GroupColumn } from "./helpers/column-creators";
+import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn, GroupColumn } from "./column-creation/types";
 
 export function isGroupColumn<TData>(column: AnyColumn<TData>): column is GroupColumn<TData> {
     return column.type === 'group'
