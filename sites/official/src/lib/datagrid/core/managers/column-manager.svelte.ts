@@ -109,6 +109,24 @@ export class ColumnManager<TOriginalRow> {
             return copy;
         };
     
+        // Helper function to merge two group columns
+        const mergeGroupColumns = (
+            existing: GroupColumn<TOriginalRow>,
+            incoming: GroupColumn<TOriginalRow>
+        ) => {
+            existing.columns = existing.columns || [];
+            if (incoming.columns) {
+                for (const incomingChild of incoming.columns) {
+                    const existingChild = findColumnById(incomingChild.columnId, existing.columns);
+                    if (!existingChild) {
+                        existing.columns.push(deepCopyColumn(incomingChild));
+                    } else if (existingChild.type === 'group' && incomingChild.type === 'group') {
+                        mergeGroupColumns(existingChild, incomingChild);
+                    }
+                }
+            }
+        };
+    
         // Build the complete hierarchy for a column
         const buildCompleteHierarchy = (
             column: AnyColumn<TOriginalRow>,
@@ -153,11 +171,7 @@ export class ColumnManager<TOriginalRow> {
                 if (existingRoot) {
                     // Merge the hierarchies
                     if (existingRoot.type === 'group' && hierarchy.type === 'group') {
-                        existingRoot.columns = existingRoot.columns || [];
-                        const newChild = hierarchy.columns?.[0];
-                        if (newChild && !findColumnById(newChild.columnId, existingRoot.columns)) {
-                            existingRoot.columns.push(newChild);
-                        }
+                        mergeGroupColumns(existingRoot, hierarchy);
                     }
                 } else {
                     result.push(hierarchy);
@@ -189,6 +203,7 @@ export class ColumnManager<TOriginalRow> {
     getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
         const cols = [...this.getColumnsPinnedToLeft(), ...this.createHierarchicalColumns(this.getColumnsPinnedToNone()), ...this.createHierarchicalColumns(this.getColumnsPinnedToRight())]
         // const cols = [...this.getColumnsPinnedToLeft()]
+        console.log('grouped', this.createHierarchicalColumns(this.getColumnsPinnedToNone()))
         return cols
     }
 
