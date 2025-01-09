@@ -1,6 +1,6 @@
 
 import { type AnyColumn, type GroupColumn } from "../column-creation/types";
-import { isGroupColumn } from "../column-guards";
+import { isGroupColumn } from "../helpers/column-guards";
 import type { Datagrid } from "../index.svelte";
 
 

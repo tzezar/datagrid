@@ -22,7 +22,6 @@ export function createAccessorColumn<
       pinnable: options?.pinnable ?? true,
       moveable: options?.moveable ?? true,
       hideable: options?.hideable ?? true,
-      showDropdownOptions: options?.showDropdownOptions ?? true
     },
     state: {
       size: DEFAULT_COLUMN_SIZE,
@@ -32,7 +31,7 @@ export function createAccessorColumn<
         offset: 0
       },
     },
-    _meta,
+    _meta: _meta ?? {},
     ...rest
   };
 }

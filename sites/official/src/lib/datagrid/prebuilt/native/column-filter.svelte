@@ -14,7 +14,7 @@
 			column,
 			value
 		});
-		datagrid.cache.invalidateFilteredDataCache();
+		datagrid.cache.invalidate('filteredData');
 		datagrid.pagination.goToFirstPage();
 		datagrid.processors.data.executeFullDataTransformation();
 		datagrid.columnFaceting.calculateFacets(datagrid.cache.sortedData || [], datagrid.columns);

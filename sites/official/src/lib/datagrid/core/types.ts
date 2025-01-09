@@ -12,6 +12,20 @@ export type GetGroupValue<TOriginalRow> = (row: TOriginalRow) => CellValue;
 export type CellValue = Primitive | Record<string, any> | Array<any>;
 
 
+export type ColumnSizeState = {
+    width: number;
+    minWidth: number;
+    maxWidth: number;
+    // grow: boolean;
+}
+export type ColumnPinningState = {
+    position: 'left' | 'right' | 'none';
+    offset: number;
+}
+
+
+
+
 export type GridRowIdentifier = GridGroupRowIdentifier | GridBasicRowIdentifier
 
 export type GridGroupRowIdentifier = string

@@ -19,7 +19,7 @@ export function createComputedColumn<TOriginalRow extends Record<string, any>>(
       filterable: options?.filterable ?? true,
       pinnable: options?.pinnable ?? true,
       moveable: options?.moveable ?? true,
-      showDropdownOptions: options?.showDropdownOptions ?? true
+      hideable: options?.hideable ?? true,
     },
     state: {
       size: DEFAULT_COLUMN_SIZE,
@@ -29,7 +29,7 @@ export function createComputedColumn<TOriginalRow extends Record<string, any>>(
         offset: 0
       },
     },
-    _meta,
+    _meta: _meta ?? {},
     ...rest
   };
 }

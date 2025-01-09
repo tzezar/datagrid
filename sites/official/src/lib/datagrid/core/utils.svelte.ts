@@ -1,4 +1,4 @@
-import { isGroupColumn } from "./column-guards";
+import { isGroupColumn } from "./helpers/column-guards";
 import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn, GroupColumn } from "./column-creation/types";
 import type { CellValue, ColumnId, CustomCellComponentWithProps, GridBasicRow, GridGroupRow, GridRow, SortableColumn } from "./types";
 import type { Datagrid } from "./index.svelte";

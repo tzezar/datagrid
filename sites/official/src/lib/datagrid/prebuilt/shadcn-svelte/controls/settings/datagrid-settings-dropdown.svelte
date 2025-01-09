@@ -16,7 +16,7 @@
 	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
 
 	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/column-creation/types';
-	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
+	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 	import MoveDown from '$lib/datagrid/icons/material-symbols/move-down.svelte';
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import DeleteOutline from '$lib/datagrid/icons/material-symbols/delete-outline.svelte';
@@ -29,9 +29,7 @@
 	import GroupBy from '../group-by.svelte';
 	import AdGroupOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-outline-sharp.svelte';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
-	import Header from '$lib/tzezars-datagrid/prebuilt/native/header.svelte';
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
-	import { on } from 'svelte/events';
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
 		datagrid.handlers.columnPinning.changeColumnPinningPosition(column.columnId, position);
 	}

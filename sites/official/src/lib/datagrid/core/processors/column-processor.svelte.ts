@@ -1,7 +1,10 @@
-import { isGroupColumn } from "../column-guards";
+import { isGroupColumn } from "../helpers/column-guards";
 import type { AnyColumn, GroupColumn } from "../column-creation/types";
 import type { Datagrid } from "../index.svelte";
 import { flattenColumns } from "../utils.svelte";
+
+
+
 
 
 export class ColumnProcessor<TOriginalRow> {
@@ -10,18 +13,11 @@ export class ColumnProcessor<TOriginalRow> {
         this.datagrid = datagrid;
     }
 
-
-    transformColumns = (columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] => {
-        this.assignParentColumnIds(columns);
-
+    placeGroupColumnsFirst = (columns: AnyColumn<any>[]): AnyColumn<any>[] => {
         const groupByColumns = this.datagrid.grouping.groupByColumns;
-
-        // Completely rework the column transformation
         const groupedColumns: AnyColumn<TOriginalRow>[] = [];
         const nonGroupedColumns: AnyColumn<TOriginalRow>[] = [];
-
         columns.forEach((column) => {
-            // Check if the column's columnId is in the groupByColumns
             if (groupByColumns.includes(column.columnId)) {
                 groupedColumns.push(column);
             } else {
@@ -31,6 +27,10 @@ export class ColumnProcessor<TOriginalRow> {
 
         // Return grouped columns first, followed by non-grouped columns
         return [...groupedColumns, ...nonGroupedColumns];
+    }
+
+    transformColumns = (columns: AnyColumn<any>[]): AnyColumn<any>[] => {
+        return this.placeGroupColumnsFirst(this.assignParentColumnIds(columns));
     };
 
     assignParentColumnIds(columns: AnyColumn<TOriginalRow>[], parentColumnId: string | null = null) {
@@ -41,6 +41,7 @@ export class ColumnProcessor<TOriginalRow> {
             }
             column.parentColumnId = parentColumnId;
         })
+        return columns;
     }
 
 
@@ -60,13 +61,13 @@ export class ColumnProcessor<TOriginalRow> {
         }
 
         const hierarchicalColumns = this.datagrid.processors.column.createHierarchicalColumns(newColumns);
-        
+
         this.datagrid.columns = hierarchicalColumns
     };
 
     createHierarchicalColumns(filteredFlatColumns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
         const allFlatColumns = flattenColumns(this.datagrid.columns);
-        
+
         // Helper function to find a column by ID in a hierarchical structure
         const findColumnById = (
             columnId: string,
@@ -81,7 +82,7 @@ export class ColumnProcessor<TOriginalRow> {
             }
             return null;
         };
-    
+
         // Helper function to create a deep copy of a column
         const deepCopyColumn = (column: AnyColumn<TOriginalRow>): AnyColumn<TOriginalRow> => {
             const copy = { ...column };
@@ -90,7 +91,7 @@ export class ColumnProcessor<TOriginalRow> {
             }
             return copy;
         };
-    
+
         // Helper function to merge two group columns
         const mergeGroupColumns = (
             existing: GroupColumn<TOriginalRow>,
@@ -108,7 +109,7 @@ export class ColumnProcessor<TOriginalRow> {
                 }
             }
         };
-    
+
         // Build the complete hierarchy for a column
         const buildCompleteHierarchy = (
             column: AnyColumn<TOriginalRow>,
@@ -117,39 +118,39 @@ export class ColumnProcessor<TOriginalRow> {
             if (processed.has(column.columnId)) {
                 return deepCopyColumn(column);
             }
-            
+
             processed.add(column.columnId);
             const currentColumn = deepCopyColumn(column);
-    
+
             if (currentColumn.parentColumnId) {
                 const parentColumn = allFlatColumns.find(
                     col => col.columnId === currentColumn.parentColumnId
                 );
-                
+
                 if (!parentColumn) {
                     throw new Error(`Parent column ${currentColumn.parentColumnId} not found`);
                 }
-    
+
                 const parent = deepCopyColumn(parentColumn) as GroupColumn<TOriginalRow>;
                 parent.columns = [currentColumn];
                 return buildCompleteHierarchy(parent, processed);
             }
-    
+
             return currentColumn;
         };
-    
+
         // Process columns and build final hierarchy
         const result: AnyColumn<TOriginalRow>[] = [];
         const processedColumns = new Set<string>();
-    
+
         // First pass: build initial hierarchies
         for (const column of filteredFlatColumns) {
             if (!processedColumns.has(column.columnId)) {
                 const hierarchy = buildCompleteHierarchy(column, new Set());
-                
+
                 // Check if we already have this root in our result
                 const existingRoot = result.find(col => col.columnId === hierarchy.columnId);
-                
+
                 if (existingRoot) {
                     // Merge the hierarchies
                     if (existingRoot.type === 'group' && hierarchy.type === 'group') {
@@ -158,11 +159,11 @@ export class ColumnProcessor<TOriginalRow> {
                 } else {
                     result.push(hierarchy);
                 }
-                
+
                 processedColumns.add(column.columnId);
             }
         }
-    
+
         return result;
     }
 

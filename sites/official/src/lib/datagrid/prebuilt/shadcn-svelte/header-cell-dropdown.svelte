@@ -18,7 +18,7 @@
 	import ArrowMoveLeft from '$lib/datagrid/icons/tabler/arrow-move-left.svelte';
 	import ArrowMoveRight from '$lib/datagrid/icons/tabler/arrow-move-right.svelte';
 	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
-	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
+	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 	import type { AnyColumn } from '$lib/datagrid/core/column-creation/types';
 	import {
 		numberFilterOperators,

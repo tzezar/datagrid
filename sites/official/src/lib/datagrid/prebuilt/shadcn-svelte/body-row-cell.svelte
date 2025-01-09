@@ -18,6 +18,7 @@
 
 <div
 	class="grid-body-cell"
+	class:justify-center={column?._meta?.align === 'center'}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 	style:--width={column.state.size.width + 'px'}
 	style:--min-width={column.state.size.minWidth + 'px'}

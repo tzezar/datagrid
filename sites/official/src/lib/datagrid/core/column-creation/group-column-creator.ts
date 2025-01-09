@@ -10,7 +10,7 @@ export function createColumnGroup<TOriginalRow>(
     columnId,
     parentColumnId: rest.parentColumnId || null,
     header,
-    _meta,
+    _meta: _meta ?? {},
     columns,
     options: {
       searchable: null,
@@ -19,16 +19,16 @@ export function createColumnGroup<TOriginalRow>(
       filterable: null,
       pinnable: null,
       moveable: true,
-      showDropdownOptions: null
     },
     state: {
       size: DEFAULT_COLUMN_SIZE,
       visible: null,
       pinning: {
-        position: null,
+        position: 'none',
         offset: 0
       }
     },
+
     ...rest
   };
 }

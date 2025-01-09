@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
+	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
@@ -71,7 +71,7 @@
 				{#if column.options.sortable}
 					<SortingIndicator {datagrid} {column} />
 				{/if}
-				{#if column.options.showDropdownOptions}
+				{#if column._meta.showColumnManagerDropdownMenu === true}
 					<HeaderCellDropdown {datagrid} {column} />
 				{/if}
 			</div>

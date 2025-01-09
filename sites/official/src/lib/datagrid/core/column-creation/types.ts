@@ -1,4 +1,4 @@
-import type { GetValueFn, FormatterFn, AggregationConfig, GetGroupValue, CustomCell, HeaderCell, AccessorFn, ColumnId, CellValue } from "../types";
+import type { GetValueFn, FormatterFn, AggregationConfig, GetGroupValue, CustomCell, HeaderCell, AccessorFn, ColumnId, CellValue, ColumnSizeState, ColumnPinningState } from "../types";
 
 type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
 export type DotNestedKeys<T> = (T extends object ? {
@@ -26,20 +26,11 @@ export interface AccessorColumn<TOriginalRow> {
     pinnable: boolean;
     moveable: boolean;
     hideable: boolean;
-    showDropdownOptions?: boolean;
   };
   state: {
-    size: {
-      width: number;
-      minWidth: number;
-      maxWidth: number;
-      grow: boolean;
-    };
+    size: ColumnSizeState
     visible: boolean;
-    pinning: {
-      position: 'left' | 'right' | 'none';
-      offset: number;
-    };
+    pinning: ColumnPinningState
   };
   _meta: any;
 }
@@ -65,20 +56,11 @@ export interface ComputedColumn<TOriginalRow> {
     pinnable: boolean;
     moveable: boolean;
     hideable: boolean;
-    showDropdownOptions?: boolean;
   };
   state: {
-    size: {
-      width: number;
-      minWidth: number;
-      maxWidth: number;
-      grow: boolean;
-    };
+    size: ColumnSizeState
     visible: boolean;
-    pinning: {
-      position: 'left' | 'right' | 'none';
-      offset: number;
-    };
+    pinning: ColumnPinningState
   };
   _meta: any;
 }
@@ -99,21 +81,12 @@ export interface DisplayColumn<TOriginalRow> {
     pinnable: boolean;
     moveable: boolean;
     hideable: boolean;
-    showDropdownOptions?: boolean;
 
   };
   state: {
-    size: {
-      width: number;
-      minWidth: number;
-      maxWidth: number;
-      grow: boolean;
-    };
+    size: ColumnSizeState
     visible: boolean;
-    pinning: {
-      position: 'left' | 'right' | 'none';
-      offset: number;
-    };
+    pinning: ColumnPinningState
 
   };
   _meta: any;
@@ -134,24 +107,24 @@ export interface GroupColumn<TOriginalRow> {
     filterable: null;
     pinnable: null;
     moveable: boolean;
-    showDropdownOptions: null;
   };
   state: {
-    size: {
-      width: number;
-      minWidth: number;
-      maxWidth: number;
-      grow: boolean;
-    };
+    size: ColumnSizeState
     visible: null;
-    pinning: {
-      position: null;
-      offset: number;
-    };
+    pinning: ColumnPinningState;
   };
   _meta: any;
 }
 // Union type for all column types
+
+
+type CommonColumnProps = {
+  header: string;
+  headerCell?: HeaderCell;
+  columnId: ColumnId;
+  parentColumnId?: ParentColumnId;
+  _meta?: any;
+}
 
 export type AnyColumn<TOriginalRow> = AccessorColumn<TOriginalRow> |
   ComputedColumn<TOriginalRow> |
@@ -160,16 +133,13 @@ export type AnyColumn<TOriginalRow> = AccessorColumn<TOriginalRow> |
 
 
 export type ParentColumnId = string | null;
+
 export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOriginalRow>> = {
-  header: string;
-  columnId: ColumnId;
-  parentColumnId?: ParentColumnId;
   accessorKey: TKey;
   getValueFn: (row: TOriginalRow) => CellValue;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   aggregate?: AggregationConfig;
   cell?: CustomCell<TOriginalRow>;
-  headerCell?: HeaderCell;
   formatter?: FormatterFn<TOriginalRow>;
   options?: {
     searchable?: boolean;
@@ -179,7 +149,6 @@ export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<T
     pinnable?: boolean;
     moveable?: boolean;
     hideable?: boolean;
-    showDropdownOptions?: boolean;
   };
   state?: {
     size?: {
@@ -194,20 +163,17 @@ export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<T
       offset?: number;
     };
   };
-  _meta?: any;
-};
-export type CreateComputeColumnProps<TOriginalRow> = {
-  header: string;
-  columnId: ColumnId;
-  parentColumnId?: ParentColumnId;
+} & CommonColumnProps;
 
+
+
+export type CreateComputeColumnProps<TOriginalRow> = {
   accessorFn: (row: TOriginalRow) => CellValue;
   getValueFn: (row: TOriginalRow) => CellValue;
   aggregate?: AggregationConfig;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   formatter?: FormatterFn<TOriginalRow>;
   cell?: CustomCell<TOriginalRow>;
-  headerCell?: HeaderCell;
   options?: {
     searchable?: boolean;
     groupable?: boolean;
@@ -216,7 +182,6 @@ export type CreateComputeColumnProps<TOriginalRow> = {
     pinnable?: boolean;
     moveable?: boolean;
     hideable?: boolean;
-    showDropdownOptions?: boolean;
   };
   state?: {
     size?: {
@@ -231,14 +196,10 @@ export type CreateComputeColumnProps<TOriginalRow> = {
       offset?: number;
     };
   };
-  _meta?: any;
-};
+} & CommonColumnProps;
+
 export type CreateDisplayColumnProps<TOriginalRow> = {
-  header: string;
-  columnId: ColumnId;
-  parentColumnId?: ParentColumnId;
   cell: CustomCell<TOriginalRow>;
-  headerCell?: HeaderCell;
   options?: {
     searchable?: false;
     groupable?: boolean;
@@ -247,7 +208,6 @@ export type CreateDisplayColumnProps<TOriginalRow> = {
     pinnable?: boolean;
     moveable?: boolean;
     hideable?: boolean;
-    showDropdownOptions?: boolean;
   };
   state?: {
     size?: {
@@ -262,16 +222,9 @@ export type CreateDisplayColumnProps<TOriginalRow> = {
       offset?: number;
     };
   };
-  _meta?: any;
-};
+} & CommonColumnProps;
 export type CreateGroupColumnProps<TOriginalRow> = {
-  header: string;
-  headerCell?: HeaderCell;
-  columnId: ColumnId;
-  parentColumnId?: ParentColumnId;
   columns: AnyColumn<TOriginalRow>[];
-  _meta?: any;
-};
+} & CommonColumnProps;
 
 
-  

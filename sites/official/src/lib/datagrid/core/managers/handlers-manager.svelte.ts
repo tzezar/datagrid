@@ -91,7 +91,7 @@ export class HandlersManager {
     filtering = {
         changeFilterOperator: (columnId: string, operator: FilterOperator) => {
             this.datagrid.filtering.changeConditionOperator(columnId, operator);
-            this.datagrid.cache.invalidateFilteredDataCache();
+            this.datagrid.cache.invalidate('filteredData');
             this.datagrid.processors.data.executeFullDataTransformation();
         },
 

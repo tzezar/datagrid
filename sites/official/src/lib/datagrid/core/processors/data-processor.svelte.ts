@@ -1,5 +1,5 @@
 import { sort } from "fast-sort";
-import { isGroupColumn } from "../column-guards";
+import { isGroupColumn } from "../helpers/column-guards";
 import type { Datagrid } from "../index.svelte";
 import type { Aggregation, AggregationFn, GridGroupRow, GridRow } from "../types";
 import { findColumnById, flattenColumns, isColumnSortable, isGridGroupRow } from "../utils.svelte";
@@ -57,7 +57,7 @@ export class DataProcessor<TRow> {
         this.datagrid.cache.sortedData = data;
 
         // Clear hierarchical cache when data changes
-        this.datagrid.cache.invalidateHierarchicalRowsCache();
+        this.datagrid.cache.invalidate('hierarchicalRows');
 
         // Process grouped or regular data
         if (shouldRunGrouping) this.processGroupedData(data);

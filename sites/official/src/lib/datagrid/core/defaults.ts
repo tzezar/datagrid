@@ -13,7 +13,6 @@ export const DEFAULT_COLUMN_SIZE = {
     grow: false
 }
 
-
 export const numberFilterOperators: FilterOperator[] = [
     'equals',
     'notEquals',

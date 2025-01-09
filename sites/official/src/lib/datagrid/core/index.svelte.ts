@@ -1,27 +1,8 @@
-import { GroupingFeature as GroupingFeature } from "./features/grouping.svelte";
-import { PaginationFeature } from "./features/pagination.svelte";
-import { SortingFeature as DataSortingFeature } from "./features/sorting.svelte";
 import type { AnyColumn } from "./column-creation/types";
-import { ColumnFilteringFeature as FilteringFeature } from "./features/column-filtering.svelte";
-import { GlobalSearchFeature as GlobalSearchFeature } from "./features/global-search.svelte";
-import { ColumnSizingFeature as ColumnSizingFeature } from "./features/column-sizing.svelte";
-import { ColumnVisibilityFeature as ColumnVisibilityFeature } from "./features/column-visibility.svelte";
-import { RowExpandingFeature as RowExpandingFeature } from "./features/row-expanding.svelte";
-import { RowSelectionFeature as RowSelectionFeature } from "./features/row-selection.svelte";
-import { ColumnPinningFeature as ColumnPinningFeature } from "./features/column-pinning.svelte";
-import { ColumnFacetingFeature as ColumnFacetingFeature } from "./features/column-faceting.svelte";
-import { RowPinningFeature as RowPinningFeatures } from "./features/row-pinning.svelte";
-import { ColumnOrderingFeature as ColumnOrderingFeature } from "./features/column-ordering.svelte";
-import { ColumnGroupingFeature as ColumnGroupingFeature } from "./features/column-grouping.svelte";
-import { FullscreenFeature as FullscreenFeature } from "./features/fullscreen.svelte";
-import { RowManager } from "./managers/row-manager.svelte";
-import { ColumnManager } from "./managers/column-manager.svelte";
-import { DataProcessor } from "./processors/data-processor.svelte";
-import { ColumnProcessor } from "./processors/column-processor.svelte";
-import { DatagridCacheManager } from "./managers/cache-manager.svelte";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
-import { HandlersManager } from "./managers/handlers-manager.svelte";
-
+import { ColumnFacetingFeature, ColumnFilteringFeature, ColumnGroupingFeature, ColumnOrderingFeature, ColumnPinningFeature, ColumnSizingFeature, ColumnVisibilityFeature, FullscreenFeature, GlobalSearchFeature, GroupingFeature, PaginationFeature, RowExpandingFeature, RowPinningFeature, RowSelectionFeature, SortingFeature } from "./features";
+import { DataProcessor, ColumnProcessor } from "./processors";
+import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
 export type DatagridConfig<TOriginalRow> = {
     columns: AnyColumn<TOriginalRow>[];
     data: TOriginalRow[];
@@ -29,12 +10,12 @@ export type DatagridConfig<TOriginalRow> = {
     event?: object
 }
 
+
 const defaultConfig = {
     measurePerformance: false,
     createBasicRowIdentifier: (row: any) => row.id,
     createBasicRowIndex: (row: any, parentIndex: string | null, index: number) => parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
 }
-
 
 export class Datagrid<TOriginalRow> {
     readonly metrics = new PerformanceMetrics();
@@ -45,16 +26,31 @@ export class Datagrid<TOriginalRow> {
     });
     columns: AnyColumn<TOriginalRow>[] = $state([]);
 
-    columnsPinnedToLeft: AnyColumn<TOriginalRow>[] = $state([]);
-    columnsPinnedToRight: AnyColumn<TOriginalRow>[] = $state([]);
-    
     handlers = new HandlersManager(this);
-
 
     processors = {
         data: new DataProcessor(this),
         column: new ColumnProcessor(this)
     }
+
+    feature = {
+        pagination: new PaginationFeature(this),
+        sorting: new SortingFeature(this),
+        grouping: new GroupingFeature(),
+        filtering: new ColumnFilteringFeature(),
+        globalSearch: new GlobalSearchFeature(),
+        columnSizing: new ColumnSizingFeature(this),
+        columnVisibility: new ColumnVisibilityFeature(this),
+        columnPinning: new ColumnPinningFeature(this),
+        columnFaceting: new ColumnFacetingFeature(this),
+        columnOrdering: new ColumnOrderingFeature(this),
+        columnGrouping: new ColumnGroupingFeature(this),
+        rowExpanding: new RowExpandingFeature(this),
+        rowSelection: new RowSelectionFeature(this),
+        rowPinning: new RowPinningFeature(this),
+        fullscreen: new FullscreenFeature()
+    }
+
     cache = new DatagridCacheManager(this);
     rowManager = new RowManager(this);
     columnManager = new ColumnManager(this);
@@ -62,9 +58,9 @@ export class Datagrid<TOriginalRow> {
     config = defaultConfig
 
     pagination = new PaginationFeature(this);
-    sorting = new DataSortingFeature(this);
+    sorting = new SortingFeature(this);
     grouping = new GroupingFeature();
-    filtering = new FilteringFeature();
+    filtering = new ColumnFilteringFeature();
     globalSearch = new GlobalSearchFeature();
 
     columnSizing = new ColumnSizingFeature(this);
@@ -76,12 +72,20 @@ export class Datagrid<TOriginalRow> {
 
     rowExpanding = new RowExpandingFeature(this);
     rowSelection = new RowSelectionFeature(this);
-    rowPinning = new RowPinningFeatures(this);
+    rowPinning = new RowPinningFeature(this);
 
     fullscreen = new FullscreenFeature();
 
-    constructor(config: DatagridConfig<TOriginalRow>) {
+
+    hooks = {
+        preProcessColumns: (action: any, columns: AnyColumn<TOriginalRow>[]) => {
+            return action(columns);
+        }
+    }
+
+    constructor(config: DatagridConfig<TOriginalRow>, hook: any) {
         this.validateInputs(config);
+        config.columns = this.hooks.preProcessColumns(hook, config.columns);
         this.initializeState(config);
     }
 
@@ -97,7 +101,7 @@ export class Datagrid<TOriginalRow> {
     private initializeState(config: DatagridConfig<TOriginalRow>) {
         this.original.columns = config.columns;
         this.original.data = config.data;
-        
+
         this.columns = this.processors.column.transformColumns(this.original.columns);
         this.processors.data.executeFullDataTransformation();
 

@@ -103,6 +103,7 @@
 }
 
 .grid-body-cell {
+	display: flex;
 	width: var(--width);
 	/* background-color: hsl(var(--grid-body-cell)); */
 	min-width: var(--min-width);

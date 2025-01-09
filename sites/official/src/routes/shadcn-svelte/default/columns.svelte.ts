@@ -7,6 +7,7 @@ import RowSelectionHeader from "./_components/headers/row-selection-header.svelt
 
 
 import { displayColumn, accessorColumn, columnGroup, computedColumn } from "$lib/datagrid/core/column-creation";
+import type { ColumnMeta } from "$lib/datagrid/prebuilt/shadcn-svelte/types";
 
 
 // const exampleFn = (value) => {
@@ -14,11 +15,13 @@ import { displayColumn, accessorColumn, columnGroup, computedColumn } from "$lib
 // }
 
 
-export const userColumns: AnyColumn<User>[] = [
+export type Column = AnyColumn<User> & {_meta: {showColumnManagerDropdownMenu: boolean}}
+
+export const userColumns: Column[] = [
     displayColumn({
         header: 'Actions',
         columnId: 'actions',
-        headerCell: () => ``,
+        headerCell: () => `&nbsp;`,
         cell: () => {
             return {
                 component: ActionsCell,
@@ -32,6 +35,9 @@ export const userColumns: AnyColumn<User>[] = [
                 maxWidth: 40,
                 grow: false
             }
+        },
+        _meta: {
+            showColumnManagerDropdownMenu: false
         }
 
     }),
@@ -44,7 +50,7 @@ export const userColumns: AnyColumn<User>[] = [
         cell: () => ({
             component: SelectRowCell,
         }),
-        options: { sortable: false, showDropdownOptions: false },
+        options: { sortable: false },
         state: {
             size: {
                 width: 40,
@@ -52,7 +58,11 @@ export const userColumns: AnyColumn<User>[] = [
                 maxWidth: 40,
                 grow: false
             }
-        }
+        },
+        _meta: {
+            showColumnManagerDropdownMenu: false,
+            align: 'center'
+        } as ColumnMeta
     }),
 
     // displayColumn({
@@ -75,8 +85,8 @@ export const userColumns: AnyColumn<User>[] = [
         options: { sortable: true, hideable: false },
         aggregate: 'count',
         _meta: {
-            filterType: 'number'
-        }
+            filterType: 'number',
+        } as ColumnMeta
     }),
     accessorColumn({
         header: 'Status',
