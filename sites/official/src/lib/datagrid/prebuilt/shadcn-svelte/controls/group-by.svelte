@@ -28,7 +28,7 @@
 
 	let columns = $derived(
 		datagrid.columnManager
-			.getFlattenColumns()
+			.getFlatColumns()
 			.filter((col) => columnsWithGetters.includes(col.type as (typeof columnsWithGetters)[number]))
 			.filter((col) => col.options.groupable === true)
 	);

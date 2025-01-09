@@ -7,8 +7,8 @@
 </script>
 
 <div class="flex flex-row gap-2 h-full">
-	<button onclick={() => datagrid.rowPinning.pinTop(row.identifier)}><FreezeRow /></button>
-	<button onclick={() => datagrid.rowPinning.pinBottom(row.identifier)}>
+	<button onclick={() => datagrid.rowPinning.pinRowTop(row.identifier)}><FreezeRow /></button>
+	<button onclick={() => datagrid.rowPinning.pinRowBottom(row.identifier)}>
 		<FreezeRow class="rotate-180" />
 	</button>
 </div>

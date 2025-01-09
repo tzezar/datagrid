@@ -12,11 +12,13 @@ export class ColumnManager<TOriginalRow> {
         this.datagrid = datagrid;
     }
 
+
+
     getGroupColumns(): GroupColumn<TOriginalRow>[] {
         return flattenColumns(this.datagrid.columns).filter(col => isGroupColumn(col));
     }
 
-    getFlattenColumns(): AnyColumn<TOriginalRow>[] {
+    getFlatColumns(): AnyColumn<TOriginalRow>[] {
         const flattened: AnyColumn<any>[] = [];
         for (const column of this.datagrid.columns) {
             if (isGroupColumn(column)) {
@@ -30,7 +32,7 @@ export class ColumnManager<TOriginalRow> {
     }
 
     getLeafColumns(): LeafColumn<TOriginalRow>[] {
-        return this.getFlattenColumns().filter(col => col.type !== 'group')
+        return this.getFlatColumns().filter(col => col.type !== 'group')
     }
 
     getLeafColumnsInOrder(): LeafColumn<TOriginalRow>[] {

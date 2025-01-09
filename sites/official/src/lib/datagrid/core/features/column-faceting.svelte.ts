@@ -13,6 +13,25 @@ export class ColumnFacetingFeature<TOriginalRow> {
         this.datagrid = datagrid
     }
 
+    
+    // Getters for facets
+    getNumericFacet(columnId: string) {
+        return this.numericFacets[columnId];
+    }
+
+    getCategoricalFacet(columnId: string) {
+        return this.categoricalFacets[columnId];
+    }
+
+    // Optional: Get all numeric or categorical facets
+    getAllNumericFacets() {
+        return this.numericFacets;
+    }
+
+    getAllCategoricalFacets() {
+        return this.categoricalFacets;
+    }
+
     calculateFacets(rows: TOriginalRow[], columns: AnyColumn<TOriginalRow>[]) { 
         // Reset existing facets
         this.numericFacets = {};
@@ -48,21 +67,4 @@ export class ColumnFacetingFeature<TOriginalRow> {
         }
     }
 
-    // Getters for facets
-    getNumericFacet(columnId: string) {
-        return this.numericFacets[columnId];
-    }
-
-    getCategoricalFacet(columnId: string) {
-        return this.categoricalFacets[columnId];
-    }
-
-    // Optional: Get all numeric or categorical facets
-    getAllNumericFacets() {
-        return this.numericFacets;
-    }
-
-    getAllCategoricalFacets() {
-        return this.categoricalFacets;
-    }
 }

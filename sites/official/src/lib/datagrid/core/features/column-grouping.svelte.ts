@@ -1,9 +1,7 @@
 import { createColumnGroup } from "../column-creation/group-column-creator";
 import { type AnyColumn, type GroupColumn } from "../column-creation/types";
 import type { Datagrid } from "../index.svelte";
-import { flattenColumns } from "../utils.svelte";
-
-
+import { generateRandomColumnId } from "../utils.svelte";
 
 export class ColumnGroupingFeature<TOriginalRow> {
     private datagrid: Datagrid<TOriginalRow>;
@@ -14,34 +12,30 @@ export class ColumnGroupingFeature<TOriginalRow> {
 
     findParentColumnGroup(parentColumnId: string | null): GroupColumn<TOriginalRow> | null {
         if (parentColumnId === null) return null;
-        const flattenedColumns = flattenColumns(this.datagrid.columns);
+        const flattenedColumns = this.datagrid.columnManager.getFlatColumns();
         const groupColumn = flattenedColumns.find(col => col.columnId === parentColumnId);
         if (groupColumn) {
             return groupColumn as GroupColumn<TOriginalRow>;
         }
         return null
     }
-
     
     isColumnWithinGroup(column: AnyColumn<TOriginalRow>): boolean {
         return column.parentColumnId !== null;
     }
 
-    generateRandomColumnId(): string {
-        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    }
+
 
     createGroupColumn(header: string, parentColumnId: string | null): void {
         const groupColumn = createColumnGroup({
             header,
-            columnId: this.generateRandomColumnId(),
+            columnId: generateRandomColumnId(),
             parentColumnId,
             columns: [],
         });
         this.datagrid.columns.push(groupColumn as GroupColumn<TOriginalRow>);
         this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
-
 
     renameGroupColumn(column: any, newHeader: string): void {
         column.header = newHeader;

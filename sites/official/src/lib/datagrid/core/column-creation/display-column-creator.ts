@@ -18,6 +18,7 @@ export function createDisplayColumn<TOriginalRow extends Record<string, any>>(
       filterable: null,
       pinnable: options?.pinnable ?? true,
       moveable: options?.moveable ?? true,
+      hideable: options?.hideable ?? true,
       showDropdownOptions: options?.showDropdownOptions ?? true
     },
     state: {

@@ -53,7 +53,7 @@ export class ColumnProcessor<TOriginalRow> {
             if (col.state.pinning.position === 'none') {
                 col.state.pinning.offset = 0;
             } else {
-                col.state.pinning.offset = this.datagrid.columnPinning.getOffset(col.columnId, col.state.pinning.position);
+                col.state.pinning.offset = this.datagrid.columnPinning.calculateOffset(col.columnId, col.state.pinning.position);
             }
 
             newColumns.push(col);

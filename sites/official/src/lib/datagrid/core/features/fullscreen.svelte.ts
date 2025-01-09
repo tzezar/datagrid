@@ -15,5 +15,5 @@ export class FullscreenFeature {
     enterFullscreen() {
         this.isFullscreen = true;
     }
-    
+
 }

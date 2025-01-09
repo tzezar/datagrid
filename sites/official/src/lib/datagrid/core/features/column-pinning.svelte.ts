@@ -13,28 +13,7 @@ export class ColumnPinningFeature {
         column.state.pinning.position = position;
     }
 
-
-
-    // // changeColumnPinningPosition(column: AnyColumn<any>, position: PinningPosition) {
-    // //     if (position === 'left') {
-    // //         this.leftPinnedColumns.add(column.columnId);
-    // //         this.rightPinnedColumns.delete(column.columnId);
-    // //     } else if (position === 'right') {
-    // //         this.rightPinnedColumns.add(column.columnId);
-    // //         this.leftPinnedColumns.delete(column.columnId);
-    // //     } else {
-    // //         this.leftPinnedColumns.delete(column.columnId);
-    // //         this.rightPinnedColumns.delete(column.columnId);
-    // //     }
-    // // }
-
-
-    // changeColumnPinningPosition(column: AnyColumn<any>, position: PinningPosition) {
-    //     column.state.pinning.position = position;
-    // }
-
-
-    getOffset = (columnId: ColumnId, position: 'left' | 'right' | null): number => {
+    calculateOffset = (columnId: ColumnId, position: 'left' | 'right' | null): number => {
         if (position === null) return -1
         // Filter columns that are visible and pinned to the specified position
         const pinnedColumns = this.datagrid.columnManager.getLeafColumns().filter(

@@ -19,8 +19,8 @@
 	import StabilizationLock from '$lib/datagrid/icons/material-symbols/stabilization-lock.svelte';
 	import Width from '$lib/datagrid/icons/material-symbols/width.svelte';
 	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
-	
-	import type { AnyColumn, GroupColumn } from "$lib/datagrid/core/column-creation/types";
+
+	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/column-creation/types';
 	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
 	import MoveDown from '$lib/datagrid/icons/material-symbols/move-down.svelte';
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
@@ -32,16 +32,15 @@
 	import SortAscending from '$lib/datagrid/icons/tabler/sort-ascending.svelte';
 	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';
 	import GroupBy from '../group-by.svelte';
+	import { columns } from '../../../../../../routes/_components/columns.svelte';
 
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
 		datagrid.columnManager.handlers.changeColumnPinningPosition(column.columnId, position);
 	}
 
-	const leafColumns = datagrid.columnManager.getLeafColumns()
+	const leafColumns = datagrid.columnManager.getLeafColumns();
 
-	let sortableColumns = $derived(
-		leafColumns.filter((column) => column.options.sortable === true)
-	);
+	let sortableColumns = $derived(leafColumns.filter((column) => column.options.sortable === true));
 
 	let selectedColumns: Record<string, boolean> = $state({});
 	let newGroupName = $state('');
@@ -115,7 +114,10 @@
 							.filter(([_, selected]) => selected)
 							.map(([columnId]) => columnId);
 
-						datagrid.columnGrouping.createGroupColumn(columnsToGroup, newGroupName);
+						columnsToGroup.forEach((columnId) => {
+							datagrid.columnGrouping.createGroupColumn(columnId, newGroupName);
+						});
+
 						selectedColumns = {};
 						newGroupName = '';
 					}}
@@ -262,7 +264,7 @@
 						max={column.state.size.maxWidth}
 						value={column.state.size.width}
 						onValueChange={(value: number) => {
-							datagrid.columnSizing.setColumnSize(column.columnId, Number(value));
+							datagrid.columnSizing.updateColumnSize(column.columnId, Number(value));
 							datagrid.processors.column.refreshColumnPinningOffsets();
 						}}
 					/>
@@ -302,14 +304,12 @@
 	</DropdownMenu.Sub>
 {/snippet}
 
-
 {#snippet groupBy()}
 	<DropdownMenu.Item closeOnSelect={false}>
-			<!-- <GroupBy class="mr-2 size-4" /> -->
-			<GroupBy {datagrid} />
+		<!-- <GroupBy class="mr-2 size-4" /> -->
+		<GroupBy {datagrid} />
 	</DropdownMenu.Item>
 {/snippet}
-
 
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger class={`${buttonVariants({ variant: 'outline' })} rounded-none`}>

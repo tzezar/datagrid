@@ -132,11 +132,9 @@ export class RowPinningFeature<TOriginalRow> {
     }
 
     // Pin a row or group to the top
-    pinTop(rowIdentifier: GridRowIdentifier) {
+    pinRowTop(rowIdentifier: GridRowIdentifier) {
         let row = this.datagrid.rowManager.findRowByIdentifier(rowIdentifier);
         if (!row) return;
-
-
 
         if (isGroupRow(row)) {
             row = row as GridGroupRow<TOriginalRow>;
@@ -157,7 +155,7 @@ export class RowPinningFeature<TOriginalRow> {
     }
 
     // Pin a row or group to the bottom
-    pinBottom(rowIdentifier: GridRowIdentifier) {
+    pinRowBottom(rowIdentifier: GridRowIdentifier) {
         const row = this.datagrid.rowManager.findRowByIdentifier(rowIdentifier);
         if (!row) return;
 
@@ -178,7 +176,7 @@ export class RowPinningFeature<TOriginalRow> {
     }
 
     // Unpin a row or group
-    unpin(rowId: GridRowIdentifier) {
+    unpinRow(rowId: GridRowIdentifier) {
         const row = this.datagrid.rowManager.findRowByIdentifier(rowId);
         if (!row) return;
 
@@ -241,6 +239,5 @@ export class RowPinningFeature<TOriginalRow> {
             bottom: Array.from(this.rowIdsPinnedBottom)
         };
     }
-
 
 }

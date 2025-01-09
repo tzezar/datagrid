@@ -19,7 +19,6 @@ export class RowSelectionFeature<TOriginalRow> {
         this.selectedBasicRowIdentifiers.delete(identifier);
     }
 
-
     toggleRowSelection(identifier: GridRowIdentifier) {
         if (this.selectedBasicRowIdentifiers.has(identifier)) this.unselectRow(identifier);
         else this.selectRow(identifier);

@@ -1,12 +1,5 @@
 import type { GetValueFn, FormatterFn, AggregationConfig, GetGroupValue, CustomCell, HeaderCell, AccessorFn, ColumnId, CellValue } from "../types";
 
-// Helper type to get nested key paths
-export type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
-
-export type DotNestedKeys<T> = (T extends object ?
-  { [K in Exclude<keyof T, symbol>]: `${K}${DotPrefix<DotNestedKeys<T[K]>>}` }[Exclude<keyof T, symbol>]
-  : "") extends infer D ? Extract<D, string> : never;
-// Helper type to get nested key paths
 type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
 export type DotNestedKeys<T> = (T extends object ? {
   [K in Exclude<keyof T, symbol>]: `${K}${DotPrefix<DotNestedKeys<T[K]>>}`;
@@ -71,6 +64,7 @@ export interface ComputedColumn<TOriginalRow> {
     filterable: boolean;
     pinnable: boolean;
     moveable: boolean;
+    hideable: boolean;
     showDropdownOptions?: boolean;
   };
   state: {
@@ -104,6 +98,7 @@ export interface DisplayColumn<TOriginalRow> {
     filterable: null;
     pinnable: boolean;
     moveable: boolean;
+    hideable: boolean;
     showDropdownOptions?: boolean;
 
   };
@@ -220,6 +215,7 @@ export type CreateComputeColumnProps<TOriginalRow> = {
     filterable?: boolean;
     pinnable?: boolean;
     moveable?: boolean;
+    hideable?: boolean;
     showDropdownOptions?: boolean;
   };
   state?: {
@@ -250,6 +246,7 @@ export type CreateDisplayColumnProps<TOriginalRow> = {
     filterable?: false;
     pinnable?: boolean;
     moveable?: boolean;
+    hideable?: boolean;
     showDropdownOptions?: boolean;
   };
   state?: {

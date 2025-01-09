@@ -1,15 +1,12 @@
 import { type AnyColumn, type GroupColumn } from "../column-creation/types";
 import type { Datagrid } from "../index.svelte";
-import { flattenColumns } from "../utils.svelte";
 
-// Add to your existing ColumnOrdering class
 export class ColumnOrderingFeature<TOriginalRow> {
     private datagrid: Datagrid<TOriginalRow>;
 
     constructor(datagrid: Datagrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
-
 
     moveLeft(column: AnyColumn<TOriginalRow>): void {
         if (this.datagrid.columnGrouping.isColumnWithinGroup(column)) {
@@ -80,7 +77,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
         }
 
         // Find target group column
-        const targetGroupColumn = flattenColumns(this.datagrid.columns)
+        const targetGroupColumn = this.datagrid.columnManager.getFlatColumns()
             .find(col => col.columnId === targetGroupColumnId) as GroupColumn<TOriginalRow>;
         
         if (!targetGroupColumn) {
