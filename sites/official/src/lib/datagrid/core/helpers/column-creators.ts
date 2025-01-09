@@ -31,6 +31,7 @@ export interface AccessorColumn<TOriginalRow> {
     pinnable: boolean,
     moveable: boolean
     hideable: boolean
+    showDropdownOptions?: boolean
   },
   state: {
     size: {
@@ -68,6 +69,7 @@ export interface ComputedColumn<TOriginalRow> {
     filterable: boolean
     pinnable: boolean,
     moveable: boolean
+    showDropdownOptions?: boolean
   },
   state: {
     size: {
@@ -121,6 +123,7 @@ export interface DisplayColumn<TOriginalRow> {
     filterable: null
     pinnable: boolean
     moveable: boolean
+    showDropdownOptions?: boolean
 
   },
   state: {
@@ -155,6 +158,7 @@ export interface GroupColumn<TOriginalRow> {
     filterable: null
     pinnable: null
     moveable: boolean
+    showDropdownOptions: null
   },
   state: {
     size: {
@@ -201,6 +205,7 @@ type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOrigina
     pinnable?: boolean
     moveable?: boolean
     hideable?: boolean
+    showDropdownOptions?: boolean
   }
   state?: {
     size?: {
@@ -237,6 +242,7 @@ type CreateComputeColumnProps<TOriginalRow> = {
     filterable?: boolean
     pinnable?: boolean
     moveable?: boolean
+    showDropdownOptions?: boolean
   },
   state?: {
     size?: {
@@ -267,6 +273,7 @@ type CreateDisplayColumnProps<TOriginalRow> = {
     filterable?: false
     pinnable?: boolean
     moveable?: boolean
+    showDropdownOptions?: boolean
   },
   state?: {
     size?: {
@@ -315,6 +322,7 @@ export function createAccessorColumn<
       pinnable: options?.pinnable ?? true,
       moveable: options?.moveable ?? true,
       hideable: options?.hideable ?? true,
+      showDropdownOptions: options?.showDropdownOptions ?? true
     },
     state: {
       size: DEFAULT_COLUMN_SIZE,
@@ -347,6 +355,7 @@ export function createComputedColumn<TOriginalRow extends Record<string, any>>(
       filterable: options?.filterable ?? true,
       pinnable: options?.pinnable ?? true,
       moveable: options?.moveable ?? true,
+      showDropdownOptions: options?.showDropdownOptions ?? true
       
     },
     state: {
@@ -378,6 +387,7 @@ export function createDisplayColumn<TOriginalRow extends Record<string, any>>(
       filterable: null,
       pinnable: options?.pinnable ?? true,
       moveable: options?.moveable ?? true,
+      showDropdownOptions: options?.showDropdownOptions ?? true
     },
     state: {
       size: state?.size ?? DEFAULT_COLUMN_SIZE,
@@ -411,6 +421,7 @@ export function createColumnGroup<TOriginalRow extends Record<string, any>>(
       filterable: null,
       pinnable: null,
       moveable: true,
+      showDropdownOptions: null
     },
     state: {
       size: DEFAULT_COLUMN_SIZE,

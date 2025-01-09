@@ -2,6 +2,7 @@ import ActionsCell from "./_components/cells/cell-actions.svelte";
 import { createAccessorColumn, createColumnGroup, createComputedColumn, createDisplayColumn, type AnyColumn } from "../../../lib/datagrid/core/helpers/column-creators";
 import SelectRowCell from "./_components/cells/cell-select-row.svelte";
 import type { User } from "./generate-users";
+import RowSelectionHeader from "./_components/headers/row-selection-header.svelte";
 
 
 
@@ -14,6 +15,7 @@ export const userColumns: AnyColumn<User>[] = [
     createDisplayColumn({
         header: 'Actions',
         columnId: 'actions',
+        headerCell: () => ``,
         cell: () => {
             return {
                 component: ActionsCell,
@@ -32,11 +34,22 @@ export const userColumns: AnyColumn<User>[] = [
     }),
     createDisplayColumn({
         header: 'Row Selection',
+        headerCell: () => ({
+            component: RowSelectionHeader
+        }),
         columnId: 'selectRow',
         cell: () => ({
             component: SelectRowCell,
         }),
-        options: { sortable: false },
+        options: { sortable: false, showDropdownOptions: false },
+        state: {
+            size: {
+                width: 40,
+                minWidth: 40,
+                maxWidth: 40,
+                grow: false
+            }
+        }
     }),
 
     // createDisplayColumn({

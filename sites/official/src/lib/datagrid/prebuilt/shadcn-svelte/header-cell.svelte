@@ -2,7 +2,8 @@
 	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
 	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/helpers/column-creators';
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
-	import { onSort } from '$lib/datagrid/core/utils.svelte';
+	import type { LeafColumn } from '$lib/datagrid/core/types';
+	import { isCellComponent, onSort } from '$lib/datagrid/core/utils.svelte';
 	import ColumnFilter from '$lib/datagrid/prebuilt/native/column-filter.svelte';
 	import HeaderCellDropdown from './header-cell-dropdown.svelte';
 	import HeaderCell from './header-cell.svelte';
@@ -37,7 +38,7 @@
 	</div>
 {/snippet}
 
-{#snippet HeaderCellSnippet(column: AnyColumn<any>)}
+{#snippet HeaderCellSnippet(column: LeafColumn<any>)}
 	<div
 		class={`grid-header-cell h-fit justify-end self-end border-t text-xs font-medium`}
 		data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
@@ -53,13 +54,23 @@
 			class="grid-header-cell-content items-end {column.options.sortable ? 'sortable' : ''}"
 			onclick={(e) => onSort(datagrid, column, e)}
 		>
-			<span class="grid-header-cell-content-header">{column.header}</span>
-			<div class='flex gap-1'>
-
-				{#if column.options.sortable}
-				<SortingIndicator {datagrid} {column} />
+			{#if column.headerCell}
+				{@const cellContent = column.headerCell({ datagrid, column })}
+				{#if typeof cellContent === 'string'}
+					{@html cellContent}
+				{:else if isCellComponent(cellContent)}
+					<cellContent.component {datagrid} {column} />
 				{/if}
-				<HeaderCellDropdown {column}/>
+			{:else}
+				<span class="grid-header-cell-content-header">{column.header}</span>
+			{/if}
+			<div class="flex gap-1">
+				{#if column.options.sortable}
+					<SortingIndicator {datagrid} {column} />
+				{/if}
+				{#if column.options.showDropdownOptions}
+					<HeaderCellDropdown {column} />
+				{/if}
 			</div>
 		</div>
 		{#if datagrid.filtering.showColumnFiltering}
