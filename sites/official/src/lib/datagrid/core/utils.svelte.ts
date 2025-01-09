@@ -24,9 +24,15 @@ export function getCellValue(column: AnyColumn<any>, row: any): CellValue {
 export function getCellContent(column: AnyColumn<any>, row: any): CellValue | HTMLElement {
     if (column.type === 'accessor') {
         column = column as AccessorColumn<any>;
+        if (column.formatter) {
+            return column.formatter(row);
+        }
         return column.getValueFn(row);
     } else if (column.type === 'computed') {
         column = column as ComputedColumn<any>;
+        if (column.formatter) {
+            return column.formatter(row);
+        }
         return column.getValueFn(row);
     } else if (column.type === 'display') {
         column = column as DisplayColumn<any>;

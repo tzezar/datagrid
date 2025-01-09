@@ -192,6 +192,7 @@ type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOrigina
   aggregate?: AggregationConfig;
   cell?: CustomCell<TOriginalRow>
   headerCell?: HeaderCell
+  formatter?: FormatterFn<TOriginalRow>,
   options?: {
     searchable?: boolean
     groupable?: boolean,
@@ -226,10 +227,9 @@ type CreateComputeColumnProps<TOriginalRow> = {
   getValueFn: (row: TOriginalRow) => CellValue,
   aggregate?: AggregationConfig;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
-
+  formatter?: FormatterFn<TOriginalRow>,
   cell?: CustomCell<TOriginalRow>
   headerCell?: HeaderCell
-
   options?: {
     searchable?: boolean
     groupable?: boolean
