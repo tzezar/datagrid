@@ -9,7 +9,7 @@
 		$props();
 
 	let structuredColumns = $derived(flattenColumns(datagrid.columnManager.getColumnsInOrder()));
-	let leafColumns = $derived(flattenColumns(datagrid.columnManager.getColumnsInOrder()));
+	let leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
 
 </script>
 
@@ -35,11 +35,11 @@
 			{/if}
 		{/each}
 	</div>
-	{#if datagrid.rowExpanding.isRowExpanded(row.index)}
+	{#if datagrid.rowExpanding.isRowExpanded(row.identifier)}
 		<div class="grid-body-row">
 			<div class="grid-body-cell">
 				<div class="grid-body-cell">
-					Content for row with ID {row.original.id}
+					Content for row with ID {row.identifier}
 				</div>
 			</div>
 		</div>

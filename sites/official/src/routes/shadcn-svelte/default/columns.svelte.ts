@@ -1,5 +1,4 @@
 import ActionsCell from "./_components/cells/cell-actions.svelte";
-import CellRowPinning from "./_components/cells/cell-row-pinning.svelte";
 import { createAccessorColumn, createColumnGroup, createComputedColumn, createDisplayColumn, type AnyColumn } from "../../../lib/datagrid/core/helpers/column-creators";
 import SelectRowCell from "./_components/cells/cell-select-row.svelte";
 import type { User } from "./generate-users";
@@ -23,6 +22,7 @@ export const userColumns: AnyColumn<User>[] = [
                 width: 40,
                 minWidth: 40,
                 maxWidth: 40,
+                grow: false
             }
         }
         
@@ -43,6 +43,7 @@ export const userColumns: AnyColumn<User>[] = [
     createAccessorColumn({
         header: 'Id',
         columnId: 'id',
+        accessorKey: 'id',
         getValueFn: (row) => row.id,
         options: { sortable: true, hideable: false },
         aggregate: 'count',

@@ -30,6 +30,7 @@ export interface AccessorColumn<TOriginalRow> {
     filterable: boolean,
     pinnable: boolean,
     moveable: boolean
+    hideable: boolean
   },
   state: {
     size: {
@@ -198,6 +199,7 @@ type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOrigina
     filterable?: boolean
     pinnable?: boolean
     moveable?: boolean
+    hideable?: boolean
   }
   state?: {
     size?: {
@@ -268,10 +270,10 @@ type CreateDisplayColumnProps<TOriginalRow> = {
   },
   state?: {
     size?: {
-      width?: number,
-      minWidth?: number,
-      maxWidth?: number,
-      grow?: boolean
+      width: number,
+      minWidth: number,
+      maxWidth: number,
+      grow: boolean
     },
     visible?: boolean,
     pinning?: {

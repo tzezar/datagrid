@@ -1,11 +1,14 @@
 <script lang="ts">
+	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { GridBasicRow } from '$lib/datagrid/core/types';
 
-	let { row, datagrid }: { row: any; datagrid: Datagrid<any> } = $props();
+	let { row, datagrid }: { row: GridBasicRow<any>; datagrid: Datagrid<any> } = $props();
 </script>
 
-<input
-	type="checkbox"
-	checked={datagrid.rowSelection.isRowSelected(row.original.id)}
-	onchange={() => datagrid.rowSelection.toggleRowSelection(row.original.id)}
-/>
+<div class="flex items-center">
+	<Checkbox
+		checked={datagrid.rowSelection.isRowSelected(row.identifier)}
+		onCheckedChange={() => datagrid.rowSelection.toggleRowSelection(row.identifier)}
+	/>
+</div>

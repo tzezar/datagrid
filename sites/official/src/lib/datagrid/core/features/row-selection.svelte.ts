@@ -1,31 +1,31 @@
 import { SvelteSet } from "svelte/reactivity";
 import type { Datagrid } from "../index.svelte";
-import type { GridBasicRowIdentifier } from "../types";
+import type { GridRowIdentifier } from "../types";
 
 
 
 export class RowSelectionFeature<TOriginalRow> {
     datagrid: Datagrid<TOriginalRow>;
-    selectedBasicRowIdentifiers: SvelteSet<GridBasicRowIdentifier> = new SvelteSet()
+    selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier> = new SvelteSet()
 
     constructor(datagrid: Datagrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 
-    selectRow(identifier: GridBasicRowIdentifier) {
+    selectRow(identifier: GridRowIdentifier) {
         this.selectedBasicRowIdentifiers.add(identifier);
     }
-    unselectRow(identifier: GridBasicRowIdentifier) {
+    unselectRow(identifier: GridRowIdentifier) {
         this.selectedBasicRowIdentifiers.delete(identifier);
     }
 
 
-    toggleRowSelection(identifier: string) {
+    toggleRowSelection(identifier: GridRowIdentifier) {
         if (this.selectedBasicRowIdentifiers.has(identifier)) this.unselectRow(identifier);
         else this.selectRow(identifier);
     }
 
-    isRowSelected(identifier: string) {
+    isRowSelected(identifier: GridRowIdentifier) {
         return this.selectedBasicRowIdentifiers.has(identifier);
     }
 

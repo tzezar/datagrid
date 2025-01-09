@@ -100,7 +100,7 @@ export class Datagrid<TOriginalRow> {
 
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
-        this.columnFaceting.calculateFacets(this.cache.sortedData, this.columns);
+        this.columnFaceting.calculateFacets(this.cache.sortedData || [], this.columns);
 
         this.globalSearch.fuseInstance = this.globalSearch.initializeFuseInstance(this.original.data, this.columns.map(col => col.columnId as string))
     }

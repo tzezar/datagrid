@@ -1,5 +1,5 @@
 import { isGroupColumn } from "../column-guards";
-import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn, GroupColumn } from "../helpers/column-creators";
+import type {  AnyColumn,  GroupColumn } from "../helpers/column-creators";
 import type { Datagrid } from "../index.svelte";
 import type { LeafColumn, PinningPosition } from "../types";
 import { filterGroupColumns, findColumnById, flattenColumns } from "../utils.svelte";
@@ -33,10 +33,15 @@ export class ColumnManager<TOriginalRow> {
         return this.getFlattenColumns().filter(col => col.type !== 'group')
     }
 
-    getColumnWithGroupStructureAbove<TOriginalRow>(
+    getLeafColumnsInOrder(): LeafColumn<TOriginalRow>[] {
+        return flattenColumns(this.getColumnsInOrder()).filter(col => col.type !== 'group')
+    }
+
+
+    getColumnWithGroupStructureAbove(
         columnId: string,
-    ): GroupColumn<TOriginalRow> | null {
-        const column = findColumnById(this.datagrid.columns, columnId);
+    ): AnyColumn<TOriginalRow> | null {
+        const column = findColumnById(this.datagrid.columns, columnId) as AnyColumn<TOriginalRow>;
         if (!column) {
             throw new Error(`Column ${columnId} not found`);
         }
@@ -46,7 +51,7 @@ export class ColumnManager<TOriginalRow> {
         }
 
         const buildGroupHierarchy = (
-            currentColumn: AnyColumn<any> | GroupColumn<TOriginalRow>
+            currentColumn: AnyColumn<TOriginalRow>
         ): GroupColumn<TOriginalRow> | null => {
             if (currentColumn.parentColumnId === null) {
                 return null;
@@ -112,7 +117,7 @@ export class ColumnManager<TOriginalRow> {
             }
             
             processed.add(column.columnId);
-            let currentColumn = deepCopyColumn(column);
+            const currentColumn = deepCopyColumn(column);
     
             if (currentColumn.parentColumnId) {
                 const parentColumn = allFlatColumns.find(
@@ -123,7 +128,7 @@ export class ColumnManager<TOriginalRow> {
                     throw new Error(`Parent column ${currentColumn.parentColumnId} not found`);
                 }
     
-                const parent = deepCopyColumn(parentColumn);
+                const parent = deepCopyColumn(parentColumn) as GroupColumn<TOriginalRow>;
                 parent.columns = [currentColumn];
                 return buildCompleteHierarchy(parent, processed);
             }
@@ -169,8 +174,7 @@ export class ColumnManager<TOriginalRow> {
     getColumnsPinnedToLeft(): AnyColumn<TOriginalRow>[] {
         // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'left' || this.datagrid.grouping.groupByColumns.includes(col.columnId))
         // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'left')
-        let a =  flattenColumns(this.datagrid.columns).filter(col => col.state.pinning.position === 'left' || this.datagrid.grouping.groupByColumns.includes(col.columnId))
-        return a
+        return flattenColumns(this.datagrid.columns).filter(col => col.state.pinning.position === 'left' || this.datagrid.grouping.groupByColumns.includes(col.columnId))
     }
     getColumnsPinnedToRight(): AnyColumn<TOriginalRow>[] {
         return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'right')
@@ -192,7 +196,7 @@ export class ColumnManager<TOriginalRow> {
 
     handlers = {
         changeColumnPinningPosition: (columnId: string, position: PinningPosition) => {
-            let column = findColumnById(this.datagrid.columns, columnId);
+            const column = findColumnById(this.datagrid.columns, columnId);
             if (!column) throw new Error(`Column ${columnId} not found`);
             this.datagrid.columnPinning.changeColumnPinningPosition(column, position);
             this.datagrid.processors.column.refreshColumnPinningOffsets();
