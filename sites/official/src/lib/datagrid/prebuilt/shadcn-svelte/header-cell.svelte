@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { isGroupColumn } from '$lib/datagrid/core/column-guards';
-	
-	import type { AnyColumn, GroupColumn } from "$lib/datagrid/core/column-creation/types";
+
+	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/column-creation/types';
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import { isCellComponent } from '$lib/datagrid/core/utils.svelte';
@@ -29,7 +29,10 @@
 		data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 	>
 		{#if hasVisibleChildren(column)}
-			<div class="grid-header-group-header box-border text-center">{column.header}</div>
+			<div class="grid-header-group-header box-border text-center flex justify-center items-center gap-2">
+				{column.header}
+				<HeaderCellDropdown {datagrid} {column} />
+			</div>
 			<div class="flex grow flex-row">
 				{#each column.columns ?? [] as subColumn (subColumn.columnId)}
 					<HeaderCell {datagrid} column={subColumn} />

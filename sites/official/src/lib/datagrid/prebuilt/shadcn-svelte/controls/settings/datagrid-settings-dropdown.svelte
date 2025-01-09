@@ -3,14 +3,7 @@
 
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
-	import {
-		findColumnById,
-		flattenColumns,
-		generateRandomColumnId,
-		getSortDirection,
-		getSortIndex,
-		isDescendantOf
-	} from '$lib/datagrid/core/utils.svelte';
+	import { getSortDirection, getSortIndex, isDescendantOf } from '$lib/datagrid/core/utils.svelte';
 	import Visibility from '$lib/datagrid/icons/material-symbols/visibility.svelte';
 	import VisibilityOff from '$lib/datagrid/icons/material-symbols/visibility-off.svelte';
 	import Slider from '$lib/components/ui/slider/slider.svelte';
@@ -34,9 +27,7 @@
 	import SortAscending from '$lib/datagrid/icons/tabler/sort-ascending.svelte';
 	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';
 	import GroupBy from '../group-by.svelte';
-	import { columns } from '../../../../../../routes/_components/columns.svelte';
 	import AdGroupOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-outline-sharp.svelte';
-	import { createColumnGroup } from '$lib/datagrid/core/column-creation/group-column-creator';
 
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
 		datagrid.handlers.columnPinning.changeColumnPinningPosition(column.columnId, position);
@@ -135,12 +126,12 @@
 
 {#snippet columnGroupControls(column: AnyColumn<any>)}
 	<div class="text-muted-foreground flex flex-row gap-2 text-xs">
-		<button onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
-			><MoveUp /></button
-		>
-		<button onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}
-			><MoveDown /></button
-		>
+		<button onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}>
+			<MoveUp />
+		</button>
+		<button onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}>
+			<MoveDown />
+		</button>
 		<select
 			id={`group-select-${column.columnId}`}
 			class="w-full"
