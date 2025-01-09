@@ -1,5 +1,7 @@
 import { type AnyColumn, type GroupColumn } from "../column-creation/types";
 import type { Datagrid } from "../index.svelte";
+import type { ColumnId } from "../types";
+import { findColumnById } from "../utils.svelte";
 
 export class ColumnOrderingFeature<TOriginalRow> {
     private datagrid: Datagrid<TOriginalRow>;
@@ -8,12 +10,16 @@ export class ColumnOrderingFeature<TOriginalRow> {
         this.datagrid = datagrid;
     }
 
-    moveLeft(column: AnyColumn<TOriginalRow>): void {
+    moveLeft(columnId: ColumnId): void {
+        const column = findColumnById(this.datagrid.columns, columnId);
+        if (!column) return;
+        // if (column.state.pinning.position !== 'none') return;
+
         if (this.datagrid.columnGrouping.isColumnWithinGroup(column)) {
             const parentGroupColumn = this.datagrid.columnGrouping.findParentColumnGroup(column.parentColumnId);
             if (parentGroupColumn === null) return;
             const columnsInGroup = parentGroupColumn.columns;
-            const index = columnsInGroup.findIndex(col => col === column);
+            const index = columnsInGroup.findIndex(col => col.columnId === columnId);
             if (index === 0) return;
             if (index === -1) return;
             const [columnToMove] = columnsInGroup.splice(index, 1);
@@ -23,7 +29,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
         }
 
         // Move column to the previous position
-        const index = this.datagrid.columns.findIndex(col => col === column);
+        const index = this.datagrid.columns.findIndex(col => col.columnId === columnId);
         if (index === 0) return;
         if (index === -1) return;
 
@@ -33,12 +39,16 @@ export class ColumnOrderingFeature<TOriginalRow> {
 
     }
 
-    moveRight(column: AnyColumn<TOriginalRow>): void {
+    moveRight(columnId: ColumnId): void {
+        const column = findColumnById(this.datagrid.columns, columnId);
+        if (!column) return;
+        // if (column.state.pinning.position !== 'none') return;
+
         if (this.datagrid.columnGrouping.isColumnWithinGroup(column)) {
             const parentGroupColumn = this.datagrid.columnGrouping.findParentColumnGroup(column.parentColumnId);
             if (parentGroupColumn === null) return;
             const columnsInGroup = parentGroupColumn.columns;
-            const index = columnsInGroup.findIndex(col => col === column);
+            const index = columnsInGroup.findIndex(col => col.columnId === columnId);
             // Fixed the boundary check to use columnsInGroup length instead of datagrid.columns
             if (index === columnsInGroup.length - 1) return;
             if (index === -1) return;
@@ -49,7 +59,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
         }
 
         // Move column to the next position
-        const index = this.datagrid.columns.findIndex(col => col === column);
+        const index = this.datagrid.columns.findIndex(col => col.columnId === columnId);
         if (index === this.datagrid.columns.length - 1) return;
         if (index === -1) return;
         const [columnToMove] = this.datagrid.columns.splice(index, 1);

@@ -162,4 +162,12 @@ export class HandlersManager {
             column.state.pinning.position = position;
         },
     }
+    columnOrdering = {
+        moveLeft: (columnId: ColumnId) => {
+            this.datagrid.columnOrdering.moveLeft(columnId);
+        },
+        moveRight: (columnId: ColumnId) => {
+            this.datagrid.columnOrdering.moveRight(columnId)
+        }
+    }
 }

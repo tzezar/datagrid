@@ -29,6 +29,10 @@
 	import AdGroupOffOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-off-outline-sharp.svelte';
 	import FreezeColumn from '$lib/datagrid/icons/tabler/freeze-column.svelte';
 	import ColumnsOff from '$lib/datagrid/icons/tabler/columns-off.svelte';
+	import VisibilityOff from '$lib/datagrid/icons/material-symbols/visibility-off.svelte';
+	import Visibility from '$lib/datagrid/icons/material-symbols/visibility.svelte';
+	import ArrowMoveLeft from '$lib/datagrid/icons/tabler/arrow-move-left.svelte';
+	import ArrowMoveRight from '$lib/datagrid/icons/tabler/arrow-move-right.svelte';
 
 	let { datagrid, column }: { datagrid: Datagrid<any>; column: LeafColumn<any> } = $props();
 </script>
@@ -137,34 +141,42 @@
 			</DropdownMenu.Item>
 			<DropdownMenu.Separator />
 
-			<DropdownMenu.Item onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'left')}>
+			<DropdownMenu.Item
+				onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'left')}
+			>
 				<FreezeColumn class="mr-2 size-4" />
 				<span>Pin to left</span>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'right')}>
+			<DropdownMenu.Item
+				onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'right')}
+			>
 				<FreezeColumn class="mr-2 size-4 rotate-180" />
 				<span>Pin to right</span>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'none')}>
+			<DropdownMenu.Item
+				onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'none')}
+			>
 				<ColumnsOff class="mr-2 size-4" />
 				<span>Unpin</span>
 			</DropdownMenu.Item>
 			<DropdownMenu.Separator />
 			<DropdownMenu.Item>
-				<Users class="mr-2 size-4" />
-				<span>Hide {column.header} column</span>
-			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				<Users class="mr-2 size-4" />
-				<span>Show all columns</span>
+				<VisibilityOff class="mr-2 size-4" />
+				<span>Hide column</span>
 			</DropdownMenu.Item>
 			<DropdownMenu.Separator />
-			<DropdownMenu.Item>
-				<Users class="mr-2 size-4" />
+			<DropdownMenu.Item
+				onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
+				closeOnSelect={false}
+			>
+				<ArrowMoveLeft class="mr-2 size-4" />
 				<span>Move left</span>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				<Users class="mr-2 size-4" />
+			<DropdownMenu.Item
+				onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}
+				closeOnSelect={false}
+			>
+				<ArrowMoveRight class="mr-2 size-4" />
 				<span>Move right</span>
 			</DropdownMenu.Item>
 			<DropdownMenu.Item>

@@ -130,8 +130,8 @@
 
 {#snippet columnGroupControls(column: AnyColumn<any>)}
 	<div class="text-muted-foreground flex flex-row gap-2 text-xs">
-		<button onclick={() => datagrid.columnOrdering.moveLeft(column)}><MoveUp /></button>
-		<button onclick={() => datagrid.columnOrdering.moveRight(column)}><MoveDown /></button>
+		<button onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}><MoveUp /></button>
+		<button onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}><MoveDown /></button>
 		<select
 			id={`group-select-${column.columnId}`}
 			class="w-full"
