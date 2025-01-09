@@ -1,6 +1,6 @@
 import type { AnyColumn } from "../column-creation/types";
 import type { Datagrid } from "../index.svelte";
-import type { ColumnId, FilterableColumn, LeafColumn } from "../types";
+import type { ColumnId, FilterableColumn, LeafColumn, PinningPosition } from "../types";
 import { findColumnById, isColumnFilterable } from "../utils.svelte";
 
 
@@ -155,5 +155,11 @@ export class HandlersManager {
             this.datagrid.processors.data.executeFullDataTransformation();
         }
     }
-
+    columnPinning = {
+        pinColumn: (columnId: string, position: PinningPosition) => {
+            const column = findColumnById(this.datagrid.columns, columnId);
+            if (!column) return;
+            column.state.pinning.position = position;
+        },
+    }
 }

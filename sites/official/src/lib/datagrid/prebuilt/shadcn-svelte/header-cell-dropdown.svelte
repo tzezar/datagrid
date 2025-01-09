@@ -27,6 +27,8 @@
 	import FilterCog from '$lib/datagrid/icons/tabler/filter-cog.svelte';
 	import AdGroupOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-outline-sharp.svelte';
 	import AdGroupOffOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-off-outline-sharp.svelte';
+	import FreezeColumn from '$lib/datagrid/icons/tabler/freeze-column.svelte';
+	import ColumnsOff from '$lib/datagrid/icons/tabler/columns-off.svelte';
 
 	let { datagrid, column }: { datagrid: Datagrid<any>; column: LeafColumn<any> } = $props();
 </script>
@@ -135,16 +137,16 @@
 			</DropdownMenu.Item>
 			<DropdownMenu.Separator />
 
-			<DropdownMenu.Item>
-				<Users class="mr-2 size-4" />
+			<DropdownMenu.Item onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'left')}>
+				<FreezeColumn class="mr-2 size-4" />
 				<span>Pin to left</span>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				<Users class="mr-2 size-4" />
+			<DropdownMenu.Item onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'right')}>
+				<FreezeColumn class="mr-2 size-4 rotate-180" />
 				<span>Pin to right</span>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				<Users class="mr-2 size-4" />
+			<DropdownMenu.Item onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'none')}>
+				<ColumnsOff class="mr-2 size-4" />
 				<span>Unpin</span>
 			</DropdownMenu.Item>
 			<DropdownMenu.Separator />
