@@ -1,5 +1,6 @@
 import type { Component } from "svelte";
-import type { AccessorColumn, ComputedColumn, DisplayColumn } from "./helpers/column-creators";
+import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn } from "./helpers/column-creators";
+import type { Datagrid } from "./index.svelte";
 
 
 export type ColumnType = 'accessor' | 'computed' | 'display' | 'group';
@@ -21,11 +22,22 @@ export type LeafColumn<TOriginalRow> = AccessorColumn<TOriginalRow> | ComputedCo
 export type RowPinningPosition = 'top' | 'bottom' | false;
 
 
-export type Cell = (props: any) => {
-    component: Component<any>,
-    props: object
-} | string | HTMLElement
 
+
+
+
+export type CustomCellComponentWithProps = {
+    component: Component<any>;
+    props: object;
+};
+
+export type CustomCellProps = {
+    datagrid: Datagrid<any>;
+    column: AnyColumn<any>;
+    row: GridBasicRow<any>;
+}
+
+export type CustomCell = (props: CustomCellProps) => string | HTMLElement | CustomCellComponentWithProps
 
 
 export type HeaderCell<TOriginalRow> = (row: TOriginalRow) =>
@@ -48,16 +60,16 @@ export type Aggregation = {
 };
 
 export type AggregationFn = (values: any[]) => any;
-export type BaseAggregationConfig = 
-    | 'sum' 
-    | 'min' 
-    | 'max' 
-    | 'extent' 
-    | 'mean' 
-    | 'median' 
-    | 'unique' 
-    | 'uniqueCount' 
-    | 'count' 
+export type BaseAggregationConfig =
+    | 'sum'
+    | 'min'
+    | 'max'
+    | 'extent'
+    | 'mean'
+    | 'median'
+    | 'unique'
+    | 'uniqueCount'
+    | 'count'
     | { type: string; fn?: AggregationFn };
 
 export type AggregationConfig = BaseAggregationConfig | BaseAggregationConfig[];

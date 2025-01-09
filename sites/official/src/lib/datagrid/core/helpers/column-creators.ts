@@ -1,7 +1,7 @@
 
 // More specific types for different kinds of values
 import { DEFAULT_COLUMN_SIZE } from "../defaults";
-import type { AccessorFn, CellValue, Cell, ColumnId, GetGroupValue, GetValueFn, HeaderCell, FormatterFn, AggregationConfig } from "../types";
+import type { AccessorFn, CellValue, CustomCell, ColumnId, GetGroupValue, GetValueFn, HeaderCell, FormatterFn, AggregationConfig } from "../types";
 
 // Helper type to get nested key paths
 type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
@@ -21,7 +21,7 @@ export interface AccessorColumn<TOriginalRow> {
   formatter?: FormatterFn<TOriginalRow>
   aggregate?: AggregationConfig;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
-  cell?: Cell;
+  cell?: CustomCell;
   headerCell?: HeaderCell<TOriginalRow>
   options: {
     searchable: boolean,
@@ -56,7 +56,7 @@ export interface ComputedColumn<TOriginalRow> {
   accessorFn: AccessorFn<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
-  cell?: Cell;
+  cell?: CustomCell;
   headerCell?: HeaderCell<TOriginalRow>
   formatter?: FormatterFn<TOriginalRow>
   aggregate?: AggregationConfig;
@@ -111,7 +111,7 @@ export interface DisplayColumn<TOriginalRow> {
   header: string;
   columnId: string;
   parentColumnId: string | null;
-  cell: Cell
+  cell: CustomCell
   headerCell?: HeaderCell<TOriginalRow>
 
   options: {
@@ -147,7 +147,7 @@ export interface GroupColumn<TOriginalRow> {
   columnId: string;
   parentColumnId: string | null;
   columns: AnyColumn<TOriginalRow>[];
-  cell?: Cell,
+  cell?: CustomCell,
   options: {
     searchable: null
     groupable: null,
@@ -190,7 +190,7 @@ type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOrigina
   getValueFn: (row: TOriginalRow) => CellValue,
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   aggregate?: AggregationConfig;
-  cell?: Cell
+  cell?: CustomCell
   headerCell?: HeaderCell<TOriginalRow>
   options?: {
     searchable?: boolean
@@ -227,7 +227,7 @@ type CreateComputeColumnProps<TOriginalRow> = {
   aggregate?: AggregationConfig;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
 
-  cell?: Cell
+  cell?: CustomCell
   headerCell?: HeaderCell<TOriginalRow>
 
   options?: {
@@ -258,7 +258,7 @@ type CreateDisplayColumnProps<TOriginalRow> = {
   header: string,
   columnId: ColumnId,
   parentColumnId?: ParentColumnId
-  cell: Cell,
+  cell: CustomCell,
   headerCell?: HeaderCell<TOriginalRow>
   options?: {
     searchable?: false

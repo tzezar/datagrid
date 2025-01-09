@@ -55,7 +55,7 @@ export const userColumns: AnyColumn<User>[] = [
         header: 'Status',
         columnId: 'status',
         accessorKey: 'status',
-        // cell: (row) => `<span class="${row?.status}">${row?.status.toUpperCase()}</span>`,
+        cell: ({row}) => `<span class="${row?.original.status}">${row?.original.status?.toUpperCase()}</span>`,
         getValueFn: (row) => row.status,
         options: { sortable: true },
         _meta: {
@@ -67,7 +67,6 @@ export const userColumns: AnyColumn<User>[] = [
         header: 'Full Name',
         columnId: 'fullName',
         accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-
         getValueFn: (row) => `${row.firstName} ${row.lastName}`,
         options: { sortable: true },
         getGroupValueFn: (row) => {
