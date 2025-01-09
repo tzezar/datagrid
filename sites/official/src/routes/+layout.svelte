@@ -45,7 +45,7 @@
 <div class="flex h-screen w-full">
 	<div class="flex h-full w-full">
 		<!-- Desktop Sidebar -->
-		<div class="hidden h-full w-64 shrink-0 flex-col overflow-auto border-r lg:flex z-[10000]  ">
+		<div class="hidden h-full w-64 shrink-0 flex-col overflow-auto border-r lg:flex  ">
 			<!-- Logo Section -->
 			<a href="/" class="">
 				<div class="bg-primary-foreground sticky top-0 flex items-center justify-center gap-4 py-4">
@@ -79,7 +79,7 @@
 		<!-- Main Content Area -->
 		<div class="relative flex h-screen w-full flex-col overflow-auto" bind:this={scrollFix}>
 			<!-- Mobile Header -->
-			<div class="bg-primary-foreground sticky top-0 flex w-full border-b lg:hidden z-[10000] ">
+			<div class="bg-primary-foreground sticky top-0 flex w-full border-b lg:hidden  ">
 				<div
 					class="bg-primary-foreground flex w-full flex-row items-center justify-between gap-1 px-4 py-2 lg:px-6"
 				>
