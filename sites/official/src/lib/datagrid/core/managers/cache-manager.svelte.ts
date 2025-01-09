@@ -49,4 +49,13 @@ export class DatagridCacheManager<TOriginalRow> {
         this.rows = [];
         this.paginatedRows = null;
     }
+
+    invalidateFilteredDataCache(): void {
+        this.filteredData = null;
+    }
+    invalidateHierarchicalRowsCache(): void {
+        this.hierarchicalRows = null;
+    }
+
+
 }

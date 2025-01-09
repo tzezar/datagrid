@@ -19,23 +19,34 @@ export class DataProcessor<TRow> {
     executeFullDataTransformation(): void {
         this.metrics.clear();
 
+        const shouldRunGlobalSearch = this.datagrid.globalSearch.value !== '';
+        const shouldRunColumnFilters = this.datagrid.filtering.conditions.length > 0;
+        const shouldRunSorting = this.datagrid.sorting.sortConfigs.length > 0;
+        const shouldRunGrouping = this.datagrid.grouping.groupByColumns.length > 0;
+
+
         // Create a copy of the data to avoid mutating the original data
         let data = [...this.datagrid.original.data];
 
-        // Apply global search if value is set
-        if (this.datagrid.globalSearch.value !== '') {
-            this.metrics.measure('Global Search', () => {
-                data = this.applyGlobalSearch(data);
-            });
+
+        if (this.datagrid.cache.filteredData === null) {
+            // Apply global search if value is set
+            if (shouldRunGlobalSearch) {
+                this.metrics.measure('Global Search', () => {
+                    data = this.applyGlobalSearch(data);
+                });
+            }
+
+            if (shouldRunColumnFilters) {
+                this.metrics.measure('Column Filtering', () => {
+                    data = this.applyColumnFilters(data);
+                });
+            }
+        } else {
+            data = this.datagrid.cache.filteredData;
         }
 
-        if (this.datagrid.filtering.conditions.length > 0) {
-            this.metrics.measure('Column Filtering', () => {
-                data = this.applyColumnFilters(data);
-            });
-        }
-
-        if (this.datagrid.sorting.sortConfigs.length > 0) {
+        if (shouldRunSorting) {
             this.metrics.measure('Sorting', () => {
                 data = this.applySorting(data);
                 this.datagrid.cache.sortedData = data;
@@ -46,18 +57,14 @@ export class DataProcessor<TRow> {
         this.datagrid.cache.sortedData = data;
 
         // Clear hierarchical cache when data changes
-        this.datagrid.cache.hierarchicalRows = null;
+        this.datagrid.cache.invalidateHierarchicalRowsCache();
 
         // Process grouped or regular data
-        if (this.datagrid.grouping.groupByColumns.length > 0) {
-            this.processGroupedData(data);
-        } else {
-            this.processRegularData(data);
-        }
+        if (shouldRunGrouping) this.processGroupedData(data);
+        else this.processRegularData(data);
+        
+        if (this.datagrid.config.measurePerformance) this.datagrid.metrics.print();
 
-        if (this.datagrid.config.measurePerformance) {
-            this.datagrid.metrics.print();
-        }
     }
 
     private applyGlobalSearch(data: TRow[]): TRow[] {
