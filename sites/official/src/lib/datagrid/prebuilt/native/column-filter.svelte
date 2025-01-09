@@ -26,7 +26,7 @@
 </script>
 
 {#snippet FilterOperator()}
-	<span class="text-muted-foreground text-[0.5rem]">Filter mode: equals</span>
+	<span class="text-muted-foreground text-[0.5rem]">Filter mode: {datagrid.filtering.getConditionOperator(column.columnId)}</span>
 {/snippet}
 
 {#if column.options.filterable !== false}

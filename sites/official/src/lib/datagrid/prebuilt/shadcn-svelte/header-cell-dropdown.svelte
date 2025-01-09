@@ -169,31 +169,6 @@
 			value: 'notEquals',
 			icon: NotEquals
 		},
-		{
-			label: 'Contains',
-			value: 'contains',
-			icon: Contains
-		},
-		{
-			label: 'Starts with',
-			value: 'startsWith',
-			icon: StartsWith
-		},
-		{
-			label: 'Ends with',
-			value: 'endsWith',
-			icon: EndsWith
-		},
-		{
-			label: 'Empty',
-			value: 'empty',
-			icon: Empty
-		},
-		{
-			label: 'Not empty',
-			value: 'notEmpty',
-			icon: NotEmpty
-		}
 	];
 
 	let { datagrid, column }: { datagrid: Datagrid<any>; column: AnyColumn<any> } = $props();
@@ -288,7 +263,7 @@
 				</DropdownMenu.Item>
 				<DropdownMenu.Sub>
 					<DropdownMenu.SubTrigger
-						disabled={true}
+						disabled={!column._meta.filterType || column.options.filterable === false}
 						class="aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
 					>
 						<FilterCog class="mr-2 size-4" />
