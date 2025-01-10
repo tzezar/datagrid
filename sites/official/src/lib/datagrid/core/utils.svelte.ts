@@ -105,14 +105,6 @@ export const getSortDirection = (datagrid: DataGrid<any>, column: AnyColumn<any>
 
 
 
-export const isColumnFilterable = <TOriginalRow>(
-    column: AnyColumn<TOriginalRow>
-): (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>) | null => {
-    if (column.options.filterable !== null) {
-        return column as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>;
-    }
-    return null;
-};
 
 
 
@@ -147,6 +139,15 @@ export const isColumnSortable = <TOriginalRow>(
 ): SortableColumn<TOriginalRow> | null => {
     if (column.options.sortable !== null || column.options.sortable !== false) {
         return column as SortableColumn<TOriginalRow>;
+    }
+    return null;
+};
+
+export const isColumnFilterable = <TOriginalRow>(
+    column: AnyColumn<TOriginalRow>
+): (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>) | null => {
+    if (column.options.filterable !== null || column.options.filterable !== false) {
+        return column as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>;
     }
     return null;
 };

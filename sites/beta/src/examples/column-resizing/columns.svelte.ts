@@ -19,6 +19,5 @@ export const columns = [
         align: 'end',
         grow: true,
         resizable: false
-    }
-
+    },
 ] satisfies BaseColumn<InventoryDataRow>[]

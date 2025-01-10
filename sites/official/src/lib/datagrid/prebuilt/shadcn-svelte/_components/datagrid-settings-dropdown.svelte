@@ -1,6 +1,4 @@
 <script lang="ts">
-	let { datagrid }: { datagrid: DataGrid<any> } = $props();
-
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import { getSortDirection, getSortIndex, isDescendantOf } from '$lib/datagrid/core/utils.svelte';
@@ -14,11 +12,9 @@
 	import StabilizationLock from '$lib/datagrid/icons/material-symbols/stabilization-lock.svelte';
 	import Width from '$lib/datagrid/icons/material-symbols/width.svelte';
 	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
-
 	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/column-creation/types';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 	import MoveDown from '$lib/datagrid/icons/material-symbols/move-down.svelte';
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import DeleteOutline from '$lib/datagrid/icons/material-symbols/delete-outline.svelte';
 	import Settings from '$lib/datagrid/icons/material-symbols/settings.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
@@ -30,8 +26,12 @@
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
 	import GroupRowsByColumnDropdown from './group-rows-by-column-dropdown.svelte';
+	import ExpandLess from '$lib/datagrid/icons/material-symbols/expand-less.svelte';
+	import ExpandMore from '$lib/datagrid/icons/material-symbols/expand-more.svelte';
+	import type { TzezarsDatagrid } from '../core/index.svelte';
 
-	
+	let { datagrid }: { datagrid: TzezarsDatagrid } = $props();
+
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
 		datagrid.handlers.columnPinning.changeColumnPinningPosition(column.columnId, position);
 	}
@@ -97,15 +97,15 @@
 		<div class=" flex flex-col gap-2">
 			{#each datagrid.columns as column}
 				{#if !isGroupColumn(column)}
-					<div class='flex flex-row gap-2 items-center'>
+					<div class="flex flex-row items-center gap-2">
 						<Checkbox
-						id={column.columnId}
-						checked={selectedColumns[column.columnId]}
-						onCheckedChange={(checked) => (selectedColumns[column.columnId] = checked)}
-					/>
-					<label for={column.columnId} >
-						{column.header}
-					</label>
+							id={column.columnId}
+							checked={selectedColumns[column.columnId]}
+							onCheckedChange={(checked) => (selectedColumns[column.columnId] = checked)}
+						/>
+						<label for={column.columnId}>
+							{column.header}
+						</label>
 					</div>
 				{/if}
 			{/each}
@@ -314,7 +314,7 @@
 {/snippet}
 
 {#snippet groupBy()}
-	<DropdownMenu.Item closeOnSelect={false}>
+	<DropdownMenu.Item closeOnSelect={false} class="p-0">
 		<!-- <GroupBy class="mr-2 size-4" /> -->
 		<GroupRowsByColumnDropdown {datagrid} />
 	</DropdownMenu.Item>
@@ -343,6 +343,20 @@
 						{@render newGroupCreationMenu()}
 					</DropdownMenu.SubContent>
 				</DropdownMenu.Sub>
+				<DropdownMenu.Separator />
+				<DropdownMenu.Item
+					closeOnSelect={false}
+					onclick={() => datagrid.groupHeadersVisibility.toggleGroupHeaders()}
+				>
+					{#if datagrid.groupHeadersVisibility.showGroupHeaders}
+						<ExpandLess class="mr-2 size-4" />
+						Hide Column Groups
+					{:else}
+						<ExpandMore class="mr-2 size-4" />
+						Show Column Groups
+					{/if}
+				</DropdownMenu.Item>
+				<DropdownMenu.Separator />
 				{@render groupBy()}
 			</DropdownMenu.Group>
 			<!-- <DropdownMenu.Separator /> -->

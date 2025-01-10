@@ -2,11 +2,11 @@
 	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/column-creation/types';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 	import type { Snippet } from 'svelte';
-	import type { TzezarsDatagrid } from '../../types';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
+	import type { TzezarsDatagrid } from '../../core/index.svelte';
 
 	type Props = {
-		datagrid: TzezarsDatagrid;
+		datagrid: TzezarsDatagrid
 		column: AnyColumn<any>;
 		groupCell: Snippet<[column: GroupColumn<any>]>;
 		cell: Snippet<[column: LeafColumn<any>]>;

@@ -2,6 +2,8 @@ import type { AnyColumn, GroupColumn } from "$lib/datagrid/core/column-creation/
 import { isGroupColumn } from "$lib/datagrid/core/helpers/column-guards";
 import { DataGrid, type GridConfig } from "$lib/datagrid/core/index.svelte";
 import type { LeafColumn } from "$lib/datagrid/core/types";
+import { FullscreenFeature } from "./features/fullscreen.svelte";
+import { GroupHeadersVisibilityFeature } from "./features/group-headers-visibility.svelte";
 
 const handleDropdownMenu = (columns: AnyColumn<any>[]) => {
     columns.forEach((column) => {
@@ -16,12 +18,16 @@ const handleDropdownMenu = (columns: AnyColumn<any>[]) => {
     return columns;
 };
 
-export class TzezarsDatagrid<TOriginalRow> extends DataGrid<TOriginalRow> {
+export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> {
     constructor(config: GridConfig<TOriginalRow>) {
         super(config, handleDropdownMenu);
     }
 
+    fullscreen = new FullscreenFeature();
+    groupHeadersVisibility = new GroupHeadersVisibilityFeature();
+
     extra = {
-        highlightSelectedRow: true
+        highlightSelectedRow: true,
+        
     }
 }

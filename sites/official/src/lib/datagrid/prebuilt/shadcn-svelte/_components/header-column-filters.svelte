@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import ColumnFilter from '../../native/column-filter.svelte';
-	import type { TzezarsDatagrid } from '../types';
+	import type { TzezarsDatagrid } from '../core/index.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;

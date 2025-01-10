@@ -2,10 +2,17 @@ import type { Component } from "svelte";
 import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn } from "./column-creation/types";
 import type { DataGrid } from "./index.svelte";
 
+export type ColumnId<T = unknown> = keyof T | (string & {});
+// export type ColumnId = string;
+
+
+export type ExtractColumnIds<T> = T extends AccessorColumn<any, any>[] 
+  ? T[number]['columnId'] 
+  : never;
+
 
 export type ColumnType = 'accessor' | 'computed' | 'display' | 'group';
 
-export type ColumnId = string;
 type Primitive = string | number | boolean | null | undefined;
 export type GetValueFn<TOriginalRow> = (row: TOriginalRow) => CellValue;
 export type GetGroupValue<TOriginalRow> = (row: TOriginalRow) => CellValue;

@@ -3,14 +3,14 @@ import type { CreateComputeColumnProps, ComputedColumn } from "./types";
 
 
 export function createComputedColumn<TOriginalRow extends Record<string, any>>(
-  { header, columnId, accessorFn, getValueFn: getValue, _meta = {}, options, state, ...rest }: CreateComputeColumnProps<TOriginalRow>
+  { header, columnId, getValueFn: getValue, _meta = {}, options, state, ...rest }: CreateComputeColumnProps<TOriginalRow>
 ): ComputedColumn<TOriginalRow> {
   return {
     type: 'computed',
     header,
     columnId,
     parentColumnId: rest.parentColumnId || null,
-    accessorFn,
+    // accessorFn,
     getValueFn: getValue,
     options: {
       searchable: options?.searchable ?? true,

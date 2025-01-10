@@ -17,7 +17,7 @@ import type { ColumnMeta } from "$lib/datagrid/prebuilt/shadcn-svelte/types";
 
 export type Column = AnyColumn<User> & {_meta: {showColumnManagerDropdownMenu: boolean}}
 
-export const userColumns: Column[] = [
+export const userColumns = [
     displayColumn({
         header: 'Actions',
         columnId: 'actions',
@@ -105,7 +105,7 @@ export const userColumns: Column[] = [
     computedColumn({
         header: 'Full Name',
         columnId: 'fullName',
-        accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+        // accessorFn: (row) => `${row.firstName} ${row.lastName}`,
         getValueFn: (row) => `${row.firstName} ${row.lastName}`,
         options: { sortable: true },
         getGroupValueFn: (row) => {
@@ -237,7 +237,7 @@ export const userColumns: Column[] = [
             computedColumn({
                 header: 'Last Login',
                 columnId: 'lastLogin',
-                accessorFn: (row) => row.stats.lastLogin.toLocaleString(),
+                // accessorFn: (row) => row.stats.lastLogin.toLocaleString(),
                 getValueFn: (row) => row.stats.lastLogin,
                 options: { sortable: true }
             }),
@@ -253,4 +253,4 @@ export const userColumns: Column[] = [
             })
         ]
     }),
-];
+] satisfies AnyColumn<User>[]

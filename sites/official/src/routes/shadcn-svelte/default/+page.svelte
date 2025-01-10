@@ -1,7 +1,6 @@
 <script lang="ts">
 	import '$lib/datagrid/styles.css';
-	import { userColumns } from './columns.svelte';
-	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core';
+	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core/index.svelte';
 	import * as Grid from '$lib/datagrid/prebuilt/shadcn-svelte/_components';
 	import GridHeader from './_components/grid-header.svelte';
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
@@ -21,22 +20,22 @@
 	import HeaderBasicCell from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-basic-cell.svelte';
 	import HeaderBasicCellContentWrapper from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-basic-cell-content-wrapper.svelte';
 	import HeaderCellWrapper from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-cell-wrapper.svelte';
-	import type { User } from './generate-users';
-
+	// import { userColumns } from './columns.svelte';
+	import { userColumns as simplifiedColumns } from './simplefied-columns.svelte';
+	import Pagination from '$lib/datagrid/prebuilt/shadcn-svelte/_components/pagination.svelte';
+	import { cn } from '$lib/utils';
 	let { data } = $props();
 
 	let datagrid = new TzezarsDatagrid({
-		columns: userColumns,
+		columns: simplifiedColumns,
 		data: data.users
 	});
-	const col = datagrid.columns[0] as AccessorColumn<User>;
-	// if (col.accessorKey === '') {
 
+	// const col = datagrid.columns[0] as AccessorColumn<User>;
+	// if (col.type === 'accessor') {
+	// 	if (col.accessorKey === 'firstName') {
+	// 	}
 	// }
-	const column = datagrid.getColumn('name');
-	// const value = column?.getValueFn(data.users[0]);
-
-	const a = column?.columnId
 
 	// const datagrid = new Datagrid({
 	// 	columns: userColumns,
@@ -53,6 +52,18 @@
 	// 		return 'bg-red-400';
 	// 	}
 	// }
+
+	let columns = $derived(
+		datagrid.groupHeadersVisibility.showGroupHeaders
+			? datagrid.columnManager.getColumnsInOrder()
+			: datagrid.columnManager.getLeafColumnsInOrder()
+	);
+
+	let end: HTMLElement;
+
+	
+
+	import { Portal } from 'bits-ui';
 </script>
 
 {#snippet GroupRowSnippet(row: GridGroupRow<any>, leafColumns: LeafColumn<any>[])}
@@ -75,7 +86,7 @@
 {#snippet HeaderGroupCellSnippet(column: GroupColumn<any>)}
 	<HeaderGroupCell {datagrid} {column}>
 		<div
-			class="grid-header-group-header box-border flex items-center justify-center gap-2 text-center"
+			class="grid-header-group-header box-border flex h-full items-center justify-center gap-2 text-center"
 		>
 			{column.header}
 			<HeaderCellDropdown {datagrid} {column} />
@@ -114,53 +125,62 @@
 	</HeaderBasicCell>
 {/snippet}
 
-<div class="flex flex-col">
-	<GridHeader {datagrid} />
-	<div class="grid-wrapper">
-		<div class="grid-container">
-			<div class="grid-header">
-				<div class="grid-header-row">
-					{#each datagrid.columnManager.getColumnsInOrder() as column (column)}
-						<HeaderCellWrapper {datagrid} {column}>
-							{#snippet groupCell(column)}
-								{@render HeaderGroupCellSnippet(column)}
-							{/snippet}
-							{#snippet cell(column)}
-								{@render HeaderCellSnippet(column)}
-							{/snippet}
-						</HeaderCellWrapper>
-					{/each}
+<Portal disabled={!datagrid.fullscreen.isFullscreen}>
+	<div
+		class={cn('flex flex-col', datagrid.fullscreen.isFullscreen && 'absolute inset-0 z-[20] p-4')}
+	>
+		<GridHeader {datagrid} />
+		<div class={cn('grid-wrapper', datagrid.fullscreen.isFullscreen && 'max-h-full h-full overflow-auto')}>
+			<!-- <div class="grid-toolbar-container">
+				<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
+			</div> -->
+
+			<div class="grid-container">
+				<div class="grid-header">
+					<div class="grid-header-row">
+						{#each columns as column (column)}
+							<HeaderCellWrapper {datagrid} {column}>
+								{#snippet groupCell(column)}
+									{@render HeaderGroupCellSnippet(column)}
+								{/snippet}
+								{#snippet cell(column)}
+									{@render HeaderCellSnippet(column)}
+								{/snippet}
+							</HeaderCellWrapper>
+						{/each}
+					</div>
 				</div>
-			</div>
-			<div class="grid-body">
-				{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
-					{@const columns = datagrid.columnManager.getLeafColumnsInOrder()}
-					{#if isGroupRow(row)}
-						{@render GroupRowSnippet(row, columns)}
-					{:else}
-						<div class="grid-body-row">
-							{#each columns as column (column)}
-								<!-- {#if column.id === ''}
+				<div class="grid-body">
+					{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
+						{@const columns = datagrid.columnManager.getLeafColumnsInOrder()}
+						{#if isGroupRow(row)}
+							{@render GroupRowSnippet(row, columns)}
+						{:else}
+							<div class="grid-body-row">
+								{#each columns as column (column)}
+									<!-- {#if column.id === ''}
 								
 								{/if} -->
 
-								<BodyBasicRowCell {datagrid} {column} {row}>
-									<BasicRowCellContent {datagrid} {column} {row} />
-								</BodyBasicRowCell>
-							{/each}
-						</div>
-						{#if row.isExpanded()}
-							<div class="grid-body-row">
-								<div class="grid-body-cell">
-									Content for row with ID {row.identifier}
-								</div>
+									<BodyBasicRowCell {datagrid} {column} {row}>
+										<BasicRowCellContent {datagrid} {column} {row} />
+									</BodyBasicRowCell>
+								{/each}
 							</div>
+							{#if row.isExpanded()}
+								<div class="grid-body-row">
+									<div class="grid-body-cell">
+										Content for row with ID {row.identifier}
+									</div>
+								</div>
+							{/if}
 						{/if}
-					{/if}
-				{/each}
+					{/each}
+				</div>
 			</div>
+			<div class="grid-footer-container"></div>
 		</div>
-		<div class="grid-footer-container"></div>
+		<Pagination {datagrid} />
 	</div>
-	<Grid.Pagination {datagrid} />
-</div>
+	<div bind:this={end} aria-hidden="true" class="hidden"></div>
+</Portal>

@@ -5,9 +5,10 @@
 	import FilterAlt from "$lib/datagrid/icons/material-symbols/filter-alt.svelte";
 	import GlobalSearch from "$lib/datagrid/prebuilt/shadcn-svelte/_components/global-search-input.svelte";
 	import DatagridSettingsDropdown from "$lib/datagrid/prebuilt/shadcn-svelte/_components/datagrid-settings-dropdown.svelte";
+	import type { TzezarsDatagrid } from "$lib/datagrid/prebuilt/shadcn-svelte/core/index.svelte";
 
 
-    let {datagrid}: {datagrid: DataGrid<any>} = $props()
+    let {datagrid}: {datagrid: TzezarsDatagrid} = $props()
 
 </script>
 

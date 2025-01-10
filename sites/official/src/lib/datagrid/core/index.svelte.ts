@@ -1,11 +1,11 @@
-import type { AccessorColumn, AnyColumn } from "./column-creation/types";
+import type { AnyColumn } from "./column-creation/types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
-import { ColumnFacetingFeature, ColumnFilteringFeature, ColumnGroupingFeature, ColumnOrderingFeature, ColumnPinningFeature, ColumnSizingFeature, ColumnVisibilityFeature, FullscreenFeature, GlobalSearchFeature, GroupingFeature, PaginationFeature, RowExpandingFeature, RowPinningFeature, RowSelectionFeature, SortingFeature } from "./features";
+import { ColumnFacetingFeature, ColumnFilteringFeature, ColumnGroupingFeature, ColumnOrderingFeature, ColumnPinningFeature, ColumnSizingFeature, ColumnVisibilityFeature, GlobalSearchFeature, GroupingFeature, PaginationFeature, RowExpandingFeature, RowPinningFeature, RowSelectionFeature, SortingFeature } from "./features";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
 
-export type GridConfig<TOriginalRow> = {
-    columns: AnyColumn<TOriginalRow>[];
+export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
+    columns: C[];
     data: TOriginalRow[];
 
     event?: object
@@ -24,7 +24,7 @@ export class DataGrid<TOriginalRow> {
         data: new DataProcessor(this),
         column: new ColumnProcessor(this)
     }
-
+    
     cache = new DatagridCacheManager(this);
     rows = new RowManager(this);
     columnManager = new ColumnManager(this);
@@ -50,7 +50,6 @@ export class DataGrid<TOriginalRow> {
     rowExpanding = new RowExpandingFeature(this);
     rowSelection = new RowSelectionFeature(this);
     rowPinning = new RowPinningFeature(this);
-    fullscreen = new FullscreenFeature();
 
 
     lifecycleHooks = {
@@ -78,7 +77,7 @@ export class DataGrid<TOriginalRow> {
         this.initial.columns = config.columns;
         this.initial.data = config.data;
 
-        this.columns = this.processors.column.transformColumns(this.initial.columns);
+        this.columns = this.processors.column.transformColumns(this.initial.columns)
         this.processors.data.executeFullDataTransformation();
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
@@ -115,13 +114,5 @@ export class DataGrid<TOriginalRow> {
 
         if (this.config.measurePerformance) console.log(`Operation took ${performance.now() - timeStart}ms`);
     }
-
-
-
-    // Type-safe column getter
-    getColumn<K extends keyof TOriginalRow>(columnId: string): AccessorColumn<TOriginalRow> | undefined {
-        return this.columns.find(col => col.columnId === columnId) as AccessorColumn<TOriginalRow>;
-    }
-
 
 }

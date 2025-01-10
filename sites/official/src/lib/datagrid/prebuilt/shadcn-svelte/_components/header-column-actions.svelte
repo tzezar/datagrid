@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import { isColumnSortable } from '$lib/datagrid/core/utils.svelte';
-	import type { TzezarsDatagrid } from '../types';
+	import type { TzezarsDatagrid } from '../core/index.svelte';
 	import HeaderCellDropdown from './header-cell-dropdown.svelte';
 	import SortingIndicator from './sorting-indicator.svelte';
 

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import type { Snippet } from 'svelte';
-	import type { ColumnMeta, TzezarsDatagrid } from '../../types';
+	import type { ColumnMeta } from '../../types';
+	import type { TzezarsDatagrid } from '../../core/index.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;

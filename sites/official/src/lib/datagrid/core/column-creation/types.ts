@@ -9,7 +9,7 @@ export type DotNestedKeys<T> = (T extends object ? {
 export interface AccessorColumn<TOriginalRow, TMeta = any> {
   type: 'accessor';
   header: string;
-  columnId: ColumnId;
+  columnId: DotNestedKeys<TOriginalRow>;
   parentColumnId: string | null;
   accessorKey: DotNestedKeys<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
@@ -41,7 +41,7 @@ export interface ComputedColumn<TOriginalRow, TMeta = any> {
   header: string;
   columnId: ColumnId;
   parentColumnId: ColumnId | null;
-  accessorFn: AccessorFn<TOriginalRow>;
+  // accessorFn: AccessorFn<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   cell?: CustomCell<TOriginalRow>;
@@ -128,7 +128,8 @@ type CommonColumnProps = {
   _meta?: any;
 }
 
-export type AnyColumn<TOriginalRow> = AccessorColumn<TOriginalRow> |
+export type AnyColumn<TOriginalRow> =
+  AccessorColumn<TOriginalRow> |
   ComputedColumn<TOriginalRow> |
   DisplayColumn<TOriginalRow> |
   GroupColumn<TOriginalRow>;
@@ -172,7 +173,7 @@ export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<T
 
 
 export type CreateComputeColumnProps<TOriginalRow> = {
-  accessorFn: (row: TOriginalRow) => CellValue;
+  // accessorFn: (row: TOriginalRow) => CellValue;
   getValueFn: (row: TOriginalRow) => CellValue;
   aggregate?: AggregationConfig;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;

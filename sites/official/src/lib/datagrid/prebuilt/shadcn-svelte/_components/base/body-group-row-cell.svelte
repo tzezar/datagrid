@@ -1,9 +1,10 @@
 <script lang="ts">
-	import type { GridBasicRow, GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
+	import type {  GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
-	import type { ColumnMeta, TzezarsDatagrid } from '../../types';
+	import type { ColumnMeta } from '../../types';
 	import { isColumnVisible } from '$lib/datagrid/core/utils.svelte';
+	import type { TzezarsDatagrid } from '../../core/index.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;

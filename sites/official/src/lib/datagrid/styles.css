@@ -6,6 +6,7 @@
 	display: inline-block;
 	max-height: 600px;
 	border: var(--grid-border-width) solid hsl(var(--grid-border));
+	background-color: hsl(var(--grid-background));
 }
 
 .grid-container {
@@ -193,6 +194,12 @@
 	background-color: hsl(var(--grid-footer));
 }
 
+.grid-toolbar-container {
+	position: sticky;
+	top: 0px;
+	left: 0px;
+	background-color: hsl(var(--grid-toolbar));
+}
 /* Pagination */
 
 .pagination-container {

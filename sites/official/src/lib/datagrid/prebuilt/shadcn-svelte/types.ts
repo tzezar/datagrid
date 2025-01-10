@@ -1,4 +1,6 @@
 import type { DataGrid } from "$lib/datagrid/core/index.svelte";
+import type { FullscreenFeature } from "./core/features/fullscreen.svelte";
+import type { GroupHeadersVisibilityFeature } from "./core/features/group-headers-visibility.svelte";
 
 export type ColumnMeta = {
     align?: 'start' | 'center' | 'end';
@@ -14,7 +16,13 @@ export type ColumnMeta = {
 }
 
 
-export type TzezarsDatagrid = DataGrid<any> & {
+export type TzezarsDatagrid<TOriginalRow = any> = DataGrid<TOriginalRow> & {
+    fullscreen: FullscreenFeature
+    groupHeadersVisibility: GroupHeadersVisibilityFeature
+    
+    showColumnGroups: boolean
+    toggleColumnGroups(): void
+    
     extra: {
         highlightSelectedRow: boolean
     }
