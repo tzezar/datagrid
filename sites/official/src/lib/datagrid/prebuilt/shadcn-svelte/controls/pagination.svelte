@@ -54,6 +54,7 @@
 	<Select.Root
 		type="single"
 		name="perPage"
+		allowDeselect={false}
 		value={String(datagrid.pagination.pageSize)}
 		onValueChange={(value: string) => {
 			datagrid.refresh(() => datagrid.pagination.setPageSize(Number(value)), {
