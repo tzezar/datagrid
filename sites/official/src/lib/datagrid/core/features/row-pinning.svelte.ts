@@ -27,7 +27,7 @@ export class RowPinningFeature<TOriginalRow> {
 
         for (let i = 0; i < this.datagrid.cache.rows.length; i++) {
             const row = this.datagrid.cache.rows[i];
-            const rowIdentifier = this.datagrid.rowManager.getRowIdentifier(row);
+            const rowIdentifier = this.datagrid.rows.getRowIdentifier(row);
             if (this.rowIdsPinnedTop.has(rowIdentifier)) {
                 pinnedTop.push(row);
             } else if (this.rowIdsPinnedBottom.has(rowIdentifier)) {
@@ -47,19 +47,19 @@ export class RowPinningFeature<TOriginalRow> {
         const unpinned: GridRow<TOriginalRow>[] = [];
 
         for (const rowIndex of this.rowIdsPinnedTop) {
-            const row = this.datagrid.rowManager.findRowByIdentifier(rowIndex);
+            const row = this.datagrid.rows.findRowByIdentifier(rowIndex);
             if (row) pinnedTop.push(row);
         }
 
         // Iterate through all pinned bottom rows
         for (const rowIndex of this.rowIdsPinnedBottom) {
-            const row = this.datagrid.rowManager.findRowByIdentifier(rowIndex);
+            const row = this.datagrid.rows.findRowByIdentifier(rowIndex);
             if (row) pinnedBottom.push(row);
         }
 
         // Iterate through all rows to populate unpinned array
         this.datagrid.cache.rows.forEach(row => {
-            const id = this.datagrid.rowManager.getRowIdentifier(row);
+            const id = this.datagrid.rows.getRowIdentifier(row);
             if (!this.rowIdsPinnedTop.has(id) && !this.rowIdsPinnedBottom.has(id)) {
                 unpinned.push(row);
             }
@@ -74,7 +74,7 @@ export class RowPinningFeature<TOriginalRow> {
         const unpinned: GridRow<TOriginalRow>[] = [];
 
         const processRow = (row: GridRow<TOriginalRow>) => {
-            const rowId = this.datagrid.rowManager.getRowIdentifier(row);
+            const rowId = this.datagrid.rows.getRowIdentifier(row);
             const pinningState = this.getPinningState(rowId);
 
             if (isGroupRow(row)) {
@@ -119,7 +119,7 @@ export class RowPinningFeature<TOriginalRow> {
      */
     getCenterRows(): GridRow<TOriginalRow>[] {
         return (this.datagrid.cache.paginatedRows || []).filter(row => {
-            const id = this.datagrid.rowManager.getRowIdentifier(row);
+            const id = this.datagrid.rows.getRowIdentifier(row);
             return !this.isPinnedTop(id) && !this.isPinnedBottom(id);
         });
     }
@@ -133,7 +133,7 @@ export class RowPinningFeature<TOriginalRow> {
 
     // Pin a row or group to the top
     pinRowTop(rowIdentifier: GridRowIdentifier) {
-        let row = this.datagrid.rowManager.findRowByIdentifier(rowIdentifier);
+        let row = this.datagrid.rows.findRowByIdentifier(rowIdentifier);
         if (!row) return;
 
         if (isGroupRow(row)) {
@@ -141,7 +141,7 @@ export class RowPinningFeature<TOriginalRow> {
             // Pin the group itself
             this.rowIdsPinnedTop.add(row.identifier);
             // Pin all descendants
-            const descendantIndices = this.datagrid.rowManager.getAllDescendantIndifiers(row);
+            const descendantIndices = this.datagrid.rows.getAllDescendantIndifiers(row);
             descendantIndices.forEach(id => this.rowIdsPinnedTop.add(id));
         } else {
             if (this.isPinnedTop(rowIdentifier)) this.rowIdsPinnedTop.delete(rowIdentifier);
@@ -156,14 +156,14 @@ export class RowPinningFeature<TOriginalRow> {
 
     // Pin a row or group to the bottom
     pinRowBottom(rowIdentifier: GridRowIdentifier) {
-        const row = this.datagrid.rowManager.findRowByIdentifier(rowIdentifier);
+        const row = this.datagrid.rows.findRowByIdentifier(rowIdentifier);
         if (!row) return;
 
         if (isGroupRow(row)) {
             // Pin the group itself
             this.rowIdsPinnedBottom.add(row.identifier);
             // Pin all descendants
-            const descendantIds = this.datagrid.rowManager.getAllDescendantIndifiers(row);
+            const descendantIds = this.datagrid.rows.getAllDescendantIndifiers(row);
             descendantIds.forEach(id => this.rowIdsPinnedBottom.add(id));
         } else {
             if (this.isPinnedBottom(rowIdentifier)) this.rowIdsPinnedBottom.delete(rowIdentifier);
@@ -177,7 +177,7 @@ export class RowPinningFeature<TOriginalRow> {
 
     // Unpin a row or group
     unpinRow(rowId: GridRowIdentifier) {
-        const row = this.datagrid.rowManager.findRowByIdentifier(rowId);
+        const row = this.datagrid.rows.findRowByIdentifier(rowId);
         if (!row) return;
 
         if (isGroupRow(row)) {
@@ -185,7 +185,7 @@ export class RowPinningFeature<TOriginalRow> {
             this.rowIdsPinnedTop.delete(row.identifier);
             this.rowIdsPinnedBottom.delete(row.identifier);
             // Unpin all descendants
-            const descendantIds = this.datagrid.rowManager.getAllDescendantIndifiers(row);
+            const descendantIds = this.datagrid.rows.getAllDescendantIndifiers(row);
             descendantIds.forEach(id => {
                 this.rowIdsPinnedTop.delete(id);
                 this.rowIdsPinnedBottom.delete(id);

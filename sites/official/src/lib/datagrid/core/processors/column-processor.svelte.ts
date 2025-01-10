@@ -30,7 +30,15 @@ export class ColumnProcessor<TOriginalRow> {
     }
 
     transformColumns = (columns: AnyColumn<any>[]): AnyColumn<any>[] => {
-        return this.placeGroupColumnsFirst(this.assignParentColumnIds(columns));
+        const newCols = this.placeGroupColumnsFirst(this.assignParentColumnIds(columns));
+        newCols.forEach(col => {
+            return {
+                isGroupColumn: () => col.type === 'group',
+                ...col,
+            }
+        })
+        
+        return newCols
     };
 
     assignParentColumnIds(columns: AnyColumn<TOriginalRow>[], parentColumnId: string | null = null) {

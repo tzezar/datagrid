@@ -1,47 +1,48 @@
 <script lang="ts">
 	import CirclePlus from 'lucide-svelte/icons/circle-plus';
-	import Cloud from 'lucide-svelte/icons/cloud';
-	import CreditCard from 'lucide-svelte/icons/credit-card';
-	import Github from 'lucide-svelte/icons/github';
+
 	import Keyboard from 'lucide-svelte/icons/keyboard';
-	import LifeBuoy from 'lucide-svelte/icons/life-buoy';
-	import LogOut from 'lucide-svelte/icons/log-out';
 	import Mail from 'lucide-svelte/icons/mail';
 	import MessageSquare from 'lucide-svelte/icons/message-square';
-	import Plus from 'lucide-svelte/icons/plus';
 	import Settings from 'lucide-svelte/icons/settings';
-	import User from 'lucide-svelte/icons/user';
 	import UserPlus from 'lucide-svelte/icons/user-plus';
 	import Users from 'lucide-svelte/icons/users';
 
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
-	import type { LeafColumn } from '$lib/datagrid/core/types';
+	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import MoreVert from '$lib/datagrid/icons/material-symbols/more-vert.svelte';
 	import { cn } from '$lib/utils';
+	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
+	import MoveDown from '$lib/datagrid/icons/material-symbols/move-down.svelte';
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 
-    let {column}: {column: LeafColumn<any>} = $props()
+	let {
+		datagrid,
+		column,
+		row
+	}: { datagrid: DataGrid<any>; column: LeafColumn<any>; row: GridBasicRow<any> } = $props();
 
-
-	console.log('To be implemented')
-
+	console.log('To be implemented');
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger class={cn(buttonVariants({ variant: 'ghost' }), "size-4 p-2 ")} ><MoreVert /></DropdownMenu.Trigger>
+	<DropdownMenu.Trigger class={cn(buttonVariants({ variant: 'ghost' }), 'size-4 p-2 ')}
+		><MoreVert /></DropdownMenu.Trigger
+	>
 	<DropdownMenu.Content class="w-56">
 		<DropdownMenu.Group>
-			<DropdownMenu.Item>
-				<User class="mr-2 size-4" />
-				<span>Clear sort</span>
+			<DropdownMenu.Item onclick={() => datagrid.handlers.rowPinning.pinRowTop(row.identifier)}>
+				<MoveUp class="mr-2 size-4" />
+				<span>Pin to top</span>
 				<DropdownMenu.Shortcut>⇧⌘P</DropdownMenu.Shortcut>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				<CreditCard class="mr-2 size-4" />
-				<span>Sort {column.header} ascending </span>
+			<DropdownMenu.Item onclick={() => datagrid.handlers.rowPinning.pinRowBottom(row.identifier)}>
+				<MoveDown class="mr-2 size-4" />
+				<span>Pin to bottom</span>
 				<DropdownMenu.Shortcut>⌘B</DropdownMenu.Shortcut>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item>
+			<!-- <DropdownMenu.Item>
 				<Settings class="mr-2 size-4" />
 				<span>Sort {column.header} descending </span>
 				<DropdownMenu.Shortcut>⌘S</DropdownMenu.Shortcut>
@@ -147,22 +148,22 @@
 				<span>Show all columns</span>
 			</DropdownMenu.Item>
 			<DropdownMenu.Separator />
-            <DropdownMenu.Item>
+			<DropdownMenu.Item>
 				<Users class="mr-2 size-4" />
 				<span>Move left</span>
 			</DropdownMenu.Item>
-            <DropdownMenu.Item>
+			<DropdownMenu.Item>
 				<Users class="mr-2 size-4" />
 				<span>Move right</span>
 			</DropdownMenu.Item>
-            <DropdownMenu.Item>
+			<DropdownMenu.Item>
 				<Users class="mr-2 size-4" />
 				<span>Move to group or root</span>
 			</DropdownMenu.Item>
-            <DropdownMenu.Item>
+			<DropdownMenu.Item>
 				<Users class="mr-2 size-4" />
 				<span>Create group</span>
-			</DropdownMenu.Item>
+			</DropdownMenu.Item> -->
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

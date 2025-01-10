@@ -10,6 +10,13 @@ export class RowManager<TOriginalRow> {
         this.datagrid = datagrid;
     }
 
+    getVisibleRows(): GridRow<TOriginalRow>[] {
+        const topRows = this.datagrid.rowPinning.getTopRows();
+        const bottomRows = this.datagrid.rowPinning.getBottomRows();
+        const centerRows = this.datagrid.rowPinning.getCenterRows();
+        return [...topRows, ...centerRows, ...bottomRows];
+    }
+    
     isGroupRowExpanded(row: GridGroupRow<TOriginalRow>) {
         return this.datagrid.grouping.expandedGroups.has(row.identifier);
     }

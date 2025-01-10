@@ -4,7 +4,28 @@ import type { CellValue, ColumnId, CustomCellComponentWithProps, GridBasicRow, G
 import type { DataGrid } from "./index.svelte";
 
 
-export function getCellContent(column: AnyColumn<any>, row: any): CellValue | HTMLElement {
+export function getCellContent(column: AnyColumn<any>, originalRow: any): CellValue | HTMLElement {
+    if (column.type === 'accessor') {
+        column = column as AccessorColumn<any>;
+        if (column.formatter) {
+            return column.formatter(originalRow);
+        }
+        return column.getValueFn(originalRow);
+    } else if (column.type === 'computed') {
+        column = column as ComputedColumn<any>;
+        if (column.formatter) {
+            return column.formatter(originalRow);
+        }
+        return column.getValueFn(originalRow);
+    } else if (column.type === 'display') {
+        column = column as DisplayColumn<any>;
+        return column.cell(originalRow);
+    } else if (column.type === 'group') {
+        throw new Error('Group columns are not supported');
+    }
+}
+
+export function getGroupRowCellContent(column: AnyColumn<any>, row: GridGroupRow<any>): CellValue | HTMLElement {
     if (column.type === 'accessor') {
         column = column as AccessorColumn<any>;
         if (column.formatter) {
@@ -83,15 +104,6 @@ export const getSortDirection = (datagrid: DataGrid<any>, column: AnyColumn<any>
 };
 
 
-export const isGridGroupRow = <TOriginalRow,>(
-    row: GridRow<TOriginalRow>
-): row is GridGroupRow<TOriginalRow> => {
-    return (row as GridGroupRow<TOriginalRow>).children !== undefined;
-};
-
-
-
-
 
 export const isColumnFilterable = <TOriginalRow>(
     column: AnyColumn<TOriginalRow>
@@ -102,14 +114,6 @@ export const isColumnFilterable = <TOriginalRow>(
     return null;
 };
 
-export const isColumnSortable = <TOriginalRow>(
-    column: AnyColumn<TOriginalRow>
-): SortableColumn<TOriginalRow> | null => {
-    if (column.options.sortable !== null) {
-        return column as SortableColumn<TOriginalRow>;
-    }
-    return null;
-};
 
 
 // Helper to check if a row is a group row
@@ -123,4 +127,37 @@ export function isBasicRow<TOriginalRow>(row: GridRow<TOriginalRow>): row is Gri
 
 export function isCellComponent(value: any): value is CustomCellComponentWithProps {
     return value && typeof value === 'object' && 'component' in value
+}
+
+// Row utils
+export const isGridGroupRow = <TOriginalRow,>(
+    row: GridRow<TOriginalRow>
+): row is GridGroupRow<TOriginalRow> => {
+    return (row as GridGroupRow<TOriginalRow>).children !== undefined;
+};
+
+
+// Column utils
+export function isColumnVisible(column: AnyColumn<any>): boolean {
+    return column.state.visible === true;
+}
+
+export const isColumnSortable = <TOriginalRow>(
+    column: AnyColumn<TOriginalRow>
+): SortableColumn<TOriginalRow> | null => {
+    if (column.options.sortable !== null || column.options.sortable !== false) {
+        return column as SortableColumn<TOriginalRow>;
+    }
+    return null;
+};
+
+
+function hasColumnGotVisibleChildren(column: any): boolean {
+    if (!isGroupColumn(column)) return false;
+    return column.columns.some((col: any) => {
+        if (isGroupColumn(col)) {
+            return hasColumnGotVisibleChildren(col);
+        }
+        return col.state.visible === true;
+    });
 }

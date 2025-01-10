@@ -30,15 +30,16 @@ export const userColumns: Column[] = [
         options: { sortable: false },
         state: {
             size: {
-                width: 40,
-                minWidth: 40,
-                maxWidth: 40,
+                width: 60,
+                minWidth: 60,
+                maxWidth: 60,
                 grow: false
             }
         },
         _meta: {
+            align: 'center',
             showColumnManagerDropdownMenu: false
-        }
+        } as ColumnMeta
 
     }),
     displayColumn({

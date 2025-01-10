@@ -18,6 +18,7 @@ export interface AccessorColumn<TOriginalRow, TMeta = any> {
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   cell?: CustomCell<TOriginalRow>;
   headerCell?: HeaderCell;
+  groupRowCell?: CustomCell<TOriginalRow>;
   options: {
     searchable: boolean;
     groupable: boolean;
@@ -44,6 +45,7 @@ export interface ComputedColumn<TOriginalRow, TMeta = any> {
   getValueFn: GetValueFn<TOriginalRow>;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   cell?: CustomCell<TOriginalRow>;
+  groupRowCell?: CustomCell<TOriginalRow>;
   headerCell?: HeaderCell;
   formatter?: FormatterFn<TOriginalRow>;
   aggregate?: AggregationConfig;
@@ -72,7 +74,7 @@ export interface DisplayColumn<TOriginalRow, TMeta = any> {
   parentColumnId: string | null;
   cell: CustomCell<TOriginalRow>;
   headerCell?: HeaderCell;
-
+  groupRowCell?: CustomCell<TOriginalRow>;
   options: {
     searchable: null;
     groupable: null;
@@ -140,6 +142,8 @@ export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<T
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   aggregate?: AggregationConfig;
   cell?: CustomCell<TOriginalRow>;
+  groupRowCell?: CustomCell<TOriginalRow>;
+  headerCell?: HeaderCell;
   formatter?: FormatterFn<TOriginalRow>;
   options?: {
     searchable?: boolean;
@@ -174,6 +178,8 @@ export type CreateComputeColumnProps<TOriginalRow> = {
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   formatter?: FormatterFn<TOriginalRow>;
   cell?: CustomCell<TOriginalRow>;
+  groupRowCell?: CustomCell<TOriginalRow>;
+  headerCell?: HeaderCell;
   options?: {
     searchable?: boolean;
     groupable?: boolean;
@@ -200,6 +206,8 @@ export type CreateComputeColumnProps<TOriginalRow> = {
 
 export type CreateDisplayColumnProps<TOriginalRow> = {
   cell: CustomCell<TOriginalRow>;
+  groupRowCell?: CustomCell<TOriginalRow>;
+  headerCell?: HeaderCell;
   options?: {
     searchable?: false;
     groupable?: boolean;

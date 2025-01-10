@@ -1,7 +1,7 @@
 import { createColumnGroup } from "../column-creation/group-column-creator";
 import type { AnyColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
-import type { ColumnId, FilterableColumn, FilterOperator, GridBasicRow, LeafColumn, PinningPosition } from "../types";
+import type { ColumnId, FilterableColumn, FilterOperator, GridBasicRow, GridRowIdentifier, LeafColumn, PinningPosition } from "../types";
 import { findColumnById, flattenColumns, generateRandomColumnId, isColumnFilterable, isGroupRow } from "../utils.svelte";
 
 
@@ -232,5 +232,13 @@ export class HandlersManager {
             this.datagrid.rowSelection.unselectRows(ids);
         }
 
+    }
+    rowPinning = {
+        pinRowTop: (rowIdentifier: GridRowIdentifier) => {
+            this.datagrid.rowPinning.pinRowTop(rowIdentifier);
+        },
+        pinRowBottom: (rowIdentifier: GridRowIdentifier) => {
+            this.datagrid.rowPinning.pinRowBottom(rowIdentifier);
+        }
     }
 }

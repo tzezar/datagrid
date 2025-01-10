@@ -33,7 +33,7 @@
 
 	
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
-		datagrid.eventHandlers.columnPinning.changeColumnPinningPosition(column.columnId, position);
+		datagrid.handlers.columnPinning.changeColumnPinningPosition(column.columnId, position);
 	}
 
 	const leafColumns = datagrid.columnManager.getLeafColumns();
@@ -54,7 +54,7 @@
 			{#each sortableColumns as column}
 				<DropdownMenu.Item
 					closeOnSelect={false}
-					onclick={(e) => datagrid.eventHandlers.sorting.toggleColumnSorting(column, e)}
+					onclick={(e) => datagrid.handlers.sorting.toggleColumnSorting(column, e)}
 				>
 					{#if column.options.sortable}
 						<div class="sort-indicator">
@@ -116,7 +116,7 @@
 				class="w-full"
 				disabled={!newGroupName || !Object.values(selectedColumns).some((v) => v)}
 				onclick={() => {
-					datagrid.eventHandlers.columnGrouping.createGroup({
+					datagrid.handlers.columnGrouping.createGroup({
 						newGroupName,
 						selectedColumns
 					});
@@ -133,10 +133,10 @@
 
 {#snippet columnGroupControls(column: AnyColumn<any>)}
 	<div class="text-muted-foreground flex flex-row gap-2 text-xs">
-		<button onclick={() => datagrid.eventHandlers.columnOrdering.moveLeft(column.columnId)}>
+		<button onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}>
 			<MoveUp />
 		</button>
-		<button onclick={() => datagrid.eventHandlers.columnOrdering.moveRight(column.columnId)}>
+		<button onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}>
 			<MoveDown />
 		</button>
 		<select
@@ -159,7 +159,7 @@
 					}
 				}
 
-				datagrid.eventHandlers.columnOrdering.moveColumnToGroup({
+				datagrid.handlers.columnOrdering.moveColumnToGroup({
 					columnId: column.columnId,
 					targetGroupColumnId: targetGroupId
 				});

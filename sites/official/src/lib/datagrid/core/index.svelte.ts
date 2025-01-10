@@ -19,18 +19,18 @@ export class DataGrid<TOriginalRow> {
     });
     columns: GenericColumn<TOriginalRow>[] = $state([]);
 
-    eventHandlers = new HandlersManager(this);
+    handlers = new HandlersManager(this);
     processors = {
         data: new DataProcessor(this),
         column: new ColumnProcessor(this)
     }
     
     cache = new DatagridCacheManager(this);
-    rowManager = new RowManager(this);
+    rows = new RowManager(this);
     columnManager = new ColumnManager(this);
 
     config = {
-        measurePerformance: false,
+        measurePerformance: true,
         createBasicRowIdentifier: (row: TOriginalRow) => (row as any).id,
         createBasicRowIndex: (row: TOriginalRow, parentIndex: string | null, index: number) =>
             parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
@@ -47,11 +47,9 @@ export class DataGrid<TOriginalRow> {
     columnFaceting = new ColumnFacetingFeature(this);
     columnOrdering = new ColumnOrderingFeature(this);
     columnGrouping = new ColumnGroupingFeature(this);
-
     rowExpanding = new RowExpandingFeature(this);
     rowSelection = new RowSelectionFeature(this);
     rowPinning = new RowPinningFeature(this);
-
     fullscreen = new FullscreenFeature();
 
 
@@ -117,7 +115,6 @@ export class DataGrid<TOriginalRow> {
 
         if (this.config.measurePerformance) console.log(`Operation took ${performance.now() - timeStart}ms`);
     }
-
 
 
 

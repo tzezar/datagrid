@@ -56,7 +56,7 @@
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div
 			class="grid-header-cell-content items-end {column.options.sortable ? 'sortable' : ''}"
-			onclick={(e) => datagrid.eventHandlers.sorting.toggleColumnSorting(column, e)}
+			onclick={(e) => datagrid.handlers.sorting.toggleColumnSorting(column, e)}
 		>
 			{#if column.headerCell}
 				{@const cellContent = column.headerCell({ datagrid, column })}

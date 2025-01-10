@@ -10,7 +10,7 @@
 	let { datagrid, column }: Props = $props();
 
 	const handleColumnFilterChange = (column: AnyColumn<any>, value: any) => {
-		datagrid.eventHandlers.filtering.updateFilterCondition({
+		datagrid.handlers.filtering.updateFilterCondition({
 			column,
 			value
 		});

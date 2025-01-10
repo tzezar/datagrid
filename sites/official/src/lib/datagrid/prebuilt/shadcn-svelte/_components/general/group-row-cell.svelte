@@ -33,10 +33,10 @@
 			<span class="text-muted-foreground flex place-items-center text-xs">
 				({row.children.length} items)
 			</span>
-			<button class="flex gap-1" onclick={() => datagrid.rowManager.toggleGroupRowExpansion(row)}>
+			<button class="flex gap-1" onclick={() => datagrid.rows.toggleGroupRowExpansion(row)}>
 				<span class="border-primary/30 rounded-sm border-[1px]">
 					<ArrowRight
-						class={`${datagrid.rowManager.isGroupRowExpanded(row) && 'rotate-90'} transition-all `}
+						class={`${datagrid.rows.isGroupRowExpanded(row) && 'rotate-90'} transition-all `}
 					/>
 				</span>
 				<span class="">
