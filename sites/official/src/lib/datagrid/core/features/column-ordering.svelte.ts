@@ -50,17 +50,143 @@ export class ColumnOrderingFeature<TOriginalRow> {
         this.swapColumns(this.datagrid.columns, index, targetIndex);
     }
 
+    // moveLeft(columnId: ColumnId): void {
+    //     if (!this.moveWithinGroup(columnId, -1)) {
+    //         this.moveAtRoot(columnId, -1);
+    //     }
+    // }
+
+    // moveRight(columnId: ColumnId): void {
+    //     if (!this.moveWithinGroup(columnId, 1)) {
+    //         this.moveAtRoot(columnId, 1);
+    //     }
+    // }
+
     moveLeft(columnId: ColumnId): void {
-        if (!this.moveWithinGroup(columnId, -1)) {
-            this.moveAtRoot(columnId, -1);
-        }
+        this.moveColumn(columnId, 'left');
     }
 
     moveRight(columnId: ColumnId): void {
-        if (!this.moveWithinGroup(columnId, 1)) {
-            this.moveAtRoot(columnId, 1);
-        }
+        this.moveColumn(columnId, 'right');
     }
+
+
+    // If the next column is a group, the column moves into the group at the start.
+    // If already in a group:
+    // Moves to the next column within the group.
+    // If at the end of the group, moves out to the parent group or below the group in the next available position.
+    // If at the root, moves to the next position in the root or into the next group if applicable.
+    // Wraparound Logic:
+    // If a column reaches the end of all groups and columns at a level, it should wrap to the next level or exit the group hierarchy.
+    
+    private moveColumn(columnId: ColumnId, direction: 'left' | 'right'): void {
+        const column = findColumnById(this.datagrid.columns, columnId);
+        if (!column) return;
+
+        const moveWithinGroup = (group: GroupColumn<TOriginalRow>, currentIndex: number): boolean => {
+            if (direction === 'right' && currentIndex < group.columns.length - 1) {
+                const nextItem = group.columns[currentIndex + 1];
+                if ((nextItem as GroupColumn<TOriginalRow>).columns) {
+                    // If next item is a group, move into it at the beginning
+                    const targetGroup = nextItem as GroupColumn<TOriginalRow>;
+                    group.columns.splice(currentIndex, 1);
+                    column.parentColumnId = targetGroup.columnId;
+                    targetGroup.columns.unshift(column);
+                } else {
+                    // Otherwise swap within the group
+                    this.swapColumns(group.columns, currentIndex, currentIndex + 1);
+                }
+                return true;
+            } else if (direction === 'left' && currentIndex > 0) {
+                const prevItem = group.columns[currentIndex - 1];
+                if ((prevItem as GroupColumn<TOriginalRow>).columns) {
+                    // If previous item is a group, move into it at the end
+                    const targetGroup = prevItem as GroupColumn<TOriginalRow>;
+                    group.columns.splice(currentIndex, 1);
+                    column.parentColumnId = targetGroup.columnId;
+                    targetGroup.columns.push(column);
+                } else {
+                    // Otherwise swap within the group
+                    this.swapColumns(group.columns, currentIndex, currentIndex - 1);
+                }
+                return true;
+            }
+            return false;
+        };
+
+        const moveOutOfGroup = (currentGroup: GroupColumn<TOriginalRow>): void => {
+            const parentGroup = this.datagrid.features.columnGrouping.findParentColumnGroup(currentGroup.parentColumnId);
+            const indexInParent = parentGroup
+                ? this.getColumnIndex(parentGroup.columns, currentGroup.columnId)
+                : this.getColumnIndex(this.datagrid.columns, currentGroup.columnId);
+
+            // Remove from current group
+            this.removeFromGroup(currentGroup, column);
+
+            if (parentGroup) {
+                // Move to parent group
+                column.parentColumnId = parentGroup.columnId;
+                if (direction === 'right') {
+                    parentGroup.columns.splice(indexInParent + 1, 0, column);
+                } else {
+                    parentGroup.columns.splice(indexInParent, 0, column);
+                }
+            } else {
+                // Move to root level
+                column.parentColumnId = null;
+                if (direction === 'right') {
+                    this.datagrid.columns.splice(indexInParent + 1, 0, column);
+                } else {
+                    this.datagrid.columns.splice(indexInParent, 0, column);
+                }
+            }
+        };
+
+        const currentGroup = this.datagrid.features.columnGrouping.findParentColumnGroup(column.parentColumnId);
+        if (currentGroup) {
+            const indexInGroup = this.getColumnIndex(currentGroup.columns, columnId);
+            if (!moveWithinGroup(currentGroup, indexInGroup)) {
+                moveOutOfGroup(currentGroup);
+            }
+        } else {
+            // Handle root level movement
+            const rootIndex = this.getColumnIndex(this.datagrid.columns, columnId);
+            
+            if (direction === 'right') {
+                if (rootIndex < this.datagrid.columns.length - 1) {
+                    const nextColumn = this.datagrid.columns[rootIndex + 1];
+                    if ((nextColumn as GroupColumn<TOriginalRow>).columns) {
+                        // Move into the next group at the beginning
+                        const targetGroup = nextColumn as GroupColumn<TOriginalRow>;
+                        this.datagrid.columns.splice(rootIndex, 1);
+                        column.parentColumnId = targetGroup.columnId;
+                        targetGroup.columns.unshift(column);
+                    } else {
+                        // Regular swap at root level
+                        this.swapColumns(this.datagrid.columns, rootIndex, rootIndex + 1);
+                    }
+                }
+            } else {
+                if (rootIndex > 0) {
+                    const prevColumn = this.datagrid.columns[rootIndex - 1];
+                    if ((prevColumn as GroupColumn<TOriginalRow>).columns) {
+                        // Move into the previous group at the end
+                        const targetGroup = prevColumn as GroupColumn<TOriginalRow>;
+                        this.datagrid.columns.splice(rootIndex, 1);
+                        column.parentColumnId = targetGroup.columnId;
+                        targetGroup.columns.push(column);
+                    } else {
+                        // Regular swap at root level
+                        this.swapColumns(this.datagrid.columns, rootIndex, rootIndex - 1);
+                    }
+                }
+            }
+        }
+
+        this.datagrid.processors.column.refreshColumnPinningOffsets();
+    }
+    
+
 
     moveColumnToGroup({
         columnId,
