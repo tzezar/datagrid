@@ -1,9 +1,9 @@
 <script lang="ts">
-	import GroupRowCell from './group-row-cell.svelte';
-	import BodyRowCell from './body-row-cell.svelte';
 	import type { GridBasicRow, GridGroupRow } from '$lib/datagrid/core/types';
 	import { flattenColumns, isGridGroupRow } from '$lib/datagrid/core/utils.svelte';
-	import type { TzezarsDatagrid } from './types';
+	import type { TzezarsDatagrid } from '../../types';
+	import BodyRowCell from './body-row-cell.svelte';
+	import GroupRowCell from './group-row-cell.svelte';
 
 	let {
 		datagrid,

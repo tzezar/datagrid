@@ -26,10 +26,12 @@
 	import SortDescending from '$lib/datagrid/icons/tabler/sort-descending.svelte';
 	import SortAscending from '$lib/datagrid/icons/tabler/sort-ascending.svelte';
 	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';
-	import GroupBy from '../group-by.svelte';
 	import AdGroupOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-outline-sharp.svelte';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
+	import GroupRowsByColumnDropdown from './group-rows-by-column-dropdown.svelte';
+
+	
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
 		datagrid.eventHandlers.columnPinning.changeColumnPinningPosition(column.columnId, position);
 	}
@@ -314,7 +316,7 @@
 {#snippet groupBy()}
 	<DropdownMenu.Item closeOnSelect={false}>
 		<!-- <GroupBy class="mr-2 size-4" /> -->
-		<GroupBy {datagrid} />
+		<GroupRowsByColumnDropdown {datagrid} />
 	</DropdownMenu.Item>
 {/snippet}
 

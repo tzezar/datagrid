@@ -1,11 +1,10 @@
 <script lang="ts">
 	import '$lib/datagrid/styles.css';
-	import { userColumns, type Column } from './columns.svelte';
-	import Pagination from '$lib/datagrid/prebuilt/shadcn-svelte/controls/pagination.svelte';
-	import Row from '$lib/datagrid/prebuilt/shadcn-svelte/row.svelte';
-	import HeaderCell from '$lib/datagrid/prebuilt/shadcn-svelte/header-cell.svelte';
-	import GridHeader from './_components/grid-header.svelte';
+	import { userColumns  } from './columns.svelte';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core';
+
+	import * as Grid from '$lib/datagrid/prebuilt/shadcn-svelte/_components';
+	import GridHeader from './_components/grid-header.svelte';
 
 	let { data } = $props();
 
@@ -27,25 +26,24 @@
 			<div class="grid-header">
 				<div class="grid-header-row">
 					{#each datagrid.columnManager.getColumnsInOrder() as column (column)}
-						<HeaderCell {datagrid} {column} />
+						<Grid.HeaderCell {datagrid} {column} />
 					{/each}
 				</div>
 			</div>
 			<div class="grid-body">
 				{#each datagrid.rowPinning.getTopRows() as row (row.identifier)}
-					<Row {datagrid} {row} />
+					<Grid.BodyRow {datagrid} {row} />
 				{/each}
 				{#each datagrid.rowPinning.getCenterRows() as row (row.identifier)}
-					<Row {datagrid} {row} class={{
-					}} />
+					<Grid.BodyRow {datagrid} {row} class={{}} />
 				{/each}
 
 				{#each datagrid.rowPinning.getBottomRows() as row (row.identifier)}
-					<Row {datagrid} {row} />
+					<Grid.BodyRow {datagrid} {row} />
 				{/each}
 			</div>
 		</div>
 		<div class="grid-footer-container"></div>
 	</div>
-	<Pagination {datagrid} />
+	<Grid.Pagination {datagrid} />
 </div>

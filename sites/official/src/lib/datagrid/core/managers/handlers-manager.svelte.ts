@@ -224,7 +224,6 @@ export class HandlersManager {
         selectAllRows: () => {
             const rows = (this.datagrid.cacheManager.rows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
             const ids = rows.map(row => row.identifier);
-            console.log(ids)
             this.datagrid.rowSelection.selectRows(ids);
         },
         unselectAllRows: () => {

@@ -2,7 +2,7 @@
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import { cn } from '$lib/utils';
-	import type { ColumnMeta, TzezarsDatagrid } from './types';
+	import type { ColumnMeta, TzezarsDatagrid } from '../../types';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;
@@ -15,7 +15,7 @@
 </script>
 
 <div
-	class={cn('grid-body-cell', column._meta.styles?.bodyCell, datagrid.extra.highlightSelectedRow && datagrid.rowSelection.isRowSelected(row.identifier) ? 'bg-blue-400' : '', _class)}
+	class={cn('grid-body-cell', column._meta.styles?.bodyCell, datagrid.extra.highlightSelectedRow && datagrid.rowSelection.isRowSelected(row.identifier) ? 'bg-blue-400/10' : '', _class)}
 	class:justify-center={column?._meta?.align === 'center'}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 	style:--width={column.state.size.width + 'px'}

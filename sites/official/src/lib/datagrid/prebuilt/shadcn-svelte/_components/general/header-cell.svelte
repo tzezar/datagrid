@@ -5,10 +5,10 @@
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import { isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import ColumnFilter from '$lib/datagrid/prebuilt/native/column-filter.svelte';
-	import SortingIndicator from './sorting-indicator.svelte';
+	import HeaderCellDropdown from '../header-cell-dropdown.svelte';
 	import HeaderCell from './header-cell.svelte';
-	import HeaderCellDropdown from './header-cell-dropdown.svelte';
 	import { cn } from '$lib/utils';
+	import SortingIndicator from '../sorting-indicator.svelte';
 
 	let { datagrid, column }: { datagrid: DataGrid<any>; column: any } = $props();
 

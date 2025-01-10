@@ -22,6 +22,9 @@
 
     let {column}: {column: LeafColumn<any>} = $props()
 
+
+	console.log('To be implemented')
+
 </script>
 
 <DropdownMenu.Root>

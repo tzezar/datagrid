@@ -3,8 +3,8 @@
 	import Button from "$lib/components/ui/button/button.svelte";
 	import FilterAltOff from "$lib/datagrid/icons/material-symbols/filter-alt-off.svelte";
 	import FilterAlt from "$lib/datagrid/icons/material-symbols/filter-alt.svelte";
-	import GlobalSearch from "$lib/datagrid/prebuilt/shadcn-svelte/controls/global-search.svelte";
-	import DatagridSettingsDropdown from "$lib/datagrid/prebuilt/shadcn-svelte/controls/settings/datagrid-settings-dropdown.svelte";
+	import GlobalSearch from "$lib/datagrid/prebuilt/shadcn-svelte/_components/global-search-input.svelte";
+	import DatagridSettingsDropdown from "$lib/datagrid/prebuilt/shadcn-svelte/_components/datagrid-settings-dropdown.svelte";
 
 
     let {datagrid}: {datagrid: DataGrid<any>} = $props()
