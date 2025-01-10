@@ -22,14 +22,14 @@ export class RowManager<TOriginalRow> {
         }
 
          // Only invalidate the flattened view cache
-         this.datagrid.cacheManager.invalidateGroupedRowsCache();
+         this.datagrid.cache.invalidateGroupedRowsCache();
 
          // Use the new optimized method instead of full transformation
          this.datagrid.processors.data.handleGroupExpansion();
     }
 
     findRowByIdentifier(identifier: GridRowIdentifier): GridRow<TOriginalRow> | undefined {
-        return (this.datagrid.cacheManager.rows || []).find(row => row.identifier === identifier);
+        return (this.datagrid.cache.rows || []).find(row => row.identifier === identifier);
     }
 
     // new

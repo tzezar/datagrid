@@ -14,7 +14,7 @@
 			<!-- Ensuring each div is 1 grid cell -->
 			<span>
 				Showing {datagrid.pagination.pageSize * (datagrid.pagination.page - 1)} to {datagrid
-					.pagination.pageSize * datagrid.pagination.page} of {(datagrid.cacheManager.rows || []).length} rows
+					.pagination.pageSize * datagrid.pagination.page} of {(datagrid.cache.rows || []).length} rows
 			</span>
 		</div>
 		<div class="flex justify-between md:w-1/3">

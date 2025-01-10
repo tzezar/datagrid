@@ -16,8 +16,8 @@ const handleDropdownMenu = (columns: AnyColumn<any>[]) => {
     return columns;
 };
 
-export class TzezarsDatagrid extends DataGrid<any> {
-    constructor(config: GridConfig<any>) {
+export class TzezarsDatagrid<TOriginalRow> extends DataGrid<TOriginalRow> {
+    constructor(config: GridConfig<TOriginalRow>) {
         super(config, handleDropdownMenu);
     }
 

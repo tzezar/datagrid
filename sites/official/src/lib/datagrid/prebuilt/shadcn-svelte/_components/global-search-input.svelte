@@ -13,7 +13,7 @@
 	oninput={(e) => {
 		datagrid.globalSearch.value = e.currentTarget.value;
 		datagrid.pagination.goToFirstPage();
-		datagrid.cacheManager.invalidate('filteredData');
+		datagrid.cache.invalidate('filteredData');
 		datagrid.processors.data.executeFullDataTransformation();
 	}}
 />

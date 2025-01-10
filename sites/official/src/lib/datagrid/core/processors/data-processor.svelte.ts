@@ -26,10 +26,10 @@ export class DataProcessor<TRow> {
 
 
         // Create a copy of the data to avoid mutating the original data
-        let data = [...this.datagrid.initialState.data];
+        let data = [...this.datagrid.initial.data];
 
 
-        if (this.datagrid.cacheManager.filteredData === null) {
+        if (this.datagrid.cache.filteredData === null) {
             // Apply global search if value is set
             if (shouldRunGlobalSearch) {
                 this.metrics.measure('Global Search', () => {
@@ -43,21 +43,21 @@ export class DataProcessor<TRow> {
                 });
             }
         } else {
-            data = this.datagrid.cacheManager.filteredData;
+            data = this.datagrid.cache.filteredData;
         }
 
         if (shouldRunSorting) {
             this.metrics.measure('Sorting', () => {
                 data = this.applySorting(data);
-                this.datagrid.cacheManager.sortedData = data;
+                this.datagrid.cache.sortedData = data;
             });
         }
 
         // Cache sorted/filtered results
-        this.datagrid.cacheManager.sortedData = data;
+        this.datagrid.cache.sortedData = data;
 
         // Clear hierarchical cache when data changes
-        this.datagrid.cacheManager.invalidate('hierarchicalRows');
+        this.datagrid.cache.invalidate('hierarchicalRows');
 
         // Process grouped or regular data
         if (shouldRunGrouping) this.processGroupedData(data);
@@ -103,7 +103,7 @@ export class DataProcessor<TRow> {
     private applySorting(data: TRow[]): TRow[] {
         const sortInstructions = this.datagrid.sorting.sortConfigs
             .map(config => {
-                const column = findColumnById(this.datagrid.initialState.columns, config.columnId) as (AccessorColumn<TRow> | ComputedColumn<TRow>);
+                const column = findColumnById(this.datagrid.initial.columns, config.columnId) as (AccessorColumn<TRow> | ComputedColumn<TRow>);
                 if (!column || isGroupColumn(column) || !isColumnSortable(column)) {
                     return null;
                 }
@@ -130,12 +130,12 @@ export class DataProcessor<TRow> {
 
     processGroupedData(data: TRow[]): void {
         // Create grouped structure only if not already cached
-        let groupedRows = this.datagrid.cacheManager.hierarchicalRows;
+        let groupedRows = this.datagrid.cache.hierarchicalRows;
 
         if (!groupedRows) {
             this.metrics.measure('Grouping', () => {
                 groupedRows = this.createHierarchicalData(data);
-                this.datagrid.cacheManager.hierarchicalRows = groupedRows;
+                this.datagrid.cache.hierarchicalRows = groupedRows;
             });
         }
 
@@ -144,9 +144,9 @@ export class DataProcessor<TRow> {
 
         // Update cache and pagination
         this.metrics.measure('Cache Update', () => {
-            this.datagrid.cacheManager.rows = visibleRows;
+            this.datagrid.cache.rows = visibleRows;
             this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(visibleRows);
-            this.datagrid.cacheManager.paginatedRows = this.paginateRows(visibleRows);
+            this.datagrid.cache.paginatedRows = this.paginateRows(visibleRows);
         });
 
         // this has to run always
@@ -159,7 +159,7 @@ export class DataProcessor<TRow> {
 
         this.metrics.measure('Data Transformation', () => {
             basicRows = this.createBasicRows(data);
-            this.datagrid.cacheManager.rows = basicRows;
+            this.datagrid.cache.rows = basicRows;
 
         });
 
@@ -171,7 +171,7 @@ export class DataProcessor<TRow> {
         this.datagrid.pagination.visibleRowsCount = data!.length;
         this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(data);
         // Apply pagination
-        this.datagrid.cacheManager.paginatedRows = this.paginateRows(basicRows!);
+        this.datagrid.cache.paginatedRows = this.paginateRows(basicRows!);
     }
 
     // Register custom aggregation function
@@ -334,34 +334,34 @@ export class DataProcessor<TRow> {
     // Handlers
 
     handleGroupExpansion(): void {
-        const hierarchicalRows = this.datagrid.cacheManager.hierarchicalRows;
+        const hierarchicalRows = this.datagrid.cache.hierarchicalRows;
         if (!hierarchicalRows) {
-            this.processGroupedData(this.datagrid.cacheManager.sortedData || []);
+            this.processGroupedData(this.datagrid.cache.sortedData || []);
             return;
         }
 
         this.metrics.measure('Group Expansion', () => {
             const visibleRows = this.getVisibleRows();
-            this.datagrid.cacheManager.rows = visibleRows;
+            this.datagrid.cache.rows = visibleRows;
             this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(visibleRows);
-            this.datagrid.cacheManager.paginatedRows = this.paginateRows(visibleRows);
+            this.datagrid.cache.paginatedRows = this.paginateRows(visibleRows);
         });
     }
 
     handlePaginationChange(): void {
         const visibleRows = this.getVisibleRows();
         this.metrics.measure('Pagination', () => {
-            this.datagrid.cacheManager.paginatedRows = this.paginateRows(visibleRows);
+            this.datagrid.cache.paginatedRows = this.paginateRows(visibleRows);
         });
     }
 
     // New method to get only the visible rows based on group expansion state
     private getVisibleRows(): GridRow<TRow>[] {
-        if (!this.datagrid.cacheManager.hierarchicalRows) {
-            return this.datagrid.cacheManager.rows;
+        if (!this.datagrid.cache.hierarchicalRows) {
+            return this.datagrid.cache.rows;
         }
 
-        return this.flattenExpandedGroups(this.datagrid.cacheManager.hierarchicalRows);
+        return this.flattenExpandedGroups(this.datagrid.cache.hierarchicalRows);
     }
 
 

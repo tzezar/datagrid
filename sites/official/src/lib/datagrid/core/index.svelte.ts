@@ -13,7 +13,7 @@ export type GridConfig<TOriginalRow> = {
 
 export class DataGrid<TOriginalRow> {
     readonly metrics = new PerformanceMetrics();
-    initialState = $state.raw({
+    initial = $state.raw({
         columns: [] as GenericColumn<TOriginalRow>[],
         data: [] as TOriginalRow[]
     });
@@ -24,7 +24,8 @@ export class DataGrid<TOriginalRow> {
         data: new DataProcessor(this),
         column: new ColumnProcessor(this)
     }
-    cacheManager = new DatagridCacheManager(this);
+    
+    cache = new DatagridCacheManager(this);
     rowManager = new RowManager(this);
     columnManager = new ColumnManager(this);
 
@@ -76,16 +77,16 @@ export class DataGrid<TOriginalRow> {
     }
 
     private initializeState(config: GridConfig<TOriginalRow>) {
-        this.initialState.columns = config.columns;
-        this.initialState.data = config.data;
+        this.initial.columns = config.columns;
+        this.initial.data = config.data;
 
-        this.columns = this.processors.column.transformColumns(this.initialState.columns);
+        this.columns = this.processors.column.transformColumns(this.initial.columns);
         this.processors.data.executeFullDataTransformation();
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
-        this.columnFaceting.calculateFacets(this.cacheManager.sortedData || [], this.columns);
+        this.columnFaceting.calculateFacets(this.cache.sortedData || [], this.columns);
 
-        this.globalSearch.fuseInstance = this.globalSearch.initializeFuseInstance(this.initialState.data, this.columns.map(col => col.columnId as string))
+        this.globalSearch.fuseInstance = this.globalSearch.initializeFuseInstance(this.initial.data, this.columns.map(col => col.columnId as string))
     }
 
     /**

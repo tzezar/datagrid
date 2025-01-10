@@ -91,7 +91,7 @@ export class HandlersManager {
     filtering = {
         changeFilterOperator: (columnId: string, operator: FilterOperator) => {
             this.datagrid.filtering.changeConditionOperator(columnId, operator);
-            this.datagrid.cacheManager.invalidate('filteredData');
+            this.datagrid.cache.invalidate('filteredData');
             this.datagrid.processors.data.executeFullDataTransformation();
         },
 
@@ -144,7 +144,7 @@ export class HandlersManager {
 
             this.datagrid.grouping.groupByColumns = newGroupBy;
             this.datagrid.pagination.goToFirstPage();
-            this.datagrid.cacheManager.invalidateGroupedRowsCache();
+            this.datagrid.cache.invalidateGroupedRowsCache();
             this.datagrid.processors.data.executeFullDataTransformation();
         },
         toggle: (columnId: ColumnId) => {
@@ -158,7 +158,7 @@ export class HandlersManager {
                 this.datagrid.grouping.groupByColumns = [...this.datagrid.grouping.groupByColumns, columnId];
             }
             this.datagrid.pagination.goToFirstPage();
-            this.datagrid.cacheManager.invalidateGroupedRowsCache();
+            this.datagrid.cache.invalidateGroupedRowsCache();
             this.datagrid.processors.data.executeFullDataTransformation();
         }
     }
@@ -212,22 +212,22 @@ export class HandlersManager {
     }
     rowSelection = {
         selectRowsOnPage: () => {
-            const rowsOnPage = (this.datagrid.cacheManager.paginatedRows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
+            const rowsOnPage = (this.datagrid.cache.paginatedRows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
             const ids = rowsOnPage.map(row => row.identifier);
             this.datagrid.rowSelection.selectRows(ids);
         },
         unselectRowsOnPage: () => {
-            const rowsOnPage = (this.datagrid.cacheManager.paginatedRows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
+            const rowsOnPage = (this.datagrid.cache.paginatedRows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
             const ids = rowsOnPage.map(row => row.identifier);
             this.datagrid.rowSelection.unselectRows(ids);
         },
         selectAllRows: () => {
-            const rows = (this.datagrid.cacheManager.rows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
+            const rows = (this.datagrid.cache.rows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
             const ids = rows.map(row => row.identifier);
             this.datagrid.rowSelection.selectRows(ids);
         },
         unselectAllRows: () => {
-            const rows = (this.datagrid.cacheManager.rows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
+            const rows = (this.datagrid.cache.rows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
             const ids = rows.map(row => row.identifier);
             this.datagrid.rowSelection.unselectRows(ids);
         }

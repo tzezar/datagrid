@@ -68,7 +68,7 @@ export class ExportingFeature<T> {
      * Prepares data for export by mapping rows and columns
      */
     private prepareData(): Record<string, unknown>[] {
-        return this.datagrid.initialState.data.map(row => {
+        return this.datagrid.initial.data.map(row => {
             const rowData: Record<string, unknown> = {};
             this.datagrid.columnManager.getLeafColumns().forEach((column: AnyColumn<T>) => {
                 rowData[column.columnId as string] = row[column.columnId as keyof T];

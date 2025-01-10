@@ -1,9 +1,12 @@
 <script lang="ts">
-	import type { GridBasicRow, GridGroupRow } from '$lib/datagrid/core/types';
+	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
+	import type { GridBasicRow, GridGroupRow, GridRow } from '$lib/datagrid/core/types';
 	import { flattenColumns, isGridGroupRow } from '$lib/datagrid/core/utils.svelte';
+	import type User from 'lucide-svelte/icons/user';
 	import type { TzezarsDatagrid } from '../../types';
 	import BodyRowCell from './body-row-cell.svelte';
 	import GroupRowCell from './group-row-cell.svelte';
+	import type { AnyColumn } from '$lib/datagrid/core/column-creation/types';
 
 	let {
 		datagrid,
@@ -13,7 +16,7 @@
 			rowCell: '',
 			groupRow: '',
 			groupRowCell: ''
-		}
+		},
 	}: {
 		datagrid: TzezarsDatagrid
 		row: GridBasicRow<any> | GridGroupRow<any>;
@@ -24,6 +27,7 @@
 			groupRowCell?: string
 		};
 	} = $props();
+
 
 	let structuredColumns = $derived(flattenColumns(datagrid.columnManager.getColumnsInOrder()));
 	let leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
