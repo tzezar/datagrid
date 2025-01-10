@@ -35,9 +35,6 @@
 			: datagrid.columnManager.getLeafColumnsInOrder()
 	);
 
-	let end: HTMLElement;
-
-	
 
 	import { Portal } from 'bits-ui';
 </script>
