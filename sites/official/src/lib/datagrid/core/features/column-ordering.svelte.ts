@@ -26,9 +26,9 @@ export class ColumnOrderingFeature<TOriginalRow> {
 
     private moveWithinGroup(columnId: ColumnId, direction: -1 | 1): boolean {
         const column = findColumnById(this.datagrid.columns, columnId);
-        if (!column || !this.datagrid.columnGrouping.isColumnWithinGroup(column)) return false;
+        if (!column || !this.datagrid.features.columnGrouping.isColumnWithinGroup(column)) return false;
 
-        const parentGroup = this.datagrid.columnGrouping.findParentColumnGroup(column.parentColumnId);
+        const parentGroup = this.datagrid.features.columnGrouping.findParentColumnGroup(column.parentColumnId);
         if (!parentGroup) return false;
 
         const columnsInGroup = parentGroup.columns;
@@ -91,7 +91,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
     }
 
     moveToRootLevel(column: AnyColumn<TOriginalRow>): void {
-        const currentGroup = this.datagrid.columnGrouping.findParentColumnGroup(column.parentColumnId);
+        const currentGroup = this.datagrid.features.columnGrouping.findParentColumnGroup(column.parentColumnId);
         if (currentGroup) {
             this.removeFromGroup(currentGroup, column);
         }
@@ -103,7 +103,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
 
     private removeFromCurrentGroupOrRoot(column: AnyColumn<TOriginalRow>): void {
         if (column.parentColumnId !== null) {
-            const currentGroup = this.datagrid.columnGrouping.findParentColumnGroup(column.parentColumnId);
+            const currentGroup = this.datagrid.features.columnGrouping.findParentColumnGroup(column.parentColumnId);
             if (currentGroup) {
                 this.removeFromGroup(currentGroup, column);
             }

@@ -13,41 +13,41 @@
 		<div class="text-muted-foreground text-xs md:w-1/3">
 			<!-- Ensuring each div is 1 grid cell -->
 			<span>
-				Showing {datagrid.pagination.pageSize * (datagrid.pagination.page - 1)} to {datagrid
-					.pagination.pageSize * datagrid.pagination.page} of {(datagrid.cache.rows || []).length} rows
+				Showing {datagrid.features.pagination.pageSize * (datagrid.features.pagination.page - 1)} to {datagrid
+					.features.pagination.pageSize * datagrid.features.pagination.page} of {(datagrid.cache.rows || []).length} rows
 			</span>
 		</div>
 		<div class="flex justify-between md:w-1/3">
 			<!-- Ensure this is a flex container within a grid column -->
 			<button
 				class="pagination-button"
-				disabled={datagrid.pagination.canGoToPrevPage()}
-				onclick={() => datagrid.refresh(() => datagrid.pagination.goToPrevPage())}
+				disabled={datagrid.features.pagination.canGoToPrevPage()}
+				onclick={() => datagrid.refresh(() => datagrid.features.pagination.goToPrevPage())}
 			>
 				Prev
 			</button>
 			<span>
-				Page {datagrid.pagination.page} of {datagrid.pagination.pageCount}
+				Page {datagrid.features.pagination.page} of {datagrid.features.pagination.pageCount}
 			</span>
 			<button
 				class="pagination-button"
-				disabled={datagrid.pagination.canGoToNextPage()}
-				onclick={() => datagrid.refresh(() => datagrid.pagination.goToNextPage())}
+				disabled={datagrid.features.pagination.canGoToNextPage()}
+				onclick={() => datagrid.refresh(() => datagrid.features.pagination.goToNextPage())}
 			>
 				Next
 			</button>
 		</div>
 		<div class="flex justify-end md:w-1/3">
 			<select
-				value={datagrid.pagination.pageSize}
+				value={datagrid.features.pagination.pageSize}
 				onchange={(e) => {
 					datagrid.refresh(() => {
-						datagrid.pagination.pageSize = Number(e.currentTarget.value);
-						datagrid.pagination.goToFirstPage();
+						datagrid.features.pagination.pageSize = Number(e.currentTarget.value);
+						datagrid.features.pagination.goToFirstPage();
 					});
 				}}
 			>
-				{#each datagrid.pagination.pageSizes as pageSize}
+				{#each datagrid.features.pagination.pageSizes as pageSize}
 					<option value={pageSize}>{pageSize}</option>
 				{/each}
 			</select>

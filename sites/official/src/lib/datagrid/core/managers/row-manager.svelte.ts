@@ -11,21 +11,21 @@ export class RowManager<TOriginalRow> {
     }
 
     getVisibleRows(): GridRow<TOriginalRow>[] {
-        const topRows = this.datagrid.rowPinning.getTopRows();
-        const bottomRows = this.datagrid.rowPinning.getBottomRows();
-        const centerRows = this.datagrid.rowPinning.getCenterRows();
+        const topRows = this.datagrid.features.rowPinning.getTopRows();
+        const bottomRows = this.datagrid.features.rowPinning.getBottomRows();
+        const centerRows = this.datagrid.features.rowPinning.getCenterRows();
         return [...topRows, ...centerRows, ...bottomRows];
     }
     
     isGroupRowExpanded(row: GridGroupRow<TOriginalRow>) {
-        return this.datagrid.grouping.expandedGroups.has(row.identifier);
+        return this.datagrid.features.grouping.expandedGroups.has(row.identifier);
     }
 
     toggleGroupRowExpansion(row: GridGroupRow<TOriginalRow>) {
         if (this.isGroupRowExpanded(row)) {
-            this.datagrid.grouping.expandedGroups.delete(row.identifier);
+            this.datagrid.features.grouping.expandedGroups.delete(row.identifier);
         } else {
-            this.datagrid.grouping.expandedGroups.add(row.identifier);
+            this.datagrid.features.grouping.expandedGroups.add(row.identifier);
         }
 
          // Only invalidate the flattened view cache

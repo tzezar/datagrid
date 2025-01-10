@@ -19,10 +19,10 @@ export class DataProcessor<TRow> {
     executeFullDataTransformation(): void {
         this.metrics.clear();
 
-        const shouldRunGlobalSearch = this.datagrid.globalSearch.value !== '';
-        const shouldRunColumnFilters = this.datagrid.filtering.conditions.length > 0;
-        const shouldRunSorting = this.datagrid.sorting.sortConfigs.length > 0;
-        const shouldRunGrouping = this.datagrid.grouping.groupByColumns.length > 0;
+        const shouldRunGlobalSearch = this.datagrid.features.globalSearch.value !== '';
+        const shouldRunColumnFilters = this.datagrid.features.filtering.conditions.length > 0;
+        const shouldRunSorting = this.datagrid.features.sorting.sortConfigs.length > 0;
+        const shouldRunGrouping = this.datagrid.features.grouping.groupByColumns.length > 0;
 
 
         // Create a copy of the data to avoid mutating the original data
@@ -68,11 +68,11 @@ export class DataProcessor<TRow> {
     }
 
     private applyGlobalSearch(data: TRow[]): TRow[] {
-        const searchValue = this.datagrid.globalSearch.value.toLowerCase();
+        const searchValue = this.datagrid.features.globalSearch.value.toLowerCase();
         const searchableColumns = flattenColumns(this.datagrid.columns).filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TRow> | ComputedColumn<TRow>)[];
 
-        if (this.datagrid.globalSearch.fuzzy) {
-            const fuse = this.datagrid.globalSearch.fuseInstance;
+        if (this.datagrid.features.globalSearch.fuzzy) {
+            const fuse = this.datagrid.features.globalSearch.fuseInstance;
             if (!fuse) throw new Error('Fuse instance is not initialized');
             return fuse.search(searchValue).map(result => result.item);
         }
@@ -87,12 +87,12 @@ export class DataProcessor<TRow> {
     }
 
     private applyColumnFilters(data: TRow[]): TRow[] {
-        const activeFilters = this.datagrid.filtering.conditions
+        const activeFilters = this.datagrid.features.filtering.conditions
             .filter(condition => condition.value !== '');
 
         return data.filter(row =>
             activeFilters.every(filter =>
-                this.datagrid.filtering.evaluateCondition(
+                this.datagrid.features.filtering.evaluateCondition(
                     filter.getValueFn(row),
                     filter
                 )
@@ -101,7 +101,7 @@ export class DataProcessor<TRow> {
     }
 
     private applySorting(data: TRow[]): TRow[] {
-        const sortInstructions = this.datagrid.sorting.sortConfigs
+        const sortInstructions = this.datagrid.features.sorting.sortConfigs
             .map(config => {
                 const column = findColumnById(this.datagrid.initial.columns, config.columnId) as (AccessorColumn<TRow> | ComputedColumn<TRow>);
                 if (!column || isGroupColumn(column) || !isColumnSortable(column)) {
@@ -145,12 +145,12 @@ export class DataProcessor<TRow> {
         // Update cache and pagination
         this.metrics.measure('Cache Update', () => {
             this.datagrid.cache.rows = visibleRows;
-            this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(visibleRows);
+            this.datagrid.features.pagination.pageCount = this.datagrid.features.pagination.getPageCount(visibleRows);
             this.datagrid.cache.paginatedRows = this.paginateRows(visibleRows);
         });
 
         // this has to run always
-        this.datagrid.rowPinning.updatePinnedRows();
+        this.datagrid.features.rowPinning.updatePinnedRows();
     }
 
     private processRegularData(data: TRow[]): void {
@@ -165,11 +165,11 @@ export class DataProcessor<TRow> {
 
         // this has to run always
         this.metrics.measure('Row Pinning', () => {
-            this.datagrid.rowPinning.updatePinnedRows();
+            this.datagrid.features.rowPinning.updatePinnedRows();
         });
 
-        this.datagrid.pagination.visibleRowsCount = data!.length;
-        this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(data);
+        this.datagrid.features.pagination.visibleRowsCount = data!.length;
+        this.datagrid.features.pagination.pageCount = this.datagrid.features.pagination.getPageCount(data);
         // Apply pagination
         this.datagrid.cache.paginatedRows = this.paginateRows(basicRows!);
     }
@@ -232,7 +232,7 @@ export class DataProcessor<TRow> {
     }
 
     createHierarchicalData(data: TRow[]): GridRow<TRow>[] {
-        const groupCols = this.datagrid.grouping.groupByColumns;
+        const groupCols = this.datagrid.features.grouping.groupByColumns;
         if (!groupCols.length) return this.createBasicRows(data);
 
         const groupByLevel = (
@@ -283,7 +283,7 @@ export class DataProcessor<TRow> {
                     // isExpanded: false,
                     children: groupByLevel(groupRows, depth + 1, `${parentPath}${index + 1}`),
                     aggregations: aggregations,
-                    isExpanded: () => this.datagrid.rowExpanding.isRowExpanded(key),
+                    isExpanded: () => this.datagrid.features.rowExpanding.isRowExpanded(key),
                  
                 };
             });
@@ -302,7 +302,7 @@ export class DataProcessor<TRow> {
         for (const row of rows) {
             flattened.push(row);
 
-            if (this.isGroupRow(row) && this.datagrid.grouping.expandedGroups.has(row.identifier)) {
+            if (this.isGroupRow(row) && this.datagrid.features.grouping.expandedGroups.has(row.identifier)) {
                 flattened.push(...this.flattenExpandedGroups(row.children));
             }
         }
@@ -319,13 +319,13 @@ export class DataProcessor<TRow> {
                 index: this.datagrid.config.createBasicRowIndex(row, parentIndex || null, i),
                 parentIndex: parentIndex ?? null,
                 original: row,
-                isExpanded: () => this.datagrid.rowExpanding.isRowExpanded(identifier),
+                isExpanded: () => this.datagrid.features.rowExpanding.isRowExpanded(identifier),
             }
         });
     }
 
     private paginateRows(rows: GridRow<TRow>[]): GridRow<TRow>[] {
-        const { page, pageSize } = this.datagrid.pagination;
+        const { page, pageSize } = this.datagrid.features.pagination;
         const start = (page - 1) * pageSize;
         return rows.slice(start, start + pageSize);
     }
@@ -343,7 +343,7 @@ export class DataProcessor<TRow> {
         this.metrics.measure('Group Expansion', () => {
             const visibleRows = this.getVisibleRows();
             this.datagrid.cache.rows = visibleRows;
-            this.datagrid.pagination.pageCount = this.datagrid.pagination.getPageCount(visibleRows);
+            this.datagrid.features.pagination.pageCount = this.datagrid.features.pagination.getPageCount(visibleRows);
             this.datagrid.cache.paginatedRows = this.paginateRows(visibleRows);
         });
     }

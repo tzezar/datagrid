@@ -268,7 +268,7 @@
 
 				<DropdownMenu.Separator />
 				<DropdownMenu.Item onclick={() => datagrid.handlers.grouping.toggle(column.columnId)}>
-					{#if datagrid.grouping.isColumnWithinGroup(column.columnId)}
+					{#if datagrid.features.grouping.isColumnWithinGroup(column.columnId)}
 						<AdGroupOffOutlineSharp class="mr-2 size-4" />
 						<span>Ungroup by {column.header}</span>
 					{:else}

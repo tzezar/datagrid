@@ -10,7 +10,7 @@
 
 <div class="flex items-center">
 	<Checkbox
-		checked={datagrid.rowSelection.isRowSelected(row.identifier)}
-		onCheckedChange={() => datagrid.rowSelection.toggleRowSelection(row.identifier)}
+		checked={datagrid.features.rowSelection.isRowSelected(row.identifier)}
+		onCheckedChange={() => datagrid.features.rowSelection.toggleRowSelection(row.identifier)}
 	/>
 </div>

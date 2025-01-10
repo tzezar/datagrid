@@ -36,21 +36,22 @@ export class DataGrid<TOriginalRow> {
             parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
     }
 
-    pagination = new PaginationFeature(this);
-    sorting = new SortingFeature(this);
-    grouping = new GroupingFeature();
-    filtering = new ColumnFilteringFeature();
-    globalSearch = new GlobalSearchFeature();
-    columnSizing = new ColumnSizingFeature(this);
-    columnVisibility = new ColumnVisibilityFeature(this);
-    columnPinning = new ColumnPinningFeature(this);
-    columnFaceting = new ColumnFacetingFeature(this);
-    columnOrdering = new ColumnOrderingFeature(this);
-    columnGrouping = new ColumnGroupingFeature(this);
-    rowExpanding = new RowExpandingFeature(this);
-    rowSelection = new RowSelectionFeature(this);
-    rowPinning = new RowPinningFeature(this);
-
+    features = {
+        pagination: new PaginationFeature(this),
+        sorting: new SortingFeature(this),
+        grouping: new GroupingFeature(),
+        filtering: new ColumnFilteringFeature(),
+        globalSearch: new GlobalSearchFeature(),
+        columnSizing: new ColumnSizingFeature(this),
+        columnVisibility: new ColumnVisibilityFeature(this),
+        columnPinning: new ColumnPinningFeature(this),
+        columnFaceting: new ColumnFacetingFeature(this),
+        columnOrdering: new ColumnOrderingFeature(this),
+        columnGrouping: new ColumnGroupingFeature(this),
+        rowExpanding: new RowExpandingFeature(this),
+        rowSelection: new RowSelectionFeature(this),
+        rowPinning: new RowPinningFeature(this),
+    }
 
     lifecycleHooks = {
         preProcessColumns: (action: any, columns: AnyColumn<TOriginalRow>[]) => {
@@ -81,9 +82,9 @@ export class DataGrid<TOriginalRow> {
         this.processors.data.executeFullDataTransformation();
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
-        this.columnFaceting.calculateFacets(this.cache.sortedData || [], this.columns);
+        this.features.columnFaceting.calculateFacets(this.cache.sortedData || [], this.columns);
 
-        this.globalSearch.fuseInstance = this.globalSearch.initializeFuseInstance(this.initial.data, this.columns.map(col => col.columnId as string))
+        this.features.globalSearch.fuseInstance = this.features.globalSearch.initializeFuseInstance(this.initial.data, this.columns.map(col => col.columnId as string))
     }
 
     /**

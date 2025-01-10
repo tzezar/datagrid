@@ -15,15 +15,15 @@
 			value
 		});
 		datagrid.cache.invalidate('filteredData');
-		datagrid.pagination.goToFirstPage();
+		datagrid.features.pagination.goToFirstPage();
 		datagrid.processors.data.executeFullDataTransformation();
-		datagrid.columnFaceting.calculateFacets(datagrid.cache.sortedData || [], datagrid.columns);
+		datagrid.features.columnFaceting.calculateFacets(datagrid.cache.sortedData || [], datagrid.columns);
 	};
 	
 </script>
 
 {#snippet FilterOperator()}
-	<span class="text-muted-foreground text-[0.5rem]">Filter mode: {datagrid.filtering.getConditionOperator(column.columnId)}</span>
+	<span class="text-muted-foreground text-[0.5rem]">Filter mode: {datagrid.features.filtering.getConditionOperator(column.columnId)}</span>
 {/snippet}
 
 {#if column.options.filterable !== false}
@@ -31,7 +31,7 @@
 		<input
 			type="number"
 			class="column-filter-input w-full"
-			value={datagrid.filtering.getConditionValue(column.columnId)}
+			value={datagrid.features.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {
 				const value = e.currentTarget.value === '' ? null : +e.currentTarget.value;
 				handleColumnFilterChange(column, value);
@@ -43,7 +43,7 @@
 		<input
 			type="text"
 			class="column-filter-input w-full"
-			value={datagrid.filtering.getConditionValue(column.columnId)}
+			value={datagrid.features.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {
 				handleColumnFilterChange(column, e.currentTarget.value);
 			}}
@@ -53,7 +53,7 @@
 	{#if column?._meta?.filterType === 'select'}
 		<select
 			class="column-filter-input w-full"
-			value={datagrid.filtering.getConditionValue(column.columnId)}
+			value={datagrid.features.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {
 				handleColumnFilterChange(column, e.currentTarget.value);
 			}}

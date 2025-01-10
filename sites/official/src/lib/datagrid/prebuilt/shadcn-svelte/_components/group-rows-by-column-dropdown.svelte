@@ -17,7 +17,7 @@
 <Select.Root
 	type="multiple"
 	name="groupByColumn"
-	value={datagrid.grouping.groupByColumns}
+	value={datagrid.features.grouping.groupByColumns}
 	onValueChange={(values) => datagrid.handlers.grouping.change(values)}
 >
 	<Select.Trigger class="h-full w-full rounded-none border-0">Group data by column</Select.Trigger>

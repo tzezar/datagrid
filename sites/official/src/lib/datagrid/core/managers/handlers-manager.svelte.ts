@@ -13,7 +13,6 @@ export class HandlersManager {
         this.datagrid = datagrid;
     }
 
-
     sorting = {
         toggleColumnSorting: (column: LeafColumn<any>, event: MouseEvent) => {
             const datagrid = this.datagrid;
@@ -23,26 +22,26 @@ export class HandlersManager {
 
             const isUserMultiSorting = event.shiftKey;
 
-            const isColumnSorted = datagrid.sorting.isColumnSorted(columnId);
-            const isColumnSortedAscending = datagrid.sorting.isColumnSorted(columnId, false);
+            const isColumnSorted = datagrid.features.sorting.isColumnSorted(columnId);
+            const isColumnSortedAscending = datagrid.features.sorting.isColumnSorted(columnId, false);
 
             const singleColumnSort = () => {
-                if (!isColumnSorted) this.datagrid.sorting.addSortConfig(columnId, false);
+                if (!isColumnSorted) this.datagrid.features.sorting.addSortConfig(columnId, false);
                 else if (isColumnSortedAscending) {
-                    this.datagrid.sorting.clearSorting();
-                    datagrid.sorting.addSortConfig(columnId, true);
+                    this.datagrid.features.sorting.clearSorting();
+                    datagrid.features.sorting.addSortConfig(columnId, true);
                 }
-                else this.datagrid.sorting.clearSorting();
+                else this.datagrid.features.sorting.clearSorting();
 
             }
 
             const multipleColumnSort = () => {
                 if (!isColumnSorted) {
-                    datagrid.sorting.addSortConfig(columnId, false);
+                    datagrid.features.sorting.addSortConfig(columnId, false);
                 } else if (isColumnSortedAscending) {
-                    datagrid.sorting.changeDirection(columnId, true);
+                    datagrid.features.sorting.changeDirection(columnId, true);
                 } else {
-                    datagrid.sorting.removeSortConfig(columnId);
+                    datagrid.features.sorting.removeSortConfig(columnId);
 
                 }
             }
@@ -55,17 +54,17 @@ export class HandlersManager {
 
 
         sortColumnAscending: (column: LeafColumn<any>) => {
-            const isColumnSorted = this.datagrid.sorting.isColumnSorted(column.columnId);
-            if (isColumnSorted) this.datagrid.sorting.changeDirection(column.columnId, false);
-            else this.datagrid.sorting.addSortConfig(column.columnId, true);
+            const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
+            if (isColumnSorted) this.datagrid.features.sorting.changeDirection(column.columnId, false);
+            else this.datagrid.features.sorting.addSortConfig(column.columnId, true);
 
             this.datagrid.processors.data.executeFullDataTransformation();
         },
 
         sortColumnDescending: (column: LeafColumn<any>) => {
-            const isColumnSorted = this.datagrid.sorting.isColumnSorted(column.columnId);
-            if (isColumnSorted) this.datagrid.sorting.changeDirection(column.columnId, true);
-            else this.datagrid.sorting.addSortConfig(column.columnId, false);
+            const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
+            if (isColumnSorted) this.datagrid.features.sorting.changeDirection(column.columnId, true);
+            else this.datagrid.features.sorting.addSortConfig(column.columnId, false);
 
             this.datagrid.processors.data.executeFullDataTransformation();
         },
@@ -73,27 +72,27 @@ export class HandlersManager {
 
         sortColumn: (column: LeafColumn<any>, desc: boolean) => {
             if (desc) {
-                const isColumnSorted = this.datagrid.sorting.isColumnSorted(column.columnId);
-                if (isColumnSorted) this.datagrid.sorting.changeDirection(column.columnId, true);
-                else this.datagrid.sorting.addSortConfig(column.columnId, true);
+                const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
+                if (isColumnSorted) this.datagrid.features.sorting.changeDirection(column.columnId, true);
+                else this.datagrid.features.sorting.addSortConfig(column.columnId, true);
             } else {
-                const isColumnSorted = this.datagrid.sorting.isColumnSorted(column.columnId);
-                if (isColumnSorted) this.datagrid.sorting.changeDirection(column.columnId, false);
-                else this.datagrid.sorting.addSortConfig(column.columnId, false);
+                const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
+                if (isColumnSorted) this.datagrid.features.sorting.changeDirection(column.columnId, false);
+                else this.datagrid.features.sorting.addSortConfig(column.columnId, false);
             }
             this.datagrid.processors.data.executeFullDataTransformation();
         },
 
 
         unSortColumn: (column: LeafColumn<any>) => {
-            this.datagrid.sorting.removeSortConfig(column.columnId);
+            this.datagrid.features.sorting.removeSortConfig(column.columnId);
             this.datagrid.processors.data.executeFullDataTransformation();
         }
 
     }
     filtering = {
         changeFilterOperator: (columnId: string, operator: FilterOperator) => {
-            this.datagrid.filtering.changeConditionOperator(columnId, operator);
+            this.datagrid.features.filtering.changeConditionOperator(columnId, operator);
             this.datagrid.cache.invalidate('filteredData');
             this.datagrid.processors.data.executeFullDataTransformation();
         },
@@ -109,19 +108,19 @@ export class HandlersManager {
 
             if (!column) return;
             // Find existing condition
-            const conditionIndex = this.datagrid.filtering.conditions.findIndex(c => c.columnId === column.columnId);
+            const conditionIndex = this.datagrid.features.filtering.conditions.findIndex(c => c.columnId === column.columnId);
 
             if (value === '' || value === null || value === undefined) {
                 // If value is empty, remove the condition (do not filter)
                 if (conditionIndex > -1) {
-                    this.datagrid.filtering.conditions.splice(conditionIndex, 1);
+                    this.datagrid.features.filtering.conditions.splice(conditionIndex, 1);
                 }
                 return;
             }
 
             if (conditionIndex === -1) {
                 // If condition doesn't exist, add a new one
-                this.datagrid.filtering.conditions.push({
+                this.datagrid.features.filtering.conditions.push({
                     columnId: column.columnId,
                     operator: 'equals',
                     getValueFn: column.getValueFn,
@@ -129,7 +128,7 @@ export class HandlersManager {
                 });
             } else {
                 // Update existing condition value
-                this.datagrid.filtering.conditions[conditionIndex].value = value;
+                this.datagrid.features.filtering.conditions[conditionIndex].value = value;
             }
         }
     }
@@ -145,8 +144,8 @@ export class HandlersManager {
                 })
                 .filter((group): group is ColumnId => group !== null); // Type guard to filter out null values
 
-            this.datagrid.grouping.groupByColumns = newGroupBy;
-            this.datagrid.pagination.goToFirstPage();
+            this.datagrid.features.grouping.groupByColumns = newGroupBy;
+            this.datagrid.features.pagination.goToFirstPage();
             this.datagrid.cache.invalidateGroupedRowsCache();
             this.datagrid.processors.data.executeFullDataTransformation();
         },
@@ -155,12 +154,12 @@ export class HandlersManager {
             if (!column) return;
             if (column.options.groupable === false) return;
 
-            if (this.datagrid.grouping.groupByColumns.includes(columnId)) {
-                this.datagrid.grouping.groupByColumns = this.datagrid.grouping.groupByColumns.filter((id) => id !== columnId);
+            if (this.datagrid.features.grouping.groupByColumns.includes(columnId)) {
+                this.datagrid.features.grouping.groupByColumns = this.datagrid.features.grouping.groupByColumns.filter((id) => id !== columnId);
             } else {
-                this.datagrid.grouping.groupByColumns = [...this.datagrid.grouping.groupByColumns, columnId];
+                this.datagrid.features.grouping.groupByColumns = [...this.datagrid.features.grouping.groupByColumns, columnId];
             }
-            this.datagrid.pagination.goToFirstPage();
+            this.datagrid.features.pagination.goToFirstPage();
             this.datagrid.cache.invalidateGroupedRowsCache();
             this.datagrid.processors.data.executeFullDataTransformation();
         }
@@ -174,19 +173,19 @@ export class HandlersManager {
         changeColumnPinningPosition: (columnId: string, position: PinningPosition) => {
             const column = findColumnById(this.datagrid.columns, columnId);
             if (!column) throw new Error(`Column ${columnId} not found`);
-            this.datagrid.columnPinning.changeColumnPinningPosition(column, position);
+            this.datagrid.features.columnPinning.changeColumnPinningPosition(column, position);
             this.datagrid.processors.column.refreshColumnPinningOffsets();
         }
     }
     columnOrdering = {
         moveLeft: (columnId: ColumnId) => {
-            this.datagrid.columnOrdering.moveLeft(columnId);
+            this.datagrid.features.columnOrdering.moveLeft(columnId);
         },
         moveRight: (columnId: ColumnId) => {
-            this.datagrid.columnOrdering.moveRight(columnId)
+            this.datagrid.features.columnOrdering.moveRight(columnId)
         },
         moveColumnToGroup: ({ columnId, targetGroupColumnId }: { columnId: ColumnId, targetGroupColumnId: string }) => {
-            this.datagrid.columnOrdering.moveColumnToGroup({ columnId, targetGroupColumnId });
+            this.datagrid.features.columnOrdering.moveColumnToGroup({ columnId, targetGroupColumnId });
         }
     }
     columnGrouping = {
@@ -217,31 +216,31 @@ export class HandlersManager {
         selectRowsOnPage: () => {
             const rowsOnPage = (this.datagrid.cache.paginatedRows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
             const ids = rowsOnPage.map(row => row.identifier);
-            this.datagrid.rowSelection.selectRows(ids);
+            this.datagrid.features.rowSelection.selectRows(ids);
         },
         unselectRowsOnPage: () => {
             const rowsOnPage = (this.datagrid.cache.paginatedRows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
             const ids = rowsOnPage.map(row => row.identifier);
-            this.datagrid.rowSelection.unselectRows(ids);
+            this.datagrid.features.rowSelection.unselectRows(ids);
         },
         selectAllRows: () => {
             const rows = (this.datagrid.cache.rows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
             const ids = rows.map(row => row.identifier);
-            this.datagrid.rowSelection.selectRows(ids);
+            this.datagrid.features.rowSelection.selectRows(ids);
         },
         unselectAllRows: () => {
             const rows = (this.datagrid.cache.rows || []).filter(row => !isGroupRow(row)) as GridBasicRow<any>[];
             const ids = rows.map(row => row.identifier);
-            this.datagrid.rowSelection.unselectRows(ids);
+            this.datagrid.features.rowSelection.unselectRows(ids);
         }
 
     }
     rowPinning = {
         pinRowTop: (rowIdentifier: GridRowIdentifier) => {
-            this.datagrid.rowPinning.pinRowTop(rowIdentifier);
+            this.datagrid.features.rowPinning.pinRowTop(rowIdentifier);
         },
         pinRowBottom: (rowIdentifier: GridRowIdentifier) => {
-            this.datagrid.rowPinning.pinRowBottom(rowIdentifier);
+            this.datagrid.features.rowPinning.pinRowBottom(rowIdentifier);
         }
     }
 }

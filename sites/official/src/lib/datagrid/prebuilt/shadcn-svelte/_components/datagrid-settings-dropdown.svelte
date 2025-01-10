@@ -185,7 +185,7 @@
 					<div class="flex flex-col gap-2">
 						<div class="flex w-full flex-row justify-between gap-4">
 							<span class="text-xs font-bold">{column.header}</span>
-							<button onclick={() => datagrid.columnGrouping.deleteGroupColumn(column)}>
+							<button onclick={() => datagrid.features.columnGrouping.deleteGroupColumn(column)}>
 								<DeleteOutline />
 							</button>
 						</div>
@@ -273,7 +273,7 @@
 						max={column.state.size.maxWidth}
 						value={column.state.size.width}
 						onValueChange={(value: number) => {
-							datagrid.columnSizing.updateColumnSize(column.columnId, Number(value));
+							datagrid.features.columnSizing.updateColumnSize(column.columnId, Number(value));
 							datagrid.processors.column.refreshColumnPinningOffsets();
 						}}
 					/>
@@ -295,7 +295,7 @@
 					disabled={column.options.hideable === false}
 					class={`${column.state.visible === true ? 'text-primary' : 'text-muted-foreground'}`}
 					closeOnSelect={false}
-					onclick={() => datagrid.columnVisibility.toggleColumnVisibility(column.columnId)}
+					onclick={() => datagrid.features.columnVisibility.toggleColumnVisibility(column.columnId)}
 				>
 					<span>
 						{column.header}

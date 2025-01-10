@@ -89,7 +89,7 @@ export const getSortIndex = (datagrid: DataGrid<any>, column: AnyColumn<any>): n
     column = column as SortableColumn<any>;
     if (!column.options.sortable) return null;
     const columnId = column.columnId || column.header;
-    const sortConfig = datagrid.sorting.sortConfigs.find((config) => config.columnId === columnId);
+    const sortConfig = datagrid.features.sorting.sortConfigs.find((config) => config.columnId === columnId);
     return sortConfig ? sortConfig.index + 1 : null;
 };
 
@@ -98,7 +98,7 @@ export const getSortDirection = (datagrid: DataGrid<any>, column: AnyColumn<any>
     column = column as SortableColumn<any>;
     if (!column.options.sortable) return null;
     const columnId = column.columnId || column.header;
-    const sortConfig = datagrid.sorting.sortConfigs.find((config) => config.columnId === columnId);
+    const sortConfig = datagrid.features.sorting.sortConfigs.find((config) => config.columnId === columnId);
     if (!sortConfig) return 'intermediate';
     return sortConfig.desc ? 'desc' : 'asc';
 };

@@ -14,7 +14,7 @@ export class ColumnProcessor<TOriginalRow> {
     }
 
     placeGroupColumnsFirst = (columns: AnyColumn<any>[]): AnyColumn<any>[] => {
-        const groupByColumns = this.datagrid.grouping.groupByColumns;
+        const groupByColumns = this.datagrid.features.grouping.groupByColumns;
         const groupedColumns: AnyColumn<TOriginalRow>[] = [];
         const nonGroupedColumns: AnyColumn<TOriginalRow>[] = [];
         columns.forEach((column) => {
@@ -62,7 +62,7 @@ export class ColumnProcessor<TOriginalRow> {
             if (col.state.pinning.position === 'none') {
                 col.state.pinning.offset = 0;
             } else {
-                col.state.pinning.offset = this.datagrid.columnPinning.calculateOffset(col.columnId, col.state.pinning.position);
+                col.state.pinning.offset = this.datagrid.features.columnPinning.calculateOffset(col.columnId, col.state.pinning.position);
             }
 
             newColumns.push(col);

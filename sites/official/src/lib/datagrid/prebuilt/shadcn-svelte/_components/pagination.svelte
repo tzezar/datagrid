@@ -7,7 +7,7 @@
 	import * as Select from '$lib/components/ui/select/index.js';
 	import Input from '$lib/components/ui/input/input.svelte';
 
-	let pageSizes = datagrid.pagination.pageSizes.map((pageSize: number) => {
+	let pageSizes = datagrid.features.pagination.pageSizes.map((pageSize: number) => {
 		return {
 			value: pageSize.toString(),
 			label: pageSize.toString()
@@ -20,9 +20,9 @@
 		variant="secondary"
 		class="size-6"
 		size="sm"
-		disabled={datagrid.pagination.canGoToPrevPage()}
+		disabled={datagrid.features.pagination.canGoToPrevPage()}
 		onclick={() =>
-			datagrid.refresh(() => datagrid.pagination.goToPrevPage(), {
+			datagrid.refresh(() => datagrid.features.pagination.goToPrevPage(), {
 				recalculateAll: false,
 				recalculateGroups: false,
 				recalculatePagination: true
@@ -37,9 +37,9 @@
 		variant="secondary"
 		class="size-6"
 		size="sm"
-		disabled={datagrid.pagination.canGoToNextPage()}
+		disabled={datagrid.features.pagination.canGoToNextPage()}
 		onclick={() =>
-			datagrid.refresh(() => datagrid.pagination.goToNextPage(), {
+			datagrid.refresh(() => datagrid.features.pagination.goToNextPage(), {
 				recalculateAll: false,
 				recalculateGroups: false,
 				recalculatePagination: true
@@ -54,15 +54,15 @@
 		type="single"
 		name="perPage"
 		allowDeselect={false}
-		value={String(datagrid.pagination.pageSize)}
+		value={String(datagrid.features.pagination.pageSize)}
 		onValueChange={(value: string) => {
-			datagrid.refresh(() => datagrid.pagination.setPageSize(Number(value)), {
+			datagrid.refresh(() => datagrid.features.pagination.setPageSize(Number(value)), {
 				recalculatePagination: true
 			});
 		}}
 	>
 		<Select.Trigger class="h-6 w-max max-w-[180px] p-2 text-xs">
-			<span class="pr-2">{datagrid.pagination.pageSize} per page</span>
+			<span class="pr-2">{datagrid.features.pagination.pageSize} per page</span>
 		</Select.Trigger>
 		<Select.Content>
 			<Select.Group>
@@ -77,37 +77,37 @@
 
 {#snippet status()}
 	<span class="text-muted-foreground hidden text-xs md:block md:w-1/3">
-		Showing {datagrid.pagination.pageSize * (datagrid.pagination.page - 1) + 1} : {Math.min(
-			datagrid.pagination.pageSize * datagrid.pagination.page,
-			datagrid.pagination.visibleRowsCount
-		)} of {datagrid.pagination.visibleRowsCount} rows
+		Showing {datagrid.features.pagination.pageSize * (datagrid.features.pagination.page - 1) + 1} : {Math.min(
+			datagrid.features.pagination.pageSize * datagrid.features.pagination.page,
+			datagrid.features.pagination.visibleRowsCount
+		)} of {datagrid.features.pagination.visibleRowsCount} rows
 	</span>
 {/snippet}
 {#snippet currentPage()}
 	<span class="flex items-center gap-1 text-nowrap text-xs">
 		<span class=" md:block"> Page </span>
 		<Input
-			max={datagrid.pagination.pageCount}
+			max={datagrid.features.pagination.pageCount}
 			class="pagination-page-input h-6 w-full max-w-[60px] p-2 text-xs"
 			type="text"
-			value={datagrid.pagination.page}
+			value={datagrid.features.pagination.page}
 			onfocus={(e) => {
 				e.currentTarget.select();
 			}}
 			oninput={(e) => {
 				if (isNaN(Number(e.currentTarget.value))) {
-					e.currentTarget.value = datagrid.pagination.page.toString();
+					e.currentTarget.value = datagrid.features.pagination.page.toString();
 					e.currentTarget.select();
 					return;
 				}
 				const newPage = Number(e.currentTarget.value);
 				datagrid.refresh(() => {
-					datagrid.pagination.page = Math.min(Math.max(newPage, 1), datagrid.pagination.pageCount);
+					datagrid.features.pagination.page = Math.min(Math.max(newPage, 1), datagrid.features.pagination.pageCount);
 				});
-				e.currentTarget.value = datagrid.pagination.page.toString();
+				e.currentTarget.value = datagrid.features.pagination.page.toString();
 			}}
 		/>
-		of {datagrid.pagination.pageCount}
+		of {datagrid.features.pagination.pageCount}
 	</span>
 {/snippet}
 
