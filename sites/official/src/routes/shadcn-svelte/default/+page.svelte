@@ -1,35 +1,13 @@
 <script lang="ts">
 	import '$lib/datagrid/styles.css';
-	import { DataGrid, type GridConfig } from '$lib/datagrid/core/index.svelte';
 	import { userColumns, type Column } from './columns.svelte';
 	import Pagination from '$lib/datagrid/prebuilt/shadcn-svelte/controls/pagination.svelte';
 	import Row from '$lib/datagrid/prebuilt/shadcn-svelte/row.svelte';
 	import HeaderCell from '$lib/datagrid/prebuilt/shadcn-svelte/header-cell.svelte';
-	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
-	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/column-creation/types';
-	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import GridHeader from './_components/grid-header.svelte';
+	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core';
 
 	let { data } = $props();
-
-	const handleDropdownMenu = (columns: AnyColumn<any>[]) => {
-		columns.forEach((column) => {
-			if (isGroupColumn(column)) {
-				const groupColumn = column as GroupColumn<any>;
-				handleDropdownMenu(groupColumn.columns);
-			}
-			column = column as LeafColumn<any>;
-			column._meta.showColumnManagerDropdownMenu =
-				column._meta.showColumnManagerDropdownMenu ?? true;
-		});
-		return columns;
-	};
-
-	class TzezarsDatagrid extends DataGrid<any> {
-		constructor(config: GridConfig<any>) {
-			super(config, handleDropdownMenu);
-		}
-	}
 
 	let datagrid = new TzezarsDatagrid({
 		columns: userColumns,
@@ -58,7 +36,8 @@
 					<Row {datagrid} {row} />
 				{/each}
 				{#each datagrid.rowPinning.getCenterRows() as row (row.identifier)}
-					<Row {datagrid} {row} />
+					<Row {datagrid} {row} class={{
+					}} />
 				{/each}
 
 				{#each datagrid.rowPinning.getBottomRows() as row (row.identifier)}

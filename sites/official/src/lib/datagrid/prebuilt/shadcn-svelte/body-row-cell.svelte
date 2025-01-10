@@ -1,22 +1,21 @@
 <script lang="ts">
-	import type { AccessorColumn } from '$lib/datagrid/core/column-creation/types';
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import { cn } from '$lib/utils';
-	import type { ColumnMeta } from './types';
+	import type { ColumnMeta, TzezarsDatagrid } from './types';
 
 	type Props = {
-		datagrid: DataGrid<any>;
+		datagrid: TzezarsDatagrid;
 		column: LeafColumn<any, ColumnMeta>;
 		row: GridBasicRow<any>;
+		class?: string,
 	};
 
-	let { datagrid, column, row }: Props = $props();
+	let { datagrid, column, row, class: _class = '' }: Props = $props();
 </script>
 
 <div
-	class={cn('grid-body-cell', column._meta.styles?.bodyCell)}
+	class={cn('grid-body-cell', column._meta.styles?.bodyCell, datagrid.extra.highlightSelectedRow && datagrid.rowSelection.isRowSelected(row.identifier) ? 'bg-blue-400' : '', _class)}
 	class:justify-center={column?._meta?.align === 'center'}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 	style:--width={column.state.size.width + 'px'}

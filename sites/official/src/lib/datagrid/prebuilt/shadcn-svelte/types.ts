@@ -1,3 +1,5 @@
+import type { DataGrid } from "$lib/datagrid/core/index.svelte";
+
 export type ColumnMeta = {
     align?: 'start' | 'center' | 'end';
     // filterType?: 'text' | 'number' | 'select' | 'date' | 'dateRange' | 'range';
@@ -8,5 +10,12 @@ export type ColumnMeta = {
     styles?: {
         bodyCell?: string;
         headerCell?: string;
+    }
+}
+
+
+export type TzezarsDatagrid = DataGrid<any> & {
+    extra: {
+        highlightSelectedRow: boolean
     }
 }

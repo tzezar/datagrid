@@ -8,6 +8,7 @@
 	import SortingIndicator from './sorting-indicator.svelte';
 	import HeaderCell from './header-cell.svelte';
 	import HeaderCellDropdown from './header-cell-dropdown.svelte';
+	import { cn } from '$lib/utils';
 
 	let { datagrid, column }: { datagrid: DataGrid<any>; column: any } = $props();
 
@@ -43,7 +44,7 @@
 
 {#snippet HeaderCellSnippet(column: LeafColumn<any>)}
 	<div
-		class={`grid-header-cell h-fit justify-end self-end border-t text-xs font-medium`}
+		class={cn('grid-header-cell h-fit justify-end self-end border-t text-xs font-medium')}
 		data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 		style:--pin-left-offset={column.state.pinning.offset + 'px'}
 		style:--pin-right-offset={column.state.pinning.offset + 'px'}
