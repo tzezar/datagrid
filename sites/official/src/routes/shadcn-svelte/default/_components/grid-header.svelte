@@ -1,32 +1,50 @@
 <script lang="ts">
-	import type { DataGrid } from "$lib/datagrid/core/index.svelte";
-	import Button from "$lib/components/ui/button/button.svelte";
-	import FilterAltOff from "$lib/datagrid/icons/material-symbols/filter-alt-off.svelte";
-	import FilterAlt from "$lib/datagrid/icons/material-symbols/filter-alt.svelte";
-	import GlobalSearch from "$lib/datagrid/prebuilt/shadcn-svelte/_components/global-search-input.svelte";
-	import DatagridSettingsDropdown from "$lib/datagrid/prebuilt/shadcn-svelte/_components/datagrid-settings-dropdown.svelte";
-	import type { TzezarsDatagrid } from "$lib/datagrid/prebuilt/shadcn-svelte/core/index.svelte";
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import FilterAltOff from '$lib/datagrid/icons/material-symbols/filter-alt-off.svelte';
+	import FilterAlt from '$lib/datagrid/icons/material-symbols/filter-alt.svelte';
+	import GlobalSearch from '$lib/datagrid/prebuilt/shadcn-svelte/_components/global-search-input.svelte';
+	import DatagridSettingsDropdown from '$lib/datagrid/prebuilt/shadcn-svelte/_components/datagrid-settings-dropdown.svelte';
+	import type { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core/index.svelte';
+	import Fullscreen from '$lib/datagrid/icons/material-symbols/fullscreen.svelte';
+	import FullscreenExit from '$lib/datagrid/icons/material-symbols/fullscreen-exit.svelte';
+	import { cn } from '$lib/utils';
 
-
-    let {datagrid}: {datagrid: TzezarsDatagrid} = $props()
-
+	let { datagrid }: { datagrid: TzezarsDatagrid } = $props();
 </script>
 
-<div class="top-bar flex justify-end">
-    <GlobalSearch {datagrid} />
-    <Button
-        class="rounded-none border-b-0 border-r-0"
-        variant="outline"
-        onclick={() => datagrid.filtering.toggleColumnFiltering()}
-    >
-        {#if datagrid.filtering.showColumnFiltering}
-            <FilterAlt />
-        {:else}
-            <FilterAltOff />
-        {/if}
-    </Button>
+<div class={cn("flex items-end justify-end", datagrid.filtering.showColumnFiltering && 'top-bar ')}>
+	{#if datagrid.filtering.showColumnFiltering}
+		<GlobalSearch {datagrid} />
+	{:else}
+		<div class="flex h-full grow items-end pb-1 pl-2">
+			<span class='font-semibold text-lg w-full'>Your data, our datagrid</span>
+		</div>
+	{/if}
 
-    <DatagridSettingsDropdown {datagrid} />
+	<Button
+		class="rounded-none border-b-0 border-r-0"
+		variant="outline"
+		onclick={() => datagrid.filtering.toggleColumnFiltering()}
+	>
+		{#if datagrid.filtering.showColumnFiltering}
+			<FilterAlt />
+		{:else}
+			<FilterAltOff />
+		{/if}
+	</Button>
+	<Button
+		class="rounded-none border-b-0 border-r-0"
+		variant="outline"
+		onclick={() => datagrid.fullscreen.toggleFullscreen()}
+	>
+		{#if datagrid.fullscreen.isFullscreen}
+			<FullscreenExit />
+		{:else}
+			<Fullscreen />
+		{/if}
+	</Button>
+	<DatagridSettingsDropdown {datagrid} />
 </div>
 
 <style>

@@ -1,5 +1,5 @@
 export class FullscreenFeature {
-    isFullscreen: boolean = $state(true);
+    isFullscreen: boolean = $state(false);
 
     toggleFullscreen() {
         this.isFullscreen = !this.isFullscreen;

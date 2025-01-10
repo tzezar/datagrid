@@ -1,10 +1,9 @@
 <script lang="ts">
 	import '$lib/datagrid/styles.css';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core/index.svelte';
-	import * as Grid from '$lib/datagrid/prebuilt/shadcn-svelte/_components';
 	import GridHeader from './_components/grid-header.svelte';
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
-	import type { AccessorColumn, GroupColumn } from '$lib/datagrid/core/column-creation/types';
+	import type {  GroupColumn } from '$lib/datagrid/core/column-creation/types';
 	import { isGridGroupRow as isGroupRow } from '$lib/datagrid/core/utils.svelte';
 	import GroupRowCellContent from '$lib/datagrid/prebuilt/core/group-row-cell-content.svelte';
 	import BasicRowCellContent from '$lib/datagrid/prebuilt/core/basic-row-cell-content.svelte';
@@ -20,7 +19,6 @@
 	import HeaderBasicCell from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-basic-cell.svelte';
 	import HeaderBasicCellContentWrapper from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-basic-cell-content-wrapper.svelte';
 	import HeaderCellWrapper from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-cell-wrapper.svelte';
-	// import { userColumns } from './columns.svelte';
 	import { userColumns as simplifiedColumns } from './simplefied-columns.svelte';
 	import Pagination from '$lib/datagrid/prebuilt/shadcn-svelte/_components/pagination.svelte';
 	import { cn } from '$lib/utils';
@@ -30,28 +28,6 @@
 		columns: simplifiedColumns,
 		data: data.users
 	});
-
-	// const col = datagrid.columns[0] as AccessorColumn<User>;
-	// if (col.type === 'accessor') {
-	// 	if (col.accessorKey === 'firstName') {
-	// 	}
-	// }
-
-	// const datagrid = new Datagrid({
-	// 	columns: userColumns,
-	// 	data: data.users
-	// });
-
-	// function getBodyRowCellStyles<T>(row: GridRow<User>, column: AnyColumn<User>) {
-	// 	// console.log(row.identifier, column.columnId)
-	// 	if (column.isGroupColumn()) {
-	// 		return;
-	// 	}
-	// 	row = row as GridBasicRow<any>;
-	// 	if (row.original.id === 2 && column.columnId === 'role') {
-	// 		return 'bg-red-400';
-	// 	}
-	// }
 
 	let columns = $derived(
 		datagrid.groupHeadersVisibility.showGroupHeaders
@@ -127,7 +103,7 @@
 
 <Portal disabled={!datagrid.fullscreen.isFullscreen}>
 	<div
-		class={cn('flex flex-col', datagrid.fullscreen.isFullscreen && 'absolute inset-0 z-[20] p-4')}
+		class={cn('flex flex-col h-full', datagrid.fullscreen.isFullscreen && 'absolute inset-0 z-[20] p-4 bg-background/80')}
 	>
 		<GridHeader {datagrid} />
 		<div class={cn('grid-wrapper', datagrid.fullscreen.isFullscreen && 'max-h-full h-full overflow-auto')}>
@@ -181,6 +157,8 @@
 			<div class="grid-footer-container"></div>
 		</div>
 		<Pagination {datagrid} />
+		<div class='border-b border-x p-1 px-2 text-[0.5rem] text-muted-foreground w-fit ml-auto'>
+			Made with ❤️ by Tzezar
+		</div>
 	</div>
-	<div bind:this={end} aria-hidden="true" class="hidden"></div>
 </Portal>
