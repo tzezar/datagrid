@@ -78,7 +78,16 @@ export class ColumnOrderingFeature<TOriginalRow> {
     // If at the root, moves to the next position in the root or into the next group if applicable.
     // Wraparound Logic:
     // If a column reaches the end of all groups and columns at a level, it should wrap to the next level or exit the group hierarchy.
-    
+  
+    // example:
+    // Column A starts at root level
+    // First moves into Group 1 at beginning
+    // Then moves right within Group 1
+    // Then moves into Group 1.1
+    // Moves within Group 1.1
+    // Moves out to Group 1
+    // Moves out to root level
+    // Continues moving right at root level
     private moveColumn(columnId: ColumnId, direction: 'left' | 'right'): void {
         const column = findColumnById(this.datagrid.columns, columnId);
         if (!column) return;
