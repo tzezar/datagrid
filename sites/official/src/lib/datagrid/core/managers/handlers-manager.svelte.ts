@@ -28,7 +28,10 @@ export class HandlersManager {
 
             const singleColumnSort = () => {
                 if (!isColumnSorted) this.datagrid.sorting.addSortConfig(columnId, false);
-                else if (isColumnSortedAscending) this.datagrid.sorting.changeDirection(columnId, true);
+                else if (isColumnSortedAscending) {
+                    this.datagrid.sorting.clearSorting();
+                    datagrid.sorting.addSortConfig(columnId, true);
+                }
                 else this.datagrid.sorting.clearSorting();
 
             }
