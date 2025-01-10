@@ -36,9 +36,9 @@
 	<Button
 		class="rounded-none border-b-0 border-r-0"
 		variant="outline"
-		onclick={() => datagrid.features.fullscreen.toggleFullscreen()}
+		onclick={() => datagrid.extra.features.fullscreen.toggleFullscreen()}
 	>
-		{#if datagrid.features.fullscreen.isFullscreen}
+		{#if datagrid.extra.features.fullscreen.isFullscreen}
 			<FullscreenExit />
 		{:else}
 			<Fullscreen />

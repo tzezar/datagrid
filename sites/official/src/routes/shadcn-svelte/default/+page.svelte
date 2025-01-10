@@ -30,7 +30,7 @@
 	});
 
 	let columns = $derived(
-		datagrid.features.groupHeadersVisibility.showGroupHeaders
+		datagrid.extra.features.groupHeadersVisibility.showGroupHeaders
 			? datagrid.columnManager.getColumnsInOrder()
 			: datagrid.columnManager.getLeafColumnsInOrder()
 	);
@@ -101,12 +101,12 @@
 	</HeaderBasicCell>
 {/snippet}
 
-<Portal disabled={!datagrid.features.fullscreen.isFullscreen}>
+<Portal disabled={!datagrid.extra.features.fullscreen.isFullscreen}>
 	<div
-		class={cn('flex flex-col h-full', datagrid.features.fullscreen.isFullscreen && 'absolute inset-0 z-[20] p-4 bg-background/80')}
+		class={cn('flex flex-col h-full', datagrid.extra.features.fullscreen.isFullscreen && 'absolute inset-0 z-[20] p-4 bg-background/80')}
 	>
 		<GridHeader {datagrid} />
-		<div class={cn('grid-wrapper', datagrid.features.fullscreen.isFullscreen && 'max-h-full h-full overflow-auto')}>
+		<div class={cn('grid-wrapper', datagrid.extra.features.fullscreen.isFullscreen && 'max-h-full h-full overflow-auto')}>
 			<!-- <div class="grid-toolbar-container">
 				<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
 			</div> -->
