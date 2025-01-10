@@ -1,12 +1,9 @@
 <script lang="ts">
-	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
-	import type { GridBasicRow, GridGroupRow, GridRow } from '$lib/datagrid/core/types';
+	import type { GridBasicRow, GridGroupRow } from '$lib/datagrid/core/types';
 	import { flattenColumns, isGridGroupRow } from '$lib/datagrid/core/utils.svelte';
-	import type User from 'lucide-svelte/icons/user';
 	import type { TzezarsDatagrid } from '../../types';
 	import BodyRowCell from './body-row-cell.svelte';
 	import GroupRowCell from './group-row-cell.svelte';
-	import type { AnyColumn } from '$lib/datagrid/core/column-creation/types';
 
 	let {
 		datagrid,
