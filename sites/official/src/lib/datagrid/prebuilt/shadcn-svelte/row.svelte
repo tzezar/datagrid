@@ -17,7 +17,7 @@
 	<div
 		class="grid-body-group-row"
 		data-depth={row.depth}
-		data-expanded={datagrid.rowManager.isGroupRowExpanded(row)}
+		data-expanded={row.isExpanded()}
 	>
 		{#each structuredColumns as column, columnIndex (columnIndex)}
 			{#if column.state.visible === true}
@@ -35,7 +35,7 @@
 			{/if}
 		{/each}
 	</div>
-	{#if datagrid.rowExpanding.isRowExpanded(row.identifier)}
+	{#if row.isExpanded()}
 		<div class="grid-body-row">
 			<div class="grid-body-cell">
 				<div class="grid-body-cell">

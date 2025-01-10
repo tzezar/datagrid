@@ -31,7 +31,7 @@ export type GridRowIdentifier = GridGroupRowIdentifier | GridBasicRowIdentifier
 export type GridGroupRowIdentifier = string
 export type GridBasicRowIdentifier = string | number
 
-export type LeafColumn<TOriginalRow> = AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow> | DisplayColumn<TOriginalRow>
+export type LeafColumn<TOriginalRow, TMeta = any> = AccessorColumn<TOriginalRow, TMeta> | ComputedColumn<TOriginalRow, TMeta> | DisplayColumn<TOriginalRow, TMeta>
 
 export type RowPinningPosition = 'top' | 'bottom' | false;
 
@@ -93,12 +93,14 @@ export type GridGroupRow<TOriginalRow> = {
     depth: number;
     children: GridRow<TOriginalRow>[];
     aggregations: Aggregation[];
+    isExpanded: () => boolean;
 };
 export type GridBasicRow<TOriginalRow> = {
     identifier: GridRowIdentifier;
     index: string;
     parentIndex: string | null;
     original: TOriginalRow;
+    isExpanded: () => boolean;
 };
 
 export type GridRow<TOriginalRow> = GridGroupRow<TOriginalRow> | GridBasicRow<TOriginalRow>;

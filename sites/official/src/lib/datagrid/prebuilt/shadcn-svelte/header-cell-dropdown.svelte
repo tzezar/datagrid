@@ -1,5 +1,4 @@
 <script lang="ts">
-
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import MoreVert from '$lib/datagrid/icons/material-symbols/more-vert.svelte';
@@ -20,11 +19,8 @@
 	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 	import type { AnyColumn } from '$lib/datagrid/core/column-creation/types';
-	import {
-		numberFilterOperators,
-		selectFilterOperators,
-		stringFilterOperators
-	} from '$lib/datagrid/core/defaults';
+	import { selectFilterOperators, stringFilterOperators } from '$lib/datagrid/core/constants';
+	import { numberFilterOperators } from '$lib/datagrid/core/constants';
 	import Equals from '$lib/datagrid/icons/filter-operators/equals.svelte';
 	import NotEquals from '$lib/datagrid/icons/filter-operators/not-equals.svelte';
 	import GreaterThan from '$lib/datagrid/icons/filter-operators/greater-than.svelte';
@@ -152,7 +148,7 @@
 			label: 'Not equals',
 			value: 'notEquals',
 			icon: NotEquals
-		},
+		}
 	];
 
 	let { datagrid, column }: { datagrid: DataGrid<any>; column: AnyColumn<any> } = $props();
@@ -232,11 +228,15 @@
 					<ArrowsSort class="mr-2 size-4" />
 					<span>Clear sort</span>
 				</DropdownMenu.Item>
-				<DropdownMenu.Item onclick={() => datagrid.eventHandlers.sorting.sortColumnAscending(column)}>
+				<DropdownMenu.Item
+					onclick={() => datagrid.eventHandlers.sorting.sortColumnAscending(column)}
+				>
 					<SortAscending class="mr-2 size-4" />
 					<span>Sort ascending </span>
 				</DropdownMenu.Item>
-				<DropdownMenu.Item onclick={() => datagrid.eventHandlers.sorting.sortColumnDescending(column)}>
+				<DropdownMenu.Item
+					onclick={() => datagrid.eventHandlers.sorting.sortColumnDescending(column)}
+				>
 					<SortDescending class="mr-2 size-4" />
 					<span>Sort descending </span>
 				</DropdownMenu.Item>

@@ -6,7 +6,7 @@ export type DotNestedKeys<T> = (T extends object ? {
 }[Exclude<keyof T, symbol>] : "") extends infer D ? Extract<D, string> : never;
 // Specific interfaces for different column types
 
-export interface AccessorColumn<TOriginalRow> {
+export interface AccessorColumn<TOriginalRow, TMeta = any> {
   type: 'accessor';
   header: string;
   columnId: string;
@@ -32,10 +32,10 @@ export interface AccessorColumn<TOriginalRow> {
     visible: boolean;
     pinning: ColumnPinningState
   };
-  _meta: any;
+  _meta: TMeta
 }
 
-export interface ComputedColumn<TOriginalRow> {
+export interface ComputedColumn<TOriginalRow, TMeta = any> {
   type: 'computed';
   header: string;
   columnId: string;
@@ -62,10 +62,10 @@ export interface ComputedColumn<TOriginalRow> {
     visible: boolean;
     pinning: ColumnPinningState
   };
-  _meta: any;
+  _meta: TMeta;
 }
 
-export interface DisplayColumn<TOriginalRow> {
+export interface DisplayColumn<TOriginalRow, TMeta = any> {
   type: 'display';
   header: string;
   columnId: string;
@@ -89,10 +89,10 @@ export interface DisplayColumn<TOriginalRow> {
     pinning: ColumnPinningState
 
   };
-  _meta: any;
+  _meta: TMeta;
 }
 
-export interface GroupColumn<TOriginalRow> {
+export interface GroupColumn<TOriginalRow, TMeta = any> {
   type: 'group';
   header: string;
   headerCell?: HeaderCell;
@@ -113,7 +113,7 @@ export interface GroupColumn<TOriginalRow> {
     visible: null;
     pinning: ColumnPinningState;
   };
-  _meta: any;
+  _meta: TMeta;
 }
 // Union type for all column types
 

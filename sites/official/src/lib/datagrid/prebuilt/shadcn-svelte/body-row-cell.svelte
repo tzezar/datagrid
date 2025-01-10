@@ -1,23 +1,22 @@
 <script lang="ts">
+	import type { AccessorColumn } from '$lib/datagrid/core/column-creation/types';
 	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
-	import type {
-		GridBasicRow,
-		LeafColumn
-	} from '$lib/datagrid/core/types';
+	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
+	import { cn } from '$lib/utils';
+	import type { ColumnMeta } from './types';
 
 	type Props = {
 		datagrid: DataGrid<any>;
-		column: LeafColumn<any>;
+		column: LeafColumn<any, ColumnMeta>;
 		row: GridBasicRow<any>;
 	};
 
 	let { datagrid, column, row }: Props = $props();
-
 </script>
 
 <div
-	class="grid-body-cell"
+	class={cn('grid-body-cell', column._meta.styles?.bodyCell)}
 	class:justify-center={column?._meta?.align === 'center'}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 	style:--width={column.state.size.width + 'px'}
@@ -31,7 +30,7 @@
 		{#if typeof cellContent === 'string'}
 			{@html cellContent}
 		{:else if isCellComponent(cellContent)}
-		<cellContent.component {datagrid} {row} {column} />
+			<cellContent.component {datagrid} {row} {column} />
 		{/if}
 	{:else}
 		{@html getCellContent(column, row.original)}

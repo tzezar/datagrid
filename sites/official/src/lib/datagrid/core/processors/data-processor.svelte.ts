@@ -280,9 +280,10 @@ export class DataProcessor<TRow> {
                     groupKey: groupCols[depth],
                     groupValue: [key],
                     depth,
-                    isExpanded: false,
+                    // isExpanded: false,
                     children: groupByLevel(groupRows, depth + 1, `${parentPath}${index + 1}`),
-                    aggregations: aggregations
+                    aggregations: aggregations,
+                    isExpanded: () => this.datagrid.rowExpanding.isRowExpanded(key),
                 };
             });
         };
@@ -309,12 +310,18 @@ export class DataProcessor<TRow> {
     }
 
     private createBasicRows(rows: TRow[], parentIndex?: string): GridRow<TRow>[] {
-        return rows.map((row, i) => ({
-            identifier: this.datagrid.config.createBasicRowIdentifier(row),
-            index: this.datagrid.config.createBasicRowIndex(row, parentIndex || null, i),
-            parentIndex: parentIndex ?? null,
-            original: row
-        }));
+        
+        return rows.map((row, i) => {
+            const identifier = this.datagrid.config.createBasicRowIdentifier(row);
+            return {
+                identifier,
+                index: this.datagrid.config.createBasicRowIndex(row, parentIndex || null, i),
+                parentIndex: parentIndex ?? null,
+                original: row,
+                isExpanded: () => this.datagrid.rowExpanding.isRowExpanded(identifier),
+    
+            }
+        });
     }
 
     private paginateRows(rows: GridRow<TRow>[]): GridRow<TRow>[] {
