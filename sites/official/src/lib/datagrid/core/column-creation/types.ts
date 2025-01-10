@@ -9,7 +9,7 @@ export type DotNestedKeys<T> = (T extends object ? {
 export interface AccessorColumn<TOriginalRow, TMeta = any> {
   type: 'accessor';
   header: string;
-  columnId: string;
+  columnId: ColumnId;
   parentColumnId: string | null;
   accessorKey: DotNestedKeys<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
@@ -39,8 +39,8 @@ export interface AccessorColumn<TOriginalRow, TMeta = any> {
 export interface ComputedColumn<TOriginalRow, TMeta = any> {
   type: 'computed';
   header: string;
-  columnId: string;
-  parentColumnId: string | null;
+  columnId: ColumnId;
+  parentColumnId: ColumnId | null;
   accessorFn: AccessorFn<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
@@ -70,7 +70,7 @@ export interface ComputedColumn<TOriginalRow, TMeta = any> {
 export interface DisplayColumn<TOriginalRow, TMeta = any> {
   type: 'display';
   header: string;
-  columnId: string;
+  columnId: ColumnId;
   parentColumnId: string | null;
   cell: CustomCell<TOriginalRow>;
   headerCell?: HeaderCell;
@@ -98,7 +98,7 @@ export interface GroupColumn<TOriginalRow, TMeta = any> {
   type: 'group';
   header: string;
   headerCell?: HeaderCell;
-  columnId: string;
+  columnId: ColumnId;
   parentColumnId: string | null;
   columns: AnyColumn<TOriginalRow>[];
   cell?: CustomCell<TOriginalRow>;

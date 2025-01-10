@@ -1,0 +1,21 @@
+<script lang="ts">
+	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/column-creation/types';
+	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
+	import type { Snippet } from 'svelte';
+	import type { TzezarsDatagrid } from '../../types';
+	import type { LeafColumn } from '$lib/datagrid/core/types';
+
+	type Props = {
+		datagrid: TzezarsDatagrid;
+		column: AnyColumn<any>;
+		groupCell: Snippet<[column: GroupColumn<any>]>;
+		cell: Snippet<[column: LeafColumn<any>]>;
+	};
+    const { datagrid, column, groupCell, cell }: Props = $props();
+</script>
+
+{#if isGroupColumn(column)}
+	{@render groupCell(column)}
+{:else if column.state.visible === true}
+	{@render cell(column)}
+{/if}

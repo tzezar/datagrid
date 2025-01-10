@@ -1,11 +1,11 @@
-import type { AnyColumn as GenericColumn } from "./column-creation/types";
+import type { AccessorColumn, AnyColumn } from "./column-creation/types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { ColumnFacetingFeature, ColumnFilteringFeature, ColumnGroupingFeature, ColumnOrderingFeature, ColumnPinningFeature, ColumnSizingFeature, ColumnVisibilityFeature, FullscreenFeature, GlobalSearchFeature, GroupingFeature, PaginationFeature, RowExpandingFeature, RowPinningFeature, RowSelectionFeature, SortingFeature } from "./features";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
 
 export type GridConfig<TOriginalRow> = {
-    columns: GenericColumn<TOriginalRow>[];
+    columns: AnyColumn<TOriginalRow>[];
     data: TOriginalRow[];
 
     event?: object
@@ -14,17 +14,17 @@ export type GridConfig<TOriginalRow> = {
 export class DataGrid<TOriginalRow> {
     readonly metrics = new PerformanceMetrics();
     initial = $state.raw({
-        columns: [] as GenericColumn<TOriginalRow>[],
+        columns: [] as AnyColumn<TOriginalRow>[],
         data: [] as TOriginalRow[]
     });
-    columns: GenericColumn<TOriginalRow>[] = $state([]);
+    columns: AnyColumn<TOriginalRow>[] = $state([]);
 
     handlers = new HandlersManager(this);
     processors = {
         data: new DataProcessor(this),
         column: new ColumnProcessor(this)
     }
-    
+
     cache = new DatagridCacheManager(this);
     rows = new RowManager(this);
     columnManager = new ColumnManager(this);
@@ -54,7 +54,7 @@ export class DataGrid<TOriginalRow> {
 
 
     lifecycleHooks = {
-        preProcessColumns: (action: any, columns: GenericColumn<TOriginalRow>[]) => {
+        preProcessColumns: (action: any, columns: AnyColumn<TOriginalRow>[]) => {
             return action(columns);
         }
     }
@@ -117,6 +117,11 @@ export class DataGrid<TOriginalRow> {
     }
 
 
+
+    // Type-safe column getter
+    getColumn<K extends keyof TOriginalRow>(columnId: string): AccessorColumn<TOriginalRow> | undefined {
+        return this.columns.find(col => col.columnId === columnId) as AccessorColumn<TOriginalRow>;
+    }
 
 
 }

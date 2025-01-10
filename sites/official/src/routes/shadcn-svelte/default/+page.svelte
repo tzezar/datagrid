@@ -2,15 +2,11 @@
 	import '$lib/datagrid/styles.css';
 	import { userColumns } from './columns.svelte';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core';
-
 	import * as Grid from '$lib/datagrid/prebuilt/shadcn-svelte/_components';
 	import GridHeader from './_components/grid-header.svelte';
-	import type { GridBasicRow, GridGroupRow, GridRow, LeafColumn } from '$lib/datagrid/core/types';
-	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
-	import type { User } from './generate-users';
-	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/column-creation/types';
-	import { isCellComponent, isGridGroupRow as isGroupRow } from '$lib/datagrid/core/utils.svelte';
-	import { cn } from '$lib/utils';
+	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
+	import type { AccessorColumn, GroupColumn } from '$lib/datagrid/core/column-creation/types';
+	import { isGridGroupRow as isGroupRow } from '$lib/datagrid/core/utils.svelte';
 	import GroupRowCellContent from '$lib/datagrid/prebuilt/core/group-row-cell-content.svelte';
 	import BasicRowCellContent from '$lib/datagrid/prebuilt/core/basic-row-cell-content.svelte';
 	import BodyRowGroupCellHeader from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/body-row-group-cell-header.svelte';
@@ -23,7 +19,9 @@
 	import HeaderColumnActions from '$lib/datagrid/prebuilt/shadcn-svelte/_components/header-column-actions.svelte';
 	import HeaderColumnFilters from '$lib/datagrid/prebuilt/shadcn-svelte/_components/header-column-filters.svelte';
 	import HeaderBasicCell from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-basic-cell.svelte';
-	import HeaderBasicCellWrapper from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-basic-cell-wrapper.svelte';
+	import HeaderBasicCellContentWrapper from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-basic-cell-content-wrapper.svelte';
+	import HeaderCellWrapper from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-cell-wrapper.svelte';
+	import type { User } from './generate-users';
 
 	let { data } = $props();
 
@@ -31,6 +29,14 @@
 		columns: userColumns,
 		data: data.users
 	});
+	const col = datagrid.columns[0] as AccessorColumn<User>;
+	// if (col.accessorKey === '') {
+
+	// }
+	const column = datagrid.getColumn('name');
+	// const value = column?.getValueFn(data.users[0]);
+
+	const a = column?.columnId
 
 	// const datagrid = new Datagrid({
 	// 	columns: userColumns,
@@ -49,7 +55,7 @@
 	// }
 </script>
 
-{#snippet GroupRow(row: GridGroupRow<any>, leafColumns: LeafColumn<any>[])}
+{#snippet GroupRowSnippet(row: GridGroupRow<any>, leafColumns: LeafColumn<any>[])}
 	<div class="grid-body-group-row" data-depth={row.depth} data-expanded={row.isExpanded()}>
 		{#each leafColumns as column, columnIndex (columnIndex)}
 			<BodyGroupRowCell {datagrid} {column} {row}>
@@ -66,23 +72,6 @@
 	</div>
 {/snippet}
 
-{#snippet BasicRow(row: GridBasicRow<any>, leafColumns: LeafColumn<any>[])}
-	<div class="grid-body-row">
-		{#each leafColumns as column (column)}
-			<BodyBasicRowCell {datagrid} {column} {row}>
-				<BasicRowCellContent {datagrid} {column} {row} />
-			</BodyBasicRowCell>
-		{/each}
-	</div>
-	{#if row.isExpanded()}
-		<div class="grid-body-row">
-			<div class="grid-body-cell">
-				Content for row with ID {row.identifier}
-			</div>
-		</div>
-	{/if}
-{/snippet}
-
 {#snippet HeaderGroupCellSnippet(column: GroupColumn<any>)}
 	<HeaderGroupCell {datagrid} {column}>
 		<div
@@ -93,7 +82,14 @@
 		</div>
 		<div class="flex grow flex-row">
 			{#each column.columns ?? [] as subColumn (subColumn.columnId)}
-				{@render HeaderCell(subColumn)}
+				<HeaderCellWrapper {datagrid} column={subColumn}>
+					{#snippet groupCell(column)}
+						{@render HeaderGroupCellSnippet(column)}
+					{/snippet}
+					{#snippet cell(column)}
+						{@render HeaderCellSnippet(column)}
+					{/snippet}
+				</HeaderCellWrapper>
 			{/each}
 		</div>
 	</HeaderGroupCell>
@@ -101,7 +97,7 @@
 
 {#snippet HeaderCellSnippet(column: LeafColumn<any>)}
 	<HeaderBasicCell {datagrid} {column}>
-		<HeaderBasicCellWrapper
+		<HeaderBasicCellContentWrapper
 			{datagrid}
 			{column}
 			onclick={(e) => datagrid.handlers.sorting.toggleColumnSorting(column, e)}
@@ -112,18 +108,10 @@
 				{/snippet}
 			</BasicHeaderCellContent>
 			<HeaderColumnActions {datagrid} {column} />
-		</HeaderBasicCellWrapper>
+		</HeaderBasicCellContentWrapper>
 
 		<HeaderColumnFilters {datagrid} {column} />
 	</HeaderBasicCell>
-{/snippet}
-
-{#snippet HeaderCell(column: AnyColumn<any>)}
-	{#if isGroupColumn(column)}
-		{@render HeaderGroupCellSnippet(column)}
-	{:else if column.state.visible === true}
-		{@render HeaderCellSnippet(column)}
-	{/if}
 {/snippet}
 
 <div class="flex flex-col">
@@ -133,7 +121,14 @@
 			<div class="grid-header">
 				<div class="grid-header-row">
 					{#each datagrid.columnManager.getColumnsInOrder() as column (column)}
-						{@render HeaderCell(column)}
+						<HeaderCellWrapper {datagrid} {column}>
+							{#snippet groupCell(column)}
+								{@render HeaderGroupCellSnippet(column)}
+							{/snippet}
+							{#snippet cell(column)}
+								{@render HeaderCellSnippet(column)}
+							{/snippet}
+						</HeaderCellWrapper>
 					{/each}
 				</div>
 			</div>
@@ -141,9 +136,26 @@
 				{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
 					{@const columns = datagrid.columnManager.getLeafColumnsInOrder()}
 					{#if isGroupRow(row)}
-						{@render GroupRow(row, columns)}
+						{@render GroupRowSnippet(row, columns)}
 					{:else}
-						{@render BasicRow(row, columns)}
+						<div class="grid-body-row">
+							{#each columns as column (column)}
+								<!-- {#if column.id === ''}
+								
+								{/if} -->
+
+								<BodyBasicRowCell {datagrid} {column} {row}>
+									<BasicRowCellContent {datagrid} {column} {row} />
+								</BodyBasicRowCell>
+							{/each}
+						</div>
+						{#if row.isExpanded()}
+							<div class="grid-body-row">
+								<div class="grid-body-cell">
+									Content for row with ID {row.identifier}
+								</div>
+							</div>
+						{/if}
 					{/if}
 				{/each}
 			</div>
