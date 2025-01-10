@@ -5,10 +5,10 @@
 	import FilterAlt from '$lib/datagrid/icons/material-symbols/filter-alt.svelte';
 	import GlobalSearch from '$lib/datagrid/prebuilt/shadcn-svelte/_components/global-search-input.svelte';
 	import DatagridSettingsDropdown from '$lib/datagrid/prebuilt/shadcn-svelte/_components/datagrid-settings-dropdown.svelte';
-	import type { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core/index.svelte';
 	import Fullscreen from '$lib/datagrid/icons/material-symbols/fullscreen.svelte';
 	import FullscreenExit from '$lib/datagrid/icons/material-symbols/fullscreen-exit.svelte';
 	import { cn } from '$lib/utils';
+	import type { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core/index.svelte';
 
 	let { datagrid }: { datagrid: TzezarsDatagrid } = $props();
 </script>
@@ -36,9 +36,9 @@
 	<Button
 		class="rounded-none border-b-0 border-r-0"
 		variant="outline"
-		onclick={() => datagrid.fullscreen.toggleFullscreen()}
+		onclick={() => datagrid.features.fullscreen.toggleFullscreen()}
 	>
-		{#if datagrid.fullscreen.isFullscreen}
+		{#if datagrid.features.fullscreen.isFullscreen}
 			<FullscreenExit />
 		{:else}
 			<Fullscreen />

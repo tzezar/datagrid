@@ -17,7 +17,9 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div
 	class="grid-header-cell-content items-end {column.options.sortable ? 'sortable' : ''}"
-	onclick={(e) => datagrid.handlers.sorting.toggleColumnSorting(column, e)}
+	onclick={(e) => {
+		const multisort = e.shiftKey;
+		datagrid.handlers.sorting.toggleColumnSorting(column, multisort)}}
 >
 	{@render children()}
 </div>

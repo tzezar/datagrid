@@ -18,16 +18,50 @@ const handleDropdownMenu = (columns: AnyColumn<any>[]) => {
     return columns;
 };
 
+
+export interface TzezarsDatagridConfig<TOriginalRow> extends GridConfig<TOriginalRow> {
+    highlightSelectedRow?: boolean;
+}
+
+
 export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> {
-    constructor(config: GridConfig<TOriginalRow>) {
+    declare features: typeof DataGrid.prototype.features & {
+        fullscreen: FullscreenFeature;
+        groupHeadersVisibility: GroupHeadersVisibilityFeature;
+    };
+
+    constructor(config: TzezarsDatagridConfig<TOriginalRow>) {
         super(config, handleDropdownMenu);
+        
+        // Create a new features object that combines the parent features with our new ones
+        Object.defineProperty(this, 'features', {
+            value: {
+                ...this.features,
+                fullscreen: new FullscreenFeature(),
+                groupHeadersVisibility: new GroupHeadersVisibilityFeature(),
+            },
+            writable: false,
+            configurable: true
+        });
+
+        // Initialize extra configuration
+        this.extra = {
+            highlightSelectedRow: config.highlightSelectedRow ?? true,
+        };
     }
 
-    fullscreen = new FullscreenFeature();
-    groupHeadersVisibility = new GroupHeadersVisibilityFeature();
+    private extra: {
+        highlightSelectedRow: boolean;
+    };
 
-    extra = {
-        highlightSelectedRow: true,
-        
+    getExtra() {
+        return { ...this.extra };
+    }
+
+    updateExtra(config: Partial<typeof this.extra>) {
+        this.extra = {
+            ...this.extra,
+            ...config
+        };
     }
 }

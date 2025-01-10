@@ -54,7 +54,9 @@
 			{#each sortableColumns as column}
 				<DropdownMenu.Item
 					closeOnSelect={false}
-					onclick={(e) => datagrid.handlers.sorting.toggleColumnSorting(column, e)}
+					onclick={(e) => {
+						const multisort = !e.shiftKey;
+						datagrid.handlers.sorting.toggleColumnSorting(column, multisort)}}
 				>
 					{#if column.options.sortable}
 						<div class="sort-indicator">
@@ -75,7 +77,7 @@
 				</DropdownMenu.Item>
 			{/each}
 			<DropdownMenu.Item disabled>
-				<span>Hold <Badge>Shift</Badge> to multi-sort</span>
+				<span>Hold <Badge>Shift</Badge> to single sort</span>
 			</DropdownMenu.Item>
 		</DropdownMenu.SubContent>
 	</DropdownMenu.Sub>

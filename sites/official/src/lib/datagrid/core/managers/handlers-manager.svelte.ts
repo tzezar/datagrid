@@ -14,19 +14,22 @@ export class HandlersManager {
     }
 
     sorting = {
-        toggleColumnSorting: (column: LeafColumn<any>, event: MouseEvent) => {
+        toggleColumnSorting: (column: LeafColumn<any>, multisort: boolean) => {
             const datagrid = this.datagrid;
             const columnId = column.columnId;
 
             if (!column.options.sortable) return;
 
-            const isUserMultiSorting = event.shiftKey;
 
             const isColumnSorted = datagrid.features.sorting.isColumnSorted(columnId);
             const isColumnSortedAscending = datagrid.features.sorting.isColumnSorted(columnId, false);
 
             const singleColumnSort = () => {
-                if (!isColumnSorted) this.datagrid.features.sorting.addSortConfig(columnId, false);
+
+                if (!isColumnSorted) {
+                    this.datagrid.features.sorting.clearSorting();
+                    this.datagrid.features.sorting.addSortConfig(columnId, false)
+                }
                 else if (isColumnSortedAscending) {
                     this.datagrid.features.sorting.clearSorting();
                     datagrid.features.sorting.addSortConfig(columnId, true);
@@ -46,7 +49,7 @@ export class HandlersManager {
                 }
             }
 
-            if (isUserMultiSorting) multipleColumnSort();
+            if (multisort) multipleColumnSort();
             else singleColumnSort();
 
             datagrid.processors.data.executeFullDataTransformation();
