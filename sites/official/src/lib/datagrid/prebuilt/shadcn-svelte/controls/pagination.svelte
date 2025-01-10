@@ -87,7 +87,7 @@
 
 {#snippet currentPage()}
 	<span class="flex items-center gap-1 text-nowrap text-xs">
-		<!-- <span class="hidden md:block"> Page </span> -->
+		<span class=" md:block"> Page </span>
 		<Input
 			class="pagination-page-input h-6 w-full max-w-[180px] p-2 text-xs"
 			type="text"
@@ -98,7 +98,7 @@
 				});
 			}}
 		/>
-		<!-- of {datagrid.pagination.pageCount} -->
+		of {datagrid.pagination.pageCount}
 	</span>
 {/snippet}
 
@@ -106,8 +106,8 @@
 	{@render status()}
 	<div class="flex place-items-center justify-center gap-2 md:w-1/3">
 		{@render prevButton()}
-		{@render currentPage()}
 		{@render nextButton()}
+		{@render currentPage()}
 	</div>
 	<div class="flex justify-end md:w-1/3">
 		{@render perPageSelect()}
