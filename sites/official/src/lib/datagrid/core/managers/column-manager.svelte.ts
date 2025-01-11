@@ -84,21 +84,23 @@ export class ColumnManager<TOriginalRow> {
 
 
     getColumnsPinnedToLeft(): AnyColumn<TOriginalRow>[] {
-        // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'left' || this.datagrid.grouping.groupByColumns.includes(col.columnId))
-        // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'left')
         return flattenColumns(this.datagrid.columns).filter(col => col.state.pinning.position === 'left' || this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
     }
     getColumnsPinnedToRight(): AnyColumn<TOriginalRow>[] {
         return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'right')
     }
     getColumnsPinnedToNone(): AnyColumn<TOriginalRow>[] {
-        return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'none').filter(col => !this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
+        // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'none').filter(col => !this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
+        return flattenColumns(this.datagrid.columns).filter(col =>  col.state.pinning.position === 'none' && !this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
     }
 
 
     getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
-        const cols = [...this.getColumnsPinnedToLeft(), ...this.datagrid.processors.column.createColumnHierarchy(this.getColumnsPinnedToNone()), ...this.datagrid.processors.column.createColumnHierarchy(this.getColumnsPinnedToRight())]
-        return cols
+        // const cols = [...this.getColumnsPinnedToLeft(), ...this.datagrid.processors.column.createColumnHierarchy(this.getColumnsPinnedToNone()), ...this.datagrid.processors.column.createColumnHierarchy(this.getColumnsPinnedToRight())]
+        const pinnedLeft = this.getColumnsPinnedToLeft()
+        const pinnedNone = this.getColumnsPinnedToNone()
+        const pinnedRight = this.getColumnsPinnedToRight()
+        return [...pinnedLeft, ...this.datagrid.processors.column.createColumnHierarchy(pinnedNone), ...this.datagrid.processors.column.createColumnHierarchy(pinnedRight)]
     }
 
 

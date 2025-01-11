@@ -50,18 +50,20 @@ export function generateRandomColumnId(): string {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
+
 export function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
     const flattened: AnyColumn<any>[] = [];
 
-    for (const column of columns) {
-        if (isGroupColumn(column)) {
-            flattened.push(column);
+    for (let i = 0; i < columns.length; i++) {
+        const column = columns[i];
+        if (column.type === 'group') {
             flattened.push(...flattenColumns(column.columns));
-        } else {
+            flattened.push({ ...column, columns: [] });
+        }
+        else {
             flattened.push(column);
         }
     }
-
     return flattened;
 }
 

@@ -68,15 +68,14 @@ function createColumnHierarchy<TOriginalRow>(flatColumns: AnyColumn<TOriginalRow
     return results
 }
 
-function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+ function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
     const flattened: AnyColumn<any>[] = [];
 
     for (let i = 0; i < columns.length; i++) {
         const column = columns[i];
         if (column.type === 'group') {
             flattened.push(...flattenColumns(column.columns));
-            column.columns = [];
-            flattened.push(column);
+            flattened.push({ ...column, columns: [] });
         }
         else {
             flattened.push(column);
@@ -88,17 +87,18 @@ function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
 
 export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> {
     constructor(config: TzezarsDatagridConfig<TOriginalRow>) {
-        config.lifecycleHooks = new LifecycleHooks<TOriginalRow>();
-        config.lifecycleHooks.register(LifecycleHooks.HOOKS.PRE_PROCESS_COLUMNS, (columns: AnyColumn<TOriginalRow>[]) => {
-            console.log('columns passed to pre process', columns);
-            const flattenedColumns = flattenColumns([...columns]);
-            console.log('flattened columns', flattenedColumns);
-            const transformedColumns = transformColumns([...flattenedColumns]);
-            console.log('transformed columns', transformedColumns);
-            const hierarchicalColumns = createColumnHierarchy(transformedColumns, flattenedColumns);
-            console.log('hierarchical columns', hierarchicalColumns);
-            return hierarchicalColumns
-        });
+        // config.lifecycleHooks = new LifecycleHooks<TOriginalRow>();
+        // config.lifecycleHooks.register(LifecycleHooks.HOOKS.PRE_PROCESS_COLUMNS, (columns: AnyColumn<TOriginalRow>[]) => {
+        //     // console.log('columns passed to pre process', columns);
+        //     // const flattenedColumns = flattenColumns([...columns]);
+        //     // console.log('flattened columns', flattenedColumns);
+        //     // const transformedColumns = transformColumns([...flattenedColumns]);
+        //     // console.log('transformed columns', transformedColumns);
+        //     // const hierarchicalColumns = createColumnHierarchy(transformedColumns, flattenedColumns);
+        //     // console.log('hierarchical columns', hierarchicalColumns);
+        //     // return hierarchicalColumns
+        //     return columns
+        // });
         super(config);
     }
     extra = new Extra();
