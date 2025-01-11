@@ -35,7 +35,7 @@ export class ColumnProcessor<TOriginalRow> {
             }
         })
         // this.datagrid.lifecycleHooks.executePreProcessColumns(newCols);
-        
+
         return newCols
     };
 
@@ -74,102 +74,47 @@ export class ColumnProcessor<TOriginalRow> {
 
 
 
-    createColumnHierarchy<TOriginalRow>(flatColumns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
-        // ! this raise error because there can be filtered flat columns
-        
-        // Hierarchy can be multiple levels deep, so we need to traverse the hierarchy and build the final result
-    
+    createColumnHierarchy<TOriginalRow>(partialFlatColumns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
         const results: AnyColumn<TOriginalRow>[] = [];
-        const pendingColumns: AnyColumn<TOriginalRow>[] = [...flatColumns];
-    
-        const findParentColumnInResults = (columns: AnyColumn<TOriginalRow>[], column: AnyColumn<TOriginalRow>): AnyColumn<TOriginalRow> | null => {
+
+        // handle root columns first
+        partialFlatColumns.forEach(col => {
+            if (col.parentColumnId === null) {
+                results.push(col);
+            }
+        });
+        partialFlatColumns =partialFlatColumns.filter(col => col.parentColumnId !== null)
+
+
+        const findGroupColumnInResults = (columns: AnyColumn<TOriginalRow>[], column: AnyColumn<TOriginalRow>): GroupColumn<TOriginalRow> | null => {
             for (const col of columns) {
-                if (col.columnId === column.parentColumnId) return col;
+                if (col.columnId === column.parentColumnId) return col as GroupColumn<TOriginalRow>;
                 if (col.type === 'group' && col.columns) {
-                    const found = findParentColumnInResults(col.columns, column);
+                    const found = findGroupColumnInResults(col.columns, column);
                     if (found) return found;
                 }
             }
             return null;
         };
-    
-        let index = 0
-    
-        while (pendingColumns.length > 0) {
-            index++
-            if (index > 1000) throw new Error('Infinite loop detected in createColumnHierarchy');
-            const column = pendingColumns.shift()!;
-    
+
+        while (partialFlatColumns.length > 0) {
+            const column = partialFlatColumns.shift()!;
             if (column.parentColumnId === null) {
-                console.log('column', column);
                 results.push(column);
                 continue;
             }
-            let parentColumn = findParentColumnInResults(results, column);
+            let parentColumn = findGroupColumnInResults(results, column);
             if (parentColumn === null) {
                 // Check next column
-                pendingColumns.push(column);
+                partialFlatColumns.push(column);
                 continue;
             } else {
                 parentColumn = parentColumn as GroupColumn<TOriginalRow>;
                 parentColumn.columns.push(column);
             }
         }
-    
-    
+
         return results
     }
-  
-
-
-
-    // createColumnHierarchy<TOriginalRow>(flatColumns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
-    //     const results: AnyColumn<TOriginalRow>[] = [];
-    //     const pendingColumns: AnyColumn<TOriginalRow>[] = [...flatColumns];
-    
-    //     const findParentColumnInResults = (columns: AnyColumn<TOriginalRow>[], column: AnyColumn<TOriginalRow>): GroupColumn<TOriginalRow> | null => {
-    //         for (const col of columns) {
-    //             if (col.columnId === column.parentColumnId) return col.type === 'group' ? col as GroupColumn<TOriginalRow> : null;
-    //             if (col.type === 'group' && col.columns) {
-    //                 const found = findParentColumnInResults(col.columns, column);
-    //                 if (found) return found;
-    //             }
-    //         }
-    //         return null;
-    //     };
-    
-    //     const unresolvedColumns = new Set(pendingColumns.map(c => c.columnId));
-    //     let iterations = 0;
-    
-    //     while (pendingColumns.length > 0) {
-    //         iterations++;
-    //         if (iterations > flatColumns.length * 100) {
-    //             throw new Error('Infinite loop detected in createColumnHierarchy');
-    //         }
-    
-    //         const column = pendingColumns.shift()!;
-    
-    //         if (!column.parentColumnId) {
-    //             results.push(column);
-    //             unresolvedColumns.delete(column.columnId);
-    //             continue;
-    //         }
-    
-    //         const parentColumn = findParentColumnInResults(results, column);
-    //         if (parentColumn) {
-    //             parentColumn.columns.push(column);
-    //             unresolvedColumns.delete(column.columnId);
-    //         } else {
-    //             pendingColumns.push(column); // Defer processing
-    //         }
-    //     }
-    
-    //     if (unresolvedColumns.size > 0) {
-    //         console.warn('Some columns could not be resolved:', unresolvedColumns);
-    //     }
-    
-    //     return results;
-    // }
-    
 
 }

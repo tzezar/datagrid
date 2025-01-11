@@ -87,7 +87,7 @@ export class ColumnManager<TOriginalRow> {
         return flattenColumns(this.datagrid.columns).filter(col => col.state.pinning.position === 'left' || this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
     }
     getColumnsPinnedToRight(): AnyColumn<TOriginalRow>[] {
-        return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'right')
+        return flattenColumns(this.datagrid.columns).filter(col => col.type !== 'group').filter(col => col.state.pinning.position === 'right')
     }
     getColumnsPinnedToNone(): AnyColumn<TOriginalRow>[] {
         // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'none').filter(col => !this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
