@@ -27,14 +27,14 @@ export class ColumnProcessor<TOriginalRow> {
     }
 
     transformColumns = (columns: AnyColumn<any>[]): AnyColumn<any>[] => {
-        const newCols = this.placeGroupColumnsFirst(this.assignParentColumnIds(columns));
+        let newCols = this.placeGroupColumnsFirst(this.assignParentColumnIds(columns));
         newCols.forEach(col => {
             return {
                 isGroupColumn: () => col.type === 'group',
                 ...col,
             }
         })
-        // this.datagrid.lifecycleHooks.executePreProcessColumns(newCols);
+        newCols = this.datagrid.lifecycleHooks.executePreProcessColumns(newCols);
 
         return newCols
     };
