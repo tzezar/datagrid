@@ -49,7 +49,6 @@ function createColumnHierarchy<TOriginalRow>(flatColumns: AnyColumn<TOriginalRow
         const column = pendingColumns.shift()!;
 
         if (column.parentColumnId === null) {
-            console.log('column', column);
             results.push(column);
             continue;
         }
@@ -89,13 +88,9 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
     constructor(config: TzezarsDatagridConfig<TOriginalRow>) {
         config.lifecycleHooks = new LifecycleHooks<TOriginalRow>();
         config.lifecycleHooks.register(LifecycleHooks.HOOKS.PRE_PROCESS_COLUMNS, (columns: AnyColumn<TOriginalRow>[]) => {
-            console.log('columns passed to pre process', columns);
             const flattenedColumns = flattenColumns([...columns]);
-            console.log('flattened columns', flattenedColumns);
             const transformedColumns = transformColumns([...flattenedColumns]);
-            console.log('transformed columns', transformedColumns);
             const hierarchicalColumns = createColumnHierarchy(transformedColumns);
-            console.log('hierarchical columns', hierarchicalColumns);
             return hierarchicalColumns
         });
         super(config);

@@ -2,7 +2,7 @@ import { isGroupColumn } from "../helpers/column-guards";
 import type { AnyColumn, GroupColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
 import type { LeafColumn } from "../types";
-import { findColumnById, flattenColumns } from "../utils.svelte";
+import { findColumnById, flattenColumns, flattenColumnsWithNestedColumns } from "../utils.svelte";
 
 
 
@@ -30,6 +30,20 @@ export class ColumnManager<TOriginalRow> {
         }
         return flattened;
     }
+
+    getFlatColumnsWithNestedColumns(): AnyColumn<TOriginalRow>[] {
+        const flattened: AnyColumn<any>[] = [];
+        for (const column of this.datagrid.columns) {
+            if (isGroupColumn(column)) {
+                flattened.push(column);
+                flattened.push(...flattenColumnsWithNestedColumns(column.columns));
+            } else {
+                flattened.push(column);
+            }
+        }
+        return flattened;
+    }
+
 
     getLeafColumns(): LeafColumn<TOriginalRow>[] {
         return this.getFlatColumns().filter(col => col.type !== 'group')

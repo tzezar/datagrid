@@ -188,7 +188,7 @@ export class HandlersManager {
             this.datagrid.features.columnOrdering.moveRight(columnId)
         },
         moveColumnToGroup: ({ columnId, targetGroupColumnId }: { columnId: ColumnId, targetGroupColumnId: string }) => {
-            this.datagrid.features.columnOrdering.moveColumnToGroup({ columnId, targetGroupColumnId });
+            this.datagrid.features.columnOrdering.moveColumnToPosition({ columnId, targetGroupColumnId });
         }
     }
     columnGrouping = {

@@ -67,6 +67,22 @@ export function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
     return flattened;
 }
 
+export function flattenColumnsWithNestedColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+    const flattened: AnyColumn<any>[] = [];
+
+    for (let i = 0; i < columns.length; i++) {
+        const column = columns[i];
+        if (column.type === 'group') {
+            flattened.push(...flattenColumns(column.columns));
+            flattened.push(column);
+        }
+        else {
+            flattened.push(column);
+        }
+    }
+    return flattened;
+}
+
 // Find column by ID in nested structure
 export function findColumnById<TOriginalRow>(columns: AnyColumn<TOriginalRow>[], id: ColumnId): AnyColumn<TOriginalRow> | null {
     const flatColumns = flattenColumns(columns);

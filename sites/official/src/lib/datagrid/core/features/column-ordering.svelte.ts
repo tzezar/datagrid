@@ -1,6 +1,6 @@
 import { type AnyColumn, type GroupColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
-import type { ColumnId } from "../types";
+import type { ColumnId, LeafColumn } from "../types";
 import { findColumnById } from "../utils.svelte";
 
 export class ColumnOrderingFeature<TOriginalRow> {
@@ -78,7 +78,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
     // If at the root, moves to the next position in the root or into the next group if applicable.
     // Wraparound Logic:
     // If a column reaches the end of all groups and columns at a level, it should wrap to the next level or exit the group hierarchy.
-  
+
     // example:
     // Column A starts at root level
     // First moves into Group 1 at beginning
@@ -160,7 +160,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
         } else {
             // Handle root level movement
             const rootIndex = this.getColumnIndex(this.datagrid.columns, columnId);
-            
+
             if (direction === 'right') {
                 if (rootIndex < this.datagrid.columns.length - 1) {
                     const nextColumn = this.datagrid.columns[rootIndex + 1];
@@ -194,66 +194,81 @@ export class ColumnOrderingFeature<TOriginalRow> {
 
         this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
+
+
+    findParentColumnGroup(columnId: ColumnId): GroupColumn<TOriginalRow> | null {
+        const column = this.datagrid.columnManager.getFlatColumnsWithNestedColumns().find(col => col.columnId === columnId);
+        if (!column) return null;
+        return column.parentColumnId ? this.datagrid.columnManager.getFlatColumnsWithNestedColumns().find(col => col.columnId === column.parentColumnId) as GroupColumn<TOriginalRow> : null
+    }
+
+    removeColumnFromGroup(column: AnyColumn<TOriginalRow>, currentParent: GroupColumn<TOriginalRow>): void {
+        if (!currentParent) return;
+        currentParent.columns.splice(currentParent.columns.indexOf(column), 1);
+    }
+
+    moveColumnToTargetGroup(column: AnyColumn<TOriginalRow>, target: GroupColumn<TOriginalRow>): void {
+        target.columns.push(column);
+    }
+
+    moveColumnToRootLevel(column: AnyColumn<TOriginalRow>): void {
+        const currentParent = this.findParentColumnGroup(column.parentColumnId);
+        if (!currentParent) return;
+
+        let copy = structuredClone(column);
+
+        this.removeColumnFromGroup(column, currentParent);
+        this.datagrid.columns.push(copy);
+    }
+
+
+    moveColumnToPosition({
+        columnId,
+        targetGroupColumnId
+    }: { columnId: ColumnId, targetGroupColumnId: string | null }): void {
+        const column = this.datagrid.columnManager.getFlatColumnsWithNestedColumns().find(col => col.columnId === columnId);
+        if (!column) return;
+        
+        if (!targetGroupColumnId) {
+            // Move to root level
+            if (column.parentColumnId) {
+                this.moveColumnToRootLevel(column)
+            }
+            return
+        } 
+
+        if (column.type === 'group') {
+            
+        } else {
+
+
+        }
+
+
+
+        // // First, remove the column from its current location
+        // if (column.parentColumnId) {
+        //     const currentParent = this.findParentColumnGroup(column.parentColumnId);
+        //     if (currentParent) {
+        //         this.removeFromGroup(currentParent, column);
+        //     }
+        // } else {
+        //     // Remove from root level if it's there
+        //     const rootIndex = this.datagrid.columns.indexOf(column);
+        //     if (rootIndex !== -1) {
+        //         this.datagrid.columns.splice(rootIndex, 1);
+        //     }
+        // }
+    
+        // // Use a single function to handle both types of column moves
+        // this.moveColumnToTargetGroup(column, targetGroupColumnId);
+    
+        // this.datagrid.processors.column.refreshColumnPinningOffsets();
+    }
+   
     
 
 
-    moveColumnToGroup({
-        columnId,
-        targetGroupColumnId
-    }: { columnId: ColumnId, targetGroupColumnId: string }): void {
-        const column = findColumnById(this.datagrid.columns, columnId);
-        if (!column) return;
-        // Handle move to root level
-        if (!targetGroupColumnId) {
-            this.moveToRootLevel(column);
-            return;
-        }
 
-        // Find target group column
-        const targetGroupColumn = this.datagrid.columnManager.getFlatColumns()
-            .find(col => col.columnId === targetGroupColumnId) as GroupColumn<TOriginalRow>;
 
-        if (!targetGroupColumn) {
-            console.warn(`Target group column ${targetGroupColumnId} not found`);
-            return;
-        }
-
-        this.removeFromCurrentGroupOrRoot(column);
-        column.parentColumnId = targetGroupColumn.columnId;
-        targetGroupColumn.columns.push(column);
-
-        this.datagrid.processors.column.refreshColumnPinningOffsets();
-    }
-
-    moveToRootLevel(column: AnyColumn<TOriginalRow>): void {
-        const currentGroup = this.datagrid.features.columnGrouping.findParentColumnGroup(column.parentColumnId);
-        if (currentGroup) {
-            this.removeFromGroup(currentGroup, column);
-        }
-
-        column.parentColumnId = null;
-        this.datagrid.columns.push(column);
-        this.datagrid.processors.column.refreshColumnPinningOffsets();
-    }
-
-    private removeFromCurrentGroupOrRoot(column: AnyColumn<TOriginalRow>): void {
-        if (column.parentColumnId !== null) {
-            const currentGroup = this.datagrid.features.columnGrouping.findParentColumnGroup(column.parentColumnId);
-            if (currentGroup) {
-                this.removeFromGroup(currentGroup, column);
-            }
-        } else {
-            const rootIndex = this.datagrid.columns.findIndex(col => col === column);
-            if (rootIndex !== -1) {
-                this.datagrid.columns.splice(rootIndex, 1);
-            }
-        }
-    }
-
-    private removeFromGroup(group: GroupColumn<TOriginalRow>, column: AnyColumn<TOriginalRow>): void {
-        const columnIndex = group.columns.findIndex(col => col === column);
-        if (columnIndex !== -1) {
-            group.columns.splice(columnIndex, 1);
-        }
-    }
 }

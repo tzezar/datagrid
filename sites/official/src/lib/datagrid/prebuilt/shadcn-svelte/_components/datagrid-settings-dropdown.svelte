@@ -170,7 +170,7 @@
 			<option value="">Root Level</option>
 			{#each datagrid.columnManager
 				.getGroupColumns()
-				.filter((groupCol: GroupColumn<any>) => column.type !== 'group' || (groupCol !== column && !isDescendantOf(groupCol, column))) as groupColumn}
+				.filter((groupCol: GroupColumn<any>) => column.type !== 'group' || (groupCol !== column && !isDescendantOf(groupCol, column))) as groupColumn (groupColumn.columnId)}
 				<option value={groupColumn.columnId} disabled={groupColumn === column}>
 					{groupColumn.header}
 				</option>
@@ -182,7 +182,7 @@
 {#snippet ordering(columns: AnyColumn<any>[], depth: number = 0)}
 	<div class="flex flex-col gap-4">
 		{#each columns as column (column.columnId)}
-			{#if isGroupColumn(column)}
+			{#if column.type === 'group'}
 				<div class="flex gap-4 rounded-md border p-4">
 					<div class="flex flex-col gap-2">
 						<div class="flex w-full flex-row justify-between gap-4">
