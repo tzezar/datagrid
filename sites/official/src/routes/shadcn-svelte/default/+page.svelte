@@ -19,24 +19,30 @@
 	import HeaderBasicCell from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-basic-cell.svelte';
 	import HeaderBasicCellContentWrapper from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-basic-cell-content-wrapper.svelte';
 	import HeaderCellWrapper from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-cell-wrapper.svelte';
-	import { userColumns as simplifiedColumns } from './simplefied-columns.svelte';
+	// import { userColumns as simplifiedColumns } from './simplefied-columns.svelte';
 	import Pagination from '$lib/datagrid/prebuilt/shadcn-svelte/_components/pagination.svelte';
 	import { cn } from '$lib/utils';
 	let { data } = $props();
 
 	let datagrid = new TzezarsDatagrid({
-		columns: simplifiedColumns,
+		columns: userColumns,
 		data: data.users
 	});
-
+	
 	let columns = $derived(
 		datagrid.extra.features.groupHeadersVisibility.showGroupHeaders
 			? datagrid.columnManager.getColumnsInOrder()
 			: datagrid.columnManager.getLeafColumnsInOrder()
 	);
 
+	$effect(() => {
+		console.log(
+			$state.snapshot(columns))
+	});
+
 
 	import { Portal } from 'bits-ui';
+	import { userColumns } from './columns.svelte';
 </script>
 
 {#snippet GroupRowSnippet(row: GridGroupRow<any>, leafColumns: LeafColumn<any>[])}

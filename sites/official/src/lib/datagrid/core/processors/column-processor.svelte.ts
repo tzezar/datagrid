@@ -4,9 +4,6 @@ import type { DataGrid } from "../index.svelte";
 import { flattenColumns } from "../utils.svelte";
 
 
-
-
-
 export class ColumnProcessor<TOriginalRow> {
     datagrid: DataGrid<TOriginalRow>;
     constructor(datagrid: DataGrid<TOriginalRow>) {
@@ -68,12 +65,12 @@ export class ColumnProcessor<TOriginalRow> {
             newColumns.push(col);
         }
 
-        const hierarchicalColumns = this.datagrid.processors.column.createHierarchicalColumns(newColumns);
+        const hierarchicalColumns = this.datagrid.processors.column.createColumnHierarchy(newColumns);
 
         this.datagrid.columns = hierarchicalColumns
     };
 
-    createHierarchicalColumns(filteredFlatColumns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
+    createColumnHierarchy(filteredFlatColumns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
         const allFlatColumns = flattenColumns(this.datagrid.columns);
 
         // Helper function to find a column by ID in a hierarchical structure

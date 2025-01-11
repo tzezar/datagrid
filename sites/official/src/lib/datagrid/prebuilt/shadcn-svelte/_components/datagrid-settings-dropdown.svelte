@@ -348,9 +348,9 @@
 				<DropdownMenu.Separator />
 				<DropdownMenu.Item
 					closeOnSelect={false}
-					onclick={() => datagrid.groupHeadersVisibility.toggleGroupHeaders()}
+					onclick={() => datagrid.extra.features.groupHeadersVisibility.toggleGroupHeaders()}
 				>
-					{#if datagrid.groupHeadersVisibility.showGroupHeaders}
+					{#if datagrid.extra.features.groupHeadersVisibility.showGroupHeaders}
 						<ExpandLess class="mr-2 size-4" />
 						Hide Column Groups
 					{:else}

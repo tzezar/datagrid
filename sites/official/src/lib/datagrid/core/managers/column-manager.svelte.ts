@@ -97,7 +97,7 @@ export class ColumnManager<TOriginalRow> {
 
 
     getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
-        const cols = [...this.getColumnsPinnedToLeft(), ...this.datagrid.processors.column.createHierarchicalColumns(this.getColumnsPinnedToNone()), ...this.datagrid.processors.column.createHierarchicalColumns(this.getColumnsPinnedToRight())]
+        const cols = [...this.getColumnsPinnedToLeft(), ...this.datagrid.processors.column.createColumnHierarchy(this.getColumnsPinnedToNone()), ...this.datagrid.processors.column.createColumnHierarchy(this.getColumnsPinnedToRight())]
         return cols
     }
 

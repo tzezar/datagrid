@@ -12,7 +12,6 @@
 
 	let { datagrid, column }: Props = $props();
 
-
 </script>
 
 <div class="flex gap-1">

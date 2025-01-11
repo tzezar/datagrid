@@ -1,5 +1,5 @@
 export class GroupHeadersVisibilityFeature {
-    showGroupHeaders: boolean = $state(false);
+    showGroupHeaders: boolean = $state(true);
 
     show() {
         this.showGroupHeaders = true;

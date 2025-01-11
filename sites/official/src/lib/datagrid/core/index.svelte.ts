@@ -3,6 +3,7 @@ import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { ColumnFacetingFeature, ColumnFilteringFeature, ColumnGroupingFeature, ColumnOrderingFeature, ColumnPinningFeature, ColumnSizingFeature, ColumnVisibilityFeature, GlobalSearchFeature, GroupingFeature, PaginationFeature, RowExpandingFeature, RowPinningFeature, RowSelectionFeature, SortingFeature } from "./features";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
+import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
 
 export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
     columns: C[];
@@ -53,15 +54,11 @@ export class DataGrid<TOriginalRow> {
         rowPinning: new RowPinningFeature(this),
     }
 
-    lifecycleHooks = {
-        preProcessColumns: (action: any, columns: AnyColumn<TOriginalRow>[]) => {
-            return action(columns);
-        }
-    }
+    readonly lifecycleHooks = new LifecycleHooks<TOriginalRow>();
 
     constructor(config: GridConfig<TOriginalRow>, hook: any) {
         this.validateConfigInputs(config);
-        config.columns = this.lifecycleHooks.preProcessColumns(hook, config.columns);
+        // config.columns = this.lifecycleHooks.preProcessColumns(hook, config.columns);
         this.initializeState(config);
     }
 
