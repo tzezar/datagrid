@@ -1,14 +1,15 @@
-import type { AnyColumn } from "./column-creation/types";
+import type { AnyColumn, GroupColumn } from "./column-creation/types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { ColumnFacetingFeature, ColumnFilteringFeature, ColumnGroupingFeature, ColumnOrderingFeature, ColumnPinningFeature, ColumnSizingFeature, ColumnVisibilityFeature, GlobalSearchFeature, GroupingFeature, PaginationFeature, RowExpandingFeature, RowPinningFeature, RowSelectionFeature, SortingFeature } from "./features";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
 import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
+import { isGroupColumn } from "./helpers/column-guards";
 
 export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
     columns: C[];
     data: TOriginalRow[];
-
+    lifecycleHooks?: LifecycleHooks<TOriginalRow>;  // Add this
     event?: object
 }
 
@@ -31,7 +32,7 @@ export class DataGrid<TOriginalRow> {
     columnManager = new ColumnManager(this);
 
     config = {
-        measurePerformance: true,
+        measurePerformance: false,
         createBasicRowIdentifier: (row: TOriginalRow) => (row as any).id,
         createBasicRowIndex: (row: TOriginalRow, parentIndex: string | null, index: number) =>
             parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
@@ -56,7 +57,12 @@ export class DataGrid<TOriginalRow> {
 
     readonly lifecycleHooks = new LifecycleHooks<TOriginalRow>();
 
-    constructor(config: GridConfig<TOriginalRow>, hook: any) {
+    constructor(config: GridConfig<TOriginalRow>) {
+        if (config.lifecycleHooks) {
+            this.lifecycleHooks = config.lifecycleHooks;
+        }
+
+
         this.validateConfigInputs(config);
         // config.columns = this.lifecycleHooks.preProcessColumns(hook, config.columns);
         this.initializeState(config);
@@ -70,6 +76,17 @@ export class DataGrid<TOriginalRow> {
         if (columns.length === 0) throw new Error('Columns array must not be empty');
         if (data.length === 0) throw new Error('Data array must not be empty');
     }
+
+        assignParentColumnIds(columns: AnyColumn<TOriginalRow>[], parentColumnId: string | null = null) {
+            columns.forEach(column => {
+                if (isGroupColumn(column)) {
+                    const groupColumn = column as GroupColumn<TOriginalRow>;
+                    this.assignParentColumnIds(groupColumn.columns, groupColumn.columnId);
+                }
+                column.parentColumnId = parentColumnId;
+            })
+            return columns;
+        }
 
     private initializeState(config: GridConfig<TOriginalRow>) {
         this.initial.columns = config.columns;
