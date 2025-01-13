@@ -161,7 +161,7 @@
 					}
 				}
 
-				datagrid.handlers.columnOrdering.moveColumnToGroup({
+				datagrid.handlers.columnOrdering.moveColumnToPosition({
 					columnId: column.columnId,
 					targetGroupColumnId: targetGroupId
 				});

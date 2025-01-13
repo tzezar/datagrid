@@ -29,11 +29,13 @@
 		data: data.users
 	});
 	
-	let columns = $derived(
-		datagrid.extra.features.groupHeadersVisibility.showGroupHeaders
-			? datagrid.columnManager.getColumnsInOrder()
-			: datagrid.columnManager.getLeafColumnsInOrder()
-	);
+	// let columns = $derived(
+	// 	datagrid.extra.features.groupHeadersVisibility.showGroupHeaders
+	// 		? datagrid.columnManager.getColumnsInOrder()
+	// 		: datagrid.columnManager.getLeafColumnsInOrder()
+	// );
+
+	let columns = $derived(datagrid.columns)
 
 	$effect(() => {
 		console.log(

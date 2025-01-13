@@ -186,7 +186,7 @@
 						<DropdownMenu.Item
 							closeOnSelect={false}
 							onclick={() =>
-								datagrid.handlers.columnOrdering.moveColumnToGroup({
+								datagrid.handlers.columnOrdering.moveColumnToPosition({
 									columnId: column.columnId,
 									targetGroupColumnId: ''
 								})}
@@ -199,7 +199,7 @@
 							<DropdownMenu.Item
 								closeOnSelect={false}
 								onclick={() =>
-									datagrid.handlers.columnOrdering.moveColumnToGroup({
+									datagrid.handlers.columnOrdering.moveColumnToPosition({
 										columnId: column.columnId,
 										targetGroupColumnId: groupCol.columnId
 									})}
@@ -326,7 +326,7 @@
 						<DropdownMenu.Item
 							closeOnSelect={false}
 							onclick={() =>
-								datagrid.handlers.columnOrdering.moveColumnToGroup({
+								datagrid.handlers.columnOrdering.moveColumnToPosition({
 									columnId: column.columnId,
 									targetGroupColumnId: ''
 								})}
@@ -339,7 +339,7 @@
 							<DropdownMenu.Item
 								closeOnSelect={false}
 								onclick={() =>
-									datagrid.handlers.columnOrdering.moveColumnToGroup({
+									datagrid.handlers.columnOrdering.moveColumnToPosition({
 										columnId: column.columnId,
 										targetGroupColumnId: groupCol.columnId
 									})}

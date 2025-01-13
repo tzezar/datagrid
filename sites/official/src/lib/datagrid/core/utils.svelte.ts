@@ -73,7 +73,7 @@ export function flattenColumnsWithNestedColumns(columns: AnyColumn<any>[]): AnyC
     for (let i = 0; i < columns.length; i++) {
         const column = columns[i];
         if (column.type === 'group') {
-            flattened.push(...flattenColumns(column.columns));
+            flattened.push(...flattenColumnsWithNestedColumns(column.columns));
             flattened.push(column);
         }
         else {
@@ -88,6 +88,12 @@ export function findColumnById<TOriginalRow>(columns: AnyColumn<TOriginalRow>[],
     const flatColumns = flattenColumns(columns);
     return flatColumns.find((col) => col.columnId === id || col.header === id) ?? null;
 }
+
+export function findColumnByIdWithNestedColumns<TOriginalRow>(columns: AnyColumn<TOriginalRow>[], id: ColumnId): AnyColumn<TOriginalRow> | null {
+    const flatColumns = flattenColumnsWithNestedColumns(columns);
+    return flatColumns.find((col) => col.columnId === id || col.header === id) ?? null;
+}
+
 export function isDescendantOf(possibleDescendant: GroupColumn<any>, ancestor: GroupColumn<any>): boolean {
     if (!possibleDescendant) return false;
 

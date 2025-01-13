@@ -1,7 +1,7 @@
 import { type AnyColumn, type GroupColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
 import type { ColumnId, LeafColumn } from "../types";
-import { findColumnById } from "../utils.svelte";
+import { findColumnById, findColumnByIdWithNestedColumns } from "../utils.svelte";
 
 export class ColumnOrderingFeature<TOriginalRow> {
     private datagrid: DataGrid<TOriginalRow>;
@@ -63,11 +63,11 @@ export class ColumnOrderingFeature<TOriginalRow> {
     // }
 
     moveLeft(columnId: ColumnId): void {
-        this.moveColumn(columnId, 'left');
+        this.moveLeafColumn(columnId, 'left');
     }
 
     moveRight(columnId: ColumnId): void {
-        this.moveColumn(columnId, 'right');
+        this.moveLeafColumn(columnId, 'right');
     }
 
 
@@ -88,7 +88,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
     // Moves out to Group 1
     // Moves out to root level
     // Continues moving right at root level
-    private moveColumn(columnId: ColumnId, direction: 'left' | 'right'): void {
+    private moveLeafColumn(columnId: ColumnId, direction: 'left' | 'right'): void {
         const column = findColumnById(this.datagrid.columns, columnId);
         if (!column) return;
 
@@ -130,7 +130,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
                 : this.getColumnIndex(this.datagrid.columns, currentGroup.columnId);
 
             // Remove from current group
-            this.removeFromGroup(currentGroup, column);
+            this.removeLeafColumnFromGroup(currentGroup, column);
 
             if (parentGroup) {
                 // Move to parent group
@@ -196,78 +196,132 @@ export class ColumnOrderingFeature<TOriginalRow> {
     }
 
 
-    findParentColumnGroup(columnId: ColumnId): GroupColumn<TOriginalRow> | null {
-        const column = this.datagrid.columnManager.getFlatColumnsWithNestedColumns().find(col => col.columnId === columnId);
-        if (!column) return null;
-        return column.parentColumnId ? this.datagrid.columnManager.getFlatColumnsWithNestedColumns().find(col => col.columnId === column.parentColumnId) as GroupColumn<TOriginalRow> : null
-    }
 
-    removeColumnFromGroup(column: AnyColumn<TOriginalRow>, currentParent: GroupColumn<TOriginalRow>): void {
-        if (!currentParent) return;
-        currentParent.columns.splice(currentParent.columns.indexOf(column), 1);
-    }
-
-    moveColumnToTargetGroup(column: AnyColumn<TOriginalRow>, target: GroupColumn<TOriginalRow>): void {
-        target.columns.push(column);
-    }
-
-    moveColumnToRootLevel(column: AnyColumn<TOriginalRow>): void {
-        const currentParent = this.findParentColumnGroup(column.parentColumnId);
-        if (!currentParent) return;
-
-        let copy = structuredClone(column);
-
-        this.removeColumnFromGroup(column, currentParent);
-        this.datagrid.columns.push(copy);
-    }
-
-
-    moveColumnToPosition({
-        columnId,
-        targetGroupColumnId
-    }: { columnId: ColumnId, targetGroupColumnId: string | null }): void {
-        const column = this.datagrid.columnManager.getFlatColumnsWithNestedColumns().find(col => col.columnId === columnId);
+    moveColumnToPosition(columnId: ColumnId, targetId: ColumnId): void {
+        const column = findColumnByIdWithNestedColumns(this.datagrid.columns, columnId);
         if (!column) return;
-        
-        if (!targetGroupColumnId) {
-            // Move to root level
-            if (column.parentColumnId) {
-                this.moveColumnToRootLevel(column)
-            }
-            return
-        } 
-
-        if (column.type === 'group') {
-            
-        } else {
-
-
-        }
-
-
-
-        // // First, remove the column from its current location
-        // if (column.parentColumnId) {
-        //     const currentParent = this.findParentColumnGroup(column.parentColumnId);
-        //     if (currentParent) {
-        //         this.removeFromGroup(currentParent, column);
-        //     }
-        // } else {
-        //     // Remove from root level if it's there
-        //     const rootIndex = this.datagrid.columns.indexOf(column);
-        //     if (rootIndex !== -1) {
-        //         this.datagrid.columns.splice(rootIndex, 1);
-        //     }
-        // }
-    
-        // // Use a single function to handle both types of column moves
-        // this.moveColumnToTargetGroup(column, targetGroupColumnId);
-    
-        // this.datagrid.processors.column.refreshColumnPinningOffsets();
+        if (column.type === 'group') this.moveGroupColumnToPosition(column, targetId);
+        else this.moveLeafColumnToPosition(column, targetId);
     }
-   
+
+    moveLeafColumnToPosition(column: LeafColumn<any>, targetId: ColumnId): void {
+        if (targetId === '') {
+            this.moveLeafColumnToRoot(column); 
+            return;
+        }
+        const targetColumn = findColumnByIdWithNestedColumns(this.datagrid.columns, targetId);
+        if (!targetColumn) return;
+        if (targetColumn.type === 'group') this.moveLeafColumnToGroup(column, targetColumn);
+    }
+
+    moveGroupColumnToPosition(column: GroupColumn<any>, targetId: ColumnId): void {
+        if (targetId === '') {
+            this.moveGroupColumnToRoot(column); 
+            return;
+        }
+        const targetColumn = findColumnByIdWithNestedColumns(this.datagrid.columns, targetId);
+        if (!targetColumn) return;
+        if (targetColumn.type === 'group') this.moveGroupColumnToGroup(column, targetColumn);
+    }
+
+    moveLeafColumnToRoot(column: LeafColumn<any>): void {
+        // Is already in root
+        if (column.parentColumnId === '') return;
+
+        const parentGroup = findColumnByIdWithNestedColumns(this.datagrid.columns, column.parentColumnId as string) as GroupColumn<any>;
+        if (!parentGroup) return;
+
+        this.removeLeafColumnFromGroup(column, parentGroup);
+        this.addLeafColumnToRoot(column);
+
+    }
+
+    moveGroupColumnToRoot(column: GroupColumn<any>): void {
+        // Is already in root
+        if (column.parentColumnId === '') return;
+
+        const parentGroup = findColumnByIdWithNestedColumns(this.datagrid.columns, column.parentColumnId as string) as GroupColumn<any>;
+        if (!parentGroup) return;
+
+        this.removeGroupColumnFromGroup(column, parentGroup);
+        this.addGroupColumnToRoot(column);
+
+    }
     
 
+    moveLeafColumnToGroup(column: LeafColumn<any>, group: GroupColumn<any>): void {
+        if (this.isDescendant(column, group)) return;
+
+        if (column.parentColumnId === null) {
+            this.removeLeafColumnFromRoot(column);
+            this.addLeafColumnToGroup(column, group);
+            return
+        }
+        this.removeLeafColumnFromGroup(column, group);
+        this.addLeafColumnToGroup(column, group);
+
+    }
+
+    moveGroupColumnToGroup(column: GroupColumn<any>, targetGroup: GroupColumn<any>): void {
+        if (this.isDescendant(column, targetGroup)) return;
+
+        if (column.parentColumnId === null) {
+            this.removeGroupColumnFromRoot(column);
+            this.addGroupColumnToGroup(column, targetGroup);
+            return
+        }
+        const parentGroup = findColumnByIdWithNestedColumns(this.datagrid.columns, column.parentColumnId as string) as GroupColumn<any>;
+        this.removeGroupColumnFromGroup(column, parentGroup);
+        this.addGroupColumnToGroup(column, targetGroup);
+    }
+
+    private isDescendant(possibleDescendant: GroupColumn<any>, ancestor: GroupColumn<any>): boolean {
+        let current: GroupColumn<any> | null = possibleDescendant;
+        while (current) {
+            if (current.columnId === ancestor.columnId) return true;
+            current = current.parentColumnId ? 
+                (findColumnById(this.datagrid.columns, current.parentColumnId) as GroupColumn<any>) : 
+                null;
+        }
+        return false;
+    }
+
+    removeLeafColumnFromGroup(column: LeafColumn<any>, group: GroupColumn<any>): void {
+        group.columns = group.columns.filter(c => c.columnId !== column.columnId);
+    }
+
+    removeGroupColumnFromGroup(column: GroupColumn<any>, group: GroupColumn<any>): void {
+        group.columns = group.columns.filter(c => c.columnId !== column.columnId);
+        console.log('group new', $state.snapshot(group))
+    }
+
+    removeLeafColumnFromRoot(column: LeafColumn<any>): void {
+        const newColumns = this.datagrid.columns.filter(c => c.columnId !== column.columnId);
+        this.datagrid.columns = newColumns;
+    }
+
+    removeGroupColumnFromRoot(column: GroupColumn<any>): void {
+        const newColumns = this.datagrid.columns.filter(c => c.columnId !== column.columnId);
+        this.datagrid.columns = newColumns;
+    }
+
+
+    addLeafColumnToRoot(column: LeafColumn<any>): void {
+        this.datagrid.columns.push(column);
+    }
+
+    addGroupColumnToRoot(column: GroupColumn<any>): void {
+        this.datagrid.columns.push(column);
+    }
+
+    addLeafColumnToGroup(column: LeafColumn<any>, group: GroupColumn<any>): void {
+        group.columns.push(column);
+        column.parentColumnId = group.columnId;
+    }
+    addGroupColumnToGroup(column: GroupColumn<any>, group: GroupColumn<any>): void {
+        group.columns.push(column);
+        column.parentColumnId = group.columnId;
+    }
 
 
 
