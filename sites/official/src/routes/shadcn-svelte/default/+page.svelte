@@ -116,7 +116,7 @@
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
 		</div> -->
-		<!-- <div class={cn('grid-wrapper', datagrid.extra.features.fullscreen.isFullscreen && 'max-h-full h-full overflow-auto')}>
+		<div class={cn('grid-wrapper', datagrid.extra.features.fullscreen.isFullscreen && 'max-h-full h-full overflow-auto')}>
 
 			<div class="grid-container">
 				<div class="grid-header">
@@ -159,7 +159,7 @@
 				</div>
 			</div>
 			<div class="grid-footer-container"></div>
-		</div> -->
+		</div>
 		<Pagination {datagrid} />
 		<div class='border-b border-x p-1 px-2 text-[0.5rem] text-muted-foreground w-fit ml-auto'>
 			Made with ❤️ by Tzezar

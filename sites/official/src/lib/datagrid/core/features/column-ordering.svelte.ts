@@ -206,7 +206,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
 
     moveLeafColumnToPosition(column: LeafColumn<any>, targetId: ColumnId): void {
         if (targetId === '') {
-            this.moveLeafColumnToRoot(column); 
+            this.moveLeafColumnToRoot(column);
             return;
         }
         const targetColumn = findColumnByIdWithNestedColumns(this.datagrid.columns, targetId);
@@ -216,11 +216,12 @@ export class ColumnOrderingFeature<TOriginalRow> {
 
     moveGroupColumnToPosition(column: GroupColumn<any>, targetId: ColumnId): void {
         if (targetId === '') {
-            this.moveGroupColumnToRoot(column); 
+            this.moveGroupColumnToRoot(column);
             return;
         }
         const targetColumn = findColumnByIdWithNestedColumns(this.datagrid.columns, targetId);
         if (!targetColumn) return;
+        if (column.columnId === targetColumn.columnId) return
         if (targetColumn.type === 'group') this.moveGroupColumnToGroup(column, targetColumn);
     }
 
@@ -247,23 +248,26 @@ export class ColumnOrderingFeature<TOriginalRow> {
         this.addGroupColumnToRoot(column);
 
     }
-    
+
 
     moveLeafColumnToGroup(column: LeafColumn<any>, group: GroupColumn<any>): void {
         // if (this.isDescendant(column, group)) return;
 
         if (column.parentColumnId === null) {
+            console.log('removeLeafColumnFromRoot')
             this.removeLeafColumnFromRoot(column);
             this.addLeafColumnToGroup(column, group);
             return
         }
-        this.removeLeafColumnFromGroup(column, group);
+        console.log('removeLeafColumnFromGroup')
+        const parentGroup = findColumnByIdWithNestedColumns(this.datagrid.columns, column.parentColumnId) as GroupColumn<any>;
+        this.removeLeafColumnFromGroup(column, parentGroup);
         this.addLeafColumnToGroup(column, group);
 
     }
 
     moveGroupColumnToGroup(column: GroupColumn<any>, targetGroup: GroupColumn<any>): void {
-        // if (this.isDescendant(column, targetGroup)) return;
+        if (this.movingToOwnChildren(column, targetGroup)) return;
 
         if (column.parentColumnId === null) {
             this.removeGroupColumnFromRoot(column);
@@ -275,18 +279,27 @@ export class ColumnOrderingFeature<TOriginalRow> {
         this.addGroupColumnToGroup(column, targetGroup);
     }
 
-    private isDescendant(possibleDescendant: GroupColumn<any>, ancestor: GroupColumn<any>): boolean {
-        let current: GroupColumn<any> | null = possibleDescendant;
-        while (current) {
-            if (current.columnId === ancestor.columnId) return true;
-            current = current.parentColumnId ? 
-                (findColumnById(this.datagrid.columns, current.parentColumnId) as GroupColumn<any>) : 
-                null;
+
+
+
+
+    private movingToOwnChildren(group: GroupColumn<any>, target: GroupColumn<any>): boolean {
+        for (const col of group.columns) {
+            if (col.columnId === target.columnId) {
+                return true; // Found the target column
+            }
+            if (col.type === 'group' && this.movingToOwnChildren(col, target)) {
+                return true; // Recursively check nested groups
+            }
         }
-        return false;
+        return false; // Return false if no match is found
     }
 
+
+
+
     removeLeafColumnFromGroup(column: LeafColumn<any>, group: GroupColumn<any>): void {
+
         group.columns = group.columns.filter(c => c.columnId !== column.columnId);
     }
 
