@@ -26,7 +26,7 @@ export class DataGrid<TOriginalRow> {
         data: new DataProcessor(this),
         column: new ColumnProcessor(this)
     }
-    
+
     cache = new DatagridCacheManager(this);
     rows = new RowManager(this);
     columnManager = new ColumnManager(this);
@@ -76,17 +76,6 @@ export class DataGrid<TOriginalRow> {
         if (columns.length === 0) throw new Error('Columns array must not be empty');
         if (data.length === 0) throw new Error('Data array must not be empty');
     }
-
-        assignParentColumnIds(columns: AnyColumn<TOriginalRow>[], parentColumnId: string | null = null) {
-            columns.forEach(column => {
-                if (isGroupColumn(column)) {
-                    const groupColumn = column as GroupColumn<TOriginalRow>;
-                    this.assignParentColumnIds(groupColumn.columns, groupColumn.columnId);
-                }
-                column.parentColumnId = parentColumnId;
-            })
-            return columns;
-        }
 
     private initializeState(config: GridConfig<TOriginalRow>) {
         this.initial.columns = config.columns;

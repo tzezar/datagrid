@@ -67,7 +67,7 @@ function createColumnHierarchy<TOriginalRow>(flatColumns: AnyColumn<TOriginalRow
     return results
 }
 
- function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
     const flattened: AnyColumn<any>[] = [];
 
     for (let i = 0; i < columns.length; i++) {
@@ -96,6 +96,7 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
         super(config);
     }
     extra = new Extra();
+
 }
 
 export class ExtraState {

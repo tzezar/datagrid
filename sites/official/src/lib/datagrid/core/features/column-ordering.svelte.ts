@@ -280,9 +280,6 @@ export class ColumnOrderingFeature<TOriginalRow> {
     }
 
 
-
-
-
     private movingToOwnChildren(group: GroupColumn<any>, target: GroupColumn<any>): boolean {
         for (const col of group.columns) {
             if (col.columnId === target.columnId) {
@@ -294,9 +291,6 @@ export class ColumnOrderingFeature<TOriginalRow> {
         }
         return false; // Return false if no match is found
     }
-
-
-
 
     removeLeafColumnFromGroup(column: LeafColumn<any>, group: GroupColumn<any>): void {
 

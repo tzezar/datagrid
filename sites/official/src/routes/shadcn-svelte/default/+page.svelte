@@ -35,7 +35,6 @@
 			: datagrid.columnManager.getLeafColumnsInOrder()
 	);
 
-
 	$effect(() => {
 		console.log(
 			$state.snapshot(columns))
