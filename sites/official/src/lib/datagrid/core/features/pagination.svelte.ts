@@ -1,5 +1,15 @@
 import type { DataGrid } from "../index.svelte";
 
+
+export type PaginationConfig = {
+    page: number;
+    pageSize: number;
+    pageSizes: number[];
+    pageCount: number;
+    visibleRowsCount: number;
+}
+
+
 /**
  * Manages pagination functionality within the data grid.
  */
@@ -26,8 +36,16 @@ export class PaginationFeature<TOriginalRow> {
      * Constructor for setting up the data grid and initializing states.
      * @param datagrid - The data grid instance to associate with this pagination feature.
      */
-    constructor(datagrid: DataGrid<TOriginalRow>) {
+    constructor(datagrid: DataGrid<TOriginalRow>, config?: PaginationConfig) {
         this.datagrid = datagrid;
+
+        if (config) {
+            this.pageSizes = config.pageSizes;
+            this.pageCount = config.pageCount;
+            this.visibleRowsCount = config.visibleRowsCount;
+            this.pageSize = config.pageSize;
+            this.page = config.page;
+        }
     }
 
     /**
@@ -114,7 +132,7 @@ export class PaginationFeature<TOriginalRow> {
     setPageSize(newSize: number): void {
         if (newSize === this.pageSize) return; // No action if the page size is the same
         this.pageSize = newSize;
-        
+
         // Recalculate pagination and ensure the page is within the valid range after the page size change
         this.goToClosestPage();
     }

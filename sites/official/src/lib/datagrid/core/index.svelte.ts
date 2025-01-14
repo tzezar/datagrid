@@ -4,12 +4,18 @@ import { ColumnFacetingFeature, ColumnFilteringFeature, ColumnGroupingFeature, C
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
 import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
+import type { PaginationConfig } from "./features/pagination.svelte";
 
 export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
     columns: C[];
     data: TOriginalRow[];
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;  // Add this
     event?: object
+
+    features?: {
+        pagination: PaginationConfig
+    }
+
 }
 
 export class DataGrid<TOriginalRow> {
@@ -57,6 +63,8 @@ export class DataGrid<TOriginalRow> {
     readonly lifecycleHooks = new LifecycleHooks<TOriginalRow>();
 
     constructor(config: GridConfig<TOriginalRow>) {
+        this.features.pagination = new PaginationFeature(this, config.features?.pagination);
+
         if (config.lifecycleHooks) {
             this.lifecycleHooks = config.lifecycleHooks;
         }
