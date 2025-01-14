@@ -97,6 +97,11 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
     }
     extra = new Extra();
 
+
+    isFullscreenEnabled() {
+        return this.extra.features.fullscreen.isFullscreen;
+    }
+
 }
 
 export class ExtraState {

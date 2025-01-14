@@ -12,6 +12,9 @@
 	};
 
 	let { datagrid, column, row, header: header, aggregations: aggregations }: Props = $props();
+
+
+	console.log('render')
 </script>
 
 {#if column.columnId == row.groupKey}

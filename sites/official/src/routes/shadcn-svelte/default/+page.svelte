@@ -4,7 +4,10 @@
 	import GridHeader from './_components/grid-header.svelte';
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
 	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
-	import { isGridGroupRow as isGroupRow } from '$lib/datagrid/core/utils.svelte';
+	import {
+		createFlatColumnStructureAndPreserveChildren,
+		isGridGroupRow as isGroupRow
+	} from '$lib/datagrid/core/utils.svelte';
 	import GroupRowCellContent from '$lib/datagrid/prebuilt/core/group-row-cell-content.svelte';
 	import BasicRowCellContent from '$lib/datagrid/prebuilt/core/basic-row-cell-content.svelte';
 	import BodyRowGroupCellHeader from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/body-row-group-cell-header.svelte';
@@ -35,17 +38,13 @@
 			: datagrid.columnManager.getLeafColumnsInOrder()
 	);
 
-	$effect(() => {
-		console.log('datagrid.columns', $state.snapshot(columns));
-	});
-
 	import { Portal } from 'bits-ui';
 	import { userColumns } from './columns.svelte';
 </script>
 
 {#snippet GroupRowSnippet(row: GridGroupRow<any>, leafColumns: LeafColumn<any>[])}
 	<div class="grid-body-group-row" data-depth={row.depth} data-expanded={row.isExpanded()}>
-		{#each leafColumns as column, columnIndex (columnIndex)}
+		{#each leafColumns as column, columnIndex (column.columnId)}
 			<BodyGroupRowCell {datagrid} {column} {row}>
 				<GroupRowCellContent {datagrid} {column} {row}>
 					{#snippet header()}
@@ -105,7 +104,7 @@
 	</HeaderBasicCell>
 {/snippet}
 
-<Portal disabled={!datagrid.extra.features.fullscreen.isFullscreen}>
+<Portal disabled={!datagrid.isFullscreenEnabled()}>
 	<div
 		class={cn(
 			'flex h-full flex-col',
@@ -120,13 +119,13 @@
 		<div
 			class={cn(
 				'grid-wrapper',
-				datagrid.extra.features.fullscreen.isFullscreen && 'h-full max-h-full overflow-auto'
+				datagrid.isFullscreenEnabled() && 'h-full max-h-full overflow-auto'
 			)}
 		>
 			<div class="grid-container">
 				<div class="grid-header">
 					<div class="grid-header-row">
-						{#each columns as column (column)}
+						{#each columns as column (column.columnId)}
 							<HeaderCellWrapper {datagrid} {column}>
 								{#snippet groupCell(column)}
 									{@render HeaderGroupCellSnippet(column)}
@@ -145,7 +144,7 @@
 							{@render GroupRowSnippet(row, columns)}
 						{:else}
 							<div class="grid-body-row">
-								{#each columns as column (column)}
+								{#each columns as column (column.columnId)}
 									<BodyBasicRowCell {datagrid} {column} {row}>
 										<BasicRowCellContent {datagrid} {column} {row} />
 									</BodyBasicRowCell>
