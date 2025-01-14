@@ -37,7 +37,7 @@
 			<GroupItem  title="Row expanding" href={hrefs.headless.examples.rowExpanding} />
 			<GroupItem disabled title="Fully controlled" href={hrefs.headless.examples.fullyControlled} />
 			<GroupItem title="Grouping" href={hrefs.headless.examples.grouping} />
-			<GroupItem disabled title="Pagination" href={hrefs.headless.examples.pagination} />
+			<GroupItem title="Pagination" href={hrefs.headless.examples.pagination} />
 			<GroupItem
 				disabled
 				title="Pagination controlled"
