@@ -15,7 +15,7 @@ import type { ColumnMeta } from "$lib/datagrid/prebuilt/shadcn-svelte/types";
 // }
 
 
-export type Column = AnyColumn<User> & {_meta: {showColumnManagerDropdownMenu: boolean}}
+export type Column = AnyColumn<User> & { _meta: { showColumnManagerDropdownMenu: boolean } }
 
 export const userColumns = [
     displayColumn({
@@ -87,44 +87,6 @@ export const userColumns = [
             filterType: 'number',
         } as ColumnMeta
     }),
-    accessorColumn({
-        header: 'Status',
-        columnId: 'status',
-        accessorKey: 'status',
-        // cell: ({ row }) => `<span class="${row?.original.status}">${row?.original.status?.toUpperCase()}</span>`,
-        formatter: (row) => row.status?.toUpperCase(),
-        getValueFn: (row) => row.status,
-        options: { sortable: true },
-        _meta: {
-            filterType: 'select',
-            filterOptions: [{ label: 'active', value: 'active' }, { label: 'inactive', value: 'inactive' }, { label: 'pending', value: 'pending' }]
-        }
-    }),
-    computedColumn({
-        header: 'Full Name',
-        columnId: 'fullName',
-        // accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-        getValueFn: (row) => `${row.firstName} ${row.lastName}`,
-        options: { sortable: true },
-        getGroupValueFn: (row) => {
-            const fullName = `${row.firstName} ${row.lastName}`;
-            // Optional: Group by first letter or first word
-            return fullName.charAt(0).toUpperCase();
-        },
-
-    }),
-    accessorColumn({
-        // header: 'Role',
-        // columnId: 'role',
-        accessorKey: 'role',
-        // getValueFn: (row) => row.role,
-        // cell: (row) => `<span class="badge role-${row.role}">${row.role.toUpperCase()}</span>`,
-        options: { sortable: true },
-        _meta: {
-            filterType: 'text'
-        }
-    }),
-
     columnGroup({
         header: 'Person',
         columnId: 'person',
@@ -219,6 +181,45 @@ export const userColumns = [
                 ]
             })]
     }),
+    accessorColumn({
+        header: 'Status',
+        columnId: 'status',
+        accessorKey: 'status',
+        // cell: ({ row }) => `<span class="${row?.original.status}">${row?.original.status?.toUpperCase()}</span>`,
+        formatter: (row) => row.status?.toUpperCase(),
+        getValueFn: (row) => row.status,
+        options: { sortable: true },
+        _meta: {
+            filterType: 'select',
+            filterOptions: [{ label: 'active', value: 'active' }, { label: 'inactive', value: 'inactive' }, { label: 'pending', value: 'pending' }]
+        }
+    }),
+    computedColumn({
+        header: 'Full Name',
+        columnId: 'fullName',
+        // accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+        getValueFn: (row) => `${row.firstName} ${row.lastName}`,
+        options: { sortable: true },
+        getGroupValueFn: (row) => {
+            const fullName = `${row.firstName} ${row.lastName}`;
+            // Optional: Group by first letter or first word
+            return fullName.charAt(0).toUpperCase();
+        },
+
+    }),
+    accessorColumn({
+        // header: 'Role',
+        // columnId: 'role',
+        accessorKey: 'role',
+        // getValueFn: (row) => row.role,
+        // cell: (row) => `<span class="badge role-${row.role}">${row.role.toUpperCase()}</span>`,
+        options: { sortable: true },
+        _meta: {
+            filterType: 'text'
+        }
+    }),
+
+
 
     columnGroup({
         header: 'Stats',
