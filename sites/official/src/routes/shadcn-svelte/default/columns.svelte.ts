@@ -27,7 +27,7 @@ export const userColumns = [
                 component: ActionsCell,
             }
         },
-        options: { sortable: false },
+        options: { sortable: false, groupable: false },
         state: {
             size: {
                 width: 60,
