@@ -248,6 +248,9 @@ export class HandlersManager {
         },
         pinRowBottom: (rowIdentifier: GridRowIdentifier) => {
             this.datagrid.features.rowPinning.pinRowBottom(rowIdentifier);
+        },
+        unpinRow: (rowIdentifier: GridRowIdentifier) => {
+            this.datagrid.features.rowPinning.unpinRow(rowIdentifier);
         }
     }
     rowExpanding = {
