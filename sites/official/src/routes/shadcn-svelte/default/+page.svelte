@@ -5,15 +5,15 @@
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
 	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
 
-	import GroupRowCellContent from '$lib/datagrid/prebuilt/core/group-row-cell-content.svelte';
-	import BasicRowCellContent from '$lib/datagrid/prebuilt/core/basic-row-cell-content.svelte';
+	import GroupRowCellContent from '$lib/datagrid/prebuilt/core/render-group-row-cell-content.svelte';
+	import BasicRowCellContent from '$lib/datagrid/prebuilt/core/render-basic-row-cell-content.svelte';
 	import BodyRowGroupCellHeader from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/body-row-group-cell-header.svelte';
 	import BodyRowGroupCellAggregations from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/body-row-group-cell-aggregations.svelte';
 	import BodyBasicRowCell from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/body-basic-row-cell.svelte';
 	import BodyGroupRowCell from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/body-group-row-cell.svelte';
 	import HeaderCellDropdown from '$lib/datagrid/prebuilt/shadcn-svelte/_components/header-cell-dropdown.svelte';
 	import HeaderGroupCell from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-group-cell.svelte';
-	import BasicHeaderCellContent from '$lib/datagrid/prebuilt/core/basic-header-cell-content.svelte';
+	import BasicHeaderCellContent from '$lib/datagrid/prebuilt/core/render-basic-header-cell-content.svelte';
 	import HeaderColumnActions from '$lib/datagrid/prebuilt/shadcn-svelte/_components/header-column-actions.svelte';
 	import HeaderColumnFilters from '$lib/datagrid/prebuilt/shadcn-svelte/_components/header-column-filters.svelte';
 	import HeaderBasicCell from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-basic-cell.svelte';
