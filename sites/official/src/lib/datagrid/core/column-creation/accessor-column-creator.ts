@@ -94,7 +94,7 @@ export function createAccessorColumn<
       hideable: options?.hideable ?? true,
     },
     state: {
-      size: DEFAULT_COLUMN_SIZE,
+      size: state?.size ?? DEFAULT_COLUMN_SIZE,
       visible: state?.visible ?? true,
       pinning: {
         position: state?.pinning?.position ?? 'none',

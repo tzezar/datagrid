@@ -9,7 +9,7 @@ export const DEFAULT_COLUMN_SIZE = {
     width: 200,
     minWidth: 60,
     maxWidth: 700,
-    grow: false
+    // grow: false
 }
 
 export const DEFAULT_FUSE_OPTIONS = {

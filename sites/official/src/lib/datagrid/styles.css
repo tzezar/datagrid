@@ -105,8 +105,8 @@
 
 .grid-body-cell {
 	display: flex;
-	width: var(--width);
 	/* background-color: hsl(var(--grid-body-cell)); */
+	width: var(--width);
 	min-width: var(--min-width);
 	max-width: var(--max-width);
 	flex-shrink: 0;

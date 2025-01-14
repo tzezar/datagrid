@@ -32,7 +32,7 @@ export function createColumnGroup<TOriginalRow>(
       moveable: true,
     },
     state: {
-      size: DEFAULT_COLUMN_SIZE,
+      size:  DEFAULT_COLUMN_SIZE,
       visible: null,
       pinning: {
         position: 'none',
