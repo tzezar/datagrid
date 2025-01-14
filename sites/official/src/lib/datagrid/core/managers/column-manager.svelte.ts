@@ -42,7 +42,6 @@ export class ColumnManager<TOriginalRow> {
         return flattened;
     }
 
-
     getLeafColumns(): LeafColumn<TOriginalRow>[] {
         return this.getFlatColumns().filter(col => col.type !== 'group')
     }

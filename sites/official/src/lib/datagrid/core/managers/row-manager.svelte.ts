@@ -1,5 +1,5 @@
 import type { DataGrid } from "../index.svelte";
-import type { GridBasicRow, GridGroupRow, GridRow, GridRowIdentifier } from "../types";
+import type {  GridGroupRow, GridRow, GridRowIdentifier } from "../types";
 
 
 

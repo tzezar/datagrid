@@ -1,7 +1,7 @@
 import { createColumnGroup } from "../column-creation/group-column-creator";
 import type { AnyColumn, GroupColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
-import type { ColumnId, FilterableColumn, FilterOperator, GridBasicRow, GridRowIdentifier, LeafColumn, PinningPosition } from "../types";
+import type { ColumnId, FilterableColumn, FilterOperator, GridBasicRow, GridGroupRow, GridRowIdentifier, LeafColumn, PinningPosition } from "../types";
 import { findColumnById, flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups, generateRandomColumnId } from "../utils.svelte";
 
 
@@ -253,6 +253,9 @@ export class HandlersManager {
     rowExpanding = {
         toggleRowExpansion: (rowIdentifier: GridRowIdentifier) => {
             this.datagrid.features.rowExpanding.toggleRowExpansion(rowIdentifier);
+        },
+        toggleGroupRowExpansion: (row: GridGroupRow<any>) => {
+            this.datagrid.rows.toggleGroupRowExpansion(row);
         }
     }
     columnSizing = {
@@ -267,4 +270,5 @@ export class HandlersManager {
             this.datagrid.features.columnVisibility.toggleColumnVisibility(columnId);
         }
     }
+
 }

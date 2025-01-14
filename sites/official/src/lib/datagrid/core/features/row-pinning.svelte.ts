@@ -46,21 +46,21 @@ export class RowPinningFeature<TOriginalRow> {
         const pinnedBottom: GridRow<TOriginalRow>[] = [];
         const unpinned: GridRow<TOriginalRow>[] = [];
 
-        for (const rowIndex of this.rowIdsPinnedTop) {
-            const row = this.datagrid.rows.findRowByIdentifier(rowIndex);
+        for (const rowIdentifier of this.rowIdsPinnedTop) {
+            const row = this.datagrid.rows.findRowByIdentifier(rowIdentifier);
             if (row) pinnedTop.push(row);
         }
 
         // Iterate through all pinned bottom rows
-        for (const rowIndex of this.rowIdsPinnedBottom) {
-            const row = this.datagrid.rows.findRowByIdentifier(rowIndex);
+        for (const rowIdentifier of this.rowIdsPinnedBottom) {
+            const row = this.datagrid.rows.findRowByIdentifier(rowIdentifier);
             if (row) pinnedBottom.push(row);
         }
 
         // Iterate through all rows to populate unpinned array
         this.datagrid.cache.rows.forEach(row => {
-            const id = row.identifier;
-            if (!this.rowIdsPinnedTop.has(id) && !this.rowIdsPinnedBottom.has(id)) {
+            const rowIdentifier = row.identifier;
+            if (!this.rowIdsPinnedTop.has(rowIdentifier) && !this.rowIdsPinnedBottom.has(rowIdentifier)) {
                 unpinned.push(row);
             }
         });
@@ -176,8 +176,8 @@ export class RowPinningFeature<TOriginalRow> {
     }
 
     // Unpin a row or group
-    unpinRow(rowId: GridRowIdentifier) {
-        const row = this.datagrid.rows.findRowByIdentifier(rowId);
+    unpinRow(rowIdentifier: GridRowIdentifier) {
+        const row = this.datagrid.rows.findRowByIdentifier(rowIdentifier);
         if (!row) return;
 
         if (row.isGroupRow()) {
@@ -191,8 +191,8 @@ export class RowPinningFeature<TOriginalRow> {
                 this.rowIdsPinnedBottom.delete(id);
             });
         } else {
-            this.rowIdsPinnedTop.delete(rowId);
-            this.rowIdsPinnedBottom.delete(rowId);
+            this.rowIdsPinnedTop.delete(rowIdentifier);
+            this.rowIdsPinnedBottom.delete(rowIdentifier);
         }
 
         this.datagrid.processors.data.executeFullDataTransformation();
