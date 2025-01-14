@@ -7,10 +7,19 @@ import type {
 } from "./column-creation/types";
 import type { DataGrid } from "./index.svelte";
 
+type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
+export type DotNestedKeys<T> = (T extends object ? {
+  [K in Exclude<keyof T, symbol>]: `${K}${DotPrefix<DotNestedKeys<T[K]>>}`;
+}[Exclude<keyof T, symbol>] : "") extends infer D ? Extract<D, string> : never;
+// Specific interfaces for different column types
+
+// Specific interfaces for different column types
+
+
 /**
  * Column and Identifier Types
  */
-export type ColumnId<T = unknown> = keyof T | (string & {});
+export type ColumnId<T = unknown> = keyof T | (string & {})
 export type ExtractColumnIds<T> = T extends AccessorColumn<any, any>[]
     ? T[number]["columnId"]
     : never;
@@ -64,7 +73,7 @@ export type GridBasicRow<TOriginalRow> = {
     parentIndex: string | null;
     original: TOriginalRow;
     isExpanded: () => boolean;
-    isGroupRow: () => false 
+    isGroupRow: () => false
 };
 
 export type GridRow<TOriginalRow> =

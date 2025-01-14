@@ -1,7 +1,7 @@
 import { type AnyColumn, type GroupColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
 import type { ColumnId, LeafColumn } from "../types";
-import { createFlatColumnStructureAndPreserveChildren, findColumnById } from "../utils.svelte";
+import { flattenColumnStructurePreservingGroups, findColumnById } from "../utils.svelte";
 
 type Direction = 'left' | 'right';
 
@@ -74,7 +74,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
      */
     private findColumnOrThrow(columnId: ColumnId): AnyColumn<TOriginalRow> {
         const column = findColumnById(
-            createFlatColumnStructureAndPreserveChildren(this.datagrid.columns),
+            flattenColumnStructurePreservingGroups(this.datagrid.columns),
             columnId
         );
         if (!column) {
@@ -214,7 +214,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
      */
     private findParentGroupOrThrow(groupId: string): GroupColumn<TOriginalRow> {
         const group = findColumnById(
-            createFlatColumnStructureAndPreserveChildren(this.datagrid.columns),
+            flattenColumnStructurePreservingGroups(this.datagrid.columns),
             groupId
         ) as GroupColumn<TOriginalRow>;
 

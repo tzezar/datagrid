@@ -42,6 +42,7 @@ export function createAccessorColumn<
     },
     isFilterable(): boolean {
       return isColumnFilterable(this)
-    }
+    },
+
   };
 }

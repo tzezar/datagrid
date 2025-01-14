@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
-	import { getSortDirection, getSortIndex, isDescendantOf } from '$lib/datagrid/core/utils.svelte';
+	import { getSortDirection, getSortIndex, isInGroupTree } from '$lib/datagrid/core/utils.svelte';
 	import Visibility from '$lib/datagrid/icons/material-symbols/visibility.svelte';
 	import VisibilityOff from '$lib/datagrid/icons/material-symbols/visibility-off.svelte';
 	import Slider from '$lib/components/ui/slider/slider.svelte';
@@ -154,7 +154,7 @@
 						.getGroupColumns()
 						.find((group: GroupColumn<any>) => group.columnId === targetGroupId);
 
-					if (targetGroup && isDescendantOf(targetGroup, column)) {
+					if (targetGroup && isInGroupTree(targetGroup, column)) {
 						console.warn('Cannot move a group into its own descendant');
 						e.currentTarget.value = column.parentColumnId || '';
 						return;
@@ -170,7 +170,7 @@
 			<option value="">Root Level</option>
 			{#each datagrid.columnManager
 				.getGroupColumns()
-				.filter((groupCol: GroupColumn<any>) => column.type !== 'group' || (groupCol !== column && !isDescendantOf(groupCol, column))) as groupColumn (groupColumn.columnId)}
+				.filter((groupCol: GroupColumn<any>) => column.type !== 'group' || (groupCol !== column && !isInGroupTree(groupCol, column))) as groupColumn (groupColumn.columnId)}
 				<option value={groupColumn.columnId} disabled={groupColumn === column}>
 					{groupColumn.header}
 				</option>

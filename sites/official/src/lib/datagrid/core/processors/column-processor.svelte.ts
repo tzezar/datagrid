@@ -1,7 +1,7 @@
 import { isGroupColumn } from "../helpers/column-guards";
 import type { AnyColumn, GroupColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
-import { createFlatColumnStructure } from "../utils.svelte";
+import { flattenColumnStructureAndClearGroups } from "../utils.svelte";
 
 
 export class ColumnProcessor<TOriginalRow> {
@@ -52,7 +52,7 @@ export class ColumnProcessor<TOriginalRow> {
 
     refreshColumnPinningOffsets() {
         // const columns = flattenColumns(this.datagrid.columns);
-        const columns = createFlatColumnStructure(this.datagrid.columns);
+        const columns = flattenColumnStructureAndClearGroups(this.datagrid.columns);
         const newColumns: AnyColumn<any>[] = [];
         for (let i = 0; i < columns.length; i++) {
             const col = columns[i];

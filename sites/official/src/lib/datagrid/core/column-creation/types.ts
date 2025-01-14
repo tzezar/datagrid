@@ -8,11 +8,10 @@ export type DotNestedKeys<T> = (T extends object ? {
 
 
 
-
 export interface AccessorColumn<TOriginalRow, TMeta = any> {
   type: 'accessor';
   header: string;
-  columnId: DotNestedKeys<TOriginalRow>;
+  columnId: ColumnId<TOriginalRow>;
   parentColumnId: string | null;
   accessorKey: DotNestedKeys<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
@@ -45,7 +44,7 @@ export interface AccessorColumn<TOriginalRow, TMeta = any> {
 export interface ComputedColumn<TOriginalRow, TMeta = any> {
   type: 'computed';
   header: string;
-  columnId: ColumnId;
+  columnId: ColumnId<TOriginalRow>;
   parentColumnId: ColumnId | null;
   // accessorFn: AccessorFn<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
@@ -79,7 +78,7 @@ export interface ComputedColumn<TOriginalRow, TMeta = any> {
 export interface DisplayColumn<TOriginalRow, TMeta = any> {
   type: 'display';
   header: string;
-  columnId: ColumnId;
+  columnId: ColumnId<TOriginalRow>;
   parentColumnId: string | null;
   cell: CustomCell<TOriginalRow>;
   headerCell?: HeaderCell;
@@ -110,7 +109,7 @@ export interface GroupColumn<TOriginalRow, TMeta = any>  {
   type: 'group';
   header: string;
   headerCell?: HeaderCell;
-  columnId: ColumnId;
+  columnId: ColumnId<TOriginalRow>;
   parentColumnId: string | null;
   columns: AnyColumn<TOriginalRow>[];
   options: {
@@ -140,9 +139,6 @@ type CommonColumnProps = {
   columnId: ColumnId;
   parentColumnId?: ParentColumnId;
   _meta?: any;
-  isVisible(): boolean;
-  isSortable(): boolean;
-  isFilterable(): boolean;
 }
 
 export type AnyColumn<TOriginalRow> =

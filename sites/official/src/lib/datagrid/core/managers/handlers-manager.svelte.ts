@@ -2,7 +2,7 @@ import { createColumnGroup } from "../column-creation/group-column-creator";
 import type { AnyColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
 import type { ColumnId, FilterableColumn, FilterOperator, GridBasicRow, GridRowIdentifier, LeafColumn, PinningPosition } from "../types";
-import { findColumnById, createFlatColumnStructure, generateRandomColumnId} from "../utils.svelte";
+import { findColumnById, flattenColumnStructureAndClearGroups, generateRandomColumnId} from "../utils.svelte";
 
 
 
@@ -140,7 +140,7 @@ export class HandlersManager {
 
             const newGroupBy: ColumnId[] = values
                 .map((option) => {
-                    const column = findColumnById(createFlatColumnStructure(this.datagrid.columns), option);
+                    const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), option);
                     if (!column) return null;
                     if (column.options.groupable === false) return null;
                     return option;
@@ -153,7 +153,7 @@ export class HandlersManager {
             this.datagrid.processors.data.executeFullDataTransformation();
         },
         toggle: (columnId: ColumnId) => {
-            const column = findColumnById(createFlatColumnStructure(this.datagrid.columns), columnId);
+            const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), columnId);
             if (!column) return;
             if (column.options.groupable === false) return;
 
@@ -169,12 +169,12 @@ export class HandlersManager {
     }
     columnPinning = {
         pinColumn: (columnId: string, position: PinningPosition) => {
-            const column = findColumnById(createFlatColumnStructure(this.datagrid.columns), columnId);
+            const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), columnId);
             if (!column) return;
             column.state.pinning.position = position;
         },
         changeColumnPinningPosition: (columnId: string, position: PinningPosition) => {
-            const column = findColumnById(createFlatColumnStructure(this.datagrid.columns), columnId);
+            const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), columnId);
             if (!column) throw new Error(`Column ${columnId} not found`);
             this.datagrid.features.columnPinning.changeColumnPinningPosition(column, position);
             this.datagrid.processors.column.refreshColumnPinningOffsets();
@@ -209,7 +209,7 @@ export class HandlersManager {
                 .map(([columnId]) => columnId);
 
             for (const columnId of columnIdsToBeGrouped) {
-                const column = findColumnById(createFlatColumnStructure(this.datagrid.columns), columnId);
+                const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), columnId);
                 if (!column) throw new Error(`Column ${columnId} not found`);
                 column.parentColumnId = groupColumn.columnId;
             }

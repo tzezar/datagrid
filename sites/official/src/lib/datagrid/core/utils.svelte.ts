@@ -1,9 +1,11 @@
 import type { AnyColumn, GroupColumn } from "./column-creation/types";
-import type { CellValue, ColumnId, CustomCellComponentWithProps, SortableColumn } from "./types";
+import type { CellValue, ColumnId, SortableColumn } from "./types";
 import type { DataGrid } from "./index.svelte";
 
 
-
+export function generateRandomColumnId(): string {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
 
 export function getCellContent(column: AnyColumn<any>, originalRow: any): CellValue | HTMLElement {
     switch (column.type) {
@@ -35,18 +37,14 @@ export function getCellContent(column: AnyColumn<any>, originalRow: any): CellVa
 }
 
 
-export function generateRandomColumnId(): string {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-}
 
-
-export function createFlatColumnStructure(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+export function flattenColumnStructureAndClearGroups(columns: AnyColumn<any>[]): AnyColumn<any>[] {
     const flattened: AnyColumn<any>[] = [];
 
     for (let i = 0; i < columns.length; i++) {
         const column = columns[i];
         if (column.type === 'group') {
-            flattened.push(...createFlatColumnStructure(column.columns));
+            flattened.push(...flattenColumnStructureAndClearGroups(column.columns));
             flattened.push({ ...column, columns: [] });
         }
         else {
@@ -56,13 +54,13 @@ export function createFlatColumnStructure(columns: AnyColumn<any>[]): AnyColumn<
     return flattened;
 }
 
-export function createFlatColumnStructureAndPreserveChildren(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+export function flattenColumnStructurePreservingGroups(columns: AnyColumn<any>[]): AnyColumn<any>[] {
     const flattened: AnyColumn<any>[] = [];
 
     for (let i = 0; i < columns.length; i++) {
         const column = columns[i];
         if (column.type === 'group') {
-            flattened.push(...createFlatColumnStructureAndPreserveChildren(column.columns));
+            flattened.push(...flattenColumnStructurePreservingGroups(column.columns));
             flattened.push(column);
         }
         else {
@@ -74,22 +72,20 @@ export function createFlatColumnStructureAndPreserveChildren(columns: AnyColumn<
 
 // Find column by ID in nested structure
 export function findColumnById<TOriginalRow>(flatColumns: AnyColumn<TOriginalRow>[], id: ColumnId): AnyColumn<TOriginalRow> | null {
-    return flatColumns.find((col) => col.columnId === id || col.header === id) ?? null;
+    return flatColumns.find((col) => col.columnId === id) ?? null;
 }
 
-export function isDescendantOf(possibleDescendant: GroupColumn<any>, ancestor: GroupColumn<any>): boolean {
+export function isInGroupTree(possibleDescendant: GroupColumn<any>, ancestor: GroupColumn<any>): boolean {
     if (!possibleDescendant) return false;
 
-    // Check direct children
+    // Check if the possible descendant is a direct child of the ancestor
     if (ancestor.columns.includes(possibleDescendant)) return true;
 
-    // Recursively check children of group columns
+    // Recursively check if the possible descendant is a descendant of any group columns
     return ancestor.columns
-        .filter((col): col is GroupColumn<any> => col.type === 'group')
-        .some(childGroup => isDescendantOf(possibleDescendant, childGroup));
+        .filter((col): col is GroupColumn<any> => col.type === 'group') // Type guard to ensure we only check GroupColumn types
+        .some(childGroup => isInGroupTree(possibleDescendant, childGroup)); // Recursive call for group columns
 }
-
-
 
 // Get sort index for display
 export const getSortIndex = (datagrid: DataGrid<any>, column: AnyColumn<any>): number | null => {
@@ -109,9 +105,5 @@ export const getSortDirection = (datagrid: DataGrid<any>, column: AnyColumn<any>
     if (!sortConfig) return 'intermediate';
     return sortConfig.desc ? 'desc' : 'asc';
 };
-
-export function isCellComponent(value: any): value is CustomCellComponentWithProps {
-    return value && typeof value === 'object' && 'component' in value
-}
 
 
