@@ -2,6 +2,7 @@
 	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { columnsWithGetters } from '$lib/datagrid/core/constants';
+	import Badge from '$lib/components/ui/badge/badge.svelte';
 
 	let { datagrid }: { datagrid: DataGrid<any> } = $props();
 
@@ -11,7 +12,11 @@
 			.filter((col) => columnsWithGetters.includes(col.type as (typeof columnsWithGetters)[number]))
 			.filter((col) => col.options.groupable === true)
 	);
-	
+
+	const getColumnById = (columnId: string) => {
+		return datagrid.columnManager.getFlatColumns().find((col) => col.columnId === columnId);
+	};
+	const getColumnHeaders = () => {};
 </script>
 
 <Select.Root
@@ -20,7 +25,17 @@
 	value={datagrid.features.grouping.groupByColumns}
 	onValueChange={(values) => datagrid.handlers.grouping.change(values)}
 >
-	<Select.Trigger class="h-full w-full rounded-none border-0">Group data by column</Select.Trigger>
+	<Select.Trigger class="flex h-full w-full gap-x-2 gap-y-2 rounded-none border-0">
+		{#if datagrid.features.grouping.groupByColumns.length === 0}
+			<span>Select group by columns</span>
+		{:else}
+			<div class='flex h-full w-full flex-wrap gap-2'>
+				{#each datagrid.features.grouping.groupByColumns as columnId}
+					<Badge class='flex  text-center self-center items-center justify-center'>{getColumnById(columnId)?.header}</Badge>
+				{/each}
+			</div>
+		{/if}
+	</Select.Trigger>
 	<Select.Content>
 		<Select.Group>
 			<Select.GroupHeading>Columns</Select.GroupHeading>

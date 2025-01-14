@@ -29,6 +29,7 @@
 	import ExpandLess from '$lib/datagrid/icons/material-symbols/expand-less.svelte';
 	import ExpandMore from '$lib/datagrid/icons/material-symbols/expand-more.svelte';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import FileExport from '$lib/datagrid/icons/material-symbols/file-export.svelte';
 
 	let { datagrid }: { datagrid: TzezarsDatagrid } = $props();
 
@@ -47,17 +48,25 @@
 {#snippet exporting()}
 	<DropdownMenu.Sub>
 		<DropdownMenu.SubTrigger>
-			<Sort class="mr-2 size-4" />
+			<FileExport class="mr-2 size-4" />
 			<span>Exporting</span>
 		</DropdownMenu.SubTrigger>
 		<DropdownMenu.SubContent>
-			<DropdownMenu.Item onclick={() => datagrid.features.exporting.exportToExcel()}>
+			<DropdownMenu.Item onclick={() => datagrid.extra.features.exporting.exportToExcel()}>
+				Export to EXCEL
+			</DropdownMenu.Item>
+			<DropdownMenu.Item onclick={() => datagrid.extra.features.exporting.exportToCSV()}>
 				Export to CSV
+			</DropdownMenu.Item>
+			<DropdownMenu.Item onclick={() => datagrid.extra.features.exporting.exportToXML()}>
+				Export to XML
+			</DropdownMenu.Item>
+			<DropdownMenu.Item onclick={() => datagrid.extra.features.exporting.exportToJSON()}>
+				Export to JSON
 			</DropdownMenu.Item>
 		</DropdownMenu.SubContent>
 	</DropdownMenu.Sub>
 {/snippet}
-
 
 {#snippet sorting()}
 	<DropdownMenu.Sub>
@@ -352,30 +361,31 @@
 				{@render resizing()}
 				{@render visibility()}
 				{@render exporting()}
-
+			
+				<DropdownMenu.Separator />
 				<DropdownMenu.Sub>
 					<DropdownMenu.SubTrigger>
 						<AdGroupOutlineSharp class="mr-2 size-4" />
-						<span>Create Group</span>
+						<span>Create column group</span>
 					</DropdownMenu.SubTrigger>
 					<DropdownMenu.SubContent>
 						{@render newGroupCreationMenu()}
 					</DropdownMenu.SubContent>
 				</DropdownMenu.Sub>
-				<DropdownMenu.Separator />
 				<DropdownMenu.Item
 					closeOnSelect={false}
 					onclick={() => datagrid.extra.features.groupHeadersVisibility.toggleGroupHeaders()}
 				>
 					{#if datagrid.extra.features.groupHeadersVisibility.showGroupHeaders}
 						<ExpandLess class="mr-2 size-4" />
-						Hide Column Groups
+						Hide column groups
 					{:else}
 						<ExpandMore class="mr-2 size-4" />
-						Show Column Groups
+						Show column groups
 					{/if}
 				</DropdownMenu.Item>
 				<DropdownMenu.Separator />
+			<DropdownMenu.GroupHeading>Data grouping</DropdownMenu.GroupHeading>
 				{@render groupBy()}
 			</DropdownMenu.Group>
 			<!-- <DropdownMenu.Separator /> -->

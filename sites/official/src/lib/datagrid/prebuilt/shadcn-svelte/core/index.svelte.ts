@@ -4,6 +4,7 @@ import { LifecycleHooks } from "$lib/datagrid/core/managers/lifecycle-hooks-mana
 import { ColumnProcessor } from "$lib/datagrid/core/processors";
 import { flattenColumnStructureAndClearGroups } from "$lib/datagrid/core/utils.svelte";
 import { ColumnFilteringFeature } from "./features/column-filtering.svelte";
+import { ExportingFeature } from "./features/exporting.svelte";
 import { FullscreenFeature } from "./features/fullscreen.svelte";
 import { GroupHeadersVisibilityFeature } from "./features/group-headers-visibility.svelte";
 
@@ -41,7 +42,7 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
         });
         super(config);
     }
-    extra = new Extra();
+    extra = new Extra(this)
 
 
     isFullscreenEnabled() {
@@ -55,11 +56,18 @@ export class ExtraState {
 }
 
 export class Extra {
+    datagrid: TzezarsDatagrid<any>;
     state = new ExtraState();
     features = {
         fullscreen: new FullscreenFeature(),
         groupHeadersVisibility: new GroupHeadersVisibilityFeature(),
-        columnFiltering: new ColumnFilteringFeature()
+        columnFiltering: new ColumnFilteringFeature(),
+        exporting: {} as ExportingFeature<any>
     }
 
+    constructor(datagrid: TzezarsDatagrid<any>) {
+        this.datagrid = datagrid;
+        this.features.exporting = new ExportingFeature(datagrid);
+    }
 }
+

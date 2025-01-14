@@ -1,14 +1,14 @@
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { XMLBuilder } from 'fast-xml-parser';
-import type { DataGrid } from "../index.svelte";
-import type { LeafColumn } from '../types';
+import { TzezarsDatagrid } from '../index.svelte';
+import type { LeafColumn } from '$lib/datagrid/core/types';
 
 export class ExportingFeature<T> {
-    private datagrid: DataGrid<T>;
+    private datagrid: TzezarsDatagrid<T>;
     fileName: string = $state('table');
 
-    constructor(datagrid: DataGrid<T>) {
+    constructor(datagrid: TzezarsDatagrid<T>) {
         this.datagrid = datagrid;
     }
 
