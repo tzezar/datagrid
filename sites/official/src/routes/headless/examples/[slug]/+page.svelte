@@ -16,7 +16,7 @@
 		<h1 class="text-3xl font-bold">{data.meta.title}</h1>
 		<p class="text-muted-foreground text-xs">Published at {formatDate(data.meta.date)}</p>
 	</group>
-	<div class="prose dark:prose-invert pt-8 min-w-full ">
+	<div class="prose dark:prose-invert pt-8 min-w-full gap-4 flex flex-col">
 		<svelte:component this={data.content} />
 	</div>
 </article>

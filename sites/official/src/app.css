@@ -36,8 +36,8 @@
 		--grid-border-width: 1px;
 		--grid-border: 0, 0%, 85%;
 		--grid-header: 0, 0%, 98%;
-		--grid-header-cell: 0 0% 98%;
-		--grid-header-group: 0, 0%, 98%;
+		--grid-header-cell: 0 0% 96%;
+		--grid-header-group: 0, 0%, 96%;
 		--grid-header-group-cell: 0, 0%, 98%;
 		--grid-body: 0 0% 40%;
 		--grid-body-row-even: 0 0% 99%;
@@ -47,7 +47,7 @@
 		--grid-toolbar: 0, 0%, 98%;
 		--grid-pinned-cell: 0, 0%, 90%;
 		--grid-pinned-header-cell: 0, 0%, 85%;
-		--grid-background: 0, 0%, 98%;
+		--grid-background: 0, 0%, 99.5%;
 
 		--grid-pagination: 0, 0%, 98%;
 	}

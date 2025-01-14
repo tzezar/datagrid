@@ -25,7 +25,7 @@
 				title="Column filters faceted"
 				href={hrefs.headless.examples.columnFiltersFaceted}
 			/>
-			<GroupItem disabled title="Column ordering" href={hrefs.headless.examples.columnOrdering} />
+			<GroupItem  title="Column ordering" href={hrefs.headless.examples.columnOrdering} />
 			<GroupItem disabled title="Column pinning" href={hrefs.headless.examples.columnPinning} />
 			<GroupItem title="Column sizing" href={hrefs.headless.examples.columnSizing} />
 			<GroupItem

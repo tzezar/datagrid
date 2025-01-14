@@ -17,33 +17,35 @@
 	let columns = datagrid.columnManager.getLeafColumnsInOrder();
 </script>
 
-<div class="content">
-	<div class="header">
-		<div class="header-row">
-			{#each columns as column (column.columnId)}
-				<div class="header-cell">
-					<RenderBasicHeaderCellContent {datagrid} {column}>
-						{#snippet title(header)}
-							<span class="grid-header-cell-content-header">{header}</span>
-						{/snippet}
-					</RenderBasicHeaderCellContent>
+<div>
+	<div class="content">
+		<div class="header">
+			<div class="header-row">
+				{#each columns as column (column.columnId)}
+					<div class="header-cell">
+						<RenderBasicHeaderCellContent {datagrid} {column}>
+							{#snippet title(header)}
+								<span class="grid-header-cell-content-header">{header}</span>
+							{/snippet}
+						</RenderBasicHeaderCellContent>
+					</div>
+				{/each}
+			</div>
+		</div>
+		<div class="body">
+			{#each datagrid.rows.getBasicRows() as row (row.identifier)}
+				<div class="body-row">
+					{#each columns as column (column.columnId)}
+						<div class="body-cell">
+							<RenderBasicRowCellContent {datagrid} {column} {row} />
+						</div>
+					{/each}
 				</div>
 			{/each}
 		</div>
 	</div>
-	<div class="body">
-		{#each datagrid.rows.getBasicRows() as row (row.identifier)}
-			<div class="body-row">
-				{#each columns as column (column.columnId)}
-					<div class="body-cell">
-						<RenderBasicRowCellContent {datagrid} {column} {row} />
-					</div>
-				{/each}
-			</div>
-		{/each}
-	</div>
+	<MadeWithLoveByTzezar />
 </div>
-<MadeWithLoveByTzezar />
 
 <style>
 	.content {

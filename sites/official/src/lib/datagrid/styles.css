@@ -70,11 +70,18 @@
 
 .grid-header-group-header {
 	padding: 8px;
-
 	border-top: var(--grid-border-width) solid hsl(var(--grid-border));
 	/* border-bottom: var(--grid-border-width) solid hsl(var(--grid-border)); */
 	border-right: var(--grid-border-width) solid hsl(var(--grid-border));
 	border-left: var(--grid-border-width) solid hsl(var(--grid-border));
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5rem;
+	text-align: center;
 }
 
 .grid-header-group-cell {
@@ -131,14 +138,14 @@
 }
 
 /* Odd rows */
-.grid-body-row:nth-child(odd) {
-    background-color: hsl(var(--grid-body-row-odd)); /* Define a variable or use a specific color */
-}
+/* .grid-body-row:nth-child(odd) {
+    background-color: hsl(var(--grid-body-row-odd)); 
+} */
 
 /* Even rows */
-.grid-body-row:nth-child(even) {
-    background-color: hsl(var(--grid-body-row-even)); /* Define a variable or use a specific color */
-}
+/* .grid-body-row:nth-child(even) {
+    background-color: hsl(var(--grid-body-row-even)); 
+} */
 
 
 

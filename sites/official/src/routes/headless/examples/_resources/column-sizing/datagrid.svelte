@@ -18,7 +18,6 @@
 
 </script>
 
-<div class="flex flex-col gap-4">
 	<div class="flex flex-col border p-2 px-4">
 		{#each columns as column}
 			<div class="flex flex-row gap-2">
@@ -91,7 +90,6 @@
 			</div>
 		{/each}
 	</div>
-</div>
 
 <style>
 	.content {
