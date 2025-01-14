@@ -307,7 +307,7 @@
 					<span>Unpin</span>
 				</DropdownMenu.Item>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item>
+				<DropdownMenu.Item onclick={() => datagrid.handlers.columnVisibility.toggleColumnVisibility(column.columnId)}>
 					<VisibilityOff class="mr-2 size-4" />
 					<span>Hide column</span>
 				</DropdownMenu.Item>
