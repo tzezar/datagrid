@@ -11,7 +11,8 @@ export type DotNestedKeys<T> = (T extends object ? {
 export interface AccessorColumn<TOriginalRow, TMeta = any> {
   type: 'accessor';
   header: string;
-  columnId: DotNestedKeys<TOriginalRow>;
+  // columnId: DotNestedKeys<TOriginalRow>;
+  columnId: ColumnId;
   parentColumnId: string | null;
   accessorKey: DotNestedKeys<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
@@ -44,7 +45,7 @@ export interface AccessorColumn<TOriginalRow, TMeta = any> {
 export interface ComputedColumn<TOriginalRow, TMeta = any> {
   type: 'computed';
   header: string;
-  columnId: ColumnId<TOriginalRow>;
+  columnId: ColumnId
   parentColumnId: ColumnId | null;
   // accessorFn: AccessorFn<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
@@ -73,12 +74,12 @@ export interface ComputedColumn<TOriginalRow, TMeta = any> {
   isVisible(): boolean;
   isSortable(): boolean;
   isFilterable(): boolean
-} 
+}
 
 export interface DisplayColumn<TOriginalRow, TMeta = any> {
   type: 'display';
   header: string;
-  columnId: ColumnId<TOriginalRow>;
+  columnId: ColumnId
   parentColumnId: string | null;
   cell: CustomCell<TOriginalRow>;
   headerCell?: HeaderCell;
@@ -105,11 +106,11 @@ export interface DisplayColumn<TOriginalRow, TMeta = any> {
   isFilterable(): boolean
 }
 
-export interface GroupColumn<TOriginalRow, TMeta = any>  {
+export interface GroupColumn<TOriginalRow, TMeta = any> {
   type: 'group';
   header: string;
   headerCell?: HeaderCell;
-  columnId: ColumnId<TOriginalRow>;
+  columnId: ColumnId
   parentColumnId: string | null;
   columns: AnyColumn<TOriginalRow>[];
   options: {
@@ -127,7 +128,7 @@ export interface GroupColumn<TOriginalRow, TMeta = any>  {
   };
   _meta: TMeta;
   isVisible(): boolean;
-  isSortable(): boolean; 
+  isSortable(): boolean;
   isFilterable(): boolean;
 }
 // Union type for all column types

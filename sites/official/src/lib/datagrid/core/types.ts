@@ -20,7 +20,7 @@ export type DotNestedKeys<T> = (T extends object ? {
  * Column and Identifier Types
  */
 // export type ColumnId<T = any> = keyof T | (string & {})
-export type ColumnId<T = any> = string
+export type ColumnId = string 
 export type ExtractColumnIds<T> = T extends AccessorColumn<any, any>[]
     ? T[number]["columnId"]
     : never;

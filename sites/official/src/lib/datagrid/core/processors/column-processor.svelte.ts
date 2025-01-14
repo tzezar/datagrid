@@ -2,6 +2,7 @@ import { isGroupColumn } from "../helpers/column-guards";
 import type { AnyColumn, GroupColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
 import { flattenColumnStructureAndClearGroups } from "../utils.svelte";
+import type { ColumnId } from "../types";
 
 
 export class ColumnProcessor<TOriginalRow> {
@@ -23,7 +24,7 @@ export class ColumnProcessor<TOriginalRow> {
         return columnsInOrder
     };
 
-    assignParentColumnIds(columns: AnyColumn<TOriginalRow>[], parentColumnId: string | null = null) {
+    assignParentColumnIds(columns: AnyColumn<TOriginalRow>[], parentColumnId: ColumnId | null = null) {
         columns.forEach(column => {
             if (isGroupColumn(column)) {
                 const groupColumn = column as GroupColumn<TOriginalRow>;
