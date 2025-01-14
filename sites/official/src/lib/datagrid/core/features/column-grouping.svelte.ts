@@ -27,6 +27,17 @@ export class ColumnGroupingFeature<TOriginalRow> {
         }
         return null
     }
+
+    findParentColumnGroupAndPreserveChildren(parentColumnId: string | null): GroupColumn<TOriginalRow> | null {
+        if (parentColumnId === null) return null;
+        const flattenedColumns = this.datagrid.columnManager.getFlatColumnsWithNestedColumns();
+        const groupColumn = flattenedColumns.find(col => col.columnId === parentColumnId);
+        if (groupColumn) {
+            return groupColumn as GroupColumn<TOriginalRow>;
+        }
+        return null
+    }
+
     
     isColumnWithinGroup(column: AnyColumn<TOriginalRow>): boolean {
         return column.parentColumnId !== null;

@@ -3,7 +3,7 @@
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core/index.svelte';
 	import GridHeader from './_components/grid-header.svelte';
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
-	import type {  GroupColumn } from '$lib/datagrid/core/column-creation/types';
+	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
 	import { isGridGroupRow as isGroupRow } from '$lib/datagrid/core/utils.svelte';
 	import GroupRowCellContent from '$lib/datagrid/prebuilt/core/group-row-cell-content.svelte';
 	import BasicRowCellContent from '$lib/datagrid/prebuilt/core/basic-row-cell-content.svelte';
@@ -28,7 +28,7 @@
 		columns: userColumns,
 		data: data.users
 	});
-	
+
 	let columns = $derived(
 		datagrid.extra.features.groupHeadersVisibility.showGroupHeaders
 			? datagrid.columnManager.getColumnsInOrder()
@@ -36,10 +36,8 @@
 	);
 
 	$effect(() => {
-		console.log(
-			$state.snapshot(columns))
+		console.log('datagrid.columns', $state.snapshot(columns));
 	});
-
 
 	import { Portal } from 'bits-ui';
 	import { userColumns } from './columns.svelte';
@@ -92,7 +90,7 @@
 			{column}
 			onclick={(e: any) => {
 				const multisort = e.shiftKey;
-				datagrid.handlers.sorting.toggleColumnSorting(column, multisort)
+				datagrid.handlers.sorting.toggleColumnSorting(column, multisort);
 			}}
 		>
 			<BasicHeaderCellContent {datagrid} {column}>
@@ -109,14 +107,22 @@
 
 <Portal disabled={!datagrid.extra.features.fullscreen.isFullscreen}>
 	<div
-		class={cn('flex flex-col h-full', datagrid.extra.features.fullscreen.isFullscreen && 'absolute inset-0 z-[20] p-4 bg-background/80')}
+		class={cn(
+			'flex h-full flex-col',
+			datagrid.extra.features.fullscreen.isFullscreen &&
+				'bg-background/80 absolute inset-0 z-[20] p-4'
+		)}
 	>
 		<GridHeader {datagrid} />
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
 		</div> -->
-		<div class={cn('grid-wrapper', datagrid.extra.features.fullscreen.isFullscreen && 'max-h-full h-full overflow-auto')}>
-
+		<div
+			class={cn(
+				'grid-wrapper',
+				datagrid.extra.features.fullscreen.isFullscreen && 'h-full max-h-full overflow-auto'
+			)}
+		>
 			<div class="grid-container">
 				<div class="grid-header">
 					<div class="grid-header-row">
@@ -159,7 +165,7 @@
 			<div class="grid-footer-container"></div>
 		</div>
 		<Pagination {datagrid} />
-		<div class='border-b border-x p-1 px-2 text-[0.5rem] text-muted-foreground w-fit ml-auto'>
+		<div class="text-muted-foreground ml-auto w-fit border-x border-b p-1 px-2 text-[0.5rem]">
 			Made with ❤️ by Tzezar
 		</div>
 	</div>
