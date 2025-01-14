@@ -38,10 +38,6 @@
 	import { Portal } from 'bits-ui';
 	import { userColumns } from './columns.svelte';
 
-
-	const col = datagrid.columns[0]
-	col.columnId ===''
-
 </script>
 
 {#snippet GroupRowSnippet(row: GridGroupRow<any>, leafColumns: LeafColumn<any>[])}

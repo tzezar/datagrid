@@ -1,44 +1,63 @@
 import type { FilterCondition, FilterOperator } from "../types";
 
+/**
+ * Manages column filtering functionality for a data grid.
+ * Provides utilities for evaluating filter conditions and toggling the visibility of filters.
+ */
 export class ColumnFilteringFeature<TOriginalRow> {
-    conditions: FilterCondition<TOriginalRow>[] = $state([])
-    showColumnFiltering: boolean = $state(false);
+    // Stores all filter conditions for the columns
+    conditions: FilterCondition<TOriginalRow>[] = $state([]);
 
-    // TODO move it to more appropriate place
-    toggleColumnFiltering() {
-        this.showColumnFiltering = !this.showColumnFiltering;
-    }
-
+    /**
+     * Retrieves the filter condition value for a given column.
+     * @param columnId - The ID of the column.
+     * @returns The filter condition value or `null` if no condition exists.
+     */
     getConditionValue(columnId: string): any {
         const condition = this.conditions.find(c => c.columnId === columnId);
         return condition ? condition.value : null;
     }
 
+    /**
+     * Retrieves the filter operator for a given column.
+     * @param columnId - The ID of the column.
+     * @returns The filter operator or `undefined` if no condition exists.
+     */
     getConditionOperator(columnId: string): FilterOperator | undefined {
         const condition = this.conditions.find(c => c.columnId === columnId);
         return condition?.operator;
     }
 
+    /**
+     * Updates the filter operator for a given column.
+     * @param columnId - The ID of the column.
+     * @param operator - The new filter operator to set.
+     */
     changeConditionOperator(columnId: string, operator: FilterOperator) {
         const condition = this.conditions.find(c => c.columnId === columnId);
-        if (!condition) return;
+        if (!condition) return; // Exit if no condition exists for the column
         condition.operator = operator;
     }
 
+    /**
+     * Evaluates a cell value against a filter condition.
+     * @param cellValue - The value of the cell to evaluate.
+     * @param condition - The filter condition to evaluate against.
+     * @returns `true` if the cell value satisfies the condition, otherwise `false`.
+     */
     evaluateCondition(cellValue: any, condition: FilterCondition<TOriginalRow>): boolean {
-        const value = condition.value;
-        const valueTo = condition.valueTo;
+        const { value, valueTo, operator } = condition;
 
         // Handle null/undefined cell values
         if (cellValue === null || cellValue === undefined) {
-            return condition.operator === 'empty';
+            return operator === 'empty';
         }
 
         // Convert to string for string operations
         const stringCellValue = String(cellValue).toLowerCase();
         const stringValue = String(value).toLowerCase();
 
-        switch (condition.operator) {
+        switch (operator) {
             case 'equals':
                 return cellValue === value;
 
@@ -86,6 +105,7 @@ export class ColumnFilteringFeature<TOriginalRow> {
                 return cellValue !== '' && cellValue !== null && cellValue !== undefined;
 
             default:
+                // Default behavior: always return true
                 return true;
         }
     }

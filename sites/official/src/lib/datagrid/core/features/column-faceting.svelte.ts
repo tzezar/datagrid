@@ -1,70 +1,78 @@
 import type { AccessorColumn, AnyColumn, ComputedColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
+import type { ColumnId } from "../types";
 
 export class ColumnFacetingFeature<TOriginalRow> {
-    datagrid: DataGrid<TOriginalRow>;
-    numericFacets: Record<string, { min: number, max: number }> = $state({});
-    categoricalFacets: Record<string, { 
-        uniqueValuesCount: number, 
-        uniqueValues: any[] 
-    }> = $state({});
+    private datagrid: DataGrid<TOriginalRow>;
+    private numericFacets: Record<ColumnId<any>, { min: number; max: number }> = {};
+    private categoricalFacets: Record<ColumnId<any>, { uniqueValuesCount: number; uniqueValues: unknown[] }> = {};
 
     constructor(datagrid: DataGrid<TOriginalRow>) {
-        this.datagrid = datagrid
+        this.datagrid = datagrid;
     }
 
-    
-    // Getters for facets
+    // Getters for numeric and categorical facets
     getNumericFacet(columnId: string) {
-        return this.numericFacets[columnId];
+        return this.numericFacets[columnId] ?? null;
     }
 
     getCategoricalFacet(columnId: string) {
-        return this.categoricalFacets[columnId];
+        return this.categoricalFacets[columnId] ?? null;
     }
 
-    // Optional: Get all numeric or categorical facets
+    // Get all numeric or categorical facets
     getAllNumericFacets() {
-        return this.numericFacets;
+        return { ...this.numericFacets };
     }
 
     getAllCategoricalFacets() {
-        return this.categoricalFacets;
+        return { ...this.categoricalFacets };
     }
 
-    calculateFacets(rows: TOriginalRow[], columns: AnyColumn<TOriginalRow>[]) { 
+    /**
+     * Calculates facets for the provided rows and columns.
+     * @param rows - Array of original row data.
+     * @param columns - Array of columns to calculate facets for.
+     */
+    calculateFacets(rows: TOriginalRow[], columns: AnyColumn<TOriginalRow>[]): void {
         // Reset existing facets
         this.numericFacets = {};
         this.categoricalFacets = {};
 
-        for (let column of columns) {
-            if (['accessor', 'computed'].includes(column.type) === false) continue;
-            column = column as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>;
-            // if (!column.options.faceting) continue;
+        for (const column of columns) {
+            // Skip columns that aren't accessor or computed
+            if (!['accessor', 'computed'].includes(column.type)) continue;
 
             const columnId = column.columnId;
-            const values = rows.map(row => column.getValueFn(row));
+            const valueGetter = (column as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>).getValueFn;
 
-            if (column._meta.filterType === 'number' || column._meta.filterType === 'range') {
-                const numericValues = values.filter(val => typeof val === 'number');
-                
-                if (numericValues.length > 0) {
-                    this.numericFacets[columnId] = {
-                        min: Math.min(...numericValues),
-                        max: Math.max(...numericValues)
-                    };
+            const values = rows.map(row => valueGetter(row));
+
+            switch (column._meta.filterType) {
+                case 'number':
+                case 'range': {
+                    const numericValues = values.filter((val): val is number => typeof val === 'number');
+                    if (numericValues.length > 0) {
+                        this.numericFacets[columnId] = {
+                            min: Math.min(...numericValues),
+                            max: Math.max(...numericValues),
+                        };
+                    }
+                    break;
                 }
-            }
-
-            if (column._meta.filterType === 'select' || column._meta.filterType === 'text') {
-                const uniqueValues = Array.from(new Set(values));
-                
-                this.categoricalFacets[columnId] = {
-                    uniqueValuesCount: uniqueValues.length,
-                    uniqueValues: uniqueValues
-                };
+                case 'select':
+                case 'text': {
+                    const uniqueValues = Array.from(new Set(values));
+                    this.categoricalFacets[columnId] = {
+                        uniqueValuesCount: uniqueValues.length,
+                        uniqueValues,
+                    };
+                    break;
+                }
+                default:
+                    // No facet calculation for unsupported filter types
+                    break;
             }
         }
     }
-
 }

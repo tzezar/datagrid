@@ -11,7 +11,7 @@
 	let { datagrid, column }: Props = $props();
 </script>
 
-{#if datagrid.features.filtering.showColumnFiltering}
+{#if datagrid.extra.features.columnFiltering.isEnabled()}
 	<div class="h-9 w-full pt-1">
 		<ColumnFilter {datagrid} {column} />
 	</div>

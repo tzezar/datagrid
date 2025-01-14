@@ -13,8 +13,8 @@
 	let { datagrid }: { datagrid: TzezarsDatagrid } = $props();
 </script>
 
-<div class={cn("flex items-end justify-end", datagrid.features.filtering.showColumnFiltering && 'top-bar ')}>
-	{#if datagrid.features.filtering.showColumnFiltering}
+<div class={cn("flex items-end justify-end", datagrid.extra.features.columnFiltering.isEnabled() && 'top-bar ')}>
+	{#if datagrid.extra.features.columnFiltering.isEnabled()}
 		<GlobalSearch {datagrid} />
 	{:else}
 		<div class="flex h-full grow items-end pb-1 pl-2">
@@ -25,9 +25,9 @@
 	<Button
 		class="rounded-none border-b-0 border-r-0"
 		variant="outline"
-		onclick={() => datagrid.features.filtering.toggleColumnFiltering()}
+		onclick={() => datagrid.extra.features.columnFiltering.toggleColumnFiltering()}
 	>
-		{#if datagrid.features.filtering.showColumnFiltering}
+		{#if datagrid.extra.features.columnFiltering.isEnabled()}
 			<FilterAlt />
 		{:else}
 			<FilterAltOff />

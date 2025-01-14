@@ -1,6 +1,7 @@
 import type { AnyColumn, GroupColumn } from "$lib/datagrid/core/column-creation/types";
 import { DataGrid, type GridConfig } from "$lib/datagrid/core/index.svelte";
 import { LifecycleHooks } from "$lib/datagrid/core/managers/lifecycle-hooks-manager.svelte";
+import { ColumnFilteringFeature } from "./features/column-filtering.svelte";
 import { FullscreenFeature } from "./features/fullscreen.svelte";
 import { GroupHeadersVisibilityFeature } from "./features/group-headers-visibility.svelte";
 
@@ -112,7 +113,8 @@ export class Extra {
     state = new ExtraState();
     features = {
         fullscreen: new FullscreenFeature(),
-        groupHeadersVisibility: new GroupHeadersVisibilityFeature()
+        groupHeadersVisibility: new GroupHeadersVisibilityFeature(),
+        columnFiltering: new ColumnFilteringFeature()
     }
 
 }
