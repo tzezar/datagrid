@@ -18,7 +18,7 @@
 		</Group>
 		<Group>
 			<GroupTitle title="Examples" />
-			<GroupItem disabled title="Basic" href={hrefs.headless.examples.basic} />
+			<GroupItem  title="Basic" href={hrefs.headless.examples.basic} />
 			<GroupItem disabled title="Column filters" href={hrefs.headless.examples.columnFilters} />
 			<GroupItem
 				disabled
@@ -29,7 +29,7 @@
 			<GroupItem disabled title="Column pinning" href={hrefs.headless.examples.columnPinning} />
 			<GroupItem disabled title="Column sizing" href={hrefs.headless.examples.columnSizing} />
 			<GroupItem
-				disabled
+				
 				title="Column visibility"
 				href={hrefs.headless.examples.columnVisibility}
 			/>
