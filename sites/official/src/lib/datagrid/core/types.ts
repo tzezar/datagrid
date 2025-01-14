@@ -135,7 +135,7 @@ export type CustomCellComponentWithProps = {
 export type CustomCellProps<TOriginalRow> = {
     datagrid: DataGrid<any>;
     column: LeafColumn<any>;
-    row: GridRow<TOriginalRow>;
+    row: GridBasicRow<TOriginalRow>;
 };
 
 export type CustomCell<TOriginalRow> = (

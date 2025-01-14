@@ -1,5 +1,5 @@
 import type { DataGrid } from "../index.svelte";
-import type {  GridGroupRow, GridRow, GridRowIdentifier } from "../types";
+import type { GridBasicRow, GridGroupRow, GridRow, GridRowIdentifier } from "../types";
 
 
 
@@ -16,7 +16,14 @@ export class RowManager<TOriginalRow> {
         const centerRows = this.datagrid.features.rowPinning.getCenterRows();
         return [...topRows, ...centerRows, ...bottomRows];
     }
-    
+
+    getBasicRows(): GridBasicRow<TOriginalRow>[] {
+        const topRows = this.datagrid.features.rowPinning.getTopRows();
+        const bottomRows = this.datagrid.features.rowPinning.getBottomRows();
+        const centerRows = this.datagrid.features.rowPinning.getCenterRows();
+        return [...topRows, ...centerRows, ...bottomRows].filter(row => !row.isGroupRow()) as GridBasicRow<TOriginalRow>[]
+    }
+
     isGroupRowExpanded(row: GridGroupRow<TOriginalRow>) {
         return this.datagrid.features.grouping.expandedGroups.has(row.identifier);
     }
@@ -28,11 +35,11 @@ export class RowManager<TOriginalRow> {
             this.datagrid.features.grouping.expandedGroups.add(row.identifier);
         }
 
-         // Only invalidate the flattened view cache
-         this.datagrid.cache.invalidateGroupedRowsCache();
+        // Only invalidate the flattened view cache
+        this.datagrid.cache.invalidateGroupedRowsCache();
 
-         // Use the new optimized method instead of full transformation
-         this.datagrid.processors.data.handleGroupExpansion();
+        // Use the new optimized method instead of full transformation
+        this.datagrid.processors.data.handleGroupExpansion();
     }
 
     findRowByIdentifier(identifier: GridRowIdentifier): GridRow<TOriginalRow> | undefined {
@@ -52,7 +59,7 @@ export class RowManager<TOriginalRow> {
 
         return ids;
     }
-  
+
 
 }
 
