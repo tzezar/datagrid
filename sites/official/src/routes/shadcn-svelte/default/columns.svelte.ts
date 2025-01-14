@@ -116,10 +116,10 @@ export const userColumns = [
 
     }),
     accessorColumn({
-        header: 'Role',
-        columnId: 'role',
+        // header: 'Role',
+        // columnId: 'role',
         accessorKey: 'role',
-        getValueFn: (row) => row.role,
+        // getValueFn: (row) => row.role,
         // cell: (row) => `<span class="badge role-${row.role}">${row.role.toUpperCase()}</span>`,
         options: { sortable: true },
         _meta: {

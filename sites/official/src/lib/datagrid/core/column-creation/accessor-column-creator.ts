@@ -1,4 +1,5 @@
 import { DEFAULT_COLUMN_SIZE } from "../defaults";
+import { createColumnId, createHeader, getNestedValue } from "../utils.svelte";
 import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
 import type { DotNestedKeys, CreateAccessorColumnProps, AccessorColumn } from "./types";
 
@@ -8,13 +9,29 @@ export function createAccessorColumn<
 >(
   { header, accessorKey, columnId, getValueFn: getValue, options, _meta = {}, state, ...rest }: CreateAccessorColumnProps<TOriginalRow, TKey>
 ): AccessorColumn<TOriginalRow> {
-  return {
-    type: 'accessor',
-    columnId,
-    parentColumnId: rest.parentColumnId || null,
+
+  if (!accessorKey) throw new Error(`accessorKey must be defined`);
+  if (!header && !accessorKey && !columnId) throw new Error(`Either header, accessorKey or columnId must be defined`);
+
+  const getValueFn: (row: TOriginalRow) => any =
+    getValue ?? ((row: TOriginalRow) => getNestedValue(row, accessorKey));
+
+  // Use createHeader to calculate header if not explicitly provided
+  const computedHeader = createHeader({
     header,
     accessorKey,
-    getValueFn: getValue,
+    columnId,
+  });
+
+  const computedColumnId = createColumnId({ columnId, accessorKey, header });
+
+  return {
+    type: 'accessor',
+    columnId: computedColumnId,
+    parentColumnId: rest.parentColumnId || null,
+    header: computedHeader,
+    accessorKey,
+    getValueFn,
     options: {
       searchable: options?.searchable ?? true,
       groupable: options?.groupable ?? true,

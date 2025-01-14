@@ -153,7 +153,8 @@ export type ParentColumnId = string | null;
 
 export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOriginalRow>> = {
   accessorKey: TKey;
-  getValueFn: (row: TOriginalRow) => CellValue;
+  header?: string;
+  getValueFn?: (row: TOriginalRow) => CellValue;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   aggregate?: AggregationConfig;
   cell?: CustomCell<TOriginalRow>;
@@ -169,6 +170,9 @@ export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<T
     moveable?: boolean;
     hideable?: boolean;
   };
+  columnId?: ColumnId;
+  parentColumnId?: ParentColumnId;
+  _meta?: any;
   state?: {
     size?: {
       width?: number;
@@ -181,8 +185,10 @@ export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<T
       position?: 'left' | 'right' | 'none';
       offset?: number;
     };
+
+
   };
-} & CommonColumnProps;
+}
 
 
 
