@@ -239,8 +239,10 @@ export class HandlersManager {
             const rows = (this.datagrid.cache.rows || []).filter(row => !row.isGroupRow()) as GridBasicRow<any>[];
             const ids = rows.map(row => row.identifier);
             this.datagrid.features.rowSelection.unselectRows(ids);
+        },
+        toggleRowSelection: (rowIdentifier: GridRowIdentifier) => {
+            this.datagrid.features.rowSelection.toggleRowSelection(rowIdentifier);
         }
-
     }
     rowPinning = {
         pinRowTop: (rowIdentifier: GridRowIdentifier) => {

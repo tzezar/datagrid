@@ -12,6 +12,10 @@ export class RowSelectionFeature<TOriginalRow> {
         this.datagrid = datagrid;
     }
 
+    getSelectedIdentifiers() {
+        return Array.from(this.selectedBasicRowIdentifiers)
+    }
+
     selectRow(identifier: GridRowIdentifier) {
         this.selectedBasicRowIdentifiers.add(identifier);
     }
