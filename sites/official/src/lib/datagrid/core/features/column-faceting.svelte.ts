@@ -11,10 +11,10 @@ export class ColumnFacetingFeature<TOriginalRow> {
     private datagrid: DataGrid<TOriginalRow>;
 
     // Stores numeric facets (min and max values) for each column
-    private numericFacets: Record<ColumnId<any>, { min: number; max: number }> = {};
+    private numericFacets: Record<ColumnId, { min: number; max: number }> = $state({});
 
     // Stores categorical facets (unique values and their count) for each column
-    private categoricalFacets: Record<ColumnId<any>, { uniqueValuesCount: number; uniqueValues: unknown[] }> = {};
+    private categoricalFacets: Record<ColumnId, { uniqueValuesCount: number; uniqueValues: unknown[] }> = $state({});
 
     /**
      * Initializes the faceting feature for the given data grid.
@@ -68,6 +68,7 @@ export class ColumnFacetingFeature<TOriginalRow> {
      * @param columns - Array of columns to calculate facets for.
      */
     calculateFacets(rows: TOriginalRow[], columns: AnyColumn<TOriginalRow>[]): void {
+        console.log('calculateFacets')
         // Reset existing facets before recalculating
         this.numericFacets = {};
         this.categoricalFacets = {};

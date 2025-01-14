@@ -21,7 +21,6 @@
 			<GroupItem  title="Basic" href={hrefs.headless.examples.basic} />
 			<GroupItem title="Column filters" href={hrefs.headless.examples.columnFilters} />
 			<GroupItem
-				disabled
 				title="Column filters faceted"
 				href={hrefs.headless.examples.columnFiltersFaceted}
 			/>
