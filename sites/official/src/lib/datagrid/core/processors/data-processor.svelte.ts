@@ -284,6 +284,7 @@ export class DataProcessor<TRow> {
                     children: groupByLevel(groupRows, depth + 1, `${parentPath}${index + 1}`),
                     aggregations: aggregations,
                     isExpanded: () => this.datagrid.features.rowExpanding.isRowExpanded(key),
+                    isGroupRow: () => true
                  
                 };
             });
@@ -320,6 +321,7 @@ export class DataProcessor<TRow> {
                 parentIndex: parentIndex ?? null,
                 original: row,
                 isExpanded: () => this.datagrid.features.rowExpanding.isRowExpanded(identifier),
+                isGroupRow: () => false
             }
         });
     }

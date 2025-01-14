@@ -55,6 +55,7 @@ export type GridGroupRow<TOriginalRow> = {
     children: GridRow<TOriginalRow>[];
     aggregations: Aggregation[];
     isExpanded: () => boolean;
+    isGroupRow: () => this is GridGroupRow<TOriginalRow>;
 };
 
 export type GridBasicRow<TOriginalRow> = {
@@ -63,6 +64,7 @@ export type GridBasicRow<TOriginalRow> = {
     parentIndex: string | null;
     original: TOriginalRow;
     isExpanded: () => boolean;
+    isGroupRow: () => false 
 };
 
 export type GridRow<TOriginalRow> =

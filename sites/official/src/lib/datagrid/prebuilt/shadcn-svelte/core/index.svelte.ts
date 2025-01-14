@@ -104,6 +104,7 @@ export class ExtraState {
 }
 
 export class Extra {
+    state = new ExtraState();
     features = {
         fullscreen: new FullscreenFeature(),
         groupHeadersVisibility: new GroupHeadersVisibilityFeature()

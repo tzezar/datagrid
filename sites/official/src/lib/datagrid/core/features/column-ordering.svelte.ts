@@ -293,7 +293,6 @@ export class ColumnOrderingFeature<TOriginalRow> {
     }
 
     removeLeafColumnFromGroup(column: LeafColumn<any>, group: GroupColumn<any>): void {
-
         group.columns = group.columns.filter(c => c.columnId !== column.columnId);
     }
 

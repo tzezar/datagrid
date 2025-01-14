@@ -21,7 +21,7 @@
 		class={cn(
 			'grid-body-cell',
 			column._meta.styles?.bodyCell,
-			datagrid.extra.highlightSelectedRow && datagrid.features.rowSelection.isRowSelected(row.identifier)
+			datagrid.extra.state.highlightSelectedRow && datagrid.features.rowSelection.isRowSelected(row.identifier)
 				? 'bg-blue-400/10'
 				: ''
 		)}

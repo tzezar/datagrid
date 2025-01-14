@@ -135,12 +135,11 @@
 				<div class="grid-body">
 					{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
 						{@const columns = datagrid.columnManager.getLeafColumnsInOrder()}
-						{#if isGroupRow(row)}
+						{#if row.isGroupRow()}
 							{@render GroupRowSnippet(row, columns)}
 						{:else}
 							<div class="grid-body-row">
 								{#each columns as column (column)}
-
 									<BodyBasicRowCell {datagrid} {column} {row}>
 										<BasicRowCellContent {datagrid} {column} {row} />
 									</BodyBasicRowCell>
