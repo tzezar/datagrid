@@ -177,6 +177,20 @@
 			<DropdownMenu.Group>
 				<DropdownMenu.GroupHeading>{column.header} Group</DropdownMenu.GroupHeading>
 				<DropdownMenu.Separator />
+				<DropdownMenu.Item
+					onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
+					closeOnSelect={false}
+				>
+					<ArrowMoveLeft class="mr-2 size-4" />
+					<span>Move left</span>
+				</DropdownMenu.Item>
+				<DropdownMenu.Item
+					onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}
+					closeOnSelect={false}
+				>
+					<ArrowMoveRight class="mr-2 size-4" />
+					<span>Move right</span>
+				</DropdownMenu.Item>
 				<DropdownMenu.Sub>
 					<DropdownMenu.SubTrigger>
 						<MoveUp class="mr-2 size-4" />
@@ -228,15 +242,11 @@
 					<ArrowsSort class="mr-2 size-4" />
 					<span>Clear sort</span>
 				</DropdownMenu.Item>
-				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.sorting.sortColumnAscending(column)}
-				>
+				<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.sortColumnAscending(column)}>
 					<SortAscending class="mr-2 size-4" />
 					<span>Sort ascending </span>
 				</DropdownMenu.Item>
-				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.sorting.sortColumnDescending(column)}
-				>
+				<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.sortColumnDescending(column)}>
 					<SortDescending class="mr-2 size-4" />
 					<span>Sort descending </span>
 				</DropdownMenu.Item>
