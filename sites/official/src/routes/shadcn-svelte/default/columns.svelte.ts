@@ -33,7 +33,6 @@ export const userColumns = [
                 width: 60,
                 minWidth: 60,
                 maxWidth: 60,
-                grow: false
             }
         },
         _meta: {
@@ -57,7 +56,6 @@ export const userColumns = [
                 width: 40,
                 minWidth: 40,
                 maxWidth: 40,
-                grow: false
             }
         },
         _meta: {
@@ -133,7 +131,6 @@ export const userColumns = [
         columns: [
             columnGroup({
                 header: 'Personal Info',
-                columnId: 'personalInfo',
                 columns: [
                     accessorColumn({
                         header: 'First Name',

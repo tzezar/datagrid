@@ -2,14 +2,22 @@ import { DEFAULT_COLUMN_SIZE } from "../defaults";
 import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
 import type { CreateDisplayColumnProps, DisplayColumn } from "./types";
 
+const createDisplayColumnColumnId = ({ columnId, header }: { columnId?: string, header?: string }): string => {
+  if (columnId) return columnId;
+  if (header) return header.toLowerCase().replace(/\s+/g, "_"); // Fallback to a sanitized header
+  throw new Error("A valid columnId, header must be provided to create a group column.");
+}
 
 export function createDisplayColumn<TOriginalRow extends Record<string, any>>(
   { header, cell, columnId, _meta, options, state, ...rest }: CreateDisplayColumnProps<TOriginalRow>
 ): DisplayColumn<TOriginalRow> {
+
+  const computedColumnId = createDisplayColumnColumnId({ header, columnId });
+
   return {
     type: 'display',
     header,
-    columnId,
+    columnId: computedColumnId,
     parentColumnId: rest.parentColumnId || null,
     cell,
     options: {

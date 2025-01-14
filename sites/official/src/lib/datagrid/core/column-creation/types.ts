@@ -6,8 +6,6 @@ export type DotNestedKeys<T> = (T extends object ? {
 }[Exclude<keyof T, symbol>] : "") extends infer D ? Extract<D, string> : never;
 // Specific interfaces for different column types
 
-
-
 export interface AccessorColumn<TOriginalRow, TMeta = any> {
   type: 'accessor';
   header: string;
@@ -134,13 +132,6 @@ export interface GroupColumn<TOriginalRow, TMeta = any> {
 // Union type for all column types
 
 
-type CommonColumnProps = {
-  header: string;
-  headerCell?: HeaderCell;
-  columnId: ColumnId;
-  parentColumnId?: ParentColumnId;
-  _meta?: any;
-}
 
 export type AnyColumn<TOriginalRow> =
   AccessorColumn<TOriginalRow> |
@@ -150,6 +141,8 @@ export type AnyColumn<TOriginalRow> =
 
 
 export type ParentColumnId = string | null;
+
+// Column creation props
 
 export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOriginalRow>> = {
   accessorKey: TKey;
@@ -170,25 +163,8 @@ export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<T
     moveable?: boolean;
     hideable?: boolean;
   };
-  columnId?: ColumnId;
-  parentColumnId?: ParentColumnId;
-  _meta?: any;
-  state?: {
-    size?: {
-      width?: number;
-      minWidth?: number;
-      maxWidth?: number;
-      grow?: boolean;
-    };
-    visible?: boolean;
-    pinning?: {
-      position?: 'left' | 'right' | 'none';
-      offset?: number;
-    };
-
-
-  };
-}
+  state?: ColumnCreationStateProps
+} & CommonColumnCreationProps;
 
 
 
@@ -210,20 +186,9 @@ export type CreateComputeColumnProps<TOriginalRow> = {
     moveable?: boolean;
     hideable?: boolean;
   };
-  state?: {
-    size?: {
-      width?: number;
-      minWidth?: number;
-      maxWidth?: number;
-      grow?: boolean;
-    };
-    visible?: boolean;
-    pinning?: {
-      position?: 'left' | 'right' | 'none';
-      offset?: number;
-    };
-  };
-} & CommonColumnProps;
+  header: string;
+  state?: ColumnCreationStateProps
+} & CommonColumnCreationProps;
 
 export type CreateDisplayColumnProps<TOriginalRow> = {
   cell: CustomCell<TOriginalRow>;
@@ -231,29 +196,32 @@ export type CreateDisplayColumnProps<TOriginalRow> = {
   headerCell?: HeaderCell;
   options?: {
     searchable?: false;
-    groupable?: boolean;
+    groupable?: false;
     sortable?: false;
     filterable?: false;
     pinnable?: boolean;
     moveable?: boolean;
     hideable?: boolean;
   };
-  state?: {
-    size?: {
-      width: number;
-      minWidth: number;
-      maxWidth: number;
-      grow: boolean;
-    };
-    visible?: boolean;
-    pinning?: {
-      position?: 'left' | 'right' | 'none';
-      offset?: number;
-    };
-  };
-} & CommonColumnProps;
+  header: string;
+  state?: ColumnCreationStateProps
+} & CommonColumnCreationProps;
+
 export type CreateGroupColumnProps<TOriginalRow> = {
+  header: string;
+  headerCell?: HeaderCell;
   columns: AnyColumn<TOriginalRow>[];
-} & CommonColumnProps;
+} & CommonColumnCreationProps;
 
 
+type ColumnCreationStateProps = {
+  size?: ColumnSizeState;
+  visible?: boolean;
+  pinning?: ColumnPinningState;
+}
+
+type CommonColumnCreationProps = {
+  _meta?: any;
+  parentColumnId?: ParentColumnId;
+  columnId?: ColumnId;
+}

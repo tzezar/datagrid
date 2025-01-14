@@ -1,7 +1,59 @@
 import { DEFAULT_COLUMN_SIZE } from "../defaults";
-import { createColumnId, createHeader, getNestedValue } from "../utils.svelte";
 import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
 import type { DotNestedKeys, CreateAccessorColumnProps, AccessorColumn } from "./types";
+
+
+function getNestedValue<T>(obj: T, path: string): any {
+  return path.split('.').reduce((acc: any, key: string) => acc?.[key], obj);
+}
+
+
+function createAccessorColumnHeader({ header, accessorKey, columnId }: { header?: string, accessorKey?: string, columnId?: string }): string {
+  if (header) {
+    // If a header is explicitly defined, return it
+    return header;
+  } else if (columnId) {
+    // If no header is defined, use the accessorKey (formatted for better readability)
+    return columnId;
+  } else if (accessorKey) {
+    // If no header is defined, use the accessorKey (formatted for better readability)
+    return formatAccessorKey(accessorKey);
+  }
+  throw new Error(`Either header or accessorKey or columnId must be defined`);
+  // Fallback to the columnId if neither header nor accessorKey are available
+}
+
+/**
+* Formats an accessor key into a more human-readable string.
+* For example, "profile.email" becomes "Profile Email".
+*/
+function formatAccessorKey(accessorKey: string): string {
+  return accessorKey
+    .split('.') // Split nested keys by `.`
+    .map(key => key.charAt(0).toUpperCase() + key.slice(1)) // Capitalize each part
+    .join(' '); // Join with a space
+}
+
+/**
+* Generates a column ID if not explicitly provided.
+* Fallback logic: Use `accessorKey`, then `header`, or throw an error if neither is available.
+*/
+function createAccessorColumnColumnId({
+  columnId,
+  accessorKey,
+  header,
+}: {
+  columnId?: string;
+  accessorKey?: string;
+  header?: string;
+}): string {
+  if (columnId) return columnId;
+  if (accessorKey) return accessorKey; // Use accessorKey as the fallback column ID
+  if (header) return header.toLowerCase().replace(/\s+/g, "_"); // Fallback to a sanitized header
+  throw new Error("A valid columnId, accessorKey, or header must be provided to create a column.");
+}
+
+
 
 export function createAccessorColumn<
   TOriginalRow extends Record<string, any>,
@@ -17,13 +69,13 @@ export function createAccessorColumn<
     getValue ?? ((row: TOriginalRow) => getNestedValue(row, accessorKey));
 
   // Use createHeader to calculate header if not explicitly provided
-  const computedHeader = createHeader({
+  const computedHeader = createAccessorColumnHeader({
     header,
     accessorKey,
     columnId,
   });
 
-  const computedColumnId = createColumnId({ columnId, accessorKey, header });
+  const computedColumnId = createAccessorColumnColumnId({ columnId, accessorKey, header });
 
   return {
     type: 'accessor',
