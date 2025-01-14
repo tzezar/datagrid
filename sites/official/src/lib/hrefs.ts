@@ -32,7 +32,7 @@ export const hrefs = {
             columnSizing: "/headless/examples/column-sizing",
             columnVisibility: "/headless/examples/column-visibility",
             editableData: "/headless/examples/editable-data",
-            expanding: "/headless/examples/expanding",
+            rowExpanding: "/headless/examples/row-expanding",
             fullyControlled: "/headless/examples/fully-controlled",
             grouping: "/headless/examples/grouping",
             pagination: "/headless/examples/pagination",

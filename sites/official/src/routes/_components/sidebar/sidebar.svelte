@@ -34,7 +34,7 @@
 				href={hrefs.headless.examples.columnVisibility}
 			/>
 			<GroupItem disabled title="Editable data" href={hrefs.headless.examples.editableData} />
-			<GroupItem disabled title="Expanding" href={hrefs.headless.examples.expanding} />
+			<GroupItem  title="Row expanding" href={hrefs.headless.examples.rowExpanding} />
 			<GroupItem disabled title="Fully controlled" href={hrefs.headless.examples.fullyControlled} />
 			<GroupItem disabled title="Grouping" href={hrefs.headless.examples.grouping} />
 			<GroupItem disabled title="Pagination" href={hrefs.headless.examples.pagination} />
