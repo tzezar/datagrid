@@ -2,7 +2,7 @@ import { sort } from "fast-sort";
 import { isGroupColumn } from "../helpers/column-guards";
 import type { DataGrid } from "../index.svelte";
 import type { Aggregation, AggregationFn, GridGroupRow, GridRow } from "../types";
-import { findColumnById, flattenColumns, isColumnSortable, isGridGroupRow } from "../utils.svelte";
+import { findColumnById, createFlatColumnStructure, isColumnSortable, isGridGroupRow } from "../utils.svelte";
 import type { PerformanceMetrics } from "../helpers/performance-metrics.svelte";
 import type { AccessorColumn, ComputedColumn } from "../column-creation/types";
 import { aggregationFunctions } from "../helpers/aggregation-functions";
@@ -69,7 +69,7 @@ export class DataProcessor<TRow> {
 
     private applyGlobalSearch(data: TRow[]): TRow[] {
         const searchValue = this.datagrid.features.globalSearch.value.toLowerCase();
-        const searchableColumns = flattenColumns(this.datagrid.columns).filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TRow> | ComputedColumn<TRow>)[];
+        const searchableColumns = createFlatColumnStructure(this.datagrid.columns).filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TRow> | ComputedColumn<TRow>)[];
 
         if (this.datagrid.features.globalSearch.fuzzy) {
             const fuse = this.datagrid.features.globalSearch.fuseInstance;
@@ -244,7 +244,7 @@ export class DataProcessor<TRow> {
 
             if (depth >= groupCols.length) return this.createBasicRows(rows, parentPath);
 
-            const column = findColumnById(flattenColumns(this.datagrid.columns), groupCols[depth]);
+            const column = findColumnById(createFlatColumnStructure(this.datagrid.columns), groupCols[depth]);
 
             if (!column) throw new Error(`Invalid group column: ${groupCols[depth]}`);
             if (isGroupColumn(column)) throw new Error(`Cannot group by group column: ${groupCols[depth]}`);
@@ -264,7 +264,7 @@ export class DataProcessor<TRow> {
 
             // Create group rows with aggregation
             return Array.from(groups.entries()).map(([key, groupRows], index) => {
-                const aggregations = flattenColumns(this.datagrid.columns)
+                const aggregations = createFlatColumnStructure(this.datagrid.columns)
                     .filter(col =>
                         (col.type === 'accessor' || col.type === 'computed') &&
                         col.aggregate

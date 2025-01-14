@@ -1,10 +1,9 @@
-import type { AnyColumn, GroupColumn } from "./column-creation/types";
+import type { AnyColumn } from "./column-creation/types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { ColumnFacetingFeature, ColumnFilteringFeature, ColumnGroupingFeature, ColumnOrderingFeature, ColumnPinningFeature, ColumnSizingFeature, ColumnVisibilityFeature, GlobalSearchFeature, GroupingFeature, PaginationFeature, RowExpandingFeature, RowPinningFeature, RowSelectionFeature, SortingFeature } from "./features";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
 import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
-import { isGroupColumn } from "./helpers/column-guards";
 
 export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
     columns: C[];
@@ -62,7 +61,6 @@ export class DataGrid<TOriginalRow> {
             this.lifecycleHooks = config.lifecycleHooks;
         }
 
-
         this.validateConfigInputs(config);
         // config.columns = this.lifecycleHooks.preProcessColumns(hook, config.columns);
         this.initializeState(config);
@@ -81,7 +79,7 @@ export class DataGrid<TOriginalRow> {
         this.initial.columns = config.columns;
         this.initial.data = config.data;
 
-        this.columns = this.processors.column.transformColumns(this.initial.columns)
+        this.columns = this.processors.column.initializeColumns(this.initial.columns)
         this.processors.data.executeFullDataTransformation();
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation

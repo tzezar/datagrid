@@ -1,7 +1,7 @@
 import { isGroupColumn } from "../helpers/column-guards";
 import type { AnyColumn, GroupColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
-import { flattenColumns } from "../utils.svelte";
+import { createFlatColumnStructure } from "../utils.svelte";
 
 
 export class ColumnProcessor<TOriginalRow> {
@@ -10,7 +10,31 @@ export class ColumnProcessor<TOriginalRow> {
         this.datagrid = datagrid;
     }
 
-    placeGroupColumnsFirst = (columns: AnyColumn<any>[]): AnyColumn<any>[] => {
+    initializeColumns = (columns: AnyColumn<any>[]): AnyColumn<any>[] => {
+        let columnsInOrder = this.placeGroupColumnsInFront(this.assignParentColumnIds(columns));
+        columnsInOrder.forEach(col => {
+            return {
+                isGroupColumn: () => col.type === 'group',
+                ...col,
+            }
+        })
+        columnsInOrder = this.datagrid.lifecycleHooks.executePreProcessColumns(columnsInOrder);
+
+        return columnsInOrder
+    };
+
+    assignParentColumnIds(columns: AnyColumn<TOriginalRow>[], parentColumnId: string | null = null) {
+        columns.forEach(column => {
+            if (isGroupColumn(column)) {
+                const groupColumn = column as GroupColumn<TOriginalRow>;
+                this.assignParentColumnIds(groupColumn.columns, groupColumn.columnId);
+            }
+            column.parentColumnId = parentColumnId;
+        })
+        return columns;
+    }
+
+    placeGroupColumnsInFront = (columns: AnyColumn<any>[]): AnyColumn<any>[] => {
         const groupByColumns = this.datagrid.features.grouping.groupByColumns;
         const groupedColumns: AnyColumn<TOriginalRow>[] = [];
         const nonGroupedColumns: AnyColumn<TOriginalRow>[] = [];
@@ -26,34 +50,9 @@ export class ColumnProcessor<TOriginalRow> {
         return [...groupedColumns, ...nonGroupedColumns];
     }
 
-    transformColumns = (columns: AnyColumn<any>[]): AnyColumn<any>[] => {
-        let newCols = this.placeGroupColumnsFirst(this.assignParentColumnIds(columns));
-        newCols.forEach(col => {
-            return {
-                isGroupColumn: () => col.type === 'group',
-                ...col,
-            }
-        })
-        newCols = this.datagrid.lifecycleHooks.executePreProcessColumns(newCols);
-
-        return newCols
-    };
-
-    assignParentColumnIds(columns: AnyColumn<TOriginalRow>[], parentColumnId: string | null = null) {
-        columns.forEach(column => {
-            if (isGroupColumn(column)) {
-                const groupColumn = column as GroupColumn<TOriginalRow>;
-                this.assignParentColumnIds(groupColumn.columns, groupColumn.columnId);
-            }
-            column.parentColumnId = parentColumnId;
-        })
-        return columns;
-    }
-
-
     refreshColumnPinningOffsets() {
         // const columns = flattenColumns(this.datagrid.columns);
-        const columns = flattenColumns(this.datagrid.columns);
+        const columns = createFlatColumnStructure(this.datagrid.columns);
         const newColumns: AnyColumn<any>[] = [];
         for (let i = 0; i < columns.length; i++) {
             const col = columns[i];
@@ -71,9 +70,6 @@ export class ColumnProcessor<TOriginalRow> {
         this.datagrid.columns = hierarchicalColumns
     };
 
-
-
-
     createColumnHierarchy<TOriginalRow>(partialFlatColumns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
         const results: AnyColumn<TOriginalRow>[] = [];
 
@@ -83,7 +79,7 @@ export class ColumnProcessor<TOriginalRow> {
                 results.push(col);
             }
         });
-        partialFlatColumns =partialFlatColumns.filter(col => col.parentColumnId !== null)
+        partialFlatColumns = partialFlatColumns.filter(col => col.parentColumnId !== null)
 
 
         const findGroupColumnInResults = (columns: AnyColumn<TOriginalRow>[], column: AnyColumn<TOriginalRow>): GroupColumn<TOriginalRow> | null => {

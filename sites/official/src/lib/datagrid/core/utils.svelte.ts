@@ -1,63 +1,52 @@
-import { isGroupColumn } from "./helpers/column-guards";
-import type { AccessorColumn, AnyColumn, ComputedColumn, DisplayColumn, GroupColumn } from "./column-creation/types";
+import type { AccessorColumn, AnyColumn, ComputedColumn, GroupColumn } from "./column-creation/types";
 import type { CellValue, ColumnId, CustomCellComponentWithProps, GridBasicRow, GridGroupRow, GridRow, SortableColumn } from "./types";
 import type { DataGrid } from "./index.svelte";
 
 
+
+
 export function getCellContent(column: AnyColumn<any>, originalRow: any): CellValue | HTMLElement {
-    if (column.type === 'accessor') {
-        column = column as AccessorColumn<any>;
-        if (column.formatter) {
-            return column.formatter(originalRow);
-        }
-        return column.getValueFn(originalRow);
-    } else if (column.type === 'computed') {
-        column = column as ComputedColumn<any>;
-        if (column.formatter) {
-            return column.formatter(originalRow);
-        }
-        return column.getValueFn(originalRow);
-    } else if (column.type === 'display') {
-        column = column as DisplayColumn<any>;
-        return column.cell(originalRow);
-    } else if (column.type === 'group') {
-        throw new Error('Group columns are not supported');
+    switch (column.type) {
+        case 'accessor':
+            if (column.formatter) {
+                return column.formatter(originalRow);
+            } else if (column.cell) {
+                return column.cell(originalRow);
+            } else {
+                return column.getValueFn(originalRow);
+            }
+        case 'computed':
+            if (column.formatter) {
+                return column.formatter(originalRow);
+            } else if (column.cell) {
+                return column.cell(originalRow);
+            } else {
+                return column.getValueFn(originalRow);
+            }
+        case 'display':
+            if (column.cell) {
+                return column.cell(originalRow);
+            } else {
+                throw new Error('Display columns must have a cell function');
+            }
+        case 'group':
+            throw new Error('Group columns are not supported');
     }
 }
 
-export function getGroupRowCellContent(column: AnyColumn<any>, row: GridGroupRow<any>): CellValue | HTMLElement {
-    if (column.type === 'accessor') {
-        column = column as AccessorColumn<any>;
-        if (column.formatter) {
-            return column.formatter(row);
-        }
-        return column.getValueFn(row);
-    } else if (column.type === 'computed') {
-        column = column as ComputedColumn<any>;
-        if (column.formatter) {
-            return column.formatter(row);
-        }
-        return column.getValueFn(row);
-    } else if (column.type === 'display') {
-        column = column as DisplayColumn<any>;
-        return column.cell(row);
-    } else if (column.type === 'group') {
-        throw new Error('Group columns are not supported');
-    }
-}
 
 export function generateRandomColumnId(): string {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
 
-export function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+export function createFlatColumnStructure(columns: AnyColumn<any>[]): AnyColumn<any>[] {
     const flattened: AnyColumn<any>[] = [];
 
     for (let i = 0; i < columns.length; i++) {
         const column = columns[i];
         if (column.type === 'group') {
-            flattened.push(...flattenColumns(column.columns));
+            flattened.push(...createFlatColumnStructure(column.columns));
             flattened.push({ ...column, columns: [] });
         }
         else {
@@ -67,13 +56,13 @@ export function flattenColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
     return flattened;
 }
 
-export function flattenColumnsWithNestedColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+export function createFlatColumnStructureAndPreserveChildren(columns: AnyColumn<any>[]): AnyColumn<any>[] {
     const flattened: AnyColumn<any>[] = [];
 
     for (let i = 0; i < columns.length; i++) {
         const column = columns[i];
         if (column.type === 'group') {
-            flattened.push(...flattenColumnsWithNestedColumns(column.columns));
+            flattened.push(...createFlatColumnStructureAndPreserveChildren(column.columns));
             flattened.push(column);
         }
         else {
@@ -84,13 +73,7 @@ export function flattenColumnsWithNestedColumns(columns: AnyColumn<any>[]): AnyC
 }
 
 // Find column by ID in nested structure
-export function findColumnById<TOriginalRow>(columns: AnyColumn<TOriginalRow>[], id: ColumnId): AnyColumn<TOriginalRow> | null {
-    const flatColumns = flattenColumns(columns);
-    return flatColumns.find((col) => col.columnId === id || col.header === id) ?? null;
-}
-
-export function findColumnByIdWithNestedColumns<TOriginalRow>(columns: AnyColumn<TOriginalRow>[], id: ColumnId): AnyColumn<TOriginalRow> | null {
-    const flatColumns = flattenColumnsWithNestedColumns(columns);
+export function findColumnById<TOriginalRow>(flatColumns: AnyColumn<TOriginalRow>[], id: ColumnId): AnyColumn<TOriginalRow> | null {
     return flatColumns.find((col) => col.columnId === id || col.header === id) ?? null;
 }
 
@@ -128,10 +111,6 @@ export const getSortDirection = (datagrid: DataGrid<any>, column: AnyColumn<any>
 };
 
 
-
-
-
-
 // Helper to check if a row is a group row
 export function isGroupRow<TOriginalRow>(row: GridRow<TOriginalRow>): row is GridGroupRow<TOriginalRow> {
     return 'children' in row;
@@ -151,7 +130,6 @@ export const isGridGroupRow = <TOriginalRow,>(
 ): row is GridGroupRow<TOriginalRow> => {
     return (row as GridGroupRow<TOriginalRow>).children !== undefined;
 };
-
 
 // Column utils
 export function isColumnVisible(column: AnyColumn<any>): boolean {
@@ -177,12 +155,3 @@ export const isColumnFilterable = <TOriginalRow>(
 };
 
 
-function hasColumnGotVisibleChildren(column: any): boolean {
-    if (!isGroupColumn(column)) return false;
-    return column.columns.some((col: any) => {
-        if (isGroupColumn(col)) {
-            return hasColumnGotVisibleChildren(col);
-        }
-        return col.state.visible === true;
-    });
-}

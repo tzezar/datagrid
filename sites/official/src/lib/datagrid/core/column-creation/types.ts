@@ -1,4 +1,4 @@
-import type { GetValueFn, FormatterFn, AggregationConfig, GetGroupValue, CustomCell, HeaderCell, AccessorFn, ColumnId, CellValue, ColumnSizeState, ColumnPinningState } from "../types";
+import type { GetValueFn, FormatterFn, AggregationConfig, GetGroupValue, CustomCell, HeaderCell, ColumnId, CellValue, ColumnSizeState, ColumnPinningState } from "../types";
 
 type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
 export type DotNestedKeys<T> = (T extends object ? {
@@ -101,7 +101,6 @@ export interface GroupColumn<TOriginalRow, TMeta = any> {
   columnId: ColumnId;
   parentColumnId: string | null;
   columns: AnyColumn<TOriginalRow>[];
-  cell?: CustomCell<TOriginalRow>;
   options: {
     searchable: null;
     groupable: null;

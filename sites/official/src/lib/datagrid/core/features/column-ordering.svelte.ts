@@ -1,7 +1,7 @@
 import { type AnyColumn, type GroupColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
 import type { ColumnId, LeafColumn } from "../types";
-import { findColumnById, findColumnByIdWithNestedColumns } from "../utils.svelte";
+import { createFlatColumnStructure, createFlatColumnStructureAndPreserveChildren, findColumnById } from "../utils.svelte";
 
 export class ColumnOrderingFeature<TOriginalRow> {
     private datagrid: DataGrid<TOriginalRow>;
@@ -89,7 +89,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
     // Moves out to root level
     // Continues moving right at root level
     private moveLeafColumn(columnId: ColumnId, direction: 'left' | 'right'): void {
-        const column = findColumnById(this.datagrid.columns, columnId);
+        const column = findColumnById(createFlatColumnStructure(this.datagrid.columns), columnId);
         if (!column) return;
 
         const moveWithinGroup = (group: GroupColumn<TOriginalRow>, currentIndex: number): boolean => {
@@ -198,7 +198,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
 
 
     moveColumnToPosition(columnId: ColumnId, targetId: ColumnId): void {
-        const column = findColumnByIdWithNestedColumns(this.datagrid.columns, columnId);
+        const column = findColumnById(createFlatColumnStructureAndPreserveChildren(this.datagrid.columns), columnId);
         if (!column) return;
         if (column.type === 'group') this.moveGroupColumnToPosition(column, targetId);
         else this.moveLeafColumnToPosition(column, targetId);
@@ -209,7 +209,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
             this.moveLeafColumnToRoot(column);
             return;
         }
-        const targetColumn = findColumnByIdWithNestedColumns(this.datagrid.columns, targetId);
+        const targetColumn = findColumnById(createFlatColumnStructureAndPreserveChildren(this.datagrid.columns), targetId);
         if (!targetColumn) return;
         if (targetColumn.type === 'group') this.moveLeafColumnToGroup(column, targetColumn);
     }
@@ -219,7 +219,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
             this.moveGroupColumnToRoot(column);
             return;
         }
-        const targetColumn = findColumnByIdWithNestedColumns(this.datagrid.columns, targetId);
+        const targetColumn = findColumnById(createFlatColumnStructureAndPreserveChildren(this.datagrid.columns), targetId);
         if (!targetColumn) return;
         if (column.columnId === targetColumn.columnId) return
         if (targetColumn.type === 'group') this.moveGroupColumnToGroup(column, targetColumn);
@@ -229,7 +229,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
         // Is already in root
         if (column.parentColumnId === null) return;
 
-        const parentGroup = findColumnByIdWithNestedColumns(this.datagrid.columns, column.parentColumnId as string) as GroupColumn<any>;
+        const parentGroup = findColumnById(createFlatColumnStructureAndPreserveChildren(this.datagrid.columns), column.parentColumnId as string) as GroupColumn<any>;
         if (!parentGroup) return;
 
         this.removeLeafColumnFromGroup(column, parentGroup);
@@ -241,7 +241,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
         // Is already in root
         if (column.parentColumnId === '') return;
 
-        const parentGroup = findColumnByIdWithNestedColumns(this.datagrid.columns, column.parentColumnId as string) as GroupColumn<any>;
+        const parentGroup = findColumnById(createFlatColumnStructureAndPreserveChildren(this.datagrid.columns), column.parentColumnId as string) as GroupColumn<any>;
         if (!parentGroup) return;
 
         this.removeGroupColumnFromGroup(column, parentGroup);
@@ -260,7 +260,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
             return
         }
         console.log('removeLeafColumnFromGroup')
-        const parentGroup = findColumnByIdWithNestedColumns(this.datagrid.columns, column.parentColumnId) as GroupColumn<any>;
+        const parentGroup = findColumnById(createFlatColumnStructureAndPreserveChildren(this.datagrid.columns), column.parentColumnId) as GroupColumn<any>;
         this.removeLeafColumnFromGroup(column, parentGroup);
         this.addLeafColumnToGroup(column, group);
 
@@ -274,7 +274,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
             this.addGroupColumnToGroup(column, targetGroup);
             return
         }
-        const parentGroup = findColumnByIdWithNestedColumns(this.datagrid.columns, column.parentColumnId as string) as GroupColumn<any>;
+        const parentGroup = findColumnById(createFlatColumnStructureAndPreserveChildren(this.datagrid.columns), column.parentColumnId as string) as GroupColumn<any>;
         this.removeGroupColumnFromGroup(column, parentGroup);
         this.addGroupColumnToGroup(column, targetGroup);
     }

@@ -2,7 +2,7 @@ import { isGroupColumn } from "../helpers/column-guards";
 import type { AnyColumn, GroupColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
 import type { LeafColumn } from "../types";
-import { findColumnById, flattenColumns, flattenColumnsWithNestedColumns } from "../utils.svelte";
+import { findColumnById, createFlatColumnStructure, createFlatColumnStructureAndPreserveChildren } from "../utils.svelte";
 
 
 
@@ -15,7 +15,7 @@ export class ColumnManager<TOriginalRow> {
 
 
     getGroupColumns(): GroupColumn<TOriginalRow>[] {
-        return flattenColumns(this.datagrid.columns).filter(col => isGroupColumn(col));
+        return createFlatColumnStructure(this.datagrid.columns).filter(col => isGroupColumn(col));
     }
 
     getFlatColumns(): AnyColumn<TOriginalRow>[] {
@@ -23,7 +23,7 @@ export class ColumnManager<TOriginalRow> {
         for (const column of this.datagrid.columns) {
             if (isGroupColumn(column)) {
                 flattened.push(column);
-                flattened.push(...flattenColumns(column.columns));
+                flattened.push(...createFlatColumnStructure(column.columns));
             } else {
                 flattened.push(column);
             }
@@ -36,7 +36,7 @@ export class ColumnManager<TOriginalRow> {
         for (const column of this.datagrid.columns) {
             if (isGroupColumn(column)) {
                 flattened.push(column);
-                flattened.push(...flattenColumnsWithNestedColumns(column.columns));
+                flattened.push(...createFlatColumnStructureAndPreserveChildren(column.columns));
             } else {
                 flattened.push(column);
             }
@@ -50,14 +50,14 @@ export class ColumnManager<TOriginalRow> {
     }
 
     getLeafColumnsInOrder(): LeafColumn<TOriginalRow>[] {
-        return flattenColumns(this.getColumnsInOrder()).filter(col => col.type !== 'group')
+        return createFlatColumnStructure(this.getColumnsInOrder()).filter(col => col.type !== 'group')
     }
 
 
     getColumnWithGroupStructureAbove(
         columnId: string,
     ): AnyColumn<TOriginalRow> | null {
-        const column = findColumnById(this.datagrid.columns, columnId) as AnyColumn<TOriginalRow>;
+        const column = findColumnById(createFlatColumnStructure(this.datagrid.columns), columnId) as AnyColumn<TOriginalRow>;
         if (!column) {
             throw new Error(`Column ${columnId} not found`);
         }
@@ -98,14 +98,14 @@ export class ColumnManager<TOriginalRow> {
 
 
     getColumnsPinnedToLeft(): AnyColumn<TOriginalRow>[] {
-        return flattenColumns(this.datagrid.columns).filter(col => col.state.pinning.position === 'left' || this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
+        return createFlatColumnStructure(this.datagrid.columns).filter(col => col.state.pinning.position === 'left' || this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
     }
     getColumnsPinnedToRight(): AnyColumn<TOriginalRow>[] {
-        return flattenColumns(this.datagrid.columns).filter(col => col.type !== 'group').filter(col => col.state.pinning.position === 'right')
+        return createFlatColumnStructure(this.datagrid.columns).filter(col => col.type !== 'group').filter(col => col.state.pinning.position === 'right')
     }
     getColumnsPinnedToNone(): AnyColumn<TOriginalRow>[] {
         // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'none').filter(col => !this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
-        return flattenColumns(this.datagrid.columns).filter(col =>  col.state.pinning.position === 'none' && !this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
+        return createFlatColumnStructure(this.datagrid.columns).filter(col =>  col.state.pinning.position === 'none' && !this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
     }
 
 
