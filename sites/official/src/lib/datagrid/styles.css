@@ -149,20 +149,33 @@
 	border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
 }
 
-/* Pinned columns */
+/* Pinned columns base positioning */
 [data-pinned='right'],
 [data-pinned='left'] {
     position: sticky;
     z-index: 2;
-    background-color: hsl(var(--grid-pinned-cell));
+    background-clip: padding-box;
 }
 
+/* Pinned positions */
 [data-pinned='right'] {
     right: var(--pin-right-offset, 0);
 }
 
 [data-pinned='left'] {
     left: var(--pin-left-offset, 0);
+}
+
+/* Pinned header cells */
+[data-pinned='right'] .grid-header-cell,
+[data-pinned='left'] .grid-header-cell {
+    background-color: hsl(var(--grid-pinned-header-cell));
+}
+
+/* Pinned body cells */
+div[data-pinned='right'].grid-body-cell,
+div[data-pinned='left'].grid-body-cell {
+    background-color: hsl(var(--grid-pinned-cell));
 }
 
 

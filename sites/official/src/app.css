@@ -46,6 +46,7 @@
 		--grid-footer: 0, 0%, 98%;
 		--grid-toolbar: 0, 0%, 98%;
 		--grid-pinned-cell: 0, 0%, 90%;
+		--grid-pinned-header-cell: 0, 0%, 85%;
 		--grid-background: 0, 0%, 98%;
 
 		--grid-pagination: 0, 0%, 98%;
@@ -94,6 +95,7 @@
 		--grid-footer: 0 0% 9%;
 		--grid-toolbar: 0 0% 9%;
 		--grid-pinned-cell: 0 0% 40%;
+		--grid-pinned-header-cell: 0 0% 45%;
 		--grid-background: 0 0% 10%;
 
 		--grid-pagination: 0 0% 9%;
