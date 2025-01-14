@@ -2,7 +2,7 @@ import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { XMLBuilder } from 'fast-xml-parser';
 import type { DataGrid } from "../index.svelte";
-import type { AnyColumn } from "../column-creation/types";
+import type { LeafColumn } from '../types';
 
 export class ExportingFeature<T> {
     private datagrid: DataGrid<T>;
@@ -70,8 +70,12 @@ export class ExportingFeature<T> {
     private prepareData(): Record<string, unknown>[] {
         return this.datagrid.initial.data.map(row => {
             const rowData: Record<string, unknown> = {};
-            this.datagrid.columnManager.getLeafColumns().forEach((column: AnyColumn<T>) => {
-                rowData[column.columnId as string] = row[column.columnId as keyof T];
+            this.datagrid.columnManager.getLeafColumns().forEach((column: LeafColumn<T>) => {
+                if (column.type === 'accessor') {
+                    rowData[column.columnId as string] = column.getValueFn(row)
+                } else if (column.type === 'computed') {
+                    rowData[column.columnId as string] = column.getValueFn(row)
+                }
             });
             return rowData;
         });

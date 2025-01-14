@@ -44,6 +44,21 @@
 	let newGroupName = $state('');
 </script>
 
+{#snippet exporting()}
+	<DropdownMenu.Sub>
+		<DropdownMenu.SubTrigger>
+			<Sort class="mr-2 size-4" />
+			<span>Exporting</span>
+		</DropdownMenu.SubTrigger>
+		<DropdownMenu.SubContent>
+			<DropdownMenu.Item onclick={() => datagrid.features.exporting.exportToExcel()}>
+				Export to CSV
+			</DropdownMenu.Item>
+		</DropdownMenu.SubContent>
+	</DropdownMenu.Sub>
+{/snippet}
+
+
 {#snippet sorting()}
 	<DropdownMenu.Sub>
 		<DropdownMenu.SubTrigger>
@@ -336,6 +351,8 @@
 				{@render freezing()}
 				{@render resizing()}
 				{@render visibility()}
+				{@render exporting()}
+
 				<DropdownMenu.Sub>
 					<DropdownMenu.SubTrigger>
 						<AdGroupOutlineSharp class="mr-2 size-4" />

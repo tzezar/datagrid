@@ -4,6 +4,7 @@ import { ColumnFacetingFeature, ColumnFilteringFeature, ColumnGroupingFeature, C
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
 import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
+import { ExportingFeature } from "./features/exporting.svelte";
 
 export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
     columns: C[];
@@ -52,6 +53,8 @@ export class DataGrid<TOriginalRow> {
         rowExpanding: new RowExpandingFeature(this),
         rowSelection: new RowSelectionFeature(this),
         rowPinning: new RowPinningFeature(this),
+
+        exporting: new ExportingFeature(this)
     }
 
     readonly lifecycleHooks = new LifecycleHooks<TOriginalRow>();
