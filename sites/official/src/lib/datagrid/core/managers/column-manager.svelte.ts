@@ -2,7 +2,7 @@ import { isGroupColumn } from "../helpers/column-guards";
 import type { AnyColumn, GroupColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
 import type { LeafColumn } from "../types";
-import { findColumnById, flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups } from "../utils.svelte";
+import { flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups } from "../utils.svelte";
 
 
 
@@ -12,10 +12,8 @@ export class ColumnManager<TOriginalRow> {
         this.datagrid = datagrid;
     }
 
-
-
-    getGroupColumns(): GroupColumn<TOriginalRow>[] {
-        return flattenColumnStructureAndClearGroups(this.datagrid.columns).filter(col => isGroupColumn(col));
+    getGroupColumns(columns: AnyColumn<TOriginalRow>[] = this.datagrid.columns): GroupColumn<TOriginalRow>[] {
+        return flattenColumnStructureAndClearGroups(columns).filter(col => isGroupColumn(col));
     }
 
     getFlatColumns(): AnyColumn<TOriginalRow>[] {
@@ -53,67 +51,21 @@ export class ColumnManager<TOriginalRow> {
         return flattenColumnStructureAndClearGroups(this.getColumnsInOrder()).filter(col => col.type !== 'group')
     }
 
-
-    getColumnWithGroupStructureAbove(
-        columnId: string,
-    ): AnyColumn<TOriginalRow> | null {
-        const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), columnId) as AnyColumn<TOriginalRow>;
-        if (!column) {
-            throw new Error(`Column ${columnId} not found`);
-        }
-
-        if (column.parentColumnId === null) {
-            return column
-        }
-
-        const buildGroupHierarchy = (
-            currentColumn: AnyColumn<TOriginalRow>
-        ): GroupColumn<TOriginalRow> | null => {
-            if (currentColumn.parentColumnId === null) {
-                return null;
-            }
-
-            const parentGroup = findColumnById(flattenColumnStructurePreservingGroups(this.datagrid.columns), currentColumn.parentColumnId) as GroupColumn<TOriginalRow>;
-            if (!parentGroup) {
-                return null;
-            }
-
-            const upperGroup = buildGroupHierarchy(parentGroup);
-            const currentGroup = {
-                ...parentGroup,
-                columns: [currentColumn]
-            };
-
-            if (upperGroup) {
-                upperGroup.columns = [currentGroup];
-                return upperGroup;
-            }
-
-            return currentGroup;
-        };
-
-        return buildGroupHierarchy(column);
-    }
-
-
-
-    getColumnsPinnedToLeft(): AnyColumn<TOriginalRow>[] {
-        return flattenColumnStructureAndClearGroups(this.datagrid.columns).filter(col => col.state.pinning.position === 'left' || this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
-    }
-    getColumnsPinnedToRight(): AnyColumn<TOriginalRow>[] {
-        return flattenColumnStructureAndClearGroups(this.datagrid.columns).filter(col => col.type !== 'group').filter(col => col.state.pinning.position === 'right')
-    }
-    getColumnsPinnedToNone(): AnyColumn<TOriginalRow>[] {
-        // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'none').filter(col => !this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
-        return flattenColumnStructureAndClearGroups(this.datagrid.columns).filter(col =>  col.state.pinning.position === 'none' && !this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
-    }
-
-
     getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
-        // const cols = [...this.getColumnsPinnedToLeft(), ...this.datagrid.processors.column.createColumnHierarchy(this.getColumnsPinnedToNone()), ...this.datagrid.processors.column.createColumnHierarchy(this.getColumnsPinnedToRight())]
-        const pinnedLeft = this.getColumnsPinnedToLeft()
-        const pinnedNone = this.getColumnsPinnedToNone()
-        const pinnedRight = this.getColumnsPinnedToRight()
+        const getColumnsPinnedToLeft = (): AnyColumn<TOriginalRow>[] => {
+            return flattenColumnStructureAndClearGroups(this.datagrid.columns).filter(col => col.state.pinning.position === 'left' || this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
+        }
+        const getColumnsPinnedToRight = (): AnyColumn<TOriginalRow>[] => {
+            return flattenColumnStructureAndClearGroups(this.datagrid.columns).filter(col => col.type !== 'group').filter(col => col.state.pinning.position === 'right')
+        }
+        const getColumnsPinnedToNone = (): AnyColumn<TOriginalRow>[] => {
+            // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'none').filter(col => !this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
+            return flattenColumnStructureAndClearGroups(this.datagrid.columns).filter(col =>  col.state.pinning.position === 'none' && !this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
+        }
+        
+        const pinnedLeft = getColumnsPinnedToLeft()
+        const pinnedNone = getColumnsPinnedToNone()
+        const pinnedRight = getColumnsPinnedToRight()
         return [...pinnedLeft, ...this.datagrid.processors.column.createColumnHierarchy(pinnedNone), ...pinnedRight]
     }
 

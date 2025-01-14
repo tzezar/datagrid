@@ -56,7 +56,8 @@
 					closeOnSelect={false}
 					onclick={(e) => {
 						const multisort = !e.shiftKey;
-						datagrid.handlers.sorting.toggleColumnSorting(column, multisort)}}
+						datagrid.handlers.sorting.toggleColumnSorting(column, multisort);
+					}}
 				>
 					{#if column.options.sortable}
 						<div class="sort-indicator">
@@ -275,8 +276,7 @@
 						max={column.state.size.maxWidth}
 						value={column.state.size.width}
 						onValueChange={(value: number) => {
-							datagrid.features.columnSizing.updateColumnSize(column.columnId, Number(value));
-							datagrid.processors.column.refreshColumnPinningOffsets();
+							datagrid.handlers.columnSizing.updateColumnSize(column.columnId, Number(value));
 						}}
 					/>
 				</DropdownMenu.Item>
@@ -297,7 +297,7 @@
 					disabled={column.options.hideable === false}
 					class={`${column.state.visible === true ? 'text-primary' : 'text-muted-foreground'}`}
 					closeOnSelect={false}
-					onclick={() => datagrid.features.columnVisibility.toggleColumnVisibility(column.columnId)}
+					onclick={() => datagrid.handlers.columnVisibility.toggleColumnVisibility(column.columnId)}
 				>
 					<span>
 						{column.header}

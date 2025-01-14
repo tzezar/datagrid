@@ -2,7 +2,7 @@ import { createColumnGroup } from "../column-creation/group-column-creator";
 import type { AnyColumn, GroupColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
 import type { ColumnId, FilterableColumn, FilterOperator, GridBasicRow, GridRowIdentifier, LeafColumn, PinningPosition } from "../types";
-import { findColumnById, flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups, generateRandomColumnId} from "../utils.svelte";
+import { findColumnById, flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups, generateRandomColumnId } from "../utils.svelte";
 
 
 
@@ -188,7 +188,7 @@ export class HandlersManager {
             this.datagrid.features.columnOrdering.moveRight(columnId)
         },
         moveColumnToPosition: ({ columnId, targetGroupColumnId }: { columnId: ColumnId, targetGroupColumnId: string }) => {
-            this.datagrid.features.columnOrdering.moveColumnToPosition( columnId, targetGroupColumnId );
+            this.datagrid.features.columnOrdering.moveColumnToPosition(columnId, targetGroupColumnId);
         }
     }
     columnGrouping = {
@@ -248,6 +248,23 @@ export class HandlersManager {
         },
         pinRowBottom: (rowIdentifier: GridRowIdentifier) => {
             this.datagrid.features.rowPinning.pinRowBottom(rowIdentifier);
+        }
+    }
+    rowExpanding = {
+        toggleRowExpansion: (rowIdentifier: GridRowIdentifier) => {
+            this.datagrid.features.rowExpanding.toggleRowExpansion(rowIdentifier);
+        }
+    }
+    columnSizing = {
+        updateColumnSize: (columnId: ColumnId, width: number) => {
+            this.datagrid.features.columnSizing.updateColumnSize(columnId, width);
+            this.datagrid.processors.column.refreshColumnPinningOffsets();
+
+        }
+    }
+    columnVisibility = {
+        toggleColumnVisibility: (columnId: ColumnId) => {
+            this.datagrid.features.columnVisibility.toggleColumnVisibility(columnId);
         }
     }
 }

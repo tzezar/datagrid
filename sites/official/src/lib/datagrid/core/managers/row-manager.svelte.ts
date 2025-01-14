@@ -39,50 +39,6 @@ export class RowManager<TOriginalRow> {
         return (this.datagrid.cache.rows || []).find(row => row.identifier === identifier);
     }
 
-    // new
-    getFlatGridBasicRows(data: GridRow<TOriginalRow>[]): GridBasicRow<TOriginalRow>[] {
-        const flattened: GridBasicRow<TOriginalRow>[] = [];
-        for (const row of data) {
-            if (row.isGroupRow()) {
-                flattened.push(...this.getFlatGridBasicRows(row.children));
-            } else {
-                flattened.push(row as GridBasicRow<TOriginalRow>);
-            }
-        }
-        return flattened;
-    }
-
-    getFlatGridRows(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
-        const flattened: GridRow<TOriginalRow>[] = [];
-        for (const row of data) {
-            if (row.isGroupRow()) {
-                flattened.push(row);
-                flattened.push(...this.getFlatGridRows(row.children));
-            } else {
-                flattened.push(row);
-            }
-        }
-        return flattened;
-    }
-
-    getFlatGridGroupRows(data: GridRow<TOriginalRow>[]): GridGroupRow<TOriginalRow>[] {
-        const flattened: GridGroupRow<TOriginalRow>[] = [];
-        for (const row of data) {
-            if (row.isGroupRow()) {
-                flattened.push(row);
-                flattened.push(...this.getFlatGridGroupRows(row.children));
-            }
-        }
-        return flattened;
-    }
-
-
-    getRowIdentifier(row: GridRow<TOriginalRow>): GridRowIdentifier {
-        return row.identifier
-    }
-
-
-
     getAllDescendantIndifiers(row: GridGroupRow<TOriginalRow>): string[] {
         const ids: string[] = [];
         for (const child of row.children) {
@@ -96,19 +52,7 @@ export class RowManager<TOriginalRow> {
 
         return ids;
     }
-    getAllDescendantIndices(row: GridGroupRow<TOriginalRow>): string[] {
-        const ids: string[] = [];
-        for (const child of row.children) {
-            if (child.isGroupRow()) {
-                ids.push(child.identifier);
-                ids.push(...this.getAllDescendantIndifiers(child));
-            } else {
-                ids.push(child.index);
-            }
-        }
-
-        return ids;
-    }
+  
 
 }
 
