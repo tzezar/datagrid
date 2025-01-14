@@ -19,7 +19,7 @@
 		<Group>
 			<GroupTitle title="Examples" />
 			<GroupItem  title="Basic" href={hrefs.headless.examples.basic} />
-			<GroupItem disabled title="Column filters" href={hrefs.headless.examples.columnFilters} />
+			<GroupItem title="Column filters" href={hrefs.headless.examples.columnFilters} />
 			<GroupItem
 				disabled
 				title="Column filters faceted"
