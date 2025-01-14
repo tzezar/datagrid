@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { LeafColumn } from '$lib/datagrid/core/types';
-	import { isColumnSortable } from '$lib/datagrid/core/utils.svelte';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
 	import HeaderCellDropdown from './header-cell-dropdown.svelte';
 	import SortingIndicator from './sorting-indicator.svelte';
@@ -15,7 +14,7 @@
 </script>
 
 <div class="flex gap-1">
-	{#if isColumnSortable(column)}
+	{#if column.isSortable()}
 		<SortingIndicator {datagrid} {column} />
 	{/if}
 	{#if column._meta.showColumnManagerDropdownMenu === true}

@@ -1,4 +1,5 @@
 import { DEFAULT_COLUMN_SIZE } from "../defaults";
+import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
 import type { CreateGroupColumnProps, GroupColumn } from "./types";
 
 
@@ -28,7 +29,15 @@ export function createColumnGroup<TOriginalRow>(
         offset: 0
       }
     },
-
-    ...rest
+    ...rest,
+    isVisible(): boolean {
+      return isColumnVisible(this)
+    },
+    isSortable(): boolean {
+      return isColumnSortable(this)
+    },
+    isFilterable(): boolean {
+      return isColumnFilterable(this)
+    }
   };
 }

@@ -1,4 +1,5 @@
 import { DEFAULT_COLUMN_SIZE } from "../defaults";
+import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
 import type { CreateComputeColumnProps, ComputedColumn } from "./types";
 
 
@@ -30,6 +31,15 @@ export function createComputedColumn<TOriginalRow extends Record<string, any>>(
       },
     },
     _meta: _meta ?? {},
-    ...rest
+    ...rest,
+    isVisible(): boolean {
+      return isColumnVisible(this)
+    },
+    isSortable(): boolean {
+      return isColumnSortable(this)
+    },
+    isFilterable(): boolean {
+      return isColumnFilterable(this)
+    }
   };
 }

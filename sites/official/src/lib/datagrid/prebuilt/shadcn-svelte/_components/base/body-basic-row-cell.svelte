@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
-	import { isColumnVisible } from '$lib/datagrid/core/utils.svelte';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 	import type { ColumnMeta } from '../../types';
 	import type { TzezarsDatagrid } from '../../core/index.svelte';
+
 
 	type Props = {
 		datagrid: TzezarsDatagrid;
@@ -16,7 +16,7 @@
 	let { datagrid, column, row, children }: Props = $props();
 </script>
 
-{#if isColumnVisible(column)}
+{#if column.isVisible()}
 	<div
 		class={cn(
 			'grid-body-cell',

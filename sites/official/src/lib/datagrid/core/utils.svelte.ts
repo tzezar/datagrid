@@ -1,5 +1,5 @@
-import type { AccessorColumn, AnyColumn, ComputedColumn, GroupColumn } from "./column-creation/types";
-import type { CellValue, ColumnId, CustomCellComponentWithProps, GridBasicRow, GridGroupRow, GridRow, SortableColumn } from "./types";
+import type { AnyColumn, GroupColumn } from "./column-creation/types";
+import type { CellValue, ColumnId, CustomCellComponentWithProps, SortableColumn } from "./types";
 import type { DataGrid } from "./index.svelte";
 
 
@@ -110,48 +110,8 @@ export const getSortDirection = (datagrid: DataGrid<any>, column: AnyColumn<any>
     return sortConfig.desc ? 'desc' : 'asc';
 };
 
-
-// Helper to check if a row is a group row
-export function isGroupRow<TOriginalRow>(row: GridRow<TOriginalRow>): row is GridGroupRow<TOriginalRow> {
-    return 'children' in row;
-}
-
-export function isBasicRow<TOriginalRow>(row: GridRow<TOriginalRow>): row is GridBasicRow<TOriginalRow> {
-    return 'original' in row;
-}
-
 export function isCellComponent(value: any): value is CustomCellComponentWithProps {
     return value && typeof value === 'object' && 'component' in value
 }
-
-// Row utils
-export const isGridGroupRow = <TOriginalRow,>(
-    row: GridRow<TOriginalRow>
-): row is GridGroupRow<TOriginalRow> => {
-    return (row as GridGroupRow<TOriginalRow>).children !== undefined;
-};
-
-// Column utils
-export function isColumnVisible(column: AnyColumn<any>): boolean {
-    return column.state.visible === true;
-}
-
-export const isColumnSortable = <TOriginalRow>(
-    column: AnyColumn<TOriginalRow>
-): SortableColumn<TOriginalRow> | null => {
-    if (column.options.sortable !== null || column.options.sortable !== false) {
-        return column as SortableColumn<TOriginalRow>;
-    }
-    return null;
-};
-
-export const isColumnFilterable = <TOriginalRow>(
-    column: AnyColumn<TOriginalRow>
-): (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>) | null => {
-    if (column.options.filterable !== null || column.options.filterable !== false) {
-        return column as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>;
-    }
-    return null;
-};
 
 

@@ -1,6 +1,6 @@
 import type { DataGrid } from "../index.svelte";
 import type { GridBasicRow, GridGroupRow, GridRow, GridRowIdentifier } from "../types";
-import { isGridGroupRow, isGroupRow } from "../utils.svelte";
+
 
 
 
@@ -43,7 +43,7 @@ export class RowManager<TOriginalRow> {
     getFlatGridBasicRows(data: GridRow<TOriginalRow>[]): GridBasicRow<TOriginalRow>[] {
         const flattened: GridBasicRow<TOriginalRow>[] = [];
         for (const row of data) {
-            if (isGridGroupRow(row)) {
+            if (row.isGroupRow()) {
                 flattened.push(...this.getFlatGridBasicRows(row.children));
             } else {
                 flattened.push(row as GridBasicRow<TOriginalRow>);
@@ -55,7 +55,7 @@ export class RowManager<TOriginalRow> {
     getFlatGridRows(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
         const flattened: GridRow<TOriginalRow>[] = [];
         for (const row of data) {
-            if (isGridGroupRow(row)) {
+            if (row.isGroupRow()) {
                 flattened.push(row);
                 flattened.push(...this.getFlatGridRows(row.children));
             } else {
@@ -68,7 +68,7 @@ export class RowManager<TOriginalRow> {
     getFlatGridGroupRows(data: GridRow<TOriginalRow>[]): GridGroupRow<TOriginalRow>[] {
         const flattened: GridGroupRow<TOriginalRow>[] = [];
         for (const row of data) {
-            if (isGridGroupRow(row)) {
+            if (row.isGroupRow()) {
                 flattened.push(row);
                 flattened.push(...this.getFlatGridGroupRows(row.children));
             }
@@ -86,7 +86,7 @@ export class RowManager<TOriginalRow> {
     getAllDescendantIndifiers(row: GridGroupRow<TOriginalRow>): string[] {
         const ids: string[] = [];
         for (const child of row.children) {
-            if (isGroupRow(child)) {
+            if (child.isGroupRow()) {
                 ids.push(child.identifier);
                 ids.push(...this.getAllDescendantIndifiers(child));
             } else {
@@ -99,7 +99,7 @@ export class RowManager<TOriginalRow> {
     getAllDescendantIndices(row: GridGroupRow<TOriginalRow>): string[] {
         const ids: string[] = [];
         for (const child of row.children) {
-            if (isGroupRow(child)) {
+            if (child.isGroupRow()) {
                 ids.push(child.identifier);
                 ids.push(...this.getAllDescendantIndifiers(child));
             } else {

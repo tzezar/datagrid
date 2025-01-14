@@ -1,7 +1,7 @@
 import { SvelteSet } from "svelte/reactivity";
 import type { DataGrid } from "../index.svelte";
 import type { GridGroupRow, GridRow, GridRowIdentifier, RowPinningPosition } from "../types";
-import { isGroupRow } from "../utils.svelte";
+
 
 export class RowPinningFeature<TOriginalRow> {
     datagrid: DataGrid<TOriginalRow>;
@@ -77,7 +77,7 @@ export class RowPinningFeature<TOriginalRow> {
             const rowId = this.datagrid.rows.getRowIdentifier(row);
             const pinningState = this.getPinningState(rowId);
 
-            if (isGroupRow(row)) {
+            if (row.isGroupRow()) {
                 // Create a new group row with processed children
                 const processedRow: GridGroupRow<TOriginalRow> = {
                     ...row,
@@ -136,7 +136,7 @@ export class RowPinningFeature<TOriginalRow> {
         let row = this.datagrid.rows.findRowByIdentifier(rowIdentifier);
         if (!row) return;
 
-        if (isGroupRow(row)) {
+        if (row.isGroupRow()) {
             row = row as GridGroupRow<TOriginalRow>;
             // Pin the group itself
             this.rowIdsPinnedTop.add(row.identifier);
@@ -159,7 +159,7 @@ export class RowPinningFeature<TOriginalRow> {
         const row = this.datagrid.rows.findRowByIdentifier(rowIdentifier);
         if (!row) return;
 
-        if (isGroupRow(row)) {
+        if (row.isGroupRow()) {
             // Pin the group itself
             this.rowIdsPinnedBottom.add(row.identifier);
             // Pin all descendants
@@ -180,7 +180,7 @@ export class RowPinningFeature<TOriginalRow> {
         const row = this.datagrid.rows.findRowByIdentifier(rowId);
         if (!row) return;
 
-        if (isGroupRow(row)) {
+        if (row.isGroupRow()) {
             // Unpin the group itself
             this.rowIdsPinnedTop.delete(row.identifier);
             this.rowIdsPinnedBottom.delete(row.identifier);

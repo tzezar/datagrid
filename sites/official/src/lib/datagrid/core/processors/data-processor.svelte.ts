@@ -2,7 +2,7 @@ import { sort } from "fast-sort";
 import { isGroupColumn } from "../helpers/column-guards";
 import type { DataGrid } from "../index.svelte";
 import type { Aggregation, AggregationFn, GridGroupRow, GridRow } from "../types";
-import { findColumnById, createFlatColumnStructure, isColumnSortable, isGridGroupRow } from "../utils.svelte";
+import { findColumnById, createFlatColumnStructure} from "../utils.svelte";
 import type { PerformanceMetrics } from "../helpers/performance-metrics.svelte";
 import type { AccessorColumn, ComputedColumn } from "../column-creation/types";
 import { aggregationFunctions } from "../helpers/aggregation-functions";
@@ -62,7 +62,7 @@ export class DataProcessor<TRow> {
         // Process grouped or regular data
         if (shouldRunGrouping) this.processGroupedData(data);
         else this.processRegularData(data);
-        
+
         if (this.datagrid.config.measurePerformance) this.datagrid.metrics.print();
 
     }
@@ -104,7 +104,7 @@ export class DataProcessor<TRow> {
         const sortInstructions = this.datagrid.features.sorting.sortConfigs
             .map(config => {
                 const column = findColumnById(this.datagrid.initial.columns, config.columnId) as (AccessorColumn<TRow> | ComputedColumn<TRow>);
-                if (!column || isGroupColumn(column) || !isColumnSortable(column)) {
+                if (!column || isGroupColumn(column) || !column.isSortable()) {
                     return null;
                 }
 
@@ -121,7 +121,7 @@ export class DataProcessor<TRow> {
 
         for (const row of data) {
             flattened.push(row);
-            if (isGridGroupRow(row)) {
+            if (row.isGroupRow()) {
                 flattened.push(...this.flattenGridRows(row.children));
             }
         }
@@ -284,8 +284,9 @@ export class DataProcessor<TRow> {
                     children: groupByLevel(groupRows, depth + 1, `${parentPath}${index + 1}`),
                     aggregations: aggregations,
                     isExpanded: () => this.datagrid.features.rowExpanding.isRowExpanded(key),
-                    isGroupRow: () => true
-                 
+                    isGroupRow: function (): this is GridGroupRow<TRow> {
+                        return true;
+                    },
                 };
             });
         };
@@ -312,7 +313,7 @@ export class DataProcessor<TRow> {
     }
 
     private createBasicRows(rows: TRow[], parentIndex?: string): GridRow<TRow>[] {
-        
+
         return rows.map((row, i) => {
             const identifier = this.datagrid.config.createBasicRowIdentifier(row);
             return {

@@ -6,6 +6,9 @@ export type DotNestedKeys<T> = (T extends object ? {
 }[Exclude<keyof T, symbol>] : "") extends infer D ? Extract<D, string> : never;
 // Specific interfaces for different column types
 
+
+
+
 export interface AccessorColumn<TOriginalRow, TMeta = any> {
   type: 'accessor';
   header: string;
@@ -34,6 +37,9 @@ export interface AccessorColumn<TOriginalRow, TMeta = any> {
     pinning: ColumnPinningState
   };
   _meta: TMeta
+  isVisible(): boolean;
+  isSortable(): boolean;
+  isFilterable(): boolean
 }
 
 export interface ComputedColumn<TOriginalRow, TMeta = any> {
@@ -65,7 +71,10 @@ export interface ComputedColumn<TOriginalRow, TMeta = any> {
     pinning: ColumnPinningState
   };
   _meta: TMeta;
-}
+  isVisible(): boolean;
+  isSortable(): boolean;
+  isFilterable(): boolean
+} 
 
 export interface DisplayColumn<TOriginalRow, TMeta = any> {
   type: 'display';
@@ -92,9 +101,12 @@ export interface DisplayColumn<TOriginalRow, TMeta = any> {
 
   };
   _meta: TMeta;
+  isVisible(): boolean;
+  isSortable(): boolean;
+  isFilterable(): boolean
 }
 
-export interface GroupColumn<TOriginalRow, TMeta = any> {
+export interface GroupColumn<TOriginalRow, TMeta = any>  {
   type: 'group';
   header: string;
   headerCell?: HeaderCell;
@@ -115,6 +127,9 @@ export interface GroupColumn<TOriginalRow, TMeta = any> {
     pinning: ColumnPinningState;
   };
   _meta: TMeta;
+  isVisible(): boolean;
+  isSortable(): boolean; 
+  isFilterable(): boolean;
 }
 // Union type for all column types
 
@@ -125,6 +140,9 @@ type CommonColumnProps = {
   columnId: ColumnId;
   parentColumnId?: ParentColumnId;
   _meta?: any;
+  isVisible(): boolean;
+  isSortable(): boolean;
+  isFilterable(): boolean;
 }
 
 export type AnyColumn<TOriginalRow> =

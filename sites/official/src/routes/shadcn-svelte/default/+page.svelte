@@ -4,10 +4,7 @@
 	import GridHeader from './_components/grid-header.svelte';
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
 	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
-	import {
-		createFlatColumnStructureAndPreserveChildren,
-		isGridGroupRow as isGroupRow
-	} from '$lib/datagrid/core/utils.svelte';
+
 	import GroupRowCellContent from '$lib/datagrid/prebuilt/core/group-row-cell-content.svelte';
 	import BasicRowCellContent from '$lib/datagrid/prebuilt/core/basic-row-cell-content.svelte';
 	import BodyRowGroupCellHeader from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/body-row-group-cell-header.svelte';

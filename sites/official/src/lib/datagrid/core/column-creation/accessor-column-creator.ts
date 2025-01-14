@@ -1,4 +1,5 @@
 import { DEFAULT_COLUMN_SIZE } from "../defaults";
+import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
 import type { DotNestedKeys, CreateAccessorColumnProps, AccessorColumn } from "./types";
 
 export function createAccessorColumn<
@@ -32,6 +33,15 @@ export function createAccessorColumn<
       },
     },
     _meta: _meta ?? {},
-    ...rest
+    ...rest,
+    isVisible(): boolean {
+      return isColumnVisible(this)
+    },
+    isSortable(): boolean {
+      return isColumnSortable(this)
+    },
+    isFilterable(): boolean {
+      return isColumnFilterable(this)
+    }
   };
 }

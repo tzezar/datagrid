@@ -3,7 +3,6 @@
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 	import type { ColumnMeta } from '../../types';
-	import { isColumnVisible } from '$lib/datagrid/core/utils.svelte';
 	import type { TzezarsDatagrid } from '../../core/index.svelte';
 
 	type Props = {
@@ -17,7 +16,7 @@
     
 </script>
 
-{#if isColumnVisible(column)}
+{#if column.isVisible()}
 	<div
 		class={cn('grid-body-cell')}
 		class:justify-center={column?._meta?.align === 'center'}
