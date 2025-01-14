@@ -120,20 +120,36 @@ export class ColumnOrderingFeature<TOriginalRow> {
             if (!nextColumn) {
                 // Move one level up to the root level
                 const parentGroupOneLevelUp = this.datagrid.features.columnGrouping.findParentColumnGroupAndPreserveChildren(parentGroup.parentColumnId);
-                if (!parentGroupOneLevelUp) throw new Error('Parent group one level up not found');
+                if (parentGroupOneLevelUp) {
+                    const parentGroupIndexWithinOneLevelUp = this.getColumnIndex(parentGroupOneLevelUp.columns, parentGroup.columnId);
     
-                const parentGroupIndexWithinOneLevelUp = this.getColumnIndex(parentGroupOneLevelUp.columns, parentGroup.columnId);
-    
-                // Remove column from current group
-                parentGroup.columns = parentGroup.columns.filter(col => col.columnId !== column.columnId);
-    
-                // Add column to the parent group after the current group
-                parentGroupOneLevelUp.columns.splice(parentGroupIndexWithinOneLevelUp + 1, 0, column);
-    
-                // Update column's parent reference
-                column.parentColumnId = parentGroupOneLevelUp.columnId;
+                    // Remove column from current group
+                    parentGroup.columns = parentGroup.columns.filter(col => col.columnId !== column.columnId);
+        
+                    // Add column to the parent group after the current group
+                    parentGroupOneLevelUp.columns.splice(parentGroupIndexWithinOneLevelUp + 1, 0, column);
+        
+                    // Update column's parent reference
+                    column.parentColumnId = parentGroupOneLevelUp.columnId;
+                } else if (!parentGroupOneLevelUp){
+                    // throw new Error('Parent group one level up not found');
+                    // moving to root after group
+
+                    if (column.type === 'group') {
+                        this.removeGroupColumnFromGroup(column, parentGroup);
+                    } else {
+                        this.removeLeafColumnFromGroup(column, parentGroup);
+                    }
+                    const parentGroupIndexWithinOneLevelUp = this.getColumnIndex(this.datagrid.columns, parentGroup.columnId);
+                    this.datagrid.columns.splice(parentGroupIndexWithinOneLevelUp + 1, 0, column);
+                    column.parentColumnId = null;
+                } else {
+                    throw new Error('Invalid parent group');
+                }
             } else if (nextColumn.type === 'group') {
                 // Move into the next group
+
+
                 if (column.type === 'group') {
                     this.moveGroupColumnToGroup(column, nextColumn as GroupColumn<TOriginalRow>, 'left');
                 } else {
@@ -149,18 +165,32 @@ export class ColumnOrderingFeature<TOriginalRow> {
             if (!previousColumn) {
                 // Move one level up to the root level
                 const parentGroupOneLevelUp = this.datagrid.features.columnGrouping.findParentColumnGroupAndPreserveChildren(parentGroup.parentColumnId);
-                if (!parentGroupOneLevelUp) throw new Error('Parent group one level up not found');
+                if (parentGroupOneLevelUp) {
+                    if (!parentGroupOneLevelUp) throw new Error('Parent group one level up not found');
     
-                const parentGroupIndexWithinOneLevelUp = this.getColumnIndex(parentGroupOneLevelUp.columns, parentGroup.columnId);
-    
-                // Remove column from current group
-                parentGroup.columns = parentGroup.columns.filter(col => col.columnId !== column.columnId);
-    
-                // Add column to the parent group before the current group
-                parentGroupOneLevelUp.columns.splice(parentGroupIndexWithinOneLevelUp, 0, column);
-    
-                // Update column's parent reference
-                column.parentColumnId = parentGroupOneLevelUp.columnId;
+                    const parentGroupIndexWithinOneLevelUp = this.getColumnIndex(parentGroupOneLevelUp.columns, parentGroup.columnId);
+        
+                    // Remove column from current group
+                    parentGroup.columns = parentGroup.columns.filter(col => col.columnId !== column.columnId);
+        
+                    // Add column to the parent group before the current group
+                    parentGroupOneLevelUp.columns.splice(parentGroupIndexWithinOneLevelUp, 0, column);
+        
+                    // Update column's parent reference
+                    column.parentColumnId = parentGroupOneLevelUp.columnId;
+                } else if (!parentGroupOneLevelUp){
+                    // moving to root after group
+                    if (column.type === 'group') {
+                        this.removeGroupColumnFromGroup(column, parentGroup);
+                    } else {
+                        this.removeLeafColumnFromGroup(column, parentGroup);
+                    }
+                    const parentGroupIndexWithinOneLevelUp = this.getColumnIndex(this.datagrid.columns, parentGroup.columnId);
+                    this.datagrid.columns.splice(parentGroupIndexWithinOneLevelUp, 0, column);
+                    column.parentColumnId = null;
+                } else {
+                    throw new Error('Invalid parent group');
+                }
             } else if (previousColumn.type === 'group') {
                 // Move into the previous group
                 if (column.type === 'group') {
@@ -176,13 +206,6 @@ export class ColumnOrderingFeature<TOriginalRow> {
             throw new Error('Invalid direction for root level movement');
         }
     }
-    
-    
-
-
-
-
-
 
 
     moveColumnToPosition(columnId: ColumnId, targetId: ColumnId): void {
