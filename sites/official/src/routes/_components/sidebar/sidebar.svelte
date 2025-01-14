@@ -44,7 +44,7 @@
 				href={hrefs.headless.examples.paginationControlled}
 			/>
 			<GroupItem title="Row selection" href={hrefs.headless.examples.rowSelection} />
-			<GroupItem disabled title="Sorting" href={hrefs.headless.examples.sorting} />
+			<GroupItem title="Sorting" href={hrefs.headless.examples.sorting} />
 			<!-- <GroupItem title="Sub components" href={hrefs.headless.examples.subComponents} /> -->
 			<GroupItem disabled title="Virtualization" href={hrefs.headless.examples.virtualization} />
 			<GroupItem disabled title="Kitchen sink" href={hrefs.headless.examples.kitchenSink} />

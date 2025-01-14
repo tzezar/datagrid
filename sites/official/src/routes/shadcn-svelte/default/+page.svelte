@@ -97,7 +97,6 @@
 			</BasicHeaderCellContent>
 			<HeaderColumnActions {datagrid} {column} />
 		</HeaderBasicCellContentWrapper>
-
 		<HeaderColumnFilters {datagrid} {column} />
 	</HeaderBasicCell>
 {/snippet}
