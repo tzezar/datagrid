@@ -11,7 +11,7 @@ export type DotNestedKeys<T> = (T extends object ? {
 export interface AccessorColumn<TOriginalRow, TMeta = any> {
   type: 'accessor';
   header: string;
-  columnId: ColumnId<TOriginalRow>;
+  columnId: DotNestedKeys<TOriginalRow>;
   parentColumnId: string | null;
   accessorKey: DotNestedKeys<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;

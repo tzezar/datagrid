@@ -19,7 +19,8 @@ export type DotNestedKeys<T> = (T extends object ? {
 /**
  * Column and Identifier Types
  */
-export type ColumnId<T = unknown> = keyof T | (string & {})
+// export type ColumnId<T = any> = keyof T | (string & {})
+export type ColumnId<T = any> = string
 export type ExtractColumnIds<T> = T extends AccessorColumn<any, any>[]
     ? T[number]["columnId"]
     : never;
@@ -165,7 +166,7 @@ export type HeaderCell = (
  * Sorting Types
  */
 export interface SortConfig {
-    columnId: string;
+    columnId: ColumnId;
     desc: boolean;
     index: number;
 }

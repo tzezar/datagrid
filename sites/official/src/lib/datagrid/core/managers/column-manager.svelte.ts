@@ -73,7 +73,7 @@ export class ColumnManager<TOriginalRow> {
                 return null;
             }
 
-            const parentGroup = this.datagrid.features.columnGrouping.findParentColumnGroup(currentColumn.parentColumnId);
+            const parentGroup = findColumnById(flattenColumnStructurePreservingGroups(this.datagrid.columns), currentColumn.parentColumnId) as GroupColumn<TOriginalRow>;
             if (!parentGroup) {
                 return null;
             }
@@ -114,9 +114,8 @@ export class ColumnManager<TOriginalRow> {
         const pinnedLeft = this.getColumnsPinnedToLeft()
         const pinnedNone = this.getColumnsPinnedToNone()
         const pinnedRight = this.getColumnsPinnedToRight()
-        return [...pinnedLeft, ...this.datagrid.processors.column.createColumnHierarchy(pinnedNone), ...this.datagrid.processors.column.createColumnHierarchy(pinnedRight)]
+        return [...pinnedLeft, ...this.datagrid.processors.column.createColumnHierarchy(pinnedNone), ...pinnedRight]
     }
-
 
 
 }

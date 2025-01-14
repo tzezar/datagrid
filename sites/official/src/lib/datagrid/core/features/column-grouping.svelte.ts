@@ -1,58 +1,30 @@
 
-import { type AnyColumn, type GroupColumn } from "../column-creation/types";
-import { isGroupColumn } from "../helpers/column-guards";
+import { type GroupColumn } from "../column-creation/types";
 import type { DataGrid } from "../index.svelte";
+import { findColumnById, flattenColumnStructurePreservingGroups } from "../utils.svelte";
 
 
+/**
+ * Manages column grouping functionality for a data grid, including finding,
+ * renaming, and deleting group columns, as well as handling column nesting.
+ */
 export class ColumnGroupingFeature<TOriginalRow> {
+    // Reference to the parent DataGrid instance
     private datagrid: DataGrid<TOriginalRow>;
 
+    /**
+     * Initializes the column grouping feature for the given data grid.
+     * @param datagrid - The DataGrid instance this feature is associated with.
+     */
     constructor(datagrid: DataGrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 
-
-    getGroupColumns(): GroupColumn<TOriginalRow>[] {
-        return this.datagrid.columnManager.getFlatColumns().filter(col => isGroupColumn(col));
-
-    }
-
-
-    findParentColumnGroup(parentColumnId: string | null): GroupColumn<TOriginalRow> | null {
-        if (parentColumnId === null) return null;
-        const flattenedColumns = this.datagrid.columnManager.getFlatColumns();
-        const groupColumn = flattenedColumns.find(col => col.columnId === parentColumnId);
-        if (groupColumn) {
-            return groupColumn as GroupColumn<TOriginalRow>;
-        }
-        return null
-    }
-
-    findParentColumnGroupAndPreserveChildren(parentColumnId: string | null): GroupColumn<TOriginalRow> | null {
-        if (parentColumnId === null) return null;
-        const flattenedColumns = this.datagrid.columnManager.getFlatColumnsWithNestedColumns();
-        const groupColumn = flattenedColumns.find(col => col.columnId === parentColumnId);
-        if (groupColumn) {
-            return groupColumn as GroupColumn<TOriginalRow>;
-        }
-        return null
-    }
-
-    
-    isColumnWithinGroup(column: AnyColumn<TOriginalRow>): boolean {
-        return column.parentColumnId !== null;
-    }
-
-
-
-
-    renameGroupColumn(column: any, newHeader: string): void {
-        column.header = newHeader;
-        this.datagrid.processors.column.refreshColumnPinningOffsets();
-    }
-
+    /**
+        * Deletes a group column and reassigns its children to the appropriate level.
+        * @param groupColumn - The group column to delete.
+        */
     deleteGroupColumn(groupColumn: GroupColumn<TOriginalRow>): void {
-        // Get the children columns that need to be moved
         const childColumns = [...groupColumn.columns];
 
         if (groupColumn.parentColumnId === null) {
@@ -70,7 +42,8 @@ export class ColumnGroupingFeature<TOriginalRow> {
             }
         } else {
             // Group is nested within another group
-            const parentGroup = this.findParentColumnGroup(groupColumn.parentColumnId);
+            const parentGroup = findColumnById(flattenColumnStructurePreservingGroups(this.datagrid.columns), groupColumn.parentColumnId) as GroupColumn<TOriginalRow>;
+            if (!parentGroup) throw new Error('Parent group not found');
             if (parentGroup) {
                 // Find and remove the group from its parent
                 const groupIndex = parentGroup.columns.findIndex(col => col === groupColumn);
@@ -79,7 +52,7 @@ export class ColumnGroupingFeature<TOriginalRow> {
 
                     // Move all children to the parent group
                     childColumns.forEach(childColumn => {
-                        childColumn.parentColumnId = parentGroup.columnId;
+                        childColumn.parentColumnId = String(parentGroup.columnId);
                         parentGroup.columns.splice(groupIndex, 0, childColumn);
                     });
                 }

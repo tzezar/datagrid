@@ -13,6 +13,9 @@ interface MoveOperation {
     };
 }
 
+/**
+ * Manages column ordering functionality for a DataGrid.
+ */
 export class ColumnOrderingFeature<TOriginalRow> {
     private readonly datagrid: DataGrid<TOriginalRow>;
 
@@ -64,7 +67,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
     private moveColumn(columnId: ColumnId, direction: Direction): void {
         const column = this.findColumnOrThrow(columnId);
         const moveOperation = this.calculateMoveOperation(column, direction);
-        
+
         this.executeMove(moveOperation);
         this.refreshColumnState();
     }
@@ -88,7 +91,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
      */
     private calculateMoveOperation(column: AnyColumn<TOriginalRow>, direction: Direction): MoveOperation {
         const isRoot = column.parentColumnId === null;
-        return isRoot 
+        return isRoot
             ? this.calculateRootLevelMove(column, direction)
             : this.calculateGroupLevelMove(column, direction);
     }
@@ -105,7 +108,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
         }
 
         const targetColumn = this.datagrid.columns[targetIndex];
-        
+
         if (targetColumn.type === 'group') {
             return {
                 sourceColumn: column,
@@ -139,7 +142,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
         }
 
         const targetColumn = parentGroup.columns[targetIndex];
-        
+
         // Moving into adjacent group
         if (targetColumn.type === 'group') {
             return {
@@ -169,7 +172,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
         currentGroup: GroupColumn<TOriginalRow>,
         direction: Direction
     ): MoveOperation {
-        const parentGroup = currentGroup.parentColumnId 
+        const parentGroup = currentGroup.parentColumnId
             ? this.findParentGroupOrThrow(currentGroup.parentColumnId)
             : null;
 
@@ -193,7 +196,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
      */
     private executeMove(operation: MoveOperation): void {
         const { sourceColumn, targetLocation } = operation;
-        
+
         // Remove from current location
         if (sourceColumn.parentColumnId === null) {
             this.removeFromRoot(sourceColumn);
@@ -272,16 +275,16 @@ export class ColumnOrderingFeature<TOriginalRow> {
         targetGroup: GroupColumn<TOriginalRow>
     ): boolean {
         let current: GroupColumn<TOriginalRow> | null = targetGroup;
-        
+
         while (current) {
             if (current.columnId === sourceGroup.columnId) {
                 return true;
             }
-            current = current.parentColumnId 
+            current = current.parentColumnId
                 ? this.findParentGroupOrThrow(current.parentColumnId)
                 : null;
         }
-        
+
         return false;
     }
 
@@ -290,7 +293,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
      */
     private validateMove(operation: MoveOperation): void {
         const { sourceColumn, targetLocation } = operation;
-        
+
         if (sourceColumn.type === 'group' && targetLocation.parentId) {
             const targetGroup = this.findParentGroupOrThrow(targetLocation.parentId);
             if (this.wouldCreateCircularReference(sourceColumn, targetGroup)) {
@@ -300,12 +303,12 @@ export class ColumnOrderingFeature<TOriginalRow> {
     }
 
 
-     /**
-     * Moves a column to a specific position identified by target column ID
-     */
-     moveColumnToPosition(columnId: ColumnId, targetId: ColumnId): void {
+    /**
+    * Moves a column to a specific position identified by target column ID
+    */
+    moveColumnToPosition(columnId: ColumnId, targetId: ColumnId): void {
         const column = this.findColumnOrThrow(columnId);
-        
+
         // Handle root position
         if (targetId === '') {
             this.moveToRoot(column);
@@ -313,7 +316,7 @@ export class ColumnOrderingFeature<TOriginalRow> {
         }
 
         const targetColumn = this.findColumnOrThrow(targetId);
-        
+
         // Prevent moving to self
         if (column.columnId === targetColumn.columnId) {
             return;

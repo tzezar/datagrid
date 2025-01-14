@@ -1,5 +1,5 @@
 import type { AnyColumn, GroupColumn } from "./column-creation/types";
-import type { CellValue, ColumnId, SortableColumn } from "./types";
+import type { CellValue, ColumnId, CustomCellComponentWithProps, SortableColumn } from "./types";
 import type { DataGrid } from "./index.svelte";
 
 
@@ -106,4 +106,6 @@ export const getSortDirection = (datagrid: DataGrid<any>, column: AnyColumn<any>
     return sortConfig.desc ? 'desc' : 'asc';
 };
 
-
+export function isCellComponent(value: any): value is CustomCellComponentWithProps {
+    return value && typeof value === 'object' && 'component' in value
+}
