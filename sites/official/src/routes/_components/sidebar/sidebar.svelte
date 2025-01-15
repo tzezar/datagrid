@@ -99,7 +99,7 @@
 		</Group>
 		<Group>
 			<GroupTitle title="Examples" />
-			<GroupItem disabled title="Basic" href={hrefs.shadcnSvelte.examples.basic} />
+			<GroupItem  title="Basic" href={hrefs.shadcnSvelte.examples.basic} />
 			<GroupItem disabled title="Column alignment" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Column filters" href={hrefs.headless.quickStart.installation} />
 			<GroupItem
