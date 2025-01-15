@@ -112,6 +112,7 @@ export class PaginationFeature<TOriginalRow> {
      */
     goToClosestPage(): void {
         const closestPage = Math.min(this.page, this.pageCount); // Ensure the page is within valid bounds
+        console.log(closestPage)
         this.goToPage(closestPage);
     }
 
@@ -132,7 +133,7 @@ export class PaginationFeature<TOriginalRow> {
     setPageSize(newSize: number): void {
         if (newSize === this.pageSize) return; // No action if the page size is the same
         this.pageSize = newSize;
-
+        this.pageCount = this.getPageCount(this.datagrid.cache.rows || []);
         // Recalculate pagination and ensure the page is within the valid range after the page size change
         this.goToClosestPage();
     }

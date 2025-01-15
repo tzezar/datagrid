@@ -284,5 +284,27 @@ export class HandlersManager {
             this.datagrid.processors.data.executeFullDataTransformation();
         }
     }
+    pagination = {
+        goToPrevPage: () => {
+            this.datagrid.refresh(() => this.datagrid.features.pagination.goToPrevPage(), {
+                recalculateAll: false,
+                recalculateGroups: false,
+                recalculatePagination: true
+            })
+        },
+        goToNextPage: () => {
+            this.datagrid.refresh(() => this.datagrid.features.pagination.goToNextPage(), {
+                recalculateAll: false,
+                recalculateGroups: false,
+                recalculatePagination: true
+            })
+        },
+        changePageSize: (newPageSize: number) => {
+            this.datagrid.refresh(() => this.datagrid.features.pagination.setPageSize(newPageSize), {
+                recalculatePagination: true
+            });
+        }
 
+    }
 }
+
