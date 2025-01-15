@@ -10,12 +10,7 @@
 		<select
 			class="bg-background h-10 w-full max-w-[150px] border px-2 py-2"
 			value={datagrid.features.pagination.pageSize}
-			onchange={(e) => {
-				datagrid.refresh(() => {
-					datagrid.features.pagination.pageSize = Number(e.currentTarget.value);
-					datagrid.features.pagination.goToFirstPage();
-				});
-			}}
+			onchange={(e) => datagrid.handlers.pagination.changePageSize(Number(e.currentTarget.value))}
 		>
 			{#each datagrid.features.pagination.pageSizes as pageSize}
 				<option value={pageSize}>{pageSize}</option>
@@ -27,7 +22,7 @@
 		<button
 			class="pagination-button"
 			disabled={datagrid.features.pagination.canGoToPrevPage()}
-			onclick={() => datagrid.refresh(() => datagrid.features.pagination.goToPrevPage())}
+			onclick={() => datagrid.handlers.pagination.goToPrevPage()}
 		>
 			Prev
 		</button>
@@ -37,7 +32,7 @@
 		<button
 			class="pagination-button"
 			disabled={datagrid.features.pagination.canGoToNextPage()}
-			onclick={() => datagrid.refresh(() => datagrid.features.pagination.goToNextPage())}
+			onclick={() => datagrid.handlers.pagination.goToNextPage()}
 		>
 			Next
 		</button>
