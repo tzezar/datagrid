@@ -1,20 +1,8 @@
 <script lang="ts">
 	import '$lib/datagrid/styles.css';
+	import { cn } from '$lib/utils';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core/index.svelte';
 	import type { GridGroupRow, LeafColumn, GroupColumn } from '$lib/datagrid/core/types';
-	import { cn } from '$lib/utils';
-	let { data } = $props();
-
-	let datagrid = new TzezarsDatagrid({
-		columns: userColumns,
-		data: data.users
-	});
-
-	let columns = $derived(
-		datagrid.extra.features.groupHeadersVisibility.showGroupHeaders
-			? datagrid.columnManager.getColumnsInOrder()
-			: datagrid.columnManager.getLeafColumnsInOrder()
-	);
 
 	import { Portal } from 'bits-ui';
 	import { userColumns } from './columns.svelte';
@@ -30,6 +18,19 @@
 	import HeaderCellColumnFilter from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-column-filter.svelte';
 	import ColumnSortingIndicator from '$lib/datagrid/prebuilt/shadcn/blocks/column-sorting-indicator.svelte';
 	import Toolbar from '$lib/datagrid/prebuilt/shadcn/blocks/toolbar.svelte';
+
+	let { data } = $props();
+
+	let datagrid = new TzezarsDatagrid({
+		columns: userColumns,
+		data: data.users
+	});
+
+	let columns = $derived(
+		datagrid.extra.features.groupHeadersVisibility.showGroupHeaders
+			? datagrid.columnManager.getColumnsInOrder()
+			: datagrid.columnManager.getLeafColumnsInOrder()
+	);
 </script>
 
 {#snippet GroupRowSnippet(row: GridGroupRow<any>, leafColumns: LeafColumn<any>[])}
