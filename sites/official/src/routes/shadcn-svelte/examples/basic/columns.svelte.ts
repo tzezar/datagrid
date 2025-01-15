@@ -18,51 +18,51 @@ import type { ColumnMeta } from "$lib/datagrid/prebuilt/shadcn-svelte/types";
 export type Column = AnyColumn<User> & { _meta: { showColumnManagerDropdownMenu: boolean } }
 
 export const userColumns = [
-    displayColumn({
-        header: 'Actions',
-        columnId: 'actions',
-        headerCell: () => `&nbsp;`,
-        cell: () => {
-            return {
-                component: ActionsCell,
-            }
-        },
-        options: { sortable: false, groupable: false },
-        state: {
-            size: {
-                width: 60,
-                minWidth: 60,
-                maxWidth: 60,
-            }
-        },
-        _meta: {
-            align: 'center',
-            showColumnManagerDropdownMenu: false
-        } as ColumnMeta
+    // displayColumn({
+    //     header: 'Actions',
+    //     columnId: 'actions',
+    //     headerCell: () => `&nbsp;`,
+    //     cell: () => {
+    //         return {
+    //             component: ActionsCell,
+    //         }
+    //     },
+    //     options: { sortable: false, groupable: false },
+    //     state: {
+    //         size: {
+    //             width: 60,
+    //             minWidth: 60,
+    //             maxWidth: 60,
+    //         }
+    //     },
+    //     _meta: {
+    //         align: 'center',
+    //         showColumnManagerDropdownMenu: false
+    //     } as ColumnMeta
 
-    }),
-    displayColumn({
-        header: 'Row Selection',
-        headerCell: () => ({
-            component: RowSelectionHeader
-        }),
-        columnId: 'selectRow',
-        cell: () => ({
-            component: SelectRowCell,
-        }),
-        options: { sortable: false },
-        state: {
-            size: {
-                width: 40,
-                minWidth: 40,
-                maxWidth: 40,
-            }
-        },
-        _meta: {
-            showColumnManagerDropdownMenu: false,
-            align: 'center'
-        } as ColumnMeta
-    }),
+    // }),
+    // displayColumn({
+    //     header: 'Row Selection',
+    //     headerCell: () => ({
+    //         component: RowSelectionHeader
+    //     }),
+    //     columnId: 'selectRow',
+    //     cell: () => ({
+    //         component: SelectRowCell,
+    //     }),
+    //     options: { sortable: false },
+    //     state: {
+    //         size: {
+    //             width: 40,
+    //             minWidth: 40,
+    //             maxWidth: 40,
+    //         }
+    //     },
+    //     _meta: {
+    //         showColumnManagerDropdownMenu: false,
+    //         align: 'center'
+    //     } as ColumnMeta
+    // }),
 
     // displayColumn({
     //     header: 'Row Selection',
