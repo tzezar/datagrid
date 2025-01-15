@@ -52,6 +52,7 @@ export class HandlersManager {
             if (multisort) multipleColumnSort();
             else singleColumnSort();
 
+            datagrid.cache.invalidate('sortedData');
             datagrid.processors.data.executeFullDataTransformation();
         },
 

@@ -35,6 +35,10 @@
 			: datagrid.columnManager.getLeafColumnsInOrder()
 	);
 
+	$effect(() => {
+		console.log($state.snapshot(datagrid.rows.getVisibleRows()))
+	})
+
 	import { Portal } from 'bits-ui';
 	import { userColumns } from './columns.svelte';
 

@@ -103,7 +103,7 @@ export class DataProcessor<TRow> {
     private applySorting(data: TRow[]): TRow[] {
         const sortInstructions = this.datagrid.features.sorting.sortConfigs
             .map(config => {
-                const column = findColumnById(this.datagrid.initial.columns, config.columnId) as (AccessorColumn<TRow> | ComputedColumn<TRow>);
+                const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), config.columnId) as (AccessorColumn<TRow> | ComputedColumn<TRow>);
                 if (!column || isGroupColumn(column) || !column.isSortable()) {
                     return null;
                 }
@@ -113,6 +113,7 @@ export class DataProcessor<TRow> {
             })
             .filter(Boolean);
 
+        console.log(sortInstructions)
         return sort(data).by(sortInstructions as any);
     }
 

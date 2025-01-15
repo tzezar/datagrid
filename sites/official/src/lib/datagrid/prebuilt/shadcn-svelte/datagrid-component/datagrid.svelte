@@ -21,6 +21,7 @@
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
+	import SortingIndicator from '../_components/sorting-indicator.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;
@@ -244,7 +245,15 @@
 					<span class="grid-header-cell-content-header">{header}</span>
 				{/snippet}
 			</RenderBasicHeaderCellContent>
-			<HeaderColumnActions {datagrid} {column} />
+			<div class="flex gap-1">
+				{#if column.isSortable()}
+					<SortingIndicator {datagrid} {column} />
+				{/if}
+				{#if column._meta.showColumnManagerDropdownMenu === true}
+					<HeaderCellDropdown {datagrid} {column} />
+				{/if}
+			</div>
+			
 		</HeaderBasicCellContentWrapper>
 		<HeaderColumnFilters {datagrid} {column} />
 	</HeaderBasicCell>
