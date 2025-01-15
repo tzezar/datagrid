@@ -17,36 +17,39 @@
 			<GroupItem disabled title="Getting started" href={hrefs.headless.quickStart.gettingStarted} />
 		</Group>
 		<Group>
+			<GroupTitle title="Guides" />
+			<GroupItem disabled title="Column definition" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column manager" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Row manager" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Cache manager" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Data processor" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column processor" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Lifecycle hooks" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Handlers" href={hrefs.headless.quickStart.installation} />
+		</Group>
+		<Group>
 			<GroupTitle title="Examples" />
-			<GroupItem  title="Basic" href={hrefs.headless.examples.basic} />
+			<GroupItem title="Basic" href={hrefs.headless.examples.basic} />
 			<GroupItem title="Column filters" href={hrefs.headless.examples.columnFilters} />
 			<GroupItem
 				title="Column filters faceted"
 				href={hrefs.headless.examples.columnFiltersFaceted}
 			/>
-			<GroupItem  title="Column ordering" href={hrefs.headless.examples.columnOrdering} />
-			<GroupItem title="Column pinning" href={hrefs.headless.examples.columnPinning} />
-			<GroupItem title="Column sizing" href={hrefs.headless.examples.columnSizing} />
-			<GroupItem
-				
-				title="Column visibility"
-				href={hrefs.headless.examples.columnVisibility}
-			/>
+
 			<GroupItem title="Editable data" href={hrefs.headless.examples.editableData} />
-			<GroupItem  title="Row expanding" href={hrefs.headless.examples.rowExpanding} />
-			<GroupItem disabled title="Fully controlled" href={hrefs.headless.examples.fullyControlled} />
 			<GroupItem title="Grouping" href={hrefs.headless.examples.grouping} />
 			<GroupItem title="Pagination" href={hrefs.headless.examples.pagination} />
-			<GroupItem
-				disabled
-				title="Pagination controlled"
-				href={hrefs.headless.examples.paginationControlled}
-			/>
-			<GroupItem title="Row selection" href={hrefs.headless.examples.rowSelection} />
 			<GroupItem title="Sorting" href={hrefs.headless.examples.sorting} />
-			<!-- <GroupItem title="Sub components" href={hrefs.headless.examples.subComponents} /> -->
-			<GroupItem  title="Virtualization" href={hrefs.headless.examples.virtualization} />
-			<GroupItem disabled title="Kitchen sink" href={hrefs.headless.examples.kitchenSink} />
+			<GroupItem title="Search" href={hrefs.headless.examples.search} />
+			<GroupItem title="Virtualization" href={hrefs.headless.examples.virtualization} />
+
+			<GroupItem title="Column ordering" href={hrefs.headless.examples.columnOrdering} />
+			<GroupItem title="Column pinning" href={hrefs.headless.examples.columnPinning} />
+			<GroupItem title="Column sizing" href={hrefs.headless.examples.columnSizing} />
+			<GroupItem title="Column visibility" href={hrefs.headless.examples.columnVisibility} />
+			<GroupItem title="Row expanding" href={hrefs.headless.examples.rowExpanding} />
+			<GroupItem title="Row selection" href={hrefs.headless.examples.rowSelection} />
+			<GroupItem title="Row pinning" href={hrefs.headless.examples.rowPinning} />
 		</Group>
 		<!-- <Group>
 			<GroupTitle title="Feature APIs" />

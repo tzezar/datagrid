@@ -275,5 +275,13 @@ export class HandlersManager {
             this.datagrid.features.columnVisibility.toggleColumnVisibility(columnId);
         }
     }
+    globalSearch = {
+        updateValue: (value: string) => {
+            this.datagrid.features.globalSearch.updateSearchValue(value)
+            this.datagrid.features.pagination.goToFirstPage();
+            this.datagrid.cache.invalidate('filteredData');
+            this.datagrid.processors.data.executeFullDataTransformation();
+        }
+    }
 
 }

@@ -10,10 +10,5 @@
 	placeholder="Search"
 	class='rounded-none border-0 outline-none ring-0 border-l border-t focus-visible:ring-0'
 	value={datagrid.features.globalSearch.value}
-	oninput={(e) => {
-		datagrid.features.globalSearch.value = e.currentTarget.value;
-		datagrid.features.pagination.goToFirstPage();
-		datagrid.cache.invalidate('filteredData');
-		datagrid.processors.data.executeFullDataTransformation();
-	}}
+	oninput={(e) => {datagrid.handlers.globalSearch.updateValue(e.currentTarget.value)}}
 />

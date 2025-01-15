@@ -41,6 +41,8 @@ export const hrefs = {
             subComponents: "/headless/examples/sub-components",
             virtualization: "/headless/examples/virtualization",
             rowSelection: "/headless/examples/row-selection",
+            rowPinning: "/headless/examples/row-pinning",
+            search: "/headless/examples/search",
             kitchenSink: "/headless/examples/kitchen-sink",
         }
     },
