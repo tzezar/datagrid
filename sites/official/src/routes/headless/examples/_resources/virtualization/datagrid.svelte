@@ -8,7 +8,7 @@
 	import { generateData } from '$lib/data-generators/generate-data';
 	import { VirtualList } from 'svelte-virtuallists';
 
-	import { HeaderBasicCell } from '$lib/datagrid/prebuilt/native/_components';
+	import { HeaderBasicCell } from '$lib/datagrid/prebuilt/native/components';
 
 	import {
 		RenderBasicHeaderCellContent,

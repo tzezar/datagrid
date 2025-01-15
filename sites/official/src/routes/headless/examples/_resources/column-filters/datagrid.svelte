@@ -7,7 +7,7 @@
 	import { generateUser } from '$lib/data-generators/generate/user';
 	import { generateData } from '$lib/data-generators/generate-data';
 
-	import { HeaderBasicCell } from '$lib/datagrid/prebuilt/native/_components';
+	import { HeaderBasicCell } from '$lib/datagrid/prebuilt/native/components';
 
 	import {
 		RenderBasicHeaderCellContent,

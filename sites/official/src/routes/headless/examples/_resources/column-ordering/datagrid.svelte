@@ -12,7 +12,7 @@
 		HeaderBasicCellContentWrapper,
 		HeaderCellWrapper,
 		HeaderGroupCell
-	} from '$lib/datagrid/prebuilt/native/_components';
+	} from '$lib/datagrid/prebuilt/native/components';
 	import {
 		RenderBasicHeaderCellContent,
 		RenderBasicRowCellContent
