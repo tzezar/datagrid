@@ -8,7 +8,7 @@
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Sort from '$lib/datagrid/icons/material-symbols/sort.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
-	import type { PinningPosition } from '$lib/datagrid/core/types';
+	import type { LeafColumn, PinningPosition } from '$lib/datagrid/core/types';
 	import StabilizationLock from '$lib/datagrid/icons/material-symbols/stabilization-lock.svelte';
 	import Width from '$lib/datagrid/icons/material-symbols/width.svelte';
 	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
@@ -316,7 +316,9 @@
 			<span>Visibility</span>
 		</DropdownMenu.SubTrigger>
 		<DropdownMenu.SubContent>
-			{#each sortableColumns as column}
+			{#each datagrid.columnManager
+				.getLeafColumnsInOrder()
+				.filter((col: LeafColumn<any>) => col.options.hideable !== false) as column (column.columnId)}
 				<DropdownMenu.Item
 					disabled={column.options.hideable === false}
 					class={`${column.state.visible === true ? 'text-primary' : 'text-muted-foreground'}`}
@@ -361,7 +363,7 @@
 				{@render resizing()}
 				{@render visibility()}
 				{@render exporting()}
-			
+
 				<DropdownMenu.Separator />
 				<DropdownMenu.Sub>
 					<DropdownMenu.SubTrigger>
@@ -385,7 +387,7 @@
 					{/if}
 				</DropdownMenu.Item>
 				<DropdownMenu.Separator />
-			<DropdownMenu.GroupHeading>Data grouping</DropdownMenu.GroupHeading>
+				<DropdownMenu.GroupHeading>Data grouping</DropdownMenu.GroupHeading>
 				{@render groupBy()}
 			</DropdownMenu.Group>
 			<!-- <DropdownMenu.Separator /> -->

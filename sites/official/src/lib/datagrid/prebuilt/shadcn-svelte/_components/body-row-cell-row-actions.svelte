@@ -13,13 +13,12 @@
 		column,
 		row
 	}: { datagrid: DataGrid<any>; column: LeafColumn<any>; row: GridBasicRow<any> } = $props();
-
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger class={cn(buttonVariants({ variant: 'ghost' }), 'size-4 p-2 ')}
-		><MoreVert /></DropdownMenu.Trigger
-	>
+	<DropdownMenu.Trigger class={cn(buttonVariants({ variant: 'ghost' }), 'size-4 p-2 ')}>
+		<MoreVert />
+	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-56">
 		<DropdownMenu.Group>
 			<DropdownMenu.Item onclick={() => datagrid.handlers.rowPinning.pinRowTop(row.identifier)}>
@@ -32,7 +31,10 @@
 				<span>Pin to bottom</span>
 				<DropdownMenu.Shortcut>⌘B</DropdownMenu.Shortcut>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item onclick={() => datagrid.handlers.rowPinning.unpinRow(row.identifier)} disabled={!datagrid.features.rowPinning.isPinned(row.identifier)}>
+			<DropdownMenu.Item
+				onclick={() => datagrid.handlers.rowPinning.unpinRow(row.identifier)}
+				disabled={!datagrid.features.rowPinning.isPinned(row.identifier)}
+			>
 				<span>Unpin row</span>
 				<DropdownMenu.Shortcut>⌘B</DropdownMenu.Shortcut>
 			</DropdownMenu.Item>
