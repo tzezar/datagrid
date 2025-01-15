@@ -4,10 +4,11 @@
 	let { datagrid }: { datagrid: DataGrid<any> } = $props();
 </script>
 
-<div class="flex flex-row justify-around">
-	<div>
-		Per page:
+<div class="flex flex-row items-center gap-4 border border-t-0 p-2">
+	<div class="flex flex-row items-center gap-2">
+		<span class="text-nowrap">Per page:</span>
 		<select
+			class="bg-background h-10 w-full max-w-[150px] border px-2 py-2"
 			value={datagrid.features.pagination.pageSize}
 			onchange={(e) => {
 				datagrid.refresh(() => {
@@ -30,7 +31,7 @@
 		>
 			Prev
 		</button>
-		<span>
+		<span class="border p-2">
 			Page {datagrid.features.pagination.page} of {datagrid.features.pagination.pageCount}
 		</span>
 		<button
@@ -49,3 +50,9 @@
 		).length} rows
 	</div>
 </div>
+
+<style>
+	.pagination-button {
+		@apply h-10 border p-1 px-3;
+	}
+</style>

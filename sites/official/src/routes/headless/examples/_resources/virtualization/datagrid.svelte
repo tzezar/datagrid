@@ -17,7 +17,7 @@
 
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
-	import SortingIndicator from '$lib/datagrid/prebuilt/shadcn-svelte/_components/sorting-indicator.svelte';
+	import SortingIndicator from '$lib/datagrid/prebuilt/native/blocks/sorting-indicator.svelte';
 
 	const data = generateData(generateUser, 100000);
 
