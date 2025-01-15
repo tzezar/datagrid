@@ -132,7 +132,7 @@
 			<GroupItem disabled title="Status indicator" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Sub components" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Text sizing" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Virtualization" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Virtualization" href={hrefs.shadcnSvelte.examples.virtualization} />
 		</Group>
 		<!-- 
 		<Group>
