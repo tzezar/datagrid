@@ -2,7 +2,7 @@
 	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import LayoutNavbarExpandFilled from '$lib/datagrid/icons/tabler/layout-navbar-expand-filled.svelte';
-	import BodyRowCellRowActions from '$lib/datagrid/prebuilt/shadcn-svelte/_components/body-row-cell-row-actions.svelte';
+	import BodyRowActionsCellDropdownMenuWithOptions from './body-row-actions-cell-dropdown-menu-with-options.svelte';
 
 	let {
 		row,
@@ -21,5 +21,5 @@
 			class={`${datagrid.features.rowExpanding.isRowExpanded(row.identifier) ? 'rotate-180' : ''} transition-all`}
 		/>
 	</button>
-	<BodyRowCellRowActions {row} {column} {datagrid} />
+	<BodyRowActionsCellDropdownMenuWithOptions {row} {column} {datagrid} />
 </div>
