@@ -27,9 +27,7 @@
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
 	import RenderGroupRowCellContent from '$lib/datagrid/prebuilt/core/render-group-row-cell-content.svelte';
 	import { cn } from '$lib/utils';
-	import GroupingControls from './grouping-controls.svelte';
-	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
-	import ColumnPinningControls from './column-pinning-controls.svelte';
+	import type { AccessorColumn, GroupColumn } from '$lib/datagrid/core/column-creation/types';
 
 	const data = generateData(generateUser, 100);
 
@@ -38,12 +36,19 @@
 		data: data
 	});
 
-	const columns = datagrid.columnManager.getLeafColumnsInOrder();
+
+	function updateCellValue(column: AccessorColumn<any>, row: GridBasicRow<any>, value: string) { 
+		const foundRow = datagrid.initial.data.find(r => r.id === row.original.id) as any
+		if (!foundRow) return;
+		foundRow[column.accessorKey] = value;
+		datagrid.processors.data.executeFullDataTransformation();
+	}
+
 </script>
 
 {#snippet GroupRowSnippet(row: GridGroupRow<any>, leafColumns: LeafColumn<any>[])}
 	<div class="grid-body-group-row" data-depth={row.depth} data-expanded={row.isExpanded()}>
-		{#each leafColumns as column, columnIndex (column.columnId)}
+		{#each leafColumns as column, columnIndex (column.columnId)}	
 			<BodyGroupRowCell {datagrid} {column} {row}>
 				<RenderGroupRowCellContent {datagrid} {column} {row}>
 					{#snippet header()}
@@ -99,8 +104,6 @@
 	</HeaderBasicCell>
 {/snippet}
 
-<ColumnPinningControls {datagrid} />
-
 <div class={cn('flex h-full flex-col')}>
 	<div class={cn('grid-wrapper')}>
 		<div class="grid-container">
@@ -127,7 +130,10 @@
 						<div class="grid-body-row">
 							{#each columns as column (column.columnId)}
 								<BodyBasicRowCell {datagrid} {column} {row}>
-									<RenderBasicRowCellContent {datagrid} {column} {row} />
+									{#if column.type === 'accessor'}
+										<input type="text" value={column.getValueFn(row.original)} onchange={(e)=> updateCellValue(column, row, e.currentTarget.value)} />
+									{/if}
+									<!-- <RenderBasicRowCellContent {datagrid} {column} {row} /> -->
 								</BodyBasicRowCell>
 							{/each}
 						</div>
@@ -147,4 +153,3 @@
 	<!-- <Pagination {datagrid} /> -->
 	<MadeWithLoveByTzezar />
 </div>
-
