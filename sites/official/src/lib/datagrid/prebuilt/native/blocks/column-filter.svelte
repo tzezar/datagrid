@@ -1,6 +1,6 @@
 <script lang="ts">
+	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import type { AnyColumn } from '$lib/datagrid/core/types';
-	import type { DataGrid } from '../../core/index.svelte';
 
 	type Props = {
 		datagrid: DataGrid<any>;
