@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '$lib/datagrid/prebuilt/shadcn/styles.css';
 	import { cn } from '$lib/utils';
-	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core/index.svelte';
+	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
 	import type { GridGroupRow, LeafColumn, GroupColumn } from '$lib/datagrid/core/types';
 
 	import { Portal } from 'bits-ui';
@@ -14,11 +14,11 @@
 
 	// Blocks
 	import HeaderCellDropdown from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-dropdown.svelte';
-	import Pagination from '$lib/tzezars-datagrid/prebuilt/shadcn-svelte/blocks/pagination.svelte';
 	import HeaderCellColumnFilter from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-column-filter.svelte';
 	import ColumnSortingIndicator from '$lib/datagrid/prebuilt/shadcn/blocks/column-sorting-indicator.svelte';
 	import Toolbar from '$lib/datagrid/prebuilt/shadcn/blocks/toolbar.svelte';
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
+	import Pagination from '$lib/datagrid/prebuilt/shadcn/blocks/pagination.svelte';
 
 	let { data } = $props();
 
@@ -32,27 +32,15 @@
 			? datagrid.columnManager.getColumnsInOrder()
 			: datagrid.columnManager.getLeafColumnsInOrder()
 	);
-
 </script>
 
 <Portal disabled={!datagrid.isFullscreenEnabled()}>
-	<div
-		class={cn(
-			'flex h-full flex-col',
-			datagrid.extra.features.fullscreen.isFullscreen &&
-				'bg-background/80 absolute inset-0 z-[20] p-4'
-		)}
-	>
+	<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-wrapper" >
 		<Toolbar {datagrid} />
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
 		</div> -->
-		<div
-			class={cn(
-				'grid-wrapper',
-				datagrid.isFullscreenEnabled() && 'h-full max-h-full overflow-auto'
-			)}
-		>
+		<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-container-wrapper">
 			<div class="grid-container">
 				<div class="grid-header">
 					<div class="grid-header-row">
@@ -69,7 +57,65 @@
 					{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
 						{@const columns = datagrid.columnManager.getLeafColumnsInOrder()}
 						{#if row.isGroupRow()}
-							{@render GroupRowSnippet(row, columns)}
+							<div
+								class="grid-body-group-row"
+								data-depth={row.depth}
+								data-expanded={row.isExpanded()}
+							>
+								{#each columns as column, columnIndex (column.columnId)}
+									{#if column.isVisible()}
+										<div
+											class={cn('grid-body-cell')}
+											class:justify-center={column?._meta?.align === 'center'}
+											data-pinned={column.state.pinning.position !== 'none'
+												? column.state.pinning.position
+												: null}
+											style:--width={column.state.size.width + 'px'}
+											style:--min-width={column.state.size.minWidth + 'px'}
+											style:--max-width={column.state.size.maxWidth + 'px'}
+											style:--pin-left-offset={column.state.pinning.offset + 'px'}
+											style:--pin-right-offset={column.state.pinning.offset + 'px'}
+										>
+											{#if column.columnId == row.groupKey}
+												<div class="flex flex-col place-items-start justify-start gap-1">
+													<span class="text-muted-foreground flex place-items-center text-xs">
+														({row.children.length} items)
+													</span>
+													<button
+														class="flex gap-1"
+														onclick={() => datagrid.rows.toggleGroupRowExpansion(row)}
+													>
+														<span class="border-primary/30 rounded-sm border-[1px]">
+															<ArrowRight
+																class={`${datagrid.rows.isGroupRowExpanded(row) && 'rotate-90'} transition-all `}
+															/>
+														</span>
+														<span class="">
+															{row.groupValue[0]}
+														</span>
+													</button>
+												</div>
+											{:else if row.aggregations.some((agg) => agg.columnId === column.columnId)}
+												<div class="">
+													<div class="text-muted-foreground text-xs">
+														{#each row.aggregations.filter((agg) => agg.columnId === column.columnId) as aggregation}
+															<p>
+																{aggregation.type}: {#if aggregation.type === 'percentChange'}
+																	{aggregation.value.toFixed(2)}%
+																{:else if typeof aggregation.value === 'number'}
+																	{aggregation.value.toLocaleString()}
+																{:else}
+																	{aggregation.value}
+																{/if}
+															</p>
+														{/each}
+													</div>
+												</div>
+											{/if}
+										</div>
+									{/if}
+								{/each}
+							</div>
 						{:else}
 							<div class="grid-body-row">
 								{#each columns as column (column.columnId)}
@@ -125,66 +171,9 @@
 	</div>
 </Portal>
 
-{#snippet GroupRowSnippet(row: GridGroupRow<any>, leafColumns: LeafColumn<any>[])}
-	<div class="grid-body-group-row" data-depth={row.depth} data-expanded={row.isExpanded()}>
-		{#each leafColumns as column, columnIndex (column.columnId)}
-			{#if column.isVisible()}
-				<div
-					class={cn('grid-body-cell')}
-					class:justify-center={column?._meta?.align === 'center'}
-					data-pinned={column.state.pinning.position !== 'none'
-						? column.state.pinning.position
-						: null}
-					style:--width={column.state.size.width + 'px'}
-					style:--min-width={column.state.size.minWidth + 'px'}
-					style:--max-width={column.state.size.maxWidth + 'px'}
-					style:--pin-left-offset={column.state.pinning.offset + 'px'}
-					style:--pin-right-offset={column.state.pinning.offset + 'px'}
-				>
-					{#if column.columnId == row.groupKey}
-						<div class="flex flex-col place-items-start justify-start gap-1">
-							<span class="text-muted-foreground flex place-items-center text-xs">
-								({row.children.length} items)
-							</span>
-							<button class="flex gap-1" onclick={() => datagrid.rows.toggleGroupRowExpansion(row)}>
-								<span class="border-primary/30 rounded-sm border-[1px]">
-									<ArrowRight
-										class={`${datagrid.rows.isGroupRowExpanded(row) && 'rotate-90'} transition-all `}
-									/>
-								</span>
-								<span class="">
-									{row.groupValue[0]}
-								</span>
-							</button>
-						</div>
-					{:else if row.aggregations.some((agg) => agg.columnId === column.columnId)}
-						<div class="">
-							<div class="text-muted-foreground text-xs">
-								{#each row.aggregations.filter((agg) => agg.columnId === column.columnId) as aggregation}
-									<p>
-										{aggregation.type}: {#if aggregation.type === 'percentChange'}
-											{aggregation.value.toFixed(2)}%
-										{:else if typeof aggregation.value === 'number'}
-											{aggregation.value.toLocaleString()}
-										{:else}
-											{aggregation.value}
-										{/if}
-									</p>
-								{/each}
-							</div>
-						</div>
-					{/if}
-				</div>
-			{/if}
-		{/each}
-	</div>
-{/snippet}
-
 {#snippet HeaderGroupCellSnippet(column: GroupColumn<any>)}
-	<div class={`grid-header-group text-xs font-medium `}>
-		<div
-			class="grid-header-group-header box-border flex h-full items-center justify-center gap-2 text-center"
-		>
+	<div class={`grid-header-group`}>
+		<div class="grid-header-group-header">
 			{column.header}
 			<HeaderCellDropdown {datagrid} {column} />
 		</div>
@@ -202,7 +191,7 @@
 
 {#snippet HeaderCellSnippet(column: LeafColumn<any>)}
 	<div
-		class={cn('grid-header-cell h-fit justify-end self-end border-t text-xs font-medium')}
+		class={cn('grid-header-cell')}
 		data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 		style:--pin-left-offset={column.state.pinning.offset + 'px'}
 		style:--pin-right-offset={column.state.pinning.offset + 'px'}
@@ -213,7 +202,7 @@
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div
-			class="grid-header-cell-content items-end {column.options.sortable ? 'sortable' : ''}"
+			class="grid-header-cell-content {column.options.sortable ? 'sortable' : ''}"
 			onclick={(e) => {
 				const multisort = e.shiftKey;
 				datagrid.handlers.sorting.toggleColumnSorting(column, multisort);

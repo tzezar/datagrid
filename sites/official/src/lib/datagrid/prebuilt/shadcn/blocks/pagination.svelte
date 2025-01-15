@@ -1,12 +1,11 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import ChevronLeftRounded from '$lib/datagrid/icons/material-symbols/chevron-left-rounded.svelte';
 	import ChevronRightRounded from '$lib/datagrid/icons/material-symbols/chevron-right-rounded.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
-	let { datagrid }: { datagrid: TzezarsDatagrid<any> } = $props();
+	let { datagrid }: { datagrid: TzezarsDatagrid } = $props();
 	let pageSizes = datagrid.features.pagination.pageSizes.map((pageSize: number) => {
 		return {
 			value: pageSize.toString(),
@@ -103,7 +102,10 @@
 				}
 				const newPage = Number(e.currentTarget.value);
 				datagrid.refresh(() => {
-					datagrid.features.pagination.page = Math.min(Math.max(newPage, 1), datagrid.features.pagination.pageCount);
+					datagrid.features.pagination.page = Math.min(
+						Math.max(newPage, 1),
+						datagrid.features.pagination.pageCount
+					);
 				});
 				e.currentTarget.value = datagrid.features.pagination.page.toString();
 			}}

@@ -1,12 +1,32 @@
 /* Grid */
 
 .grid-wrapper {
+	display: flex;
+	height: 100%;
+	flex-direction: column;
+}
+
+[data-fullscreen='true'].grid-wrapper {
+	background-color: hsl(var(--background) / 0.8);
+	position: absolute;
+	inset: 0;
+	padding: 1rem;
+	z-index: 20;
+}
+
+.grid-container-wrapper {
 	width: 100%;
 	overflow: auto;
 	display: inline-block;
 	max-height: 600px;
 	border: var(--grid-border-width) solid hsl(var(--grid-border));
 	background-color: hsl(var(--grid-background));
+}
+
+[data-fullscreen='true'] .grid-container-wrapper {
+	height: 100%;
+	max-height: 100%;
+	overflow: auto;
 }
 
 .grid-container {
@@ -45,6 +65,13 @@
 	max-width: var(--max-width);
 	background-color: hsl(var(--grid-header-cell));
 	border-right: var(--grid-border-width) solid hsl(var(--grid-border));
+	height: fit-content;
+	justify-content: flex-end;
+	align-self: flex-end;
+	border-top-width: 1px;
+	font-size: 0.75rem /* 12px */;
+	line-height: 1rem /* 16px */;
+	font-weight: 500;
 }
 
 .grid-header-cell-content {
@@ -53,6 +80,7 @@
 	flex-wrap: nowrap;
 	width: 100%;
 	justify-content: space-between;
+	align-items: flex-end;
 }
 
 .grid-header-cell-content-header {
@@ -66,6 +94,9 @@
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	font-size: 0.75rem /* 12px */;
+	line-height: 1rem /* 16px */;
+	font-weight: 500;
 }
 
 .grid-header-group-header {
@@ -147,8 +178,6 @@
     background-color: hsl(var(--grid-body-row-even)); 
 } */
 
-
-
 .grid-body-group-row {
 	display: flex;
 	flex-direction: row;
@@ -159,32 +188,31 @@
 /* Pinned columns base positioning */
 [data-pinned='right'],
 [data-pinned='left'] {
-    position: sticky;
-    z-index: 2;
-    background-clip: padding-box;
+	position: sticky;
+	z-index: 2;
+	background-clip: padding-box;
 }
 
 /* Pinned positions */
 [data-pinned='right'] {
-    right: var(--pin-right-offset, 0);
+	right: var(--pin-right-offset, 0);
 }
 
 [data-pinned='left'] {
-    left: var(--pin-left-offset, 0);
+	left: var(--pin-left-offset, 0);
 }
 
 /* Pinned header cells */
 [data-pinned='right'] .grid-header-cell,
 [data-pinned='left'] .grid-header-cell {
-    background-color: hsl(var(--grid-pinned-header-cell));
+	background-color: hsl(var(--grid-pinned-header-cell));
 }
 
 /* Pinned body cells */
 div[data-pinned='right'].grid-body-cell,
 div[data-pinned='left'].grid-body-cell {
-    background-color: hsl(var(--grid-pinned-cell));
+	background-color: hsl(var(--grid-pinned-cell));
 }
-
 
 /* Sorting indicator */
 .sortable {

@@ -6,7 +6,6 @@ import { ColumnSizingFeature } from "./column-sizing.svelte";
 import { ColumnVisibilityFeature } from "./column-visibility.svelte";
 import { ColumnFacetingFeature } from "./column-faceting.svelte";
 import { SortingFeature } from "./sorting.svelte";
-import { FullscreenFeature } from "../../prebuilt/shadcn-svelte/core/features/fullscreen.svelte";
 import { GlobalSearchFeature } from "./global-search.svelte";
 import { GroupingFeature } from "./grouping.svelte";
 import { PaginationFeature } from "./pagination.svelte";
@@ -23,7 +22,6 @@ export {
     ColumnVisibilityFeature,
     ColumnFacetingFeature,
     SortingFeature,
-    FullscreenFeature,
     GlobalSearchFeature,
     GroupingFeature,
     PaginationFeature,
