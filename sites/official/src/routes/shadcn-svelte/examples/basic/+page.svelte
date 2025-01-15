@@ -32,6 +32,10 @@
 			? datagrid.columnManager.getColumnsInOrder()
 			: datagrid.columnManager.getLeafColumnsInOrder()
 	);
+
+	// Crazy boost in performance
+	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder())
+
 </script>
 
 <Portal disabled={!datagrid.isFullscreenEnabled()}>
@@ -55,14 +59,13 @@
 				</div>
 				<div class="grid-body">
 					{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
-						{@const columns = datagrid.columnManager.getLeafColumnsInOrder()}
 						{#if row.isGroupRow()}
 							<div
 								class="grid-body-group-row"
 								data-depth={row.depth}
 								data-expanded={row.isExpanded()}
 							>
-								{#each columns as column, columnIndex (column.columnId)}
+								{#each leafColumns as column, columnIndex (column.columnId)}
 									{#if column.isVisible()}
 										<div
 											class={cn('grid-body-cell')}
@@ -118,7 +121,7 @@
 							</div>
 						{:else}
 							<div class="grid-body-row">
-								{#each columns as column (column.columnId)}
+								{#each leafColumns as column (column.columnId)}
 									{#if column.isVisible()}
 										<div
 											class={cn(

@@ -47,7 +47,10 @@ export class ColumnManager<TOriginalRow> {
     }
 
     getLeafColumnsInOrder(): LeafColumn<TOriginalRow>[] {
-        return flattenColumnStructureAndClearGroups(this.getColumnsInOrder()).filter(col => col.type !== 'group')
+        // let timeStart = performance.now();
+        const cols = flattenColumnStructureAndClearGroups(this.getColumnsInOrder()).filter(col => col.type !== 'group')
+        // console.log(`getLeafColumnsInOrder took ${performance.now() - timeStart}ms`)
+        return cols
     }
 
     getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
