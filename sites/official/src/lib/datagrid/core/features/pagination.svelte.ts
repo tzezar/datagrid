@@ -24,7 +24,7 @@ export class PaginationFeature<TOriginalRow> {
     pageSize = $state(10);
 
     // Available page size options (e.g., [10, 20, 50, 100])
-    pageSizes = $state([10, 20, 50, 100, 1000000]);
+    pageSizes = $state([10, 20, 50, 100, 100000]);
 
     // Total number of pages in the current data set
     pageCount: number = $state(0);

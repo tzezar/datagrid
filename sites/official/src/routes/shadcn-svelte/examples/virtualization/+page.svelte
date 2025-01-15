@@ -42,13 +42,14 @@
 <Portal disabled={!datagrid.isFullscreenEnabled()}>
 	<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-wrapper">
 		<Toolbar {datagrid} />
-		<!-- <div class="grid-toolbar-container">
-			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
-		</div> -->
+
 		<!-- <div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-container-wrapper"> -->
-		<div data-fullscreen={datagrid.isFullscreenEnabled()} class="">
+		<div
+			data-fullscreen={datagrid.isFullscreenEnabled()}
+			class={cn('inline-block w-full', datagrid.isFullscreenEnabled() && '')}
+		>
 			<!-- <div class="grid-container"> -->
-			<VirtualList items={datagrid.rows.getVisibleRows()} style="height:600px">
+			<VirtualList items={datagrid.rows.getVisibleRows()} style="height: 600px">
 				{#snippet header()}
 					<div class="grid-header">
 						<div class="grid-header-row">
@@ -62,8 +63,7 @@
 						</div>
 					</div>
 				{/snippet}
-				{#snippet vl_slot({ item, index }: { item: GridRow<any>; index: number })}
-					{@const row = item}
+				{#snippet vl_slot({ item: row, index }: { item: GridRow<any>; index: number })}
 					{#if row.isGroupRow()}
 						<div
 							class="grid-body-group-row"
