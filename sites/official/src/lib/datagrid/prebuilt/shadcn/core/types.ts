@@ -1,4 +1,4 @@
-export type ColumnMeta = {
+export type ShadcnColumnMeta = {
     align?: 'start' | 'center' | 'end';
     // filterType?: 'text' | 'number' | 'select' | 'date' | 'dateRange' | 'range';
     filterType?: 'text' | 'number' | 'select'

@@ -1,9 +1,11 @@
+import { generateData } from "$lib/data-generators/generate-data";
+import { generateUser } from "$lib/data-generators/generate/user";
+
 export const ssr = false;
 
 
-import { generateUsers } from "./generate-users";
 
 export const load = async () => {
-    const users = generateUsers(100000);
+    const users = generateData(generateUser, 100);
     return { users };
   };

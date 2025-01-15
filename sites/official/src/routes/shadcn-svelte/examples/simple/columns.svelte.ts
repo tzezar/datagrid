@@ -1,11 +1,11 @@
 
 import { type AnyColumn } from "$lib/datagrid/core/types";
-import type { User } from "./generate-users";
 import { displayColumn, accessorColumn, columnGroup, computedColumn } from "$lib/datagrid/core/column-creation";
-import type { ColumnMeta } from "$lib/datagrid/prebuilt/shadcn-svelte/types";
 import RowSelectionColumnHeaderCell from "$lib/datagrid/prebuilt/shadcn/components/row-selection-column-header-cell.svelte";
 import RowSelectionBodyRowCell from "$lib/datagrid/prebuilt/shadcn/components/row-selection-body-row-cell.svelte";
 import BodyRowActionsCell from "$lib/datagrid/prebuilt/shadcn/components/body-row-actions-cell.svelte";
+import type { User } from "$lib/data-generators/generate/user";
+import type { ShadcnColumnMeta } from "$lib/datagrid/prebuilt/shadcn/core/types";
 
 
 // const exampleFn = (value) => {
@@ -36,7 +36,7 @@ export const userColumns = [
         _meta: {
             align: 'center',
             showColumnManagerDropdownMenu: false
-        } as ColumnMeta
+        } as ShadcnColumnMeta
 
     }),
     displayColumn({
@@ -59,7 +59,7 @@ export const userColumns = [
         _meta: {
             showColumnManagerDropdownMenu: false,
             align: 'center'
-        } as ColumnMeta
+        } as ShadcnColumnMeta
     }),
 
     // displayColumn({
@@ -83,7 +83,7 @@ export const userColumns = [
         aggregate: 'count',
         _meta: {
             filterType: 'number',
-        } as ColumnMeta
+        } as ShadcnColumnMeta
     }),
     columnGroup({
         header: 'Person',
