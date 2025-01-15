@@ -37,8 +37,6 @@
 
 	// Crazy boost in performance
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
-
-	console.log(datagrid.rows.getVisibleRows())
 </script>
 
 
