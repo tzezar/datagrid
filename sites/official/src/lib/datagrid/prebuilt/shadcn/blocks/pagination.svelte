@@ -20,12 +20,7 @@
 		class="size-6"
 		size="sm"
 		disabled={datagrid.features.pagination.canGoToPrevPage()}
-		onclick={() =>
-			datagrid.refresh(() => datagrid.features.pagination.goToPrevPage(), {
-				recalculateAll: false,
-				recalculateGroups: false,
-				recalculatePagination: true
-			})}
+		onclick={() => datagrid.handlers.pagination.goToPrevPage()}
 	>
 		<ChevronLeftRounded />
 	</Button>
@@ -37,12 +32,7 @@
 		class="size-6"
 		size="sm"
 		disabled={datagrid.features.pagination.canGoToNextPage()}
-		onclick={() =>
-			datagrid.refresh(() => datagrid.features.pagination.goToNextPage(), {
-				recalculateAll: false,
-				recalculateGroups: false,
-				recalculatePagination: true
-			})}
+		onclick={() => datagrid.handlers.pagination.goToNextPage()}
 	>
 		<ChevronRightRounded />
 	</Button>
@@ -54,11 +44,7 @@
 		name="perPage"
 		allowDeselect={false}
 		value={String(datagrid.features.pagination.pageSize)}
-		onValueChange={(value: string) => {
-			datagrid.refresh(() => datagrid.features.pagination.setPageSize(Number(value)), {
-				recalculatePagination: true
-			});
-		}}
+		onValueChange={(value: string) => datagrid.handlers.pagination.changePageSize(Number(value))}
 	>
 		<Select.Trigger class="h-6 w-max max-w-[180px] p-2 text-xs">
 			<span class="pr-2">{datagrid.features.pagination.pageSize} per page</span>
@@ -101,12 +87,7 @@
 					return;
 				}
 				const newPage = Number(e.currentTarget.value);
-				datagrid.refresh(() => {
-					datagrid.features.pagination.page = Math.min(
-						Math.max(newPage, 1),
-						datagrid.features.pagination.pageCount
-					);
-				});
+				datagrid.handlers.pagination.goToPage(newPage);
 				e.currentTarget.value = datagrid.features.pagination.page.toString();
 			}}
 		/>

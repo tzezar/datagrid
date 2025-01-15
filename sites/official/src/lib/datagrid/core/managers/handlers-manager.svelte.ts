@@ -303,6 +303,14 @@ export class HandlersManager {
             this.datagrid.refresh(() => this.datagrid.features.pagination.setPageSize(newPageSize), {
                 recalculatePagination: true
             });
+        },
+        goToPage: (newPage: number) => {
+            this.datagrid.refresh(() => {
+                this.datagrid.features.pagination.page = Math.min(
+                    Math.max(newPage, 1),
+                    this.datagrid.features.pagination.pageCount
+                );
+            });
         }
 
     }
