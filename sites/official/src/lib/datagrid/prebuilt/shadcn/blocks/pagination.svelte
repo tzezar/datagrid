@@ -3,10 +3,10 @@
 	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import ChevronLeftRounded from '$lib/datagrid/icons/material-symbols/chevron-left-rounded.svelte';
 	import ChevronRightRounded from '$lib/datagrid/icons/material-symbols/chevron-right-rounded.svelte';
-	let { datagrid }: { datagrid: DataGrid<any> } = $props();
 	import * as Select from '$lib/components/ui/select/index.js';
 	import Input from '$lib/components/ui/input/input.svelte';
-
+	import type { TzezarsDatagrid } from '../core/index.svelte';
+	let { datagrid }: { datagrid: TzezarsDatagrid<any> } = $props();
 	let pageSizes = datagrid.features.pagination.pageSizes.map((pageSize: number) => {
 		return {
 			value: pageSize.toString(),

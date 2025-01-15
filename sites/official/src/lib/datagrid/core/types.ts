@@ -1,17 +1,5 @@
 import type { Component } from "svelte";
-import type {
-    AccessorColumn,
-    AnyColumn,
-    ComputedColumn,
-    DisplayColumn,
-} from "./column-creation/types";
 import type { DataGrid } from "./index.svelte";
-
-type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
-export type DotNestedKeys<T> = (T extends object ? {
-  [K in Exclude<keyof T, symbol>]: `${K}${DotPrefix<DotNestedKeys<T[K]>>}`;
-}[Exclude<keyof T, symbol>] : "") extends infer D ? Extract<D, string> : never;
-// Specific interfaces for different column types
 
 // Specific interfaces for different column types
 
@@ -260,3 +248,146 @@ export const stringFilterOperators: FilterOperator[] = [
     "empty",
     "notEmpty",
 ];
+
+
+
+// Columns
+type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
+export type DotNestedKeys<T> = (T extends object ? {
+  [K in Exclude<keyof T, symbol>]: `${K}${DotPrefix<DotNestedKeys<T[K]>>}`;
+}[Exclude<keyof T, symbol>] : "") extends infer D ? Extract<D, string> : never;
+// Specific interfaces for different column types
+
+export interface AccessorColumn<TOriginalRow, TMeta = any> {
+  type: 'accessor';
+  header: string;
+  // columnId: DotNestedKeys<TOriginalRow>;
+  columnId: ColumnId;
+  parentColumnId: string | null;
+  accessorKey: DotNestedKeys<TOriginalRow>;
+  getValueFn: GetValueFn<TOriginalRow>;
+  formatter?: FormatterFn<TOriginalRow>;
+  aggregate?: AggregationConfig;
+  getGroupValueFn?: GetGroupValue<TOriginalRow>;
+  cell?: CustomCell<TOriginalRow>;
+  headerCell?: HeaderCell;
+  groupRowCell?: CustomCell<TOriginalRow>;
+  options: {
+    searchable: boolean;
+    groupable: boolean;
+    sortable: boolean;
+    filterable: boolean;
+    pinnable: boolean;
+    moveable: boolean;
+    hideable: boolean;
+  };
+  state: {
+    size: ColumnSizeState
+    visible: boolean;
+    pinning: ColumnPinningState
+  };
+  _meta: TMeta
+  isVisible(): boolean;
+  isSortable(): boolean;
+  isFilterable(): boolean
+}
+
+export interface ComputedColumn<TOriginalRow, TMeta = any> {
+  type: 'computed';
+  header: string;
+  columnId: ColumnId
+  parentColumnId: ColumnId | null;
+  // accessorFn: AccessorFn<TOriginalRow>;
+  getValueFn: GetValueFn<TOriginalRow>;
+  getGroupValueFn?: GetGroupValue<TOriginalRow>;
+  cell?: CustomCell<TOriginalRow>;
+  groupRowCell?: CustomCell<TOriginalRow>;
+  headerCell?: HeaderCell;
+  formatter?: FormatterFn<TOriginalRow>;
+  aggregate?: AggregationConfig;
+
+  options: {
+    searchable: boolean;
+    groupable: boolean;
+    sortable: boolean;
+    filterable: boolean;
+    pinnable: boolean;
+    moveable: boolean;
+    hideable: boolean;
+  };
+  state: {
+    size: ColumnSizeState
+    visible: boolean;
+    pinning: ColumnPinningState
+  };
+  _meta: TMeta;
+  isVisible(): boolean;
+  isSortable(): boolean;
+  isFilterable(): boolean
+}
+
+export interface DisplayColumn<TOriginalRow, TMeta = any> {
+  type: 'display';
+  header: string;
+  columnId: ColumnId
+  parentColumnId: string | null;
+  cell: CustomCell<TOriginalRow>;
+  headerCell?: HeaderCell;
+  groupRowCell?: CustomCell<TOriginalRow>;
+  options: {
+    searchable: null;
+    groupable: null;
+    sortable: null;
+    filterable: null;
+    pinnable: boolean;
+    moveable: boolean;
+    hideable: boolean;
+
+  };
+  state: {
+    size: ColumnSizeState
+    visible: boolean;
+    pinning: ColumnPinningState
+
+  };
+  _meta: TMeta;
+  isVisible(): boolean;
+  isSortable(): boolean;
+  isFilterable(): boolean
+}
+
+export interface GroupColumn<TOriginalRow, TMeta = any> {
+  type: 'group';
+  header: string;
+  headerCell?: HeaderCell;
+  columnId: ColumnId
+  parentColumnId: string | null;
+  columns: AnyColumn<TOriginalRow>[];
+  options: {
+    searchable: null;
+    groupable: null;
+    sortable: null;
+    filterable: null;
+    pinnable: null;
+    moveable: boolean;
+  };
+  state: {
+    size: ColumnSizeState
+    visible: null;
+    pinning: ColumnPinningState;
+  };
+  _meta: TMeta;
+  isVisible(): boolean;
+  isSortable(): boolean;
+  isFilterable(): boolean;
+}
+// Union type for all column types
+
+export type AnyColumn<TOriginalRow> =
+  AccessorColumn<TOriginalRow> |
+  ComputedColumn<TOriginalRow> |
+  DisplayColumn<TOriginalRow> |
+  GroupColumn<TOriginalRow>;
+
+
+export type ParentColumnId = string | null;

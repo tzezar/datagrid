@@ -1,10 +1,7 @@
 <script lang="ts">
 	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
-	import { columnsWithGetters } from '$lib/datagrid/core/constants';
-	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import { flattenColumnStructurePreservingGroups } from '$lib/datagrid/core/utils.svelte';
-	import type { AnyColumn } from '$lib/datagrid/core/column-creation/types';
+	import type { AnyColumn } from '$lib/datagrid/core/types';
 	import type { PinningPosition } from '$lib/datagrid/core/types';
     
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {

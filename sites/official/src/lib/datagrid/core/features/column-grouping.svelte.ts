@@ -1,5 +1,5 @@
 
-import { type GroupColumn } from "../column-creation/types";
+import { type GroupColumn } from "../types";
 import type { DataGrid } from "../index.svelte";
 import { findColumnById, flattenColumnStructurePreservingGroups } from "../utils.svelte";
 

@@ -1,4 +1,4 @@
-import type { AnyColumn, GroupColumn } from "./types";
+import type { AnyColumn, GroupColumn } from "../types";
 
 export const isColumnVisible = (column: AnyColumn<any>): boolean => {
     return column.state.visible === true;

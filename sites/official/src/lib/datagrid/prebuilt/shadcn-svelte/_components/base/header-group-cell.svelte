@@ -1,8 +1,6 @@
 <script lang="ts">
-	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
+	import type { GroupColumn } from '$lib/datagrid/core/types';
 	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
-	import type { LeafColumn } from '$lib/datagrid/core/types';
-	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 
 	type Props = {

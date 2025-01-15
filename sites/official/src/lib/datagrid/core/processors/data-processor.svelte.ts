@@ -4,7 +4,7 @@ import type { DataGrid } from "../index.svelte";
 import type { Aggregation, AggregationFn, GridGroupRow, GridRow } from "../types";
 import { findColumnById, flattenColumnStructureAndClearGroups} from "../utils.svelte";
 import type { PerformanceMetrics } from "../helpers/performance-metrics.svelte";
-import type { AccessorColumn, ComputedColumn } from "../column-creation/types";
+import type { AccessorColumn, ComputedColumn } from "../types";
 import { aggregationFunctions } from "../helpers/aggregation-functions";
 
 export class DataProcessor<TRow> {

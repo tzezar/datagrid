@@ -1,5 +1,5 @@
 
-import { type AnyColumn } from "$lib/datagrid/core/column-creation/types";
+import { type AnyColumn } from "$lib/datagrid/core/types";
 import type { User } from "./generate-users";
 
 

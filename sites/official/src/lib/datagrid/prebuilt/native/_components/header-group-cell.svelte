@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
+	import type { GroupColumn } from '$lib/datagrid/core/types';
 	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import type { Snippet } from 'svelte';
 

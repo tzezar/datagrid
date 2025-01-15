@@ -27,7 +27,7 @@
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
 	import RenderGroupRowCellContent from '$lib/datagrid/prebuilt/core/render-group-row-cell-content.svelte';
 	import { cn } from '$lib/utils';
-	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
+	import type { GroupColumn } from '$lib/datagrid/core/types';
 	import ColumnPinningControls from './column-pinning-controls.svelte';
 
 	const data = generateData(generateUser, 100);

@@ -1,26 +1,7 @@
 <script lang="ts">
 	import '$lib/datagrid/styles.css';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core/index.svelte';
-	import GridHeader from './_components/grid-header.svelte';
-	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
-	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
-
-	import GroupRowCellContent from '$lib/datagrid/prebuilt/core/render-group-row-cell-content.svelte';
-	import BasicRowCellContent from '$lib/datagrid/prebuilt/core/render-basic-row-cell-content.svelte';
-	import BodyRowGroupCellHeader from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/body-row-group-cell-header.svelte';
-	import BodyRowGroupCellAggregations from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/body-row-group-cell-aggregations.svelte';
-	import BodyBasicRowCell from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/body-basic-row-cell.svelte';
-	import BodyGroupRowCell from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/body-group-row-cell.svelte';
-	import HeaderCellDropdown from '$lib/datagrid/prebuilt/shadcn-svelte/_components/header-cell-dropdown.svelte';
-	import HeaderGroupCell from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-group-cell.svelte';
-	import BasicHeaderCellContent from '$lib/datagrid/prebuilt/core/render-basic-header-cell-content.svelte';
-	import HeaderColumnActions from '$lib/datagrid/prebuilt/shadcn-svelte/_components/header-column-actions.svelte';
-	import HeaderColumnFilters from '$lib/datagrid/prebuilt/shadcn-svelte/_components/header-column-filters.svelte';
-	import HeaderBasicCell from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-basic-cell.svelte';
-	import HeaderBasicCellContentWrapper from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-basic-cell-content-wrapper.svelte';
-	import HeaderCellWrapper from '$lib/datagrid/prebuilt/shadcn-svelte/_components/base/header-cell-wrapper.svelte';
-	// import { userColumns as simplifiedColumns } from './simplefied-columns.svelte';
-	import Pagination from '$lib/datagrid/prebuilt/shadcn-svelte/_components/pagination.svelte';
+	import type { GridGroupRow, LeafColumn, GroupColumn } from '$lib/datagrid/core/types';
 	import { cn } from '$lib/utils';
 	let { data } = $props();
 
@@ -37,10 +18,18 @@
 
 	import { Portal } from 'bits-ui';
 	import { userColumns } from './columns.svelte';
-	import SortingIndicator from '$lib/datagrid/prebuilt/shadcn-svelte/_components/sorting-indicator.svelte';
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
+
+	// Icones
 	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
+
+	// Blocks
+	import HeaderCellDropdown from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-dropdown.svelte';
+	import Pagination from '$lib/tzezars-datagrid/prebuilt/shadcn-svelte/blocks/pagination.svelte';
+	import HeaderCellColumnFilter from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-column-filter.svelte';
+	import ColumnSortingIndicator from '$lib/datagrid/prebuilt/shadcn/blocks/column-sorting-indicator.svelte';
+	import Toolbar from '$lib/datagrid/prebuilt/shadcn/blocks/toolbar.svelte';
 </script>
 
 {#snippet GroupRowSnippet(row: GridGroupRow<any>, leafColumns: LeafColumn<any>[])}
@@ -150,14 +139,18 @@
 
 			<div class="flex gap-1">
 				{#if column.isSortable()}
-					<SortingIndicator {datagrid} {column} />
+					<ColumnSortingIndicator {datagrid} {column} />
 				{/if}
 				{#if column._meta.showColumnManagerDropdownMenu === true}
 					<HeaderCellDropdown {datagrid} {column} />
 				{/if}
 			</div>
 		</div>
-		<HeaderColumnFilters {datagrid} {column} />
+		{#if datagrid.extra.features.columnFiltering.isEnabled()}
+			<div class="h-9 w-full pt-1">
+				<HeaderCellColumnFilter {datagrid} {column} />
+			</div>
+		{/if}
 	</div>
 {/snippet}
 
@@ -169,7 +162,7 @@
 				'bg-background/80 absolute inset-0 z-[20] p-4'
 		)}
 	>
-		<GridHeader {datagrid} />
+		<Toolbar {datagrid} />
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
 		</div> -->

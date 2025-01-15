@@ -1,5 +1,5 @@
 import { createColumnGroup } from "../column-creation/group-column-creator";
-import type { AnyColumn, GroupColumn } from "../column-creation/types";
+import type { AnyColumn, GroupColumn } from "../types";
 import type { DataGrid } from "../index.svelte";
 import type { ColumnId, FilterableColumn, FilterOperator, GridBasicRow, GridGroupRow, GridRowIdentifier, LeafColumn, PinningPosition } from "../types";
 import { findColumnById, flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups, generateRandomColumnId } from "../utils.svelte";

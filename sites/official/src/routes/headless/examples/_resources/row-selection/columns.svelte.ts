@@ -1,6 +1,6 @@
 import type { User } from "$lib/data-generators/generate/user";
 import { accessorColumn, displayColumn } from "$lib/datagrid/core/column-creation";
-import type { AnyColumn } from "$lib/datagrid/core/column-creation/types";
+import type { AnyColumn } from "$lib/datagrid/core/types";
 import CellSelectRow from "./cell-select-row.svelte";
 
 

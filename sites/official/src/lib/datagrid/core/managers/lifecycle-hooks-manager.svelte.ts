@@ -1,4 +1,4 @@
-import type { AnyColumn } from "../column-creation/types";
+import type { AnyColumn } from "../types";
 
 export type HookFunction<T = any> = (...args: any[]) => T;
 

@@ -1,4 +1,4 @@
-import type { AnyColumn } from "$lib/datagrid/core/column-creation/types";
+import type { AnyColumn } from "$lib/datagrid/core/types";
 import { DataGrid, type GridConfig } from "$lib/datagrid/core/index.svelte";
 import { LifecycleHooks } from "$lib/datagrid/core/managers/lifecycle-hooks-manager.svelte";
 import { ColumnProcessor } from "$lib/datagrid/core/processors";

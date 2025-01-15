@@ -1,4 +1,4 @@
-import { type AnyColumn, type GroupColumn } from "../column-creation/types";
+import { type AnyColumn, type GroupColumn } from "../types";
 import type { DataGrid } from "../index.svelte";
 import type { ColumnId, LeafColumn } from "../types";
 import { flattenColumnStructurePreservingGroups, findColumnById } from "../utils.svelte";

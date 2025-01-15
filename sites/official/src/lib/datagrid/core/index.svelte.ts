@@ -1,4 +1,4 @@
-import type { AnyColumn } from "./column-creation/types";
+import type { AnyColumn } from "./types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { ColumnFacetingFeature, ColumnFilteringFeature, ColumnGroupingFeature, ColumnOrderingFeature, ColumnPinningFeature, ColumnSizingFeature, ColumnVisibilityFeature, GlobalSearchFeature, GroupingFeature, PaginationFeature, RowExpandingFeature, RowPinningFeature, RowSelectionFeature, SortingFeature } from "./features";
 import { DataProcessor, ColumnProcessor } from "./processors";

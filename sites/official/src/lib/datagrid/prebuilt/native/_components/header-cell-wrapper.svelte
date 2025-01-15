@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/column-creation/types';
+	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/types';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 	import type { Snippet } from 'svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';

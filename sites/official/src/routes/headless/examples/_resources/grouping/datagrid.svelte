@@ -28,7 +28,7 @@
 	import RenderGroupRowCellContent from '$lib/datagrid/prebuilt/core/render-group-row-cell-content.svelte';
 	import { cn } from '$lib/utils';
 	import GroupingControls from './grouping-controls.svelte';
-	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
+	import type { GroupColumn } from '$lib/datagrid/core/types';
 
 	const data = generateData(generateUser, 100);
 

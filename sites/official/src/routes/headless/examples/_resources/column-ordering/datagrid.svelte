@@ -19,7 +19,7 @@
 	} from '$lib/datagrid/prebuilt/core';
 
 	import type { LeafColumn } from '$lib/datagrid/core/types';
-	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
+	import type { GroupColumn } from '$lib/datagrid/core/types';
 	import ColumnOrderingControls from './column-ordering-controls.svelte';
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
 

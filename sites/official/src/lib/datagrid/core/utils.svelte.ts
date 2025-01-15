@@ -1,4 +1,4 @@
-import type {  AnyColumn, GroupColumn } from "./column-creation/types";
+import type {  AnyColumn, GroupColumn } from "./types";
 import type { CellValue, ColumnId, CustomCellComponentWithProps, SortableColumn } from "./types";
 import type { DataGrid } from "./index.svelte";
 

@@ -1,7 +1,6 @@
 <script lang="ts">
-	import type { AnyColumn } from '$lib/datagrid/core/column-creation/types';
+	import type { AnyColumn } from '$lib/datagrid/core/types';
 	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
-	import type { FilterOperator } from '$lib/datagrid/core/types';
 
 	type Props = {
 		datagrid: DataGrid<any>;

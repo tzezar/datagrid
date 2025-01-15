@@ -9,7 +9,7 @@
 	import HeaderCellWrapper from '../_components/base/header-cell-wrapper.svelte';
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
 	import HeaderGroupCell from '../_components/base/header-group-cell.svelte';
-	import type { GroupColumn } from '$lib/datagrid/core/column-creation/types';
+	import type { GroupColumn } from '$lib/datagrid/core/types';
 	import HeaderCellDropdown from '../_components/header-cell-dropdown.svelte';
 	import HeaderBasicCell from '../_components/base/header-basic-cell.svelte';
 	import HeaderBasicCellContentWrapper from '../_components/base/header-basic-cell-content-wrapper.svelte';

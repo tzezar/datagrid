@@ -1,4 +1,4 @@
-import type { AnyColumn } from "../column-creation/types";
+import type { AnyColumn } from "../types";
 import type { DataGrid } from "../index.svelte";
 import type { ColumnId, PinningPosition } from "../types";
 

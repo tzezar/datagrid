@@ -1,6 +1,6 @@
 import ActionsCell from "./_components/cells/cell-actions.svelte";
 
-import { type AnyColumn } from "$lib/datagrid/core/column-creation/types";
+import { type AnyColumn } from "$lib/datagrid/core/types";
 import SelectRowCell from "./_components/cells/cell-select-row.svelte";
 import type { User } from "./generate-users";
 import RowSelectionHeader from "./_components/headers/row-selection-header.svelte";

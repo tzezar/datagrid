@@ -1,4 +1,4 @@
-import type { AccessorColumn, AnyColumn, ComputedColumn } from "../column-creation/types";
+import type { AccessorColumn, AnyColumn, ComputedColumn } from "../types";
 import type { DataGrid } from "../index.svelte";
 import type { ColumnId } from "../types";
 

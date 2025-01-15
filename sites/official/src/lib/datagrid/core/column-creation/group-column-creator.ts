@@ -1,6 +1,7 @@
 import { DEFAULT_COLUMN_SIZE } from "../defaults";
 import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
-import type { CreateGroupColumnProps, GroupColumn } from "./types";
+import type { GroupColumn } from "../types";
+import type { CreateGroupColumnProps } from "./types";
 
 const createGroupColumnColumnId = ({ columnId, header }: { columnId?: string, header?: string }): string => {
   if (columnId) return columnId;
@@ -15,7 +16,7 @@ export function createColumnGroup<TOriginalRow>(
 
 
   const computedColumnId = createGroupColumnColumnId({ header, columnId });
- 
+
   return {
     type: 'group',
     columnId: computedColumnId,
@@ -32,7 +33,7 @@ export function createColumnGroup<TOriginalRow>(
       moveable: true,
     },
     state: {
-      size:  DEFAULT_COLUMN_SIZE,
+      size: DEFAULT_COLUMN_SIZE,
       visible: null,
       pinning: {
         position: 'none',
