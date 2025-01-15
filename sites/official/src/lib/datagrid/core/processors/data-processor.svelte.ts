@@ -113,7 +113,6 @@ export class DataProcessor<TRow> {
             })
             .filter(Boolean);
 
-        console.log(sortInstructions)
         return sort(data).by(sortInstructions as any);
     }
 

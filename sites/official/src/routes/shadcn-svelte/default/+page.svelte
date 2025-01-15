@@ -35,34 +35,71 @@
 			: datagrid.columnManager.getLeafColumnsInOrder()
 	);
 
-	$effect(() => {
-		console.log($state.snapshot(datagrid.rows.getVisibleRows()))
-	})
-
 	import { Portal } from 'bits-ui';
 	import { userColumns } from './columns.svelte';
-
+	import SortingIndicator from '$lib/datagrid/prebuilt/shadcn-svelte/_components/sorting-indicator.svelte';
+	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
+	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
+	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
 </script>
 
 {#snippet GroupRowSnippet(row: GridGroupRow<any>, leafColumns: LeafColumn<any>[])}
 	<div class="grid-body-group-row" data-depth={row.depth} data-expanded={row.isExpanded()}>
 		{#each leafColumns as column, columnIndex (column.columnId)}
-			<BodyGroupRowCell {datagrid} {column} {row}>
-				<GroupRowCellContent {datagrid} {column} {row}>
-					{#snippet header()}
-						<BodyRowGroupCellHeader {datagrid} {column} {row} />
-					{/snippet}
-					{#snippet aggregations()}
-						<BodyRowGroupCellAggregations {datagrid} {column} {row} />
-					{/snippet}
-				</GroupRowCellContent>
-			</BodyGroupRowCell>
+			{#if column.isVisible()}
+				<div
+					class={cn('grid-body-cell')}
+					class:justify-center={column?._meta?.align === 'center'}
+					data-pinned={column.state.pinning.position !== 'none'
+						? column.state.pinning.position
+						: null}
+					style:--width={column.state.size.width + 'px'}
+					style:--min-width={column.state.size.minWidth + 'px'}
+					style:--max-width={column.state.size.maxWidth + 'px'}
+					style:--pin-left-offset={column.state.pinning.offset + 'px'}
+					style:--pin-right-offset={column.state.pinning.offset + 'px'}
+				>
+					{#if column.columnId == row.groupKey}
+						<div class="flex flex-col place-items-start justify-start gap-1">
+							<span class="text-muted-foreground flex place-items-center text-xs">
+								({row.children.length} items)
+							</span>
+							<button class="flex gap-1" onclick={() => datagrid.rows.toggleGroupRowExpansion(row)}>
+								<span class="border-primary/30 rounded-sm border-[1px]">
+									<ArrowRight
+										class={`${datagrid.rows.isGroupRowExpanded(row) && 'rotate-90'} transition-all `}
+									/>
+								</span>
+								<span class="">
+									{row.groupValue[0]}
+								</span>
+							</button>
+						</div>
+					{:else if row.aggregations.some((agg) => agg.columnId === column.columnId)}
+						<div class="">
+							<div class="text-muted-foreground text-xs">
+								{#each row.aggregations.filter((agg) => agg.columnId === column.columnId) as aggregation}
+									<p>
+										{aggregation.type}: {#if aggregation.type === 'percentChange'}
+											{aggregation.value.toFixed(2)}%
+										{:else if typeof aggregation.value === 'number'}
+											{aggregation.value.toLocaleString()}
+										{:else}
+											{aggregation.value}
+										{/if}
+									</p>
+								{/each}
+							</div>
+						</div>
+					{/if}
+				</div>
+			{/if}
 		{/each}
 	</div>
 {/snippet}
 
 {#snippet HeaderGroupCellSnippet(column: GroupColumn<any>)}
-	<HeaderGroupCell {datagrid} {column}>
+	<div class={`grid-header-group text-xs font-medium `}>
 		<div
 			class="grid-header-group-header box-border flex h-full items-center justify-center gap-2 text-center"
 		>
@@ -71,38 +108,57 @@
 		</div>
 		<div class="flex grow flex-row">
 			{#each column.columns ?? [] as subColumn (subColumn.columnId)}
-				<HeaderCellWrapper {datagrid} column={subColumn}>
-					{#snippet groupCell(column)}
-						{@render HeaderGroupCellSnippet(column)}
-					{/snippet}
-					{#snippet cell(column)}
-						{@render HeaderCellSnippet(column)}
-					{/snippet}
-				</HeaderCellWrapper>
+				{#if isGroupColumn(subColumn)}
+					{@render HeaderGroupCellSnippet(subColumn)}
+				{:else if subColumn.state.visible === true}
+					{@render HeaderCellSnippet(subColumn)}
+				{/if}
 			{/each}
 		</div>
-	</HeaderGroupCell>
+	</div>
 {/snippet}
 
 {#snippet HeaderCellSnippet(column: LeafColumn<any>)}
-	<HeaderBasicCell {datagrid} {column}>
-		<HeaderBasicCellContentWrapper
-			{datagrid}
-			{column}
-			onclick={(e: any) => {
+	<div
+		class={cn('grid-header-cell h-fit justify-end self-end border-t text-xs font-medium')}
+		data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
+		style:--pin-left-offset={column.state.pinning.offset + 'px'}
+		style:--pin-right-offset={column.state.pinning.offset + 'px'}
+		style:--width={column.state.size.width + 'px'}
+		style:--min-width={column.state.size.minWidth + 'px'}
+		style:--max-width={column.state.size.maxWidth + 'px'}
+	>
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<div
+			class="grid-header-cell-content items-end {column.options.sortable ? 'sortable' : ''}"
+			onclick={(e) => {
 				const multisort = e.shiftKey;
 				datagrid.handlers.sorting.toggleColumnSorting(column, multisort);
 			}}
 		>
-			<BasicHeaderCellContent {datagrid} {column}>
-				{#snippet title(header)}
-					<span class="grid-header-cell-content-header">{header}</span>
-				{/snippet}
-			</BasicHeaderCellContent>
-			<HeaderColumnActions {datagrid} {column} />
-		</HeaderBasicCellContentWrapper>
+			{#if column.headerCell}
+				{@const cellContent = column.headerCell({ datagrid, column })}
+				{#if typeof cellContent === 'string'}
+					{@html cellContent}
+				{:else if isCellComponent(cellContent)}
+					<cellContent.component {datagrid} {column} />
+				{/if}
+			{:else}
+				<span class="grid-header-cell-content-header">{column.header}</span>
+			{/if}
+
+			<div class="flex gap-1">
+				{#if column.isSortable()}
+					<SortingIndicator {datagrid} {column} />
+				{/if}
+				{#if column._meta.showColumnManagerDropdownMenu === true}
+					<HeaderCellDropdown {datagrid} {column} />
+				{/if}
+			</div>
+		</div>
 		<HeaderColumnFilters {datagrid} {column} />
-	</HeaderBasicCell>
+	</div>
 {/snippet}
 
 <Portal disabled={!datagrid.isFullscreenEnabled()}>
@@ -127,14 +183,11 @@
 				<div class="grid-header">
 					<div class="grid-header-row">
 						{#each columns as column (column.columnId)}
-							<HeaderCellWrapper {datagrid} {column}>
-								{#snippet groupCell(column)}
-									{@render HeaderGroupCellSnippet(column)}
-								{/snippet}
-								{#snippet cell(column)}
-									{@render HeaderCellSnippet(column)}
-								{/snippet}
-							</HeaderCellWrapper>
+							{#if isGroupColumn(column)}
+								{@render HeaderGroupCellSnippet(column)}
+							{:else if column.state.visible === true}
+								{@render HeaderCellSnippet(column)}
+							{/if}
 						{/each}
 					</div>
 				</div>
@@ -146,9 +199,38 @@
 						{:else}
 							<div class="grid-body-row">
 								{#each columns as column (column.columnId)}
-									<BodyBasicRowCell {datagrid} {column} {row}>
-										<BasicRowCellContent {datagrid} {column} {row} />
-									</BodyBasicRowCell>
+									{#if column.isVisible()}
+										<div
+											class={cn(
+												'grid-body-cell',
+												column._meta.styles?.bodyCell,
+												datagrid.extra.state.highlightSelectedRow &&
+													datagrid.features.rowSelection.isRowSelected(row.identifier)
+													? 'bg-blue-400/10'
+													: ''
+											)}
+											class:justify-center={column?._meta?.align === 'center'}
+											data-pinned={column.state.pinning.position !== 'none'
+												? column.state.pinning.position
+												: null}
+											style:--width={column.state.size.width + 'px'}
+											style:--min-width={column.state.size.minWidth + 'px'}
+											style:--max-width={column.state.size.maxWidth + 'px'}
+											style:--pin-left-offset={column.state.pinning.offset + 'px'}
+											style:--pin-right-offset={column.state.pinning.offset + 'px'}
+										>
+											{#if column.cell}
+												{@const cellContent = column.cell({ datagrid, column, row })}
+												{#if typeof cellContent === 'string'}
+													{@html cellContent}
+												{:else if isCellComponent(cellContent)}
+													<cellContent.component {datagrid} {row} {column} />
+												{/if}
+											{:else}
+												{@html getCellContent(column, row.original)}
+											{/if}
+										</div>
+									{/if}
 								{/each}
 							</div>
 							{#if row.isExpanded()}
