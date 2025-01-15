@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '$lib/datagrid/styles.css';
+	import '$lib/datagrid/prebuilt/shadcn/styles.css';
 	import { cn } from '$lib/utils';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core/index.svelte';
 	import type { GridGroupRow, LeafColumn, GroupColumn } from '$lib/datagrid/core/types';
@@ -18,6 +18,7 @@
 	import HeaderCellColumnFilter from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-column-filter.svelte';
 	import ColumnSortingIndicator from '$lib/datagrid/prebuilt/shadcn/blocks/column-sorting-indicator.svelte';
 	import Toolbar from '$lib/datagrid/prebuilt/shadcn/blocks/toolbar.svelte';
+	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
 
 	let { data } = $props();
 
@@ -32,6 +33,97 @@
 			: datagrid.columnManager.getLeafColumnsInOrder()
 	);
 </script>
+
+<Portal disabled={!datagrid.isFullscreenEnabled()}>
+	<div
+		class={cn(
+			'flex h-full flex-col',
+			datagrid.extra.features.fullscreen.isFullscreen &&
+				'bg-background/80 absolute inset-0 z-[20] p-4'
+		)}
+	>
+		<Toolbar {datagrid} />
+		<!-- <div class="grid-toolbar-container">
+			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
+		</div> -->
+		<div
+			class={cn(
+				'grid-wrapper',
+				datagrid.isFullscreenEnabled() && 'h-full max-h-full overflow-auto'
+			)}
+		>
+			<div class="grid-container">
+				<div class="grid-header">
+					<div class="grid-header-row">
+						{#each columns as column (column.columnId)}
+							{#if isGroupColumn(column)}
+								{@render HeaderGroupCellSnippet(column)}
+							{:else if column.state.visible === true}
+								{@render HeaderCellSnippet(column)}
+							{/if}
+						{/each}
+					</div>
+				</div>
+				<div class="grid-body">
+					{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
+						{@const columns = datagrid.columnManager.getLeafColumnsInOrder()}
+						{#if row.isGroupRow()}
+							{@render GroupRowSnippet(row, columns)}
+						{:else}
+							<div class="grid-body-row">
+								{#each columns as column (column.columnId)}
+									{#if column.isVisible()}
+										<div
+											class={cn(
+												'grid-body-cell',
+												column._meta.styles?.bodyCell,
+												datagrid.extra.state.highlightSelectedRow &&
+													datagrid.features.rowSelection.isRowSelected(row.identifier)
+													? 'bg-blue-400/10'
+													: ''
+											)}
+											class:justify-center={column?._meta?.align === 'center'}
+											data-pinned={column.state.pinning.position !== 'none'
+												? column.state.pinning.position
+												: null}
+											style:--width={column.state.size.width + 'px'}
+											style:--min-width={column.state.size.minWidth + 'px'}
+											style:--max-width={column.state.size.maxWidth + 'px'}
+											style:--pin-left-offset={column.state.pinning.offset + 'px'}
+											style:--pin-right-offset={column.state.pinning.offset + 'px'}
+										>
+											{#if column.cell}
+												{@const cellContent = column.cell({ datagrid, column, row })}
+												{#if typeof cellContent === 'string'}
+													{@html cellContent}
+												{:else if isCellComponent(cellContent)}
+													<cellContent.component {datagrid} {row} {column} />
+												{/if}
+											{:else}
+												{@html getCellContent(column, row.original)}
+											{/if}
+										</div>
+									{/if}
+								{/each}
+							</div>
+							{#if row.isExpanded()}
+								<div class="grid-body-row">
+									<div class="grid-body-cell">
+										Content for row with ID {row.identifier}
+									</div>
+								</div>
+							{/if}
+						{/if}
+					{/each}
+				</div>
+			</div>
+			<div class="grid-footer-container"></div>
+		</div>
+		<Pagination {datagrid} />
+		<MadeWithLoveByTzezar />
+	</div>
+</Portal>
+
 
 {#snippet GroupRowSnippet(row: GridGroupRow<any>, leafColumns: LeafColumn<any>[])}
 	<div class="grid-body-group-row" data-depth={row.depth} data-expanded={row.isExpanded()}>
@@ -154,95 +246,3 @@
 		{/if}
 	</div>
 {/snippet}
-
-<Portal disabled={!datagrid.isFullscreenEnabled()}>
-	<div
-		class={cn(
-			'flex h-full flex-col',
-			datagrid.extra.features.fullscreen.isFullscreen &&
-				'bg-background/80 absolute inset-0 z-[20] p-4'
-		)}
-	>
-		<Toolbar {datagrid} />
-		<!-- <div class="grid-toolbar-container">
-			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
-		</div> -->
-		<div
-			class={cn(
-				'grid-wrapper',
-				datagrid.isFullscreenEnabled() && 'h-full max-h-full overflow-auto'
-			)}
-		>
-			<div class="grid-container">
-				<div class="grid-header">
-					<div class="grid-header-row">
-						{#each columns as column (column.columnId)}
-							{#if isGroupColumn(column)}
-								{@render HeaderGroupCellSnippet(column)}
-							{:else if column.state.visible === true}
-								{@render HeaderCellSnippet(column)}
-							{/if}
-						{/each}
-					</div>
-				</div>
-				<div class="grid-body">
-					{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
-						{@const columns = datagrid.columnManager.getLeafColumnsInOrder()}
-						{#if row.isGroupRow()}
-							{@render GroupRowSnippet(row, columns)}
-						{:else}
-							<div class="grid-body-row">
-								{#each columns as column (column.columnId)}
-									{#if column.isVisible()}
-										<div
-											class={cn(
-												'grid-body-cell',
-												column._meta.styles?.bodyCell,
-												datagrid.extra.state.highlightSelectedRow &&
-													datagrid.features.rowSelection.isRowSelected(row.identifier)
-													? 'bg-blue-400/10'
-													: ''
-											)}
-											class:justify-center={column?._meta?.align === 'center'}
-											data-pinned={column.state.pinning.position !== 'none'
-												? column.state.pinning.position
-												: null}
-											style:--width={column.state.size.width + 'px'}
-											style:--min-width={column.state.size.minWidth + 'px'}
-											style:--max-width={column.state.size.maxWidth + 'px'}
-											style:--pin-left-offset={column.state.pinning.offset + 'px'}
-											style:--pin-right-offset={column.state.pinning.offset + 'px'}
-										>
-											{#if column.cell}
-												{@const cellContent = column.cell({ datagrid, column, row })}
-												{#if typeof cellContent === 'string'}
-													{@html cellContent}
-												{:else if isCellComponent(cellContent)}
-													<cellContent.component {datagrid} {row} {column} />
-												{/if}
-											{:else}
-												{@html getCellContent(column, row.original)}
-											{/if}
-										</div>
-									{/if}
-								{/each}
-							</div>
-							{#if row.isExpanded()}
-								<div class="grid-body-row">
-									<div class="grid-body-cell">
-										Content for row with ID {row.identifier}
-									</div>
-								</div>
-							{/if}
-						{/if}
-					{/each}
-				</div>
-			</div>
-			<div class="grid-footer-container"></div>
-		</div>
-		<Pagination {datagrid} />
-		<div class="text-muted-foreground ml-auto w-fit border-x border-b p-1 px-2 text-[0.5rem]">
-			Made with ❤️ by Tzezar
-		</div>
-	</div>
-</Portal>
