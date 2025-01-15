@@ -37,9 +37,13 @@
 
 	// Crazy boost in performance
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
+
+	console.log(datagrid.rows.getVisibleRows())
 </script>
 
-<Portal disabled={!datagrid.isFullscreenEnabled()}>
+
+
+<Portal disabled={!datagrid.isFullscreenEnabled()} >
 	<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-wrapper">
 		<Toolbar {datagrid} />
 
