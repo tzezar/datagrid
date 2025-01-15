@@ -1,13 +1,11 @@
-import ActionsCell from "./_components/cells/cell-actions.svelte";
 
 import { type AnyColumn } from "$lib/datagrid/core/types";
-import SelectRowCell from "./_components/cells/cell-select-row.svelte";
 import type { User } from "./generate-users";
-import RowSelectionHeader from "./_components/headers/row-selection-header.svelte";
-
-
 import { displayColumn, accessorColumn, columnGroup, computedColumn } from "$lib/datagrid/core/column-creation";
 import type { ColumnMeta } from "$lib/datagrid/prebuilt/shadcn-svelte/types";
+import RowSelectionColumnHeaderCell from "$lib/datagrid/prebuilt/shadcn/components/row-selection-column-header-cell.svelte";
+import RowSelectionBodyRowCell from "$lib/datagrid/prebuilt/shadcn/components/row-selection-body-row-cell.svelte";
+import BodyRowActionsCell from "$lib/datagrid/prebuilt/shadcn/components/body-row-actions-cell.svelte";
 
 
 // const exampleFn = (value) => {
@@ -24,7 +22,7 @@ export const userColumns = [
         headerCell: () => `&nbsp;`,
         cell: () => {
             return {
-                component: ActionsCell,
+                component: BodyRowActionsCell,
             }
         },
         options: { sortable: false, groupable: false, hideable: true },
@@ -44,11 +42,11 @@ export const userColumns = [
     displayColumn({
         header: 'Row Selection',
         headerCell: () => ({
-            component: RowSelectionHeader
+            component: RowSelectionColumnHeaderCell
         }),
         columnId: 'selectRow',
         cell: () => ({
-            component: SelectRowCell,
+            component: RowSelectionBodyRowCell,
         }),
         options: { sortable: false },
         state: {

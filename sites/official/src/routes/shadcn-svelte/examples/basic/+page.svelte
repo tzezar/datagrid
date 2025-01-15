@@ -2,7 +2,7 @@
 	import '$lib/datagrid/prebuilt/shadcn/styles.css';
 	import { cn } from '$lib/utils';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
-	import type { GridGroupRow, LeafColumn, GroupColumn } from '$lib/datagrid/core/types';
+	import type { LeafColumn, GroupColumn } from '$lib/datagrid/core/types';
 
 	import { Portal } from 'bits-ui';
 	import { userColumns } from './columns.svelte';
@@ -17,8 +17,8 @@
 	import HeaderCellColumnFilter from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-column-filter.svelte';
 	import ColumnSortingIndicator from '$lib/datagrid/prebuilt/shadcn/blocks/column-sorting-indicator.svelte';
 	import Toolbar from '$lib/datagrid/prebuilt/shadcn/blocks/toolbar.svelte';
-	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
 	import Pagination from '$lib/datagrid/prebuilt/shadcn/blocks/pagination.svelte';
+	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
 
 	let { data } = $props();
 
@@ -34,12 +34,11 @@
 	);
 
 	// Crazy boost in performance
-	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder())
-
+	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
 </script>
 
 <Portal disabled={!datagrid.isFullscreenEnabled()}>
-	<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-wrapper" >
+	<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-wrapper">
 		<Toolbar {datagrid} />
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>

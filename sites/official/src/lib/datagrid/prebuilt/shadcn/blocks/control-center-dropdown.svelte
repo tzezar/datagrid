@@ -25,11 +25,11 @@
 	import AdGroupOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-outline-sharp.svelte';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
-	import GroupRowsByColumnDropdown from './group-rows-by-column-dropdown.svelte';
 	import ExpandLess from '$lib/datagrid/icons/material-symbols/expand-less.svelte';
 	import ExpandMore from '$lib/datagrid/icons/material-symbols/expand-more.svelte';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
 	import FileExport from '$lib/datagrid/icons/material-symbols/file-export.svelte';
+	import GroupRowsByColumnDropdown from './group-rows-by-column-dropdown.svelte';
 
 	let { datagrid }: { datagrid: TzezarsDatagrid } = $props();
 

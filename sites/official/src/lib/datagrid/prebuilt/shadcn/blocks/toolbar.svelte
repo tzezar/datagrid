@@ -3,11 +3,11 @@
 	import FilterAltOff from '$lib/datagrid/icons/material-symbols/filter-alt-off.svelte';
 	import FilterAlt from '$lib/datagrid/icons/material-symbols/filter-alt.svelte';
 	import GlobalSearch from '$lib/datagrid/prebuilt/shadcn-svelte/_components/global-search-input.svelte';
-	import DatagridSettingsDropdown from '$lib/datagrid/prebuilt/shadcn-svelte/_components/datagrid-settings-dropdown.svelte';
 	import Fullscreen from '$lib/datagrid/icons/material-symbols/fullscreen.svelte';
 	import FullscreenExit from '$lib/datagrid/icons/material-symbols/fullscreen-exit.svelte';
 	import { cn } from '$lib/utils';
-	import type { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn-svelte/core/index.svelte';
+	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import ControlCenterDropdown from './control-center-dropdown.svelte';
 
 	let { datagrid }: { datagrid: TzezarsDatagrid } = $props();
 </script>
@@ -43,7 +43,7 @@
 			<Fullscreen />
 		{/if}
 	</Button>
-	<DatagridSettingsDropdown {datagrid} />
+	<ControlCenterDropdown {datagrid} />
 </div>
 
 <style>
