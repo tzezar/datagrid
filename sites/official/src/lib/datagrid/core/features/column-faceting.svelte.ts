@@ -68,7 +68,6 @@ export class ColumnFacetingFeature<TOriginalRow> {
      * @param columns - Array of columns to calculate facets for.
      */
     calculateFacets(rows: TOriginalRow[], columns: AnyColumn<TOriginalRow>[]): void {
-        console.log('calculateFacets')
         // Reset existing facets before recalculating
         this.numericFacets = {};
         this.categoricalFacets = {};
