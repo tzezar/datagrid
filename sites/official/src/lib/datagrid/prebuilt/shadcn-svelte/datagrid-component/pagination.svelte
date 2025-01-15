@@ -1,11 +1,12 @@
 <script lang="ts">
+	import * as Select from '$lib/components/ui/select/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import ChevronLeftRounded from '$lib/datagrid/icons/material-symbols/chevron-left-rounded.svelte';
 	import ChevronRightRounded from '$lib/datagrid/icons/material-symbols/chevron-right-rounded.svelte';
-	let { datagrid }: { datagrid: DataGrid<any> } = $props();
-	import * as Select from '$lib/components/ui/select/index.js';
 	import Input from '$lib/components/ui/input/input.svelte';
+	import type { TzezarsDatagrid } from '../core/index.svelte';
+	
+    let { datagrid }: { datagrid: TzezarsDatagrid } = $props();
 
 	let pageSizes = datagrid.features.pagination.pageSizes.map((pageSize: number) => {
 		return {
@@ -13,9 +14,10 @@
 			label: pageSize.toString()
 		};
 	});
+    
 </script>
 
-{#snippet prevButton()}
+{#snippet GoToPreviousPageButton()}
 	<Button
 		variant="secondary"
 		class="size-6"
@@ -32,7 +34,7 @@
 	</Button>
 {/snippet}
 
-{#snippet nextButton()}
+{#snippet GoToNextPageButton()}
 	<Button
 		variant="secondary"
 		class="size-6"
@@ -49,7 +51,7 @@
 	</Button>
 {/snippet}
 
-{#snippet perPageSelect()}
+{#snippet PageSizeSelectionDropdown()}
 	<Select.Root
 		type="single"
 		name="perPage"
@@ -84,7 +86,7 @@
 	</span>
 {/snippet}
 
-{#snippet currentPage()}
+{#snippet CurrentPageComponent()}
 	<span class="flex items-center gap-1 text-nowrap text-xs">
 		<span class=" md:block"> Page </span>
 		<Input
@@ -103,7 +105,10 @@
 				}
 				const newPage = Number(e.currentTarget.value);
 				datagrid.refresh(() => {
-					datagrid.features.pagination.page = Math.min(Math.max(newPage, 1), datagrid.features.pagination.pageCount);
+					datagrid.features.pagination.page = Math.min(
+						Math.max(newPage, 1),
+						datagrid.features.pagination.pageCount
+					);
 				});
 				e.currentTarget.value = datagrid.features.pagination.page.toString();
 			}}
@@ -115,11 +120,11 @@
 <div class="pagination-container flex flex-row items-center justify-between gap-2 p-3 md:flex-row">
 	{@render status()}
 	<div class="flex place-items-center justify-center gap-2 md:w-1/3">
-		{@render prevButton()}
-		{@render nextButton()}
-		{@render currentPage()}
+		{@render GoToPreviousPageButton()}
+		{@render GoToNextPageButton()}
+		{@render CurrentPageComponent()}
 	</div>
 	<div class="flex justify-end md:w-1/3">
-		{@render perPageSelect()}
+		{@render PageSizeSelectionDropdown()}
 	</div>
 </div>

@@ -99,7 +99,3 @@
 	</div>
 	<MadeWithLoveByTzezar />
 </div>
-
-<div class="border p-2 px-4">
-	{JSON.stringify($state.snapshot(datagrid.features.rowPinning.getIdentifiersOfPinnedRows()))}
-</div>

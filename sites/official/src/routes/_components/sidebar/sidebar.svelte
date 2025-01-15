@@ -28,6 +28,23 @@
 			<GroupItem disabled title="Handlers" href={hrefs.headless.quickStart.installation} />
 		</Group>
 		<Group>
+			<GroupTitle title="Features" />
+			<GroupItem disabled title="Grouping" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Sorting" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Pagination" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Global search" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column faceting" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column filtering" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column grouping" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column ordering" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column pinning" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column sizing" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Column visibility" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Row expanding" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Row pinning" href={hrefs.headless.quickStart.installation} />
+			<GroupItem disabled title="Row selection" href={hrefs.headless.quickStart.installation} />
+		</Group>
+		<Group>
 			<GroupTitle title="Examples" />
 			<GroupItem title="Basic" href={hrefs.headless.examples.basic} />
 			<GroupItem title="Column filters" href={hrefs.headless.examples.columnFilters} />
