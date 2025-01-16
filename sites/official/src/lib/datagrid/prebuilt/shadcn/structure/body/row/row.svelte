@@ -3,11 +3,11 @@
 	import type { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
 	import GroupCell from '$lib/datagrid/prebuilt/shadcn/structure/body/row/cell/group-cell.svelte';
 	import GroupCellContent from '$lib/datagrid/prebuilt/shadcn/structure/body/row/cell/group-cell-content.svelte';
-	import GroupCellAggregations from '$lib/datagrid/prebuilt/shadcn/structure/body/row/cell/group-cell-aggregations.svelte';
 	import RenderCell from '$lib/datagrid/prebuilt/shadcn/structure/body/row/cell/render-cell.svelte';
 	import type { Snippet } from 'svelte';
 	import BasicRow from '../../body/row/basic-row.svelte';
 	import GroupRow from '../../body/row/group-row.svelte';
+	import GroupCellAggregations from '../../../components/group-cell-aggregations.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;

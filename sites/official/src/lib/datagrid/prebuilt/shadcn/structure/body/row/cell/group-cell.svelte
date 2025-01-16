@@ -3,8 +3,8 @@
 	import type { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
-	import GroupCellAggregations from './group-cell-aggregations.svelte';
 	import GroupCellContent from './group-cell-content.svelte';
+	import GroupCellAggregations from '$lib/datagrid/prebuilt/shadcn/components/group-cell-aggregations.svelte';
 
 	type Props = {
 		column: LeafColumn<any>;
@@ -16,7 +16,14 @@
 		content?: Snippet;
 		aggregations?: Snippet;
 	};
-	let { column, row, datagrid, children, content: groupCell, aggregations: aggregationCell }: Props = $props();
+	let {
+		column,
+		row,
+		datagrid,
+		children,
+		content: groupCell,
+		aggregations: aggregationCell
+	}: Props = $props();
 </script>
 
 {#if column.isVisible()}

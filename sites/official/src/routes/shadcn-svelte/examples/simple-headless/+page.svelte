@@ -8,23 +8,10 @@
 	import ColumnSortingIndicator from '$lib/datagrid/prebuilt/shadcn/blocks/column-sorting-indicator.svelte';
 	import HeaderCellDropdown from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-dropdown.svelte';
 	import HeaderCellColumnFilter from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-column-filter.svelte';
-	import Header from '$lib/datagrid/prebuilt/shadcn/structure/header/header.svelte';
-	import HeaderRow from '$lib/datagrid/prebuilt/shadcn/structure/header/row/header-row.svelte';
-	import HeaderRowGroupColumnCell from '$lib/datagrid/prebuilt/shadcn/structure/header/row/cell/header-row-group-column-cell.svelte';
 	import { shouldShowColumnFilter } from '$lib/datagrid/prebuilt/shadcn/utils';
-	import HeaderRowGroupColumnChildren from '$lib/datagrid/prebuilt/shadcn/structure/header/row/cell/header-row-group-column-children.svelte';
-	import LeafColumnCaption from '$lib/datagrid/prebuilt/shadcn/structure/header/row/cell/leaf-column-caption.svelte';
-	import LeafColumnCell from '$lib/datagrid/prebuilt/shadcn/structure/header/row/cell/leaf-column-cell.svelte';
-	import RenderLeafColumnCaption from '$lib/datagrid/prebuilt/shadcn/structure/header/row/cell/content/render-leaf-column-caption.svelte';
-	import GroupCell from '$lib/datagrid/prebuilt/shadcn/structure/body/row/cell/group-cell.svelte';
-	import GroupCellContent from '$lib/datagrid/prebuilt/shadcn/structure/body/row/cell/group-cell-content.svelte';
-	import GroupCellAggregations from '$lib/datagrid/prebuilt/shadcn/structure/body/row/cell/group-cell-aggregations.svelte';
-	import RenderCell from '$lib/datagrid/prebuilt/shadcn/structure/body/row/cell/render-cell.svelte';
-	import Row from '$lib/datagrid/prebuilt/shadcn/structure/header/row/row.svelte';
-	import Body from '$lib/datagrid/prebuilt/shadcn/structure/body/body.svelte';
-	import BasicRow from '$lib/datagrid/prebuilt/shadcn/structure/body/row/basic-row.svelte';
-	import BasicRowExpandable from '$lib/datagrid/prebuilt/shadcn/structure/body/row/basic-row-expandable.svelte';
-	import GroupRow from '$lib/datagrid/prebuilt/shadcn/structure/body/row/group-row.svelte';
+
+	import * as Structure from '$lib/datagrid/prebuilt/shadcn/structure';
+	import GroupCellAggregations from '$lib/datagrid/prebuilt/shadcn/components/group-cell-aggregations.svelte';
 
 	let { data } = $props();
 
@@ -39,9 +26,9 @@
 
 <DatagridShadcnSvelte {datagrid}>
 	{#snippet header()}
-		<Header {datagrid}>
+		<Structure.Header {datagrid}>
 			{#snippet children(columns)}
-				<HeaderRow>
+				<Structure.HeaderRow>
 					{#each columns as column (column.columnId)}
 						{#if isGroupColumn(column)}
 							{@render HeaderGroupCellSnippet(column)}
@@ -49,41 +36,41 @@
 							{@render HeaderCellSnippet(column)}
 						{/if}
 					{/each}
-				</HeaderRow>
+				</Structure.HeaderRow>
 			{/snippet}
-		</Header>
+		</Structure.Header>
 	{/snippet}
 	{#snippet body()}
-		<Body {datagrid}>
+		<Structure.Body {datagrid}>
 			{#snippet children(columns)}
 				{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
-					<Row {datagrid} {row} {columns}>
+					<Structure.Row {datagrid} {row} {columns}>
 						{#snippet groupRow(row)}
-							<GroupRow {row} {columns} {datagrid}>
+							<Structure.GroupRow {row} {columns} {datagrid}>
 								{#each columns as column, columnIndex (column.columnId)}
-									<GroupCell {column} {row} {datagrid}>
+									<Structure.GroupCell {column} {row} {datagrid}>
 										{#snippet content()}
-											<GroupCellContent {column} {row} {datagrid} />
+											<Structure.GroupCellContent {column} {row} {datagrid} />
 										{/snippet}
 										{#snippet aggregations()}
 											<GroupCellAggregations {column} {row} {datagrid} />
 										{/snippet}
-									</GroupCell>
+									</Structure.GroupCell>
 								{/each}
-							</GroupRow>
+							</Structure.GroupRow>
 						{/snippet}
 						{#snippet basicRow(row)}
-							<BasicRow {datagrid} {row} leafColumns={columns}>
+							<Structure.BasicRow {datagrid} {row} leafColumns={columns}>
 								{#each columns as column (column.columnId)}
-									<RenderCell {datagrid} {row} {column} />
+									<Structure.RenderCell {datagrid} {row} {column} />
 								{/each}
-							</BasicRow>
-							<BasicRowExpandable {datagrid} {row} {columns}>content</BasicRowExpandable>
+							</Structure.BasicRow>
+							<Structure.BasicRowExpandable {datagrid} {row} {columns}>content</Structure.BasicRowExpandable>
 						{/snippet}
-					</Row>
+					</Structure.Row>
 				{/each}
 			{/snippet}
-		</Body>
+		</Structure.Body>
 	{/snippet}
 	{#snippet footerContent()}
 		Enjoy!
@@ -91,31 +78,31 @@
 </DatagridShadcnSvelte>
 
 {#snippet HeaderGroupCellSnippet(column: GroupColumn<any>)}
-	<HeaderRowGroupColumnCell>
+	<Structure.HeaderRowGroupColumnCell>
 		<div class="grid-header-group-header">
 			{column.header}
 			<HeaderCellDropdown {datagrid} {column} />
 		</div>
-		<HeaderRowGroupColumnChildren columns={column.columns}>
+		<Structure.HeaderRowGroupColumnChildren columns={column.columns}>
 			{#snippet groupCell(column)}
 				{@render HeaderGroupCellSnippet(column)}
 			{/snippet}
 			{#snippet leafCell(column)}
 				{@render HeaderCellSnippet(column)}
 			{/snippet}
-		</HeaderRowGroupColumnChildren>
-	</HeaderRowGroupColumnCell>
+		</Structure.HeaderRowGroupColumnChildren>
+	</Structure.HeaderRowGroupColumnCell>
 {/snippet}
 
 {#snippet HeaderCellSnippet(column: LeafColumn<any>)}
 	{#if column.state.visible === true}
-		<LeafColumnCell {column}>
-			<LeafColumnCaption {column} {datagrid}>
-				<RenderLeafColumnCaption {column} {datagrid}>
+		<Structure.LeafColumnCell {column}>
+			<Structure.LeafColumnCaption {column} {datagrid}>
+				<Structure.RenderLeafColumnCaption {column} {datagrid}>
 					{#snippet caption(header)}
 						<span class="grid-header-cell-content-header">{header}</span>
 					{/snippet}
-				</RenderLeafColumnCaption>
+				</Structure.RenderLeafColumnCaption>
 				<div class="flex gap-1">
 					{#if column.isSortable()}
 						<ColumnSortingIndicator {datagrid} {column} />
@@ -124,12 +111,12 @@
 						<HeaderCellDropdown {datagrid} {column} />
 					{/if}
 				</div>
-			</LeafColumnCaption>
+			</Structure.LeafColumnCaption>
 			{#if shouldShowColumnFilter(datagrid)}
 				<div class="h-9 w-full pt-1">
 					<HeaderCellColumnFilter {datagrid} {column} />
 				</div>
 			{/if}
-		</LeafColumnCell>
+		</Structure.LeafColumnCell>
 	{/if}
 {/snippet}
