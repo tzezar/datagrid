@@ -15,7 +15,7 @@
 </script>
 
 {#if row.isExpanded()}
-	<BasicRow {datagrid} {row} leafColumns={columns}>
+	<BasicRow {datagrid} {row} columns={columns}>
 		<div class="grid-body-cell">
 			{#if children}
 				{@render children(row)}

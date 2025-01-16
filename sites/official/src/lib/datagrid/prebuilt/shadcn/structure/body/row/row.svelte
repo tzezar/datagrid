@@ -40,7 +40,7 @@
 {:else if basicRow}
 	{@render basicRow(row)}
 {:else}
-	<BasicRow {datagrid} {row} leafColumns={columns}>
+	<BasicRow {datagrid} {row} columns={columns}>
 		{#each columns as column (column.columnId)}
 			<RenderCell {datagrid} {row} {column} />
 		{/each}
