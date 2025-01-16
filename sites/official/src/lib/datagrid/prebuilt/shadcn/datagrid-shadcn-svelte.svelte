@@ -65,7 +65,7 @@
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
 		</div> -->
 		<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-container-wrapper">
-			<div class="grid-container">
+			<div class="grid-container ">
 				{#if header}
 					{@render header()}
 				{:else}
@@ -84,7 +84,7 @@
 				{#if body}
 					{@render body()}
 				{:else}
-					<div class="grid-body">
+					<div class="grid-body ">
 						{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
 							{#if row.isGroupRow()}
 								<div

@@ -7,15 +7,15 @@
 	type Props = {
 		datagrid: TzezarsDatagrid;
 		row: GridBasicRow<any>;
-		leafColumns: LeafColumn<any>[];
+		columns: LeafColumn<any>[];
 
 		children?: Snippet<[row: GridBasicRow<any>]>;
 	};
-	let { datagrid, row, leafColumns, children }: Props = $props();
+	let { datagrid, row, columns, children }: Props = $props();
 </script>
 
 {#if row.isExpanded()}
-	<BasicRow {datagrid} {row} {leafColumns}>
+	<BasicRow {datagrid} {row} leafColumns={columns}>
 		<div class="grid-body-cell">
 			{#if children}
 				{@render children(row)}

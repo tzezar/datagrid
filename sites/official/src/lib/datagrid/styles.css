@@ -108,6 +108,7 @@
 	flex-direction: row;
 	width: 100%;
 	border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
+	min-width: max-content;
 }
 
 .grid-body-cell {

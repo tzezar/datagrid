@@ -78,10 +78,7 @@
 									<RenderCell {datagrid} {row} {column} />
 								{/each}
 							</BasicRow>
-							<div class="sticky left-0 bg-red-400">321312</div>
-							<BasicRowExpandable {datagrid} {row} leafColumns={columns}>
-								content
-							</BasicRowExpandable>
+							<BasicRowExpandable {datagrid} {row} {columns}>content</BasicRowExpandable>
 						{/snippet}
 					</Row>
 				{/each}
