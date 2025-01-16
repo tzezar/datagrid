@@ -7,24 +7,25 @@
 	import RenderCell from '$lib/datagrid/prebuilt/shadcn/structure/body/row/cell/render-cell.svelte';
 	import type { Snippet } from 'svelte';
 	import BasicRow from '../../body/row/basic-row.svelte';
+	import GroupRow from '../../body/row/group-row.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;
 		row: GridRow<any>;
-		leafColumns: LeafColumn<any>[];
+		columns: LeafColumn<any>[];
 
 		groupRow?: Snippet<[row: GridGroupRow<any>]>;
 		basicRow?: Snippet<[row: GridBasicRow<any>]>;
 	};
-	let { datagrid, row, leafColumns, groupRow, basicRow }: Props = $props();
+	let { datagrid, row, columns, groupRow, basicRow }: Props = $props();
 </script>
 
 {#if row.isGroupRow()}
-	<div class="grid-body-group-row" data-depth={row.depth} data-expanded={row.isExpanded()}>
-		{#if groupRow}
-			{@render groupRow(row)}
-		{:else}
-			{#each leafColumns as column, columnIndex (column.columnId)}
+	{#if groupRow}
+		{@render groupRow(row)}
+	{:else}
+		<GroupRow {row} columns={columns} {datagrid}>
+			{#each columns as column, columnIndex (column.columnId)}
 				<GroupCell {column} {row} {datagrid}>
 					{#snippet content()}
 						<GroupCellContent {column} {row} {datagrid} />
@@ -34,13 +35,13 @@
 					{/snippet}
 				</GroupCell>
 			{/each}
-		{/if}
-	</div>
+		</GroupRow>
+	{/if}
 {:else if basicRow}
 	{@render basicRow(row)}
 {:else}
-	<BasicRow {datagrid} {row} {leafColumns}>
-		{#each leafColumns as column (column.columnId)}
+	<BasicRow {datagrid} {row} leafColumns={columns}>
+		{#each columns as column (column.columnId)}
 			<RenderCell {datagrid} {row} {column} />
 		{/each}
 	</BasicRow>

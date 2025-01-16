@@ -24,6 +24,7 @@
 	import Body from '$lib/datagrid/prebuilt/shadcn/structure/body/body.svelte';
 	import BasicRow from '$lib/datagrid/prebuilt/shadcn/structure/body/row/basic-row.svelte';
 	import BasicRowExpandable from '$lib/datagrid/prebuilt/shadcn/structure/body/row/basic-row-expandable.svelte';
+	import GroupRow from '$lib/datagrid/prebuilt/shadcn/structure/body/row/group-row.svelte';
 
 	let { data } = $props();
 
@@ -56,18 +57,20 @@
 		<Body {datagrid}>
 			{#snippet children(columns)}
 				{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
-					<Row {datagrid} {row} leafColumns={columns}>
+					<Row {datagrid} {row} {columns}>
 						{#snippet groupRow(row)}
-							{#each columns as column, columnIndex (column.columnId)}
-								<GroupCell {column} {row} {datagrid}>
-									{#snippet content()}
-										<GroupCellContent {column} {row} {datagrid} />
-									{/snippet}
-									{#snippet aggregations()}
-										<GroupCellAggregations {column} {row} {datagrid} />
-									{/snippet}
-								</GroupCell>
-							{/each}
+							<GroupRow {row} {columns} {datagrid}>
+								{#each columns as column, columnIndex (column.columnId)}
+									<GroupCell {column} {row} {datagrid}>
+										{#snippet content()}
+											<GroupCellContent {column} {row} {datagrid} />
+										{/snippet}
+										{#snippet aggregations()}
+											<GroupCellAggregations {column} {row} {datagrid} />
+										{/snippet}
+									</GroupCell>
+								{/each}
+							</GroupRow>
 						{/snippet}
 						{#snippet basicRow(row)}
 							<BasicRow {datagrid} {row} leafColumns={columns}>
