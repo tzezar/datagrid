@@ -65,7 +65,7 @@
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
 		</div> -->
 		<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-container-wrapper">
-			<div class="grid-container ">
+			<div class="grid-container">
 				{#if header}
 					{@render header()}
 				{:else}
@@ -84,7 +84,7 @@
 				{#if body}
 					{@render body()}
 				{:else}
-					<div class="grid-body ">
+					<div class="grid-body">
 						{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
 							{#if row.isGroupRow()}
 								<div
@@ -150,36 +150,36 @@
 								<div class="grid-body-row">
 									{#each leafColumns as column (column.columnId)}
 										{#if column.isVisible()}
-											<div
-												class={cn(
-													'grid-body-cell',
-													column._meta.styles?.bodyCell,
-													datagrid.extra.state.highlightSelectedRow &&
-														datagrid.features.rowSelection.isRowSelected(row.identifier)
-														? 'bg-blue-400/10'
-														: ''
-												)}
-												class:justify-center={column?._meta?.align === 'center'}
-												data-pinned={column.state.pinning.position !== 'none'
-													? column.state.pinning.position
-													: null}
-												style:--width={column.state.size.width + 'px'}
-												style:--min-width={column.state.size.minWidth + 'px'}
-												style:--max-width={column.state.size.maxWidth + 'px'}
-												style:--pin-left-offset={column.state.pinning.offset + 'px'}
-												style:--pin-right-offset={column.state.pinning.offset + 'px'}
-											>
-												{#if column.cell}
-													{@const cellContent = column.cell({ datagrid, column, row })}
-													{#if typeof cellContent === 'string'}
-														{@html cellContent}
-													{:else if isCellComponent(cellContent)}
-														<cellContent.component {datagrid} {row} {column} />
-													{/if}
-												{:else}
-													{@html getCellContent(column, row.original)}
+											{#if column.cell}
+												{@const cellContent = column.cell({ datagrid, column, row })}
+												{#if typeof cellContent === 'string'}
+													{@html cellContent}
+												{:else if isCellComponent(cellContent)}
+													<cellContent.component {datagrid} {row} {column} />
 												{/if}
-											</div>
+											{:else}
+												<div
+													class={cn(
+														'grid-body-cell',
+														column._meta.styles?.bodyCell,
+														datagrid.extra.state.highlightSelectedRow &&
+															datagrid.features.rowSelection.isRowSelected(row.identifier)
+															? 'bg-blue-400/10'
+															: ''
+													)}
+													class:justify-center={column?._meta?.align === 'center'}
+													data-pinned={column.state.pinning.position !== 'none'
+														? column.state.pinning.position
+														: null}
+													style:--width={column.state.size.width + 'px'}
+													style:--min-width={column.state.size.minWidth + 'px'}
+													style:--max-width={column.state.size.maxWidth + 'px'}
+													style:--pin-left-offset={column.state.pinning.offset + 'px'}
+													style:--pin-right-offset={column.state.pinning.offset + 'px'}
+												>
+													{@html getCellContent(column, row.original)}
+												</div>
+											{/if}
 										{/if}
 									{/each}
 								</div>
