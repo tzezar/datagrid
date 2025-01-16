@@ -2,7 +2,7 @@ import { sort } from "fast-sort";
 import { isGroupColumn } from "../helpers/column-guards";
 import type { DataGrid } from "../index.svelte";
 import type { Aggregation, AggregationFn, GridGroupRow, GridRow } from "../types";
-import { findColumnById, flattenColumnStructureAndClearGroups} from "../utils.svelte";
+import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 import type { PerformanceMetrics } from "../helpers/performance-metrics.svelte";
 import type { AccessorColumn, ComputedColumn } from "../types";
 import { aggregationFunctions } from "../helpers/aggregation-functions";
@@ -69,14 +69,14 @@ export class DataProcessor<TRow> {
 
     private applyGlobalSearch(data: TRow[]): TRow[] {
         const searchValue = this.datagrid.features.globalSearch.value.toLowerCase();
-        const searchableColumns = flattenColumnStructureAndClearGroups(this.datagrid.columns).filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TRow> | ComputedColumn<TRow>)[];
 
         if (this.datagrid.features.globalSearch.fuzzy) {
             const fuse = this.datagrid.features.globalSearch.fuseInstance;
             if (!fuse) throw new Error('Fuse instance is not initialized');
             return fuse.search(searchValue).map(result => result.item);
         }
-
+        
+        const searchableColumns = flattenColumnStructureAndClearGroups(this.datagrid.columns).filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TRow> | ComputedColumn<TRow>)[];
         return data.filter(item =>
             searchableColumns.some(column =>
                 String(column.getValueFn(item))

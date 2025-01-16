@@ -5,6 +5,7 @@ import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
 import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
 import type { PaginationConfig } from "./features/pagination.svelte";
+import { flattenColumnStructureAndClearGroups } from "./utils.svelte";
 
 export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
     columns: C[];
@@ -93,7 +94,7 @@ export class DataGrid<TOriginalRow> {
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
         this.features.columnFaceting.calculateFacets(this.cache.sortedData || [], this.columns);
 
-        this.features.globalSearch.fuseInstance = this.features.globalSearch.initializeFuseInstance(this.initial.data, this.columns.map(col => col.columnId as string))
+        this.features.globalSearch.fuseInstance = this.features.globalSearch.initializeFuseInstance(this.initial.data, flattenColumnStructureAndClearGroups(this.columns).map(col => col.columnId as string))
     }
 
     /**
