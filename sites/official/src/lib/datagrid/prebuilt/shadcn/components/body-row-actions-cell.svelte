@@ -2,24 +2,29 @@
 	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import LayoutNavbarExpandFilled from '$lib/datagrid/icons/tabler/layout-navbar-expand-filled.svelte';
+	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import Cell from '../structure/body/row/cell/cell.svelte';
 	import BodyRowActionsCellDropdownMenuWithOptions from './body-row-actions-cell-dropdown-menu-with-options.svelte';
 
 	let {
 		row,
 		column,
 		datagrid
-	}: { row: GridBasicRow<any>; column: LeafColumn<any>; datagrid: DataGrid<any> } = $props();
+	}: { row: GridBasicRow<any>; column: LeafColumn<any>; datagrid: TzezarsDatagrid<any> } = $props();
 
 	const handleClick = () => {
 		datagrid.handlers.rowExpanding.toggleRowExpansion(row.identifier);
 	};
 </script>
 
-<div class="flex gap-2">
-	<button onclick={handleClick}>
-		<LayoutNavbarExpandFilled
+<Cell {datagrid} {row} {column}>
+	<div class="flex gap-2">
+		<button onclick={handleClick}>
+			<LayoutNavbarExpandFilled
 			class={`${datagrid.features.rowExpanding.isRowExpanded(row.identifier) ? 'rotate-180' : ''} transition-all`}
-		/>
-	</button>
-	<BodyRowActionsCellDropdownMenuWithOptions {row} {column} {datagrid} />
-</div>
+			/>
+		</button>
+		<BodyRowActionsCellDropdownMenuWithOptions {row} {column} {datagrid} />
+	</div>
+	
+</Cell>

@@ -10,6 +10,7 @@
 		columns: userColumns,
 		data: data.users
 	});
+	
 </script>
 
 <DatagridShadcnSvelte {datagrid} />

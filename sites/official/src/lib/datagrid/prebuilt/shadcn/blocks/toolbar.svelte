@@ -9,15 +9,32 @@
 	import type { TzezarsDatagrid } from '../core/index.svelte';
 	import ControlCenterDropdown from './control-center-dropdown.svelte';
 
-	let { datagrid }: { datagrid: TzezarsDatagrid } = $props();
+	type Props = {
+		datagrid: TzezarsDatagrid;
+
+		title?: string;
+	};
+
+	let { datagrid, title }: Props = $props();
 </script>
 
-<div class={cn("flex items-end justify-end", datagrid.extra.features.columnFiltering.isEnabled() && 'top-bar ')}>
+<div
+	class={cn(
+		'flex items-end justify-end',
+		datagrid.extra.features.columnFiltering.isEnabled() && 'top-bar '
+	)}
+>
 	{#if datagrid.extra.features.columnFiltering.isEnabled()}
 		<GlobalSearch {datagrid} />
 	{:else}
 		<div class="flex h-full grow items-end pb-1 pl-2">
-			<span class='font-semibold text-lg w-full'>Your data, our datagrid</span>
+			<span class="w-full text-lg font-semibold">
+				{#if title}
+					{title}
+				{:else}
+					Your data, our datagrid
+				{/if}
+			</span>
 		</div>
 	{/if}
 

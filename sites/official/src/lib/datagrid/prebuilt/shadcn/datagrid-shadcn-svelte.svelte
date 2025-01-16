@@ -22,7 +22,6 @@
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
-
 		showCredentials?: boolean;
 
 		// Blocks
@@ -30,23 +29,20 @@
 		header?: Snippet;
 		body?: Snippet;
 		footer?: Snippet;
+		footerContent?: Snippet;
 		pagination?: Snippet;
 	};
 
 	let {
 		datagrid,
-		showCredentials = true,
+
 		toolbar,
 		header,
 		body,
 		footer,
+		footerContent,
 		pagination
 	}: Props = $props();
-
-	// let datagrid = new TzezarsDatagrid({
-	// 	columns,
-	// 	data
-	// });
 
 	let headerColumns = $derived(
 		datagrid.extra.features.groupHeadersVisibility.showGroupHeaders
@@ -63,7 +59,7 @@
 		{#if toolbar}
 			{@render toolbar()}
 		{:else}
-			<Toolbar {datagrid} />
+			<Toolbar {datagrid} title={datagrid.extra.getTitle()} />
 		{/if}
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
@@ -199,18 +195,22 @@
 					</div>
 				{/if}
 			</div>
-			{#if footer}
-				{@render footer()}
-			{:else}
-				<div class="grid-footer-container"></div>
-			{/if}
 		</div>
-		{#if pagination}
-			{@render pagination()}
+		{#if footer}
+			{@render footer()}
 		{:else}
-			<Pagination {datagrid} />
+			<div class="grid-footer-container border-b p-2">
+				{@render footerContent?.()}
+			</div>
 		{/if}
-		{#if showCredentials}
+		{#if datagrid.extra.state.withPagination === true}
+			{#if pagination}
+				{@render pagination()}
+			{:else}
+				<Pagination {datagrid} />
+			{/if}
+		{/if}
+		{#if datagrid.extra.showCredentials()}
 			<MadeWithLoveByTzezar />
 		{/if}
 	</div>

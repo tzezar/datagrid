@@ -1,0 +1,28 @@
+<script lang="ts">
+	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
+	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
+	import type { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
+
+	type Props = {
+		column: LeafColumn<any>;
+		row: GridGroupRow<any>;
+		datagrid: TzezarsDatagrid;
+	};
+	let { column, row, datagrid }: Props = $props();
+</script>
+
+<div class="flex flex-col place-items-start justify-start gap-1">
+	<span class="text-muted-foreground flex place-items-center text-xs">
+		({row.children.length} items)
+	</span>
+	<button class="flex gap-1" onclick={() => datagrid.rows.toggleGroupRowExpansion(row)}>
+		<span class="border-primary/30 rounded-sm border-[1px]">
+			<ArrowRight
+				class={`${datagrid.rows.isGroupRowExpanded(row) && 'rotate-90'} transition-all `}
+			/>
+		</span>
+		<span class="">
+			{row.groupValue[0]}
+		</span>
+	</button>
+</div>
