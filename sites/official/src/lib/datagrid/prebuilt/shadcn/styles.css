@@ -151,9 +151,9 @@
 	padding: 8px;
 	margin: 0;
 	line-height: 1;
-	overflow: hidden;
+	/* overflow: hidden;
 	text-overflow: ellipsis;
-	white-space: nowrap;
+	white-space: nowrap; */
 	position: relative;
 	box-sizing: border-box;
 	/* Move border to pseudo-element
@@ -167,6 +167,29 @@
 		background-color: hsl(var(--grid-body-cell));
 	} */
 }
+
+.grid-body-cell .cell-content {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+} 
+
+/* .grid-body-cell {
+    display: flex;
+    width: var(--width);
+    min-width: var(--min-width);
+    max-width: var(--max-width);
+    flex-shrink: 0;
+    padding: 8px;
+    margin: 0;
+    line-height: 1;
+    position: relative;
+    box-sizing: border-box;
+}
+
+*/
 
 /* Odd rows */
 /* .grid-body-row:nth-child(odd) {

@@ -125,7 +125,7 @@
 				title="Pagination controlled"
 				href={hrefs.headless.quickStart.installation}
 			/>
-			<GroupItem disabled title="Row selection" href={hrefs.headless.quickStart.installation} />
+			<GroupItem  title="Row selection" href={hrefs.shadcnSvelte.examples.rowSelection} />
 			<GroupItem disabled title="Scroll to top" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Sorting" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Spacing" href={hrefs.headless.quickStart.installation} />

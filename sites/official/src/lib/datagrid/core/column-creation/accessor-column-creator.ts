@@ -1,6 +1,7 @@
 import { DEFAULT_COLUMN_SIZE } from "../defaults";
+import type { AccessorColumn } from "../types";
 import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
-import type { DotNestedKeys, CreateAccessorColumnProps, AccessorColumn } from "./types";
+import type { DotNestedKeys, CreateAccessorColumnProps } from "./types";
 
 
 function getNestedValue<T>(obj: T, path: string): any {

@@ -21,6 +21,8 @@
 	{/if}
 {:else}
 	<Cell {datagrid} {row} {column}>
-		{@html getCellContent(column, row.original)}
+		<span class="cell-content">
+			{@html getCellContent(column, row.original)}
+		</span>
 	</Cell>
 {/if}

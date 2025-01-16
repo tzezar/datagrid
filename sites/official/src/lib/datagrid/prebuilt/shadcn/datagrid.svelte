@@ -177,7 +177,9 @@
 													style:--pin-left-offset={column.state.pinning.offset + 'px'}
 													style:--pin-right-offset={column.state.pinning.offset + 'px'}
 												>
-													{@html getCellContent(column, row.original)}
+													<span class="cell-content">
+														{@html getCellContent(column, row.original)}
+													</span>
 												</div>
 											{/if}
 										{/if}
@@ -199,7 +201,7 @@
 		{#if footer}
 			{@render footer()}
 		{:else}
-			<div class="grid-footer-container border-b p-2">
+			<div class={cn('grid-footer-container border-b', footerContent && 'p-2')}>
 				{@render footerContent?.()}
 			</div>
 		{/if}
