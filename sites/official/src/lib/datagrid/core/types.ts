@@ -270,8 +270,8 @@ export interface AccessorColumn<TOriginalRow, TMeta = any> {
   aggregate?: AggregationConfig;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   cell?: CustomCell<TOriginalRow>;
+  aggregatedCell?: CustomGroupCell<TOriginalRow>;
   headerCell?: HeaderCell;
-  groupRowCell?: CustomCell<TOriginalRow>;
   options: {
     searchable: boolean;
     groupable: boolean;
@@ -301,7 +301,7 @@ export interface ComputedColumn<TOriginalRow, TMeta = any> {
   getValueFn: GetValueFn<TOriginalRow>;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   cell?: CustomCell<TOriginalRow>;
-  groupRowCell?: CustomCell<TOriginalRow>;
+  aggregatedCell?: CustomGroupCell<TOriginalRow>;
   headerCell?: HeaderCell;
   formatterFn?: FormatterFn<TOriginalRow>;
   aggregate?: AggregationConfig;
@@ -331,8 +331,8 @@ export interface DisplayColumn<TOriginalRow, TMeta = any> {
   columnId: ColumnId
   parentColumnId: string | null;
   cell: CustomCell<TOriginalRow>;
+  aggregatedCell?: CustomGroupCell<TOriginalRow>;
   headerCell?: HeaderCell;
-  groupRowCell?: CustomCell<TOriginalRow>;
   options: {
     searchable: null;
     groupable: null;
