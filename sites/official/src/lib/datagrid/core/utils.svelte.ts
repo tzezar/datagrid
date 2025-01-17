@@ -10,16 +10,16 @@ export function generateRandomColumnId(): string {
 export function getCellContent(column: AnyColumn<any>, originalRow: any): CellValue | HTMLElement {
     switch (column.type) {
         case 'accessor':
-            if (column.formatter) {
-                return column.formatter(originalRow);
+            if (column.formatterFn) {
+                return column.formatterFn(originalRow);
             } else if (column.cell) {
                 return column.cell(originalRow);
             } else {
                 return column.getValueFn(originalRow);
             }
         case 'computed':
-            if (column.formatter) {
-                return column.formatter(originalRow);
+            if (column.formatterFn) {
+                return column.formatterFn(originalRow);
             } else if (column.cell) {
                 return column.cell(originalRow);
             } else {
