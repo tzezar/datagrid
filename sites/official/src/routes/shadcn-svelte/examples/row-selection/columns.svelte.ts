@@ -12,28 +12,28 @@ import type { InventoryItem } from "$lib/data-generators/generate/inventory";
 // }
 
 export const inventoryColumns = [
-    displayColumn({
-        header: 'Row Selection',
-        headerCell: () => ({
-            component: RowSelectionColumnHeaderCell
-        }),
-        columnId: 'selectRow',
-        cell: () => ({
-            component: RowSelectionBodyRowCell,
-        }),
-        options: { sortable: false },
-        state: {
-            size: {
-                width: 40,
-                minWidth: 40,
-                maxWidth: 40,
-            }
-        },
-        _meta: {
-            showColumnManagerDropdownMenu: false,
-            align: 'center'
-        } as ShadcnColumnMeta
-    }),
+    // displayColumn({
+    //     header: 'Row Selection',
+    //     headerCell: () => ({
+    //         component: RowSelectionColumnHeaderCell
+    //     }),
+    //     columnId: 'selectRow',
+    //     cell: () => ({
+    //         component: RowSelectionBodyRowCell,
+    //     }),
+    //     options: { sortable: false },
+    //     state: {
+    //         size: {
+    //             width: 40,
+    //             minWidth: 40,
+    //             maxWidth: 40,
+    //         }
+    //     },
+    //     _meta: {
+    //         showColumnManagerDropdownMenu: false,
+    //         align: 'center'
+    //     } as ShadcnColumnMeta
+    // }),
     accessorColumn({
         accessorKey: 'id'
     }),

@@ -17,6 +17,7 @@ export type TzezarsDatagridConfig<TOriginalRow = any> = GridConfig<TOriginalRow>
 export type TzezarsDatagridExtraStateConfig = {
     title?: string
     state?: {
+        enableRowSelection?: boolean
         highlightSelectedRow?: boolean
         showCredentials?: boolean
         withPagination?: boolean
@@ -71,6 +72,7 @@ export class ExtraState {
     highlightSelectedRow = $state(true)
     showCredentials = $state(true)
     withPagination = $state(true)
+    enableRowSelection = $state(true)
 
 }
 

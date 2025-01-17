@@ -33,7 +33,7 @@
 <div class="flex h-full w-full items-center justify-center">
 	<DropdownMenu.Root>
 		<DropdownMenu.Trigger>
-			<Button size="sm" class="m-0 h-full w-full rounded-none">O</Button>
+			<button class="bg-primary size-[14px]" aria-label="Toggle row selection"></button>
 		</DropdownMenu.Trigger>
 		<DropdownMenu.Content>
 			<DropdownMenu.Group>

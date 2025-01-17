@@ -19,10 +19,11 @@
 	import Pagination from '$lib/datagrid/prebuilt/shadcn/blocks/pagination.svelte';
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
 	import type { Snippet } from 'svelte';
+	import RowSelectionCell from './built-in/row-selection-cell.svelte';
+	import RowSelectionHeaderCell from './built-in/row-selection-header-cell.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
-		showCredentials?: boolean;
 
 		// Blocks
 		toolbar?: Snippet;
@@ -71,6 +72,10 @@
 				{:else}
 					<div class="grid-header">
 						<div class="grid-header-row">
+							{#if datagrid.extra.state.enableRowSelection}
+									<RowSelectionHeaderCell {datagrid} />
+							{/if}
+
 							{#each headerColumns as column (column.columnId)}
 								{#if isGroupColumn(column)}
 									{@render HeaderGroupCellSnippet(column)}
@@ -148,6 +153,9 @@
 								</div>
 							{:else}
 								<div class="grid-body-row">
+									{#if datagrid.extra.state.enableRowSelection}
+										<RowSelectionCell {row} {datagrid}/>
+									{/if}
 									{#each leafColumns as column (column.columnId)}
 										{#if column.isVisible()}
 											{#if column.cell}

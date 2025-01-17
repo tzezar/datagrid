@@ -1,9 +1,16 @@
 <script lang="ts">
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
-	import type { CustomCellProps } from '$lib/datagrid/core/types';
+	import type {  GridBasicRow,  LeafColumn } from '$lib/datagrid/core/types'; 
+	import type { TzezarsDatagrid } from '../core/index.svelte';
 	import Cell from '../structure/body/row/cell/cell.svelte';
 
-	let { column, datagrid, row }: CustomCellProps<any> = $props();
+	type Props = {
+		column: LeafColumn<any>;
+		datagrid: TzezarsDatagrid<any>;
+		row: GridBasicRow<any>
+	}
+
+	let { column, datagrid, row }: Props = $props();
 </script>
 
 
