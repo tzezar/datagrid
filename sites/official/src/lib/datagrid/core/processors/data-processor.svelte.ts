@@ -1,123 +1,146 @@
 import { sort } from "fast-sort";
 import { isGroupColumn } from "../helpers/column-guards";
 import type { DataGrid } from "../index.svelte";
-import type { Aggregation, AggregationFn, GridGroupRow, GridRow } from "../types";
+import type { Aggregation, AggregationFn, FilterCondition, GridGroupRow, GridRow } from "../types";
 import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 import type { PerformanceMetrics } from "../helpers/performance-metrics.svelte";
 import type { AccessorColumn, ComputedColumn } from "../types";
 import { aggregationFunctions } from "../helpers/aggregation-functions";
 
-export class DataProcessor<TRow> {
+export class DataProcessor<TOriginalRow> {
     private readonly metrics: PerformanceMetrics;
     private customAggregationFns: Map<string, AggregationFn>;
 
-    constructor(private readonly datagrid: DataGrid<TRow>) {
+    constructor(private readonly datagrid: DataGrid<TOriginalRow>) {
         this.metrics = datagrid.metrics;
         this.customAggregationFns = new Map();
     }
 
     executeFullDataTransformation(): void {
+        const shouldRunGrouping = this.datagrid.features.grouping.groupByColumns.length > 0 || this.datagrid.features.grouping.manual;
+
+
         this.metrics.clear();
-
-        const shouldRunGlobalSearch = this.datagrid.features.globalSearch.value !== '';
-        const shouldRunColumnFilters = this.datagrid.features.filtering.conditions.length > 0;
-        const shouldRunSorting = this.datagrid.features.sorting.sortings.length > 0;
-        const shouldRunGrouping = this.datagrid.features.grouping.groupByColumns.length > 0;
-
 
         // Create a copy of the data to avoid mutating the original data
         let data = [...this.datagrid.initial.data];
 
-
         if (this.datagrid.cache.filteredData === null) {
             // Apply global search if value is set
-            if (shouldRunGlobalSearch) {
-                this.metrics.measure('Global Search', () => {
-                    data = this.applyGlobalSearch(data);
-                });
-            }
-
-            if (shouldRunColumnFilters) {
-                this.metrics.measure('Column Filtering', () => {
-                    data = this.applyColumnFilters(data);
-                });
-            }
+            data = this.applyGlobalSearch(data);
+            data = this.applyColumnFilters(data);
         } else {
             data = this.datagrid.cache.filteredData;
         }
+        data = this.applySorting(data);
 
-        if (shouldRunSorting) {
-            this.metrics.measure('Sorting', () => {
-                data = this.applySorting(data);
-                this.datagrid.cache.sortedData = data;
-            });
-        }
-
-        // Cache sorted/filtered results
+        // Cache sorted or sortend and filtered results
         this.datagrid.cache.sortedData = data;
 
         // Clear hierarchical cache when data changes
         this.datagrid.cache.invalidate('hierarchicalRows');
+
 
         // Process grouped or regular data
         if (shouldRunGrouping) this.processGroupedData(data);
         else this.processRegularData(data);
 
         if (this.datagrid.config.measurePerformance) this.datagrid.metrics.print();
-
     }
 
-    private applyGlobalSearch(data: TRow[]): TRow[] {
+    applyGlobalSearch(data: TOriginalRow[]): TOriginalRow[] {
+        const isManualSortingEnabled = this.datagrid.features.globalSearch.manual
+        const valueIsEmpty = this.datagrid.features.globalSearch.value === ''
+
+        if (isManualSortingEnabled || valueIsEmpty) return data
+
         const searchValue = this.datagrid.features.globalSearch.value.toLowerCase();
 
-        if (this.datagrid.features.globalSearch.fuzzy) {
-            const fuse = this.datagrid.features.globalSearch.fuseInstance;
-            if (!fuse) throw new Error('Fuse instance is not initialized');
-            return fuse.search(searchValue).map(result => result.item);
+
+        const applyFuzzySearch = () => {
+            const fuseInstance = this.datagrid.features.globalSearch.fuseInstance;
+            if (!fuseInstance) throw new Error('Fuse instance is not initialized');
+            return fuseInstance.search(searchValue).map(result => result.item);
         }
-        
-        const searchableColumns = flattenColumnStructureAndClearGroups(this.datagrid.columns).filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TRow> | ComputedColumn<TRow>)[];
-        return data.filter(item =>
-            searchableColumns.some(column =>
-                String(column.getValueFn(item))
-                    .toLowerCase()
-                    .includes(searchValue)
-            )
-        );
-    }
-
-    private applyColumnFilters(data: TRow[]): TRow[] {
-        const activeFilters = this.datagrid.features.filtering.conditions
-            .filter(condition => condition.value !== '');
-
-        return data.filter(row =>
-            activeFilters.every(filter =>
-                this.datagrid.features.filtering.evaluateCondition(
-                    filter.getValueFn(row),
-                    filter
+        const applySimpleSearch = (data: TOriginalRow[]) => {
+            const searchableColumns = flattenColumnStructureAndClearGroups(this.datagrid.columns).filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>)[];
+            return data.filter(item =>
+                searchableColumns.some(column =>
+                    String(column.getValueFn(item))
+                        .toLowerCase()
+                        .includes(searchValue)
                 )
-            )
-        );
+            );
+        }
+
+        const isFuzzySearchEnabled = this.datagrid.features.globalSearch.fuzzy;
+
+        this.metrics.measure('Global Search', () => {
+            if (isFuzzySearchEnabled) {
+                data = applyFuzzySearch();
+            } else {
+                data = applySimpleSearch(data);
+            }
+        });
+        return data;
     }
 
-    private applySorting(data: TRow[]): TRow[] {
+    applyColumnFilters(data: TOriginalRow[]): TOriginalRow[] {
+        const isMnualSortingEnabled = this.datagrid.features.globalSearch.manual
+        const noFilters = this.datagrid.features.filtering.conditions.length === 0
+
+        if (isMnualSortingEnabled || noFilters) return data
+
+        const filterData = (data: TOriginalRow[], activeFilters: FilterCondition<any>[]) => {
+            return data.filter(row =>
+                activeFilters.every(filter =>
+                    this.datagrid.features.filtering.evaluateCondition(
+                        filter.getValueFn(row),
+                        filter
+                    )
+                )
+            );
+        }
+
+        const getActiveFilters = () => {
+            return this.datagrid.features.filtering.conditions
+                .filter(condition => condition.value !== '');
+        }
+
+        this.metrics.measure('Column Filtering', () => {
+            data = filterData(data, getActiveFilters());
+        })
+
+        return data;
+    }
+
+    applySorting(data: TOriginalRow[]): TOriginalRow[] {
+        const isMnualSortingEnabled = this.datagrid.features.globalSearch.manual
+        const noSorting = this.datagrid.features.sorting.sortings.length === 0
+        if (isMnualSortingEnabled || noSorting) return data
+
         const sortInstructions = this.datagrid.features.sorting.sortings
             .map(config => {
-                const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), config.columnId) as (AccessorColumn<TRow> | ComputedColumn<TRow>);
+                const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), config.columnId) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>);
                 if (!column || isGroupColumn(column) || !column.isSortable()) {
                     return null;
                 }
 
-                const getValueFn = (row: TRow) => column.getValueFn(row);
+                const getValueFn = (row: TOriginalRow) => column.getValueFn(row);
                 return config.desc ? { desc: getValueFn } : { asc: getValueFn };
             })
             .filter(Boolean);
 
-        return sort(data).by(sortInstructions as any);
+        this.metrics.measure('Sorting', () => {
+            data = sort(data).by(sortInstructions as any);
+        });
+
+        return data
     }
 
-    flattenGridRows(data: GridRow<TRow>[]): GridRow<TRow>[] {
-        const flattened: GridRow<TRow>[] = [];
+
+    flattenGridRows(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
+        const flattened: GridRow<TOriginalRow>[] = [];
 
         for (const row of data) {
             flattened.push(row);
@@ -128,7 +151,7 @@ export class DataProcessor<TRow> {
         return flattened
     }
 
-    processGroupedData(data: TRow[]): void {
+    processGroupedData(data: TOriginalRow[]): void {
         // Create grouped structure only if not already cached
         let groupedRows = this.datagrid.cache.hierarchicalRows;
 
@@ -153,9 +176,9 @@ export class DataProcessor<TRow> {
         this.datagrid.features.rowPinning.updatePinnedRows();
     }
 
-    private processRegularData(data: TRow[]): void {
+    private processRegularData(data: TOriginalRow[]): void {
         // Transform into basic rows
-        let basicRows: GridRow<TRow>[];
+        let basicRows: GridRow<TOriginalRow>[];
 
         this.metrics.measure('Data Transformation', () => {
             basicRows = this.createBasicRows(data);
@@ -196,8 +219,8 @@ export class DataProcessor<TRow> {
 
 
     private calculateAggregations(
-        column: AccessorColumn<TRow> | ComputedColumn<TRow>,
-        groupRows: TRow[]
+        column: AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>,
+        groupRows: TOriginalRow[]
     ): Aggregation[] {
         const config = column.aggregate;
         if (!config) return [];
@@ -231,16 +254,16 @@ export class DataProcessor<TRow> {
         }];
     }
 
-    createHierarchicalData(data: TRow[]): GridRow<TRow>[] {
+    createHierarchicalData(data: TOriginalRow[]): GridRow<TOriginalRow>[] {
         const groupCols = this.datagrid.features.grouping.groupByColumns;
         if (!groupCols.length) return this.createBasicRows(data);
 
         const groupByLevel = (
-            rows: TRow[],
+            rows: TOriginalRow[],
             depth: number,
             parentPath = ''
-        ): GridRow<TRow>[] => {
-            const groups = new Map<string, TRow[]>();
+        ): GridRow<TOriginalRow>[] => {
+            const groups = new Map<string, TOriginalRow[]>();
 
             if (depth >= groupCols.length) return this.createBasicRows(rows, parentPath);
 
@@ -270,7 +293,7 @@ export class DataProcessor<TRow> {
                         col.aggregate
                     )
                     .flatMap(col => {
-                        col = col as AccessorColumn<TRow> | ComputedColumn<TRow>;
+                        col = col as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>;
                         return this.calculateAggregations(col, groupRows);
                     });
 
@@ -284,7 +307,7 @@ export class DataProcessor<TRow> {
                     children: groupByLevel(groupRows, depth + 1, `${parentPath}${index + 1}`),
                     aggregations: aggregations,
                     isExpanded: () => this.datagrid.features.rowExpanding.isRowExpanded(key),
-                    isGroupRow: function (): this is GridGroupRow<TRow> {
+                    isGroupRow: function (): this is GridGroupRow<TOriginalRow> {
                         return true;
                     },
                 };
@@ -294,12 +317,12 @@ export class DataProcessor<TRow> {
         return groupByLevel(data, 0);
     }
 
-    private isGroupRow(row: GridRow<TRow>): row is GridGroupRow<TRow> {
+    private isGroupRow(row: GridRow<TOriginalRow>): row is GridGroupRow<TOriginalRow> {
         return 'groupKey' in row && 'children' in row;
     }
 
-    private flattenExpandedGroups(rows: GridRow<TRow>[]): GridRow<TRow>[] {
-        const flattened: GridRow<TRow>[] = [];
+    private flattenExpandedGroups(rows: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
+        const flattened: GridRow<TOriginalRow>[] = [];
 
         for (const row of rows) {
             flattened.push(row);
@@ -312,7 +335,7 @@ export class DataProcessor<TRow> {
         return flattened;
     }
 
-    private createBasicRows(rows: TRow[], parentIndex?: string): GridRow<TRow>[] {
+    private createBasicRows(rows: TOriginalRow[], parentIndex?: string): GridRow<TOriginalRow>[] {
 
         return rows.map((row, i) => {
             const identifier = this.datagrid.config.createBasicRowIdentifier(row);
@@ -327,7 +350,7 @@ export class DataProcessor<TRow> {
         });
     }
 
-    private paginateRows(rows: GridRow<TRow>[]): GridRow<TRow>[] {
+    private paginateRows(rows: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
         const { page, pageSize } = this.datagrid.features.pagination;
         const start = (page - 1) * pageSize;
         return rows.slice(start, start + pageSize);
@@ -359,7 +382,7 @@ export class DataProcessor<TRow> {
     }
 
     // New method to get only the visible rows based on group expansion state
-    private getVisibleRows(): GridRow<TRow>[] {
+    private getVisibleRows(): GridRow<TOriginalRow>[] {
         if (!this.datagrid.cache.hierarchicalRows) {
             return this.datagrid.cache.rows;
         }
