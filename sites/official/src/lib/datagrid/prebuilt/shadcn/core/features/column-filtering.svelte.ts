@@ -2,6 +2,10 @@
 
 
 export class ColumnFilteringFeature {
+    enabled: boolean = $state(true);
+    onColumnFilteringChange?: (filteredColumns: string[]) => void
+
+
 
     showColumnFiltering: boolean = $state(false);
 

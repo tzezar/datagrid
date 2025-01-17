@@ -1,4 +1,4 @@
-import type { AnyColumn, Sorting } from "$lib/datagrid/core/types";
+import type { AnyColumn, GridBasicRow, Sorting } from "$lib/datagrid/core/types";
 import { DataGrid, type GridConfig } from "$lib/datagrid/core/index.svelte";
 import { LifecycleHooks } from "$lib/datagrid/core/managers/lifecycle-hooks-manager.svelte";
 import { ColumnProcessor } from "$lib/datagrid/core/processors";
@@ -15,28 +15,13 @@ export type TzezarsDatagridConfig<TOriginalRow = any> = GridConfig<TOriginalRow>
     extra?: TzezarsDatagridExtraStateConfig;
 }
 
+export type Density = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 export type TzezarsDatagridExtraStateConfig = {
     title?: string
     state?: {
-        enableRowSelection?: boolean
         highlightSelectedRow?: boolean
         showCredentials?: boolean
-        withPagination?: boolean
-
-
-
-        initialState?: {
-            sorting: Sorting[]
-        }
-
-        // sorting
-        enableSorting?: boolean // enable/disable sorting for all columns
-        isMultiSortEvent: () => boolean, // multi-sorting will be the default click behavior without the need to hold shift
-        enableSortingRemoval: boolean, // users will not be able to remove a sort on a column
-        manualSorting: boolean  // server side sorting
-        onSortingChange?: (sortConfig: Sorting[]) => void
-
     }
 }
 
@@ -103,13 +88,15 @@ export class Extra {
         exporting: {} as ExportingFeature<any>
     };
 
+
+
     constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig) {
         this.datagrid = datagrid;
         this.features.exporting = new ExportingFeature(datagrid);
         this.title = config?.title; // Assign the title from config.extra
         this.state.highlightSelectedRow = config?.state?.highlightSelectedRow ?? this.state.highlightSelectedRow;
         this.state.showCredentials = config?.state?.showCredentials ?? this.state.showCredentials;
-        this.state.withPagination = config?.state?.withPagination ?? this.state.withPagination
+        this.state.withPagination = config?.state?.enablePagination ?? this.state.withPagination
     }
 
     getTitle(): string | undefined {
