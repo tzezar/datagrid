@@ -5,8 +5,8 @@ import HeaderGroupCell from "./header-group-cell.svelte";
 
 
 import BodyGroupRowCell from "./body-group-row-cell.svelte";
-import BodyRowGroupCellHeader from "./body-row-group-cell-header.svelte";
-import BodyRowGroupCellAggregations from "./body-row-group-cell-aggregations.svelte";
+import GroupedCell from "./grouped-cell.svelte";
+import AggregatedCell from "./aggregated-cell.svelte";
 
 
 import BodyBasicRowCell from "./body-basic-row-cell.svelte";
@@ -19,8 +19,8 @@ export {
 
 
     BodyGroupRowCell,
-    BodyRowGroupCellHeader,
-    BodyRowGroupCellAggregations,
+    GroupedCell,
+    AggregatedCell,
     
     BodyBasicRowCell,
 

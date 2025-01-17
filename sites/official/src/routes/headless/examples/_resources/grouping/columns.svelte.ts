@@ -2,6 +2,8 @@
 import { type AnyColumn } from "$lib/datagrid/core/types";
 import { accessorColumn, columnGroup, computedColumn } from "$lib/datagrid/core/column-creation";
 import type { User } from "$lib/data-generators/generate/user";
+import AggregatedCell from "./aggregated-cell.svelte";
+import GroupedCell from "./grouped-cell.svelte";
 
 export const userColumns = [
     accessorColumn({
@@ -11,6 +13,17 @@ export const userColumns = [
         getValueFn: (row) => row.id,
         options: { sortable: true, hideable: false },
         aggregate: 'count',
+        aggregatedCell: () => {
+            return {
+                component: AggregatedCell
+            }
+        },
+        groupedCell: () => {
+            return {
+                component: GroupedCell
+            }
+        }
+
     }),
     columnGroup({
         header: 'Person',

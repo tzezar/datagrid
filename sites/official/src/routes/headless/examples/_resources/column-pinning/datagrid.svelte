@@ -14,8 +14,8 @@
 		BodyBasicRowCell,
 		HeaderCellWrapper,
 		BodyGroupRowCell,
-		BodyRowGroupCellHeader,
-		BodyRowGroupCellAggregations
+		GroupedCell,
+		AggregatedCell
 	} from '$lib/datagrid/prebuilt/native/components';
 
 	import {
@@ -45,11 +45,11 @@
 		{#each leafColumns as column, columnIndex (column.columnId)}
 			<BodyGroupRowCell {datagrid} {column} {row}>
 				<RenderGroupRowCellContent {datagrid} {column} {row}>
-					{#snippet groupCell()}
-						<BodyRowGroupCellHeader {datagrid} {column} {row} />
+					{#snippet groupedCell()}
+						<GroupedCell {datagrid} {column} {row} />
 					{/snippet}
 					{#snippet aggregatedCell()}
-						<BodyRowGroupCellAggregations {datagrid} {column} {row} />
+						<AggregatedCell {datagrid} {column} {row} />
 					{/snippet}
 				</RenderGroupRowCellContent>
 			</BodyGroupRowCell>

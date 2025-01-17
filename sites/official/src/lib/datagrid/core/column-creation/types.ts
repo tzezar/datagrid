@@ -1,4 +1,4 @@
-import type { FormatterFn, AggregationConfig, GetGroupValue, CustomCell, HeaderCell, ColumnId, CellValue, ColumnSizeState, ColumnPinningState, AnyColumn, ParentColumnId } from "../types";
+import type { FormatterFn, AggregationConfig, GetGroupValue, CustomCell, HeaderCell, ColumnId, CellValue, ColumnSizeState, ColumnPinningState, AnyColumn, ParentColumnId, AggregatedCell, GroupedCell } from "../types";
 
 type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
 export type DotNestedKeys<T> = (T extends object ? {
@@ -14,7 +14,8 @@ export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<T
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   aggregate?: AggregationConfig;
   cell?: CustomCell<TOriginalRow>;
-  groupRowCell?: CustomCell<TOriginalRow>;
+  aggregatedCell?: AggregatedCell<TOriginalRow>;
+  groupedCell?: GroupedCell<TOriginalRow>;
   headerCell?: HeaderCell;
   formatter?: FormatterFn<TOriginalRow>;
   options?: {
@@ -38,7 +39,8 @@ export type CreateComputeColumnProps<TOriginalRow> = {
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   formatter?: FormatterFn<TOriginalRow>;
   cell?: CustomCell<TOriginalRow>;
-  groupRowCell?: CustomCell<TOriginalRow>;
+  aggregatedCell?: AggregatedCell<TOriginalRow>;
+  groupedCell?: GroupedCell<TOriginalRow>;
   headerCell?: HeaderCell;
   options?: {
     searchable?: boolean;
@@ -55,8 +57,9 @@ export type CreateComputeColumnProps<TOriginalRow> = {
 
 export type CreateDisplayColumnProps<TOriginalRow> = {
   cell: CustomCell<TOriginalRow>;
-  groupRowCell?: CustomCell<TOriginalRow>;
   headerCell?: HeaderCell;
+  aggregatedCell?: AggregatedCell<TOriginalRow>;
+  groupedCell?: GroupedCell<TOriginalRow>;
   options?: {
     searchable?: false;
     groupable?: false;

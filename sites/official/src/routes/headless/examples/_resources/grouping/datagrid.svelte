@@ -14,8 +14,8 @@
 		BodyBasicRowCell,
 		HeaderCellWrapper,
 		BodyGroupRowCell,
-		BodyRowGroupCellHeader,
-		BodyRowGroupCellAggregations
+		GroupedCell,
+		AggregatedCell
 	} from '$lib/datagrid/prebuilt/native/components';
 
 	import {
@@ -37,7 +37,7 @@
 		data: data
 	});
 
-	const columns = datagrid.columnManager.getLeafColumnsInOrder();
+	const columns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
 </script>
 
 {#snippet GroupRowSnippet(row: GridGroupRow<any>, leafColumns: LeafColumn<any>[])}
@@ -45,11 +45,11 @@
 		{#each leafColumns as column, columnIndex (column.columnId)}
 			<BodyGroupRowCell {datagrid} {column} {row}>
 				<RenderGroupRowCellContent {datagrid} {column} {row}>
-					{#snippet groupCell()}
-						<BodyRowGroupCellHeader {datagrid} {column} {row} />
+					{#snippet groupedCell()}
+						<GroupedCell {datagrid} {column} {row} />
 					{/snippet}
 					{#snippet aggregatedCell()}
-						<BodyRowGroupCellAggregations {datagrid} {column} {row} />
+						<AggregatedCell {datagrid} {column} {row} />
 					{/snippet}
 				</RenderGroupRowCellContent>
 			</BodyGroupRowCell>
@@ -147,7 +147,6 @@
 	<MadeWithLoveByTzezar />
 </div>
 
-
-<div class='p-2 px-4 border'>
+<div class="border p-2 px-4">
 	{JSON.stringify($state.snapshot(datagrid.features.grouping.groupByColumns))}
 </div>

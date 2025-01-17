@@ -120,6 +120,8 @@ export type CustomCellComponentWithProps = {
     props?: object;
 };
 
+
+// Cell
 export type CustomCellProps<TOriginalRow> = {
     datagrid: DataGrid<any>;
     column: LeafColumn<any>;
@@ -130,24 +132,35 @@ export type CustomCell<TOriginalRow> = (
     props: CustomCellProps<TOriginalRow>
 ) => string | HTMLElement | CustomCellComponentWithProps;
 
-
-export type CustomGroupCellProps<TOriginalRow> = {
+// Aggregated Cell
+export type AggregateCellProps<TOriginalRow> = {
     datagrid: DataGrid<any>;
     column: LeafColumn<any>;
     row: GridGroupRow<TOriginalRow>;
 };
-export type CustomGroupCell<TOriginalRow> = (
-    props: CustomGroupCellProps<TOriginalRow>
+export type AggregatedCell<TOriginalRow> = (
+    props: AggregateCellProps<TOriginalRow>
 ) => string | HTMLElement | CustomCellComponentWithProps;
 
+// Grouped Cell
+export type GroupedCellProps<TOriginalRow> = {
+    datagrid: DataGrid<any>;
+    column: LeafColumn<any>;
+    row: GridGroupRow<TOriginalRow>;
+};
 
-export type CustomHeaderCellProps = {
+export type GroupedCell<TOriginalRow> = (
+    props: GroupedCellProps<TOriginalRow>
+) => string | HTMLElement | CustomCellComponentWithProps;
+
+// Header Cell
+export type HeaderCellProps = {
     column: AnyColumn<any>;
     datagrid: DataGrid<any>;
 };
 
 export type HeaderCell = (
-    props: CustomHeaderCellProps
+    props: HeaderCellProps
 ) => string | HTMLElement | CustomCellComponentWithProps;
 
 /**
@@ -270,7 +283,8 @@ export interface AccessorColumn<TOriginalRow, TMeta = any> {
   aggregate?: AggregationConfig;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   cell?: CustomCell<TOriginalRow>;
-  aggregatedCell?: CustomGroupCell<TOriginalRow>;
+  aggregatedCell?: AggregatedCell<TOriginalRow>;
+  groupedCell?: GroupedCell<TOriginalRow>;
   headerCell?: HeaderCell;
   options: {
     searchable: boolean;
@@ -301,7 +315,8 @@ export interface ComputedColumn<TOriginalRow, TMeta = any> {
   getValueFn: GetValueFn<TOriginalRow>;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   cell?: CustomCell<TOriginalRow>;
-  aggregatedCell?: CustomGroupCell<TOriginalRow>;
+  aggregatedCell?: AggregatedCell<TOriginalRow>;
+  groupedCell?: GroupedCell<TOriginalRow>;
   headerCell?: HeaderCell;
   formatterFn?: FormatterFn<TOriginalRow>;
   aggregate?: AggregationConfig;
@@ -331,7 +346,8 @@ export interface DisplayColumn<TOriginalRow, TMeta = any> {
   columnId: ColumnId
   parentColumnId: string | null;
   cell: CustomCell<TOriginalRow>;
-  aggregatedCell?: CustomGroupCell<TOriginalRow>;
+  aggregatedCell?: AggregatedCell<TOriginalRow>;
+  groupedCell?: GroupedCell<TOriginalRow>;
   headerCell?: HeaderCell;
   options: {
     searchable: null;
