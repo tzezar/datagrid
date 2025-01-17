@@ -40,7 +40,6 @@ export class DataProcessor<TOriginalRow> {
         // Clear hierarchical cache when data changes
         this.datagrid.cache.invalidate('hierarchicalRows');
 
-
         // Process grouped or regular data
         if (shouldRunGrouping) this.processGroupedData(data);
         else this.processRegularData(data);

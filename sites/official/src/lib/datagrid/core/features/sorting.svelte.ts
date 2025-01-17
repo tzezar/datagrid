@@ -3,6 +3,7 @@ import type { ColumnId, Sorting } from "../types";
 
 
 export type SortingFeatureConfig = {
+    manual: boolean;
     sortConfigs?: Sorting[];
 }
 
@@ -29,6 +30,7 @@ export class SortingFeature {
     }
 
     initialize(config?: SortingFeatureConfig) {
+        this.manual = config?.manual ?? this.manual;
         this.sortings = config?.sortConfigs ?? this.sortings;
     }
 
