@@ -3,7 +3,7 @@ import { DEFAULT_FUSE_OPTIONS } from "../defaults";
 
 
 export type GlobalSearchFeatureConfig = {
-    manual: boolean;
+    manual?: boolean;
     value?: string;
     delay?: number;
     fuzzy?: boolean;

@@ -119,6 +119,7 @@ export class DataGrid<TOriginalRow> {
         this.features.columnFaceting = new ColumnFacetingFeature(this, config.features?.columnFaceting);
         this.features.filtering = new ColumnFilteringFeature(config.features?.filtering);
         this.features.globalSearch = new GlobalSearchFeature({
+            manual: config.features?.globalSearch?.manual,
             delay: config.features?.globalSearch?.delay,
             fuzzy: config.features?.globalSearch?.fuzzy,
             fuseInstance: config.features?.globalSearch?.fuseInstance || this.features.globalSearch.initializeFuseInstance(this.initial.data, flattenColumnStructureAndClearGroups(this.columns).map(col => col.columnId as string)),
