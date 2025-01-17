@@ -305,7 +305,6 @@ export interface ComputedColumn<TOriginalRow, TMeta = any> {
   headerCell?: HeaderCell;
   formatter?: FormatterFn<TOriginalRow>;
   aggregate?: AggregationConfig;
-
   options: {
     searchable: boolean;
     groupable: boolean;

@@ -51,10 +51,10 @@
 		{#each leafColumns as column, columnIndex (column.columnId)}	
 			<BodyGroupRowCell {datagrid} {column} {row}>
 				<RenderGroupRowCellContent {datagrid} {column} {row}>
-					{#snippet header()}
+					{#snippet groupCell()}
 						<BodyRowGroupCellHeader {datagrid} {column} {row} />
 					{/snippet}
-					{#snippet aggregations()}
+					{#snippet aggregatedCell()}
 						<BodyRowGroupCellAggregations {datagrid} {column} {row} />
 					{/snippet}
 				</RenderGroupRowCellContent>

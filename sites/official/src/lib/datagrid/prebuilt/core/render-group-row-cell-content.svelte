@@ -7,11 +7,11 @@
 		datagrid: DataGrid<any>;
 		column: LeafColumn<any>;
 		row: GridGroupRow<any>;
-		header: Snippet<[DataGrid<any>, LeafColumn<any>, GridGroupRow<any>]>;
-		aggregations: Snippet<[LeafColumn<any>, GridGroupRow<any>]>;
+		groupCell: Snippet<[DataGrid<any>, LeafColumn<any>, GridGroupRow<any>]>;
+		aggregatedCell: Snippet<[LeafColumn<any>, GridGroupRow<any>]>;
 	};
 
-	let { datagrid, column, row, header: header, aggregations: aggregations }: Props = $props();
+	let { datagrid, column, row, groupCell: header, aggregatedCell: aggregations }: Props = $props();
 
 
 
