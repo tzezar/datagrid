@@ -166,7 +166,7 @@ export type HeaderCell = (
 /**
  * Sorting Types
  */
-export interface SortConfig {
+export interface Sorting {
     columnId: ColumnId;
     desc: boolean;
     index: number;

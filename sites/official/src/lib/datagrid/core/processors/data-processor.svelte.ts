@@ -21,7 +21,7 @@ export class DataProcessor<TRow> {
 
         const shouldRunGlobalSearch = this.datagrid.features.globalSearch.value !== '';
         const shouldRunColumnFilters = this.datagrid.features.filtering.conditions.length > 0;
-        const shouldRunSorting = this.datagrid.features.sorting.sortConfigs.length > 0;
+        const shouldRunSorting = this.datagrid.features.sorting.sortings.length > 0;
         const shouldRunGrouping = this.datagrid.features.grouping.groupByColumns.length > 0;
 
 
@@ -101,7 +101,7 @@ export class DataProcessor<TRow> {
     }
 
     private applySorting(data: TRow[]): TRow[] {
-        const sortInstructions = this.datagrid.features.sorting.sortConfigs
+        const sortInstructions = this.datagrid.features.sorting.sortings
             .map(config => {
                 const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), config.columnId) as (AccessorColumn<TRow> | ComputedColumn<TRow>);
                 if (!column || isGroupColumn(column) || !column.isSortable()) {

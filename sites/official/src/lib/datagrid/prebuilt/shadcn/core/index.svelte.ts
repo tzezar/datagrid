@@ -1,4 +1,4 @@
-import type { AnyColumn } from "$lib/datagrid/core/types";
+import type { AnyColumn, Sorting } from "$lib/datagrid/core/types";
 import { DataGrid, type GridConfig } from "$lib/datagrid/core/index.svelte";
 import { LifecycleHooks } from "$lib/datagrid/core/managers/lifecycle-hooks-manager.svelte";
 import { ColumnProcessor } from "$lib/datagrid/core/processors";
@@ -14,6 +14,8 @@ export type TzezarsDatagridConfig<TOriginalRow = any> = GridConfig<TOriginalRow>
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;
     extra?: TzezarsDatagridExtraStateConfig;
 }
+
+
 export type TzezarsDatagridExtraStateConfig = {
     title?: string
     state?: {
@@ -21,6 +23,20 @@ export type TzezarsDatagridExtraStateConfig = {
         highlightSelectedRow?: boolean
         showCredentials?: boolean
         withPagination?: boolean
+
+
+
+        initialState?: {
+            sorting: Sorting[]
+        }
+
+        // sorting
+        enableSorting?: boolean // enable/disable sorting for all columns
+        isMultiSortEvent: () => boolean, // multi-sorting will be the default click behavior without the need to hold shift
+        enableSortingRemoval: boolean, // users will not be able to remove a sort on a column
+        manualSorting: boolean  // server side sorting
+        onSortingChange?: (sortConfig: Sorting[]) => void
+
     }
 }
 
