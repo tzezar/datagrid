@@ -7,6 +7,8 @@ export type GroupingFeatureConfig = {
 }
 
 export class GroupingFeature {
+    manual: boolean = $state(false);
+
     groupByColumns: ColumnId[] = $state([]);
     expandedGroups: SvelteSet<GridGroupRowIdentifier> = $state(new SvelteSet([]))
 

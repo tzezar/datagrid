@@ -13,6 +13,7 @@ export type ColumnFilteringFeatureConfig = {
 export class ColumnFilteringFeature<TOriginalRow> {
     // Stores all filter conditions for the columns
     conditions: FilterCondition<TOriginalRow>[] = $state([]);
+    manual: boolean = $state(false);
 
     constructor(config?: ColumnFilteringFeatureConfig) {
         this.initialize(config);

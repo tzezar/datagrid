@@ -2,30 +2,26 @@
 
 
 export class ColumnFilteringFeature {
-    enabled: boolean = $state(true);
     onColumnFilteringChange?: (filteredColumns: string[]) => void
-
-
-
-    showColumnFiltering: boolean = $state(false);
+    enabled: boolean = $state(false);
 
     constructor() {
     }
 
     enableColumnFiltering() {
-        this.showColumnFiltering = true;
+        this.enabled = true;
     }
 
     disableColumnFiltering() {
-        this.showColumnFiltering = false;
+        this.enabled = false;
     }
 
     toggleColumnFiltering() {
-        this.showColumnFiltering = !this.showColumnFiltering;
+        this.enabled = !this.enabled;
     }
 
     isEnabled() {
-        return this.showColumnFiltering;
+        return this.enabled;
     }
 
 

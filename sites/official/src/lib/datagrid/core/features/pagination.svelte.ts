@@ -15,6 +15,8 @@ export class PaginationFeature<TOriginalRow> {
     // The instance of the data grid associated with this feature
     datagrid: DataGrid<TOriginalRow>;
 
+    manual: boolean = $state(false);
+
     // The current page number (starts at page 1)
     page = $state(1);
 

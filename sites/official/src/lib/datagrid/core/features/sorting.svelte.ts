@@ -11,6 +11,8 @@ export type SortingFeatureConfig = {
  * It allows adding, removing, and changing the sorting direction of columns.
  */
 export class SortingFeature {
+    manual: boolean = $state(false);
+
     // The instance of the data grid associated with this feature
     datagrid: DataGrid<any>;
 

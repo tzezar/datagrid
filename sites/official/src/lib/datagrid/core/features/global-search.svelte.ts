@@ -14,6 +14,8 @@ export type GlobalSearchFeatureConfig = {
  * Manages global search functionality with fuzzy searching using Fuse.js.
  */
 export class GlobalSearchFeature {
+    manual: boolean = $state(false);
+
     // State for storing the current search value
     value = $state('');
 
