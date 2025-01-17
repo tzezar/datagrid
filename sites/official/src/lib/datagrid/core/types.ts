@@ -266,7 +266,7 @@ export interface AccessorColumn<TOriginalRow, TMeta = any> {
   parentColumnId: string | null;
   accessorKey: DotNestedKeys<TOriginalRow>;
   getValueFn: GetValueFn<TOriginalRow>;
-  formatter?: FormatterFn<TOriginalRow>;
+  formatterFn?: FormatterFn<TOriginalRow>;
   aggregate?: AggregationConfig;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
   cell?: CustomCell<TOriginalRow>;
@@ -303,7 +303,7 @@ export interface ComputedColumn<TOriginalRow, TMeta = any> {
   cell?: CustomCell<TOriginalRow>;
   groupRowCell?: CustomCell<TOriginalRow>;
   headerCell?: HeaderCell;
-  formatter?: FormatterFn<TOriginalRow>;
+  formatterFn?: FormatterFn<TOriginalRow>;
   aggregate?: AggregationConfig;
   options: {
     searchable: boolean;
@@ -341,7 +341,6 @@ export interface DisplayColumn<TOriginalRow, TMeta = any> {
     pinnable: boolean;
     moveable: boolean;
     hideable: boolean;
-
   };
   state: {
     size: ColumnSizeState
