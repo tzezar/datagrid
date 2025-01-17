@@ -2,6 +2,12 @@ import { SvelteSet } from "svelte/reactivity";
 import type { DataGrid } from "../index.svelte";
 import type { GridRowIdentifier } from "../types";
 
+
+export type RowExpandingFeatureConfig = {
+    expandedRowIds?: SvelteSet<GridRowIdentifier>;
+}
+
+
 /**
  * Manages row expansion functionality within the data grid.
  * Allows expanding and collapsing rows, with the state tracked via expanded row IDs.
@@ -17,8 +23,13 @@ export class RowExpandingFeature<TOriginalRow> {
      * Constructor to initialize the row expansion feature with a reference to the data grid.
      * @param datagrid - The data grid instance to associate with this row expansion feature.
      */
-    constructor(datagrid: DataGrid<TOriginalRow>) {
+    constructor(datagrid: DataGrid<TOriginalRow>, config?: RowExpandingFeatureConfig) {
         this.datagrid = datagrid;
+        this.initialize(config);
+    }
+
+    initialize(config?: RowExpandingFeatureConfig) {
+        this.expandedRowIds = config?.expandedRowIds ?? this.expandedRowIds;
     }
 
     /**

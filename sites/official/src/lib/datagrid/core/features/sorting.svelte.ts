@@ -1,6 +1,11 @@
 import type { DataGrid } from "../index.svelte";
 import type { ColumnId, SortConfig } from "../types";
 
+
+export type SortingFeatureConfig = {
+    sortConfigs?: SortConfig[];
+}
+
 /**
  * This class manages the sorting behavior within the data grid.
  * It allows adding, removing, and changing the sorting direction of columns.
@@ -16,9 +21,15 @@ export class SortingFeature {
      * Constructor to initialize the sorting feature with a reference to the data grid.
      * @param datagrid - The data grid instance to associate with this sorting feature.
      */
-    constructor(datagrid: DataGrid<any>) {
+    constructor(datagrid: DataGrid<any>, config?: SortingFeatureConfig) {
         this.datagrid = datagrid;
+        this.initialize(config);
     }
+
+    initialize(config?: SortingFeatureConfig) {
+        this.sortConfigs = config?.sortConfigs ?? this.sortConfigs;
+    }
+
 
     /**
      * Refreshes the indices of the sort configurations, ensuring each config has an up-to-date index.

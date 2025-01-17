@@ -3,6 +3,12 @@ import type { DataGrid } from "../index.svelte";
 import type { GridGroupRow, GridRow, GridRowIdentifier, RowPinningPosition } from "../types";
 
 
+export type RowPinningFeatureConfig = {
+    rowIdsPinnedTop?: SvelteSet<GridRowIdentifier>;
+    rowIdsPinnedBottom?: SvelteSet<GridRowIdentifier>;
+}
+
+
 export class RowPinningFeature<TOriginalRow> {
     datagrid: DataGrid<TOriginalRow>;
     rowIdsPinnedTop: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
@@ -13,8 +19,14 @@ export class RowPinningFeature<TOriginalRow> {
     private bottomRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
 
 
-    constructor(datagrid: DataGrid<TOriginalRow>) {
+    constructor(datagrid: DataGrid<TOriginalRow>, config?: RowPinningFeatureConfig) {
         this.datagrid = datagrid;
+        this.initialize(config);
+    }
+
+    initialize(config?: RowPinningFeatureConfig) {
+        this.rowIdsPinnedTop = config?.rowIdsPinnedTop ?? this.rowIdsPinnedTop;
+        this.rowIdsPinnedBottom = config?.rowIdsPinnedBottom ?? this.rowIdsPinnedBottom;
     }
 
     // Update the caches based on current processedRowsCache

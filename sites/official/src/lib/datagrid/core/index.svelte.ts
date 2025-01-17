@@ -4,7 +4,7 @@ import { ColumnFacetingFeature, ColumnFilteringFeature, ColumnGroupingFeature, C
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
 import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
-import type { PaginationConfig } from "./features/pagination.svelte";
+import type { PaginationFeatureConfig } from "./features/pagination.svelte";
 import { flattenColumnStructureAndClearGroups } from "./utils.svelte";
 
 export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
@@ -14,7 +14,7 @@ export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColu
     event?: object
 
     features?: {
-        pagination: PaginationConfig
+        pagination: PaginationFeatureConfig
     }
 
 }

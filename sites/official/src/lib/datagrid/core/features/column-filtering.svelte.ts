@@ -1,5 +1,11 @@
 import type { FilterCondition, FilterOperator } from "../types";
 
+
+export type ColumnFilteringFeatureConfig = {
+    conditions?: FilterCondition<any>[];
+}
+
+
 /**
  * Manages column filtering functionality for a data grid.
  * Provides utilities for evaluating filter conditions and toggling the visibility of filters.
@@ -7,6 +13,15 @@ import type { FilterCondition, FilterOperator } from "../types";
 export class ColumnFilteringFeature<TOriginalRow> {
     // Stores all filter conditions for the columns
     conditions: FilterCondition<TOriginalRow>[] = $state([]);
+
+    constructor(config?: ColumnFilteringFeatureConfig) {
+        this.initialize(config);
+    }
+
+    initialize(config?: ColumnFilteringFeatureConfig) {
+        this.conditions = config?.conditions ?? this.conditions;
+    }
+
 
     /**
      * Retrieves the filter condition value for a given column.

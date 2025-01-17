@@ -1,6 +1,15 @@
 import Fuse, { type IFuseOptions } from "fuse.js";
 import { DEFAULT_FUSE_OPTIONS } from "../defaults";
 
+
+export type GlobalSearchFeatureConfig = {
+    value?: string;
+    delay?: number;
+    fuzzy?: boolean;
+    fuseInstance?: Fuse<any>;
+}
+
+
 /**
  * Manages global search functionality with fuzzy searching using Fuse.js.
  */
@@ -16,6 +25,17 @@ export class GlobalSearchFeature {
 
     // The instance of Fuse.js for performing the search
     fuseInstance: Fuse<any> | null = null;
+
+    constructor(config?: GlobalSearchFeatureConfig) {
+        this.initialize(config);
+    }
+
+    initialize(config?: GlobalSearchFeatureConfig) {
+        this.value = config?.value ?? this.value;
+        this.delay = config?.delay ?? this.delay;
+        this.fuzzy = config?.fuzzy ?? this.fuzzy;
+        this.fuseInstance = config?.fuseInstance ?? this.fuseInstance;
+    }
 
     /**
      * Sets the Fuse.js instance used for performing searches.

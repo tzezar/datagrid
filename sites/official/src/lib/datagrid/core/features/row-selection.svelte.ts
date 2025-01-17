@@ -3,13 +3,22 @@ import type { DataGrid } from "../index.svelte";
 import type { GridRowIdentifier } from "../types";
 
 
+export type RowSelectionFeatureConfig = {
+    selectedBasicRowIdentifiers?: SvelteSet<GridRowIdentifier>;
+}
+
 
 export class RowSelectionFeature<TOriginalRow> {
     datagrid: DataGrid<TOriginalRow>;
     selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier> = new SvelteSet()
 
-    constructor(datagrid: DataGrid<TOriginalRow>) {
+    constructor(datagrid: DataGrid<TOriginalRow>, config?: RowSelectionFeatureConfig) {
         this.datagrid = datagrid;
+        this.initialize(config);
+    }
+
+    initialize(config?: RowSelectionFeatureConfig) {
+        this.selectedBasicRowIdentifiers = config?.selectedBasicRowIdentifiers ?? this.selectedBasicRowIdentifiers;
     }
 
     getSelectedIdentifiers() {

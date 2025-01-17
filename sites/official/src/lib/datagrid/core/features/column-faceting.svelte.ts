@@ -2,6 +2,12 @@ import type { AccessorColumn, AnyColumn, ComputedColumn } from "../types";
 import type { DataGrid } from "../index.svelte";
 import type { ColumnId } from "../types";
 
+
+export type ColumnFacetingFeatureConfig = {
+    numericFacets?: Record<ColumnId, { min: number; max: number }>;
+    categoricalFacets?: Record<ColumnId, { uniqueValuesCount: number; uniqueValues: unknown[] }>;
+}
+
 /**
  * Handles facet calculations for numeric and categorical data in a data grid.
  * Provides utilities for retrieving and calculating facets for columns.
@@ -16,13 +22,16 @@ export class ColumnFacetingFeature<TOriginalRow> {
     // Stores categorical facets (unique values and their count) for each column
     private categoricalFacets: Record<ColumnId, { uniqueValuesCount: number; uniqueValues: unknown[] }> = $state({});
 
-    /**
-     * Initializes the faceting feature for the given data grid.
-     * @param datagrid - The DataGrid instance this feature is associated with.
-     */
-    constructor(datagrid: DataGrid<TOriginalRow>) {
+    constructor(datagrid: DataGrid<TOriginalRow>, config?: ColumnFacetingFeatureConfig) {
         this.datagrid = datagrid;
+        this.initialize(config);
     }
+
+    initialize(config?: ColumnFacetingFeatureConfig) {
+        this.numericFacets = config?.numericFacets ?? this.numericFacets;
+        this.categoricalFacets = config?.categoricalFacets ?? this.categoricalFacets;
+    }
+
 
     // ==== Getters for facets ====
 

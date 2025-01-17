@@ -1,5 +1,6 @@
 import type { DataGrid } from "../index.svelte";
 import type { ColumnId } from "../types";
+import { findColumnById } from "../utils.svelte";
 
 /**
  * Manages column visibility functionality for a DataGrid.
@@ -35,4 +36,19 @@ export class ColumnVisibilityFeature<TOriginalRow> {
         // Toggle the column's visibility state
         column.state.visible = !column.state.visible;
     }
+
+    hideColumn(columnId: ColumnId): void {
+        const column = findColumnById(this.datagrid.columnManager.getLeafColumns(), columnId);
+        if (column) {
+            column.state.visible = false;
+        }
+    }
+
+    showColumn(columnId: ColumnId): void {
+        const column = findColumnById(this.datagrid.columnManager.getLeafColumns(), columnId);
+        if (column) {
+            column.state.visible = true;
+        }
+    }
+
 }
