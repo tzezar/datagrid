@@ -6,6 +6,14 @@ import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from
 import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
 import type { PaginationFeatureConfig } from "./features/pagination.svelte";
 import { flattenColumnStructureAndClearGroups } from "./utils.svelte";
+import type { ColumnFilteringFeatureConfig } from "./features/column-filtering.svelte";
+import type { ColumnFacetingFeatureConfig } from "./features/column-faceting.svelte";
+import type { GlobalSearchFeatureConfig } from "./features/global-search.svelte";
+import type { GroupingFeatureConfig } from "./features/grouping.svelte";
+import type { RowExpandingFeatureConfig } from "./features/row-expanding.svelte";
+import type { RowPinningFeatureConfig } from "./features/row-pinning.svelte";
+import type { RowSelectionFeatureConfig } from "./features/row-selection.svelte";
+import type { SortingFeatureConfig } from "./features/sorting.svelte";
 
 export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
     columns: C[];
@@ -14,9 +22,16 @@ export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColu
     event?: object
 
     features?: {
+        columnFaceting?: ColumnFacetingFeatureConfig
+        filtering?: ColumnFilteringFeatureConfig
+        globalSearch?: GlobalSearchFeatureConfig
+        grouping?: GroupingFeatureConfig
         pagination: PaginationFeatureConfig
+        rowExpanding?: RowExpandingFeatureConfig
+        rowPinning?: RowPinningFeatureConfig
+        rowSelection?: RowSelectionFeatureConfig
+        sorting?: SortingFeatureConfig
     }
-
 }
 
 export class DataGrid<TOriginalRow> {
@@ -75,6 +90,8 @@ export class DataGrid<TOriginalRow> {
         this.initializeState(config);
     }
 
+
+
     private validateConfigInputs({ columns, data }: GridConfig<TOriginalRow>) {
         if (!columns) throw new Error('Columns are required');
         if (!data) throw new Error('Data is required');
@@ -90,12 +107,31 @@ export class DataGrid<TOriginalRow> {
 
         this.columns = this.processors.column.initializeColumns(this.initial.columns)
         this.processors.data.executeFullDataTransformation();
+        
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
         this.features.columnFaceting.calculateFacets(this.cache.sortedData || [], this.columns);
 
-        this.features.globalSearch.fuseInstance = this.features.globalSearch.initializeFuseInstance(this.initial.data, flattenColumnStructureAndClearGroups(this.columns).map(col => col.columnId as string))
+        this.initializeFeatures(config);
     }
+
+    private initializeFeatures(config: GridConfig<TOriginalRow>) {
+        this.features.columnFaceting = new ColumnFacetingFeature(this, config.features?.columnFaceting);
+        this.features.filtering = new ColumnFilteringFeature(config.features?.filtering);
+        this.features.globalSearch = new GlobalSearchFeature({
+            delay: config.features?.globalSearch?.delay,
+            fuzzy: config.features?.globalSearch?.fuzzy,
+            fuseInstance: config.features?.globalSearch?.fuseInstance || this.features.globalSearch.initializeFuseInstance(this.initial.data, flattenColumnStructureAndClearGroups(this.columns).map(col => col.columnId as string)),
+            value: config.features?.globalSearch?.value
+        });
+        this.features.grouping = new GroupingFeature(config.features?.grouping);
+        this.features.pagination = new PaginationFeature(this, config.features?.pagination);
+        this.features.rowExpanding = new RowExpandingFeature(this, config.features?.rowExpanding);
+        this.features.rowPinning = new RowPinningFeature(this, config.features?.rowPinning);
+        this.features.rowSelection = new RowSelectionFeature(this, config.features?.rowSelection);
+        this.features.sorting = new SortingFeature(this, config.features?.sorting);
+    }
+
 
     /**
        * Performs a refresh with different levels of data recalculation
