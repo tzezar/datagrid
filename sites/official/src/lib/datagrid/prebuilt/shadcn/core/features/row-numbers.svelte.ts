@@ -9,7 +9,7 @@ export type RowNumbersFeatureConfig = {
 
 export class RowNumbersFeature {
     enableRowNumbers: boolean = $state(true);
-    rowNumberMode: 'original' | 'static' = $state('original');
+    rowNumberMode: 'original' | 'static' = $state('static');
 
     constructor(config?: RowNumbersFeatureConfig) {
         if (config) {

@@ -197,6 +197,9 @@ export class Extra {
         this.features.rowActions = new RowActionsFeature(config?.features?.rowActions);
         this.features.rowExpanding = new ExtraRowExpandingFeature(this.datagrid, config?.features?.rowExpanding);
         this.features.rowNumbers = new RowNumbersFeature(config?.features?.rowNumbers);
+        
+        
+        
         this.features.rowSelection = new ExtraRowSelectionFeature(this.datagrid, config?.features?.rowSelection);
         this.features.sorting = new ExtraSortingFeature(this.datagrid, config?.features?.sorting);
     }

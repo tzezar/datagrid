@@ -1,12 +1,12 @@
 import { ColumnSizingFeature } from "$lib/datagrid/core/features";
+import type { ColumnSizingFeatureConfig } from "$lib/datagrid/core/features/column-sizing.svelte";
 import type { DataGrid } from "$lib/datagrid/core/index.svelte";
 
 
 export type ExtraColumnSizingFeatureConfig = {
     enableColumnSizing?: boolean;
-    onColumnResize?(columnId: string, width: number): void;
     columnResizeMode?: 'standard' | 'fluid';
-}
+} & ColumnSizingFeatureConfig
 
 
 export class ExtraColumnSizingFeature {
@@ -17,11 +17,11 @@ export class ExtraColumnSizingFeature {
     onColumnResize: (columnId: string, width: number) => void = () => { };
 
     constructor(datagrid: DataGrid<any>, config?: ExtraColumnSizingFeatureConfig) {
-        this.base = new ColumnSizingFeature(datagrid);
+        this.base = datagrid.features.columnSizing;
+        this.base.initialize(config);
 
         if (config) {
             this.enableColumnSizing = config.enableColumnSizing ?? this.enableColumnSizing;
-            this.onColumnResize = config.onColumnResize ?? this.onColumnResize;
             this.columnResizeMode = config.columnResizeMode ?? this.columnResizeMode;
         }
     }

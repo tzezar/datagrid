@@ -5,9 +5,7 @@ import { DataGrid } from "$lib/datagrid/core/index.svelte";
 
 export type ExtraGroupingFeatureConfig = {
     enableGrouping?: boolean;
-    onGroupingChange?(expandedGroups: string[]): void;
 }
-
 
 export class ExtraGroupingFeature {
     base: GroupingFeature = new GroupingFeature();
@@ -16,7 +14,8 @@ export class ExtraGroupingFeature {
     enableGrouping: boolean = $state(true);
     onGroupingChange: (expandedGroups: string[]) => void = () => { };
     constructor(datagrid: DataGrid<any>, config?: ExtraGroupingFeatureConfig & GroupingFeatureConfig) {
-        this.base = new GroupingFeature(config);
+        this.base = datagrid.features.grouping;
+        this.base.initialize(config);
 
         if (config) {
             this.enableGrouping = config.enableGrouping ?? this.enableGrouping;

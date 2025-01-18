@@ -5,6 +5,8 @@ export type GroupingFeatureConfig = {
     manual: boolean;
     groupByColumns?: ColumnId[];
     expandedGroups?: SvelteSet<GridGroupRowIdentifier>;
+    onGroupingChange?(expandedGroups: string[]): void;
+
 }
 
 export class GroupingFeature {
@@ -12,6 +14,8 @@ export class GroupingFeature {
 
     groupByColumns: ColumnId[] = $state([]);
     expandedGroups: SvelteSet<GridGroupRowIdentifier> = $state(new SvelteSet([]))
+
+    onGroupingChange: (expandedGroups: string[]) => void = () => { };
 
     constructor(config?: GroupingFeatureConfig) {
         this.initialize(config);
@@ -21,6 +25,7 @@ export class GroupingFeature {
         this.manual = config?.manual ?? this.manual;
         this.groupByColumns = config?.groupByColumns ?? this.groupByColumns;
         this.expandedGroups = config?.expandedGroups ?? this.expandedGroups;
+        this.onGroupingChange = config?.onGroupingChange ?? this.onGroupingChange;
     }
 
     isColumnWithinGroup(columnId: ColumnId): boolean {

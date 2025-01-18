@@ -19,7 +19,8 @@ export class ExtraPaginationFeature<TOriginalRow> {
     onPaginationChange: (page: number, pageSize: number) => void = () => { };
 
     constructor(datagrid: DataGrid<TOriginalRow>, config?: ExtraPaginationFeatureConfig & PaginationFeatureConfig) {
-        this.base = new PaginationFeature(datagrid, config);
+        this.base = datagrid.features.pagination;
+        this.base.initialize(config);
 
         if (config) {
             this.enablePagination = config.enablePagination ?? this.enablePagination;

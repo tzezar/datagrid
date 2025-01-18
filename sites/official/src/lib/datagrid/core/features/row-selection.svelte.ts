@@ -4,13 +4,16 @@ import type { GridRowIdentifier } from "../types";
 
 
 export type RowSelectionFeatureConfig = {
-    selectedBasicRowIdentifiers?: SvelteSet<GridRowIdentifier>;
+    maxSelectedRows?: number;
+    selectedRowIds?: SvelteSet<GridRowIdentifier>;
+    onRowSelectionChange?(config: RowSelectionFeature<any>): void;
 }
 
 
 export class RowSelectionFeature<TOriginalRow> {
     datagrid: DataGrid<TOriginalRow>;
     selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier> = new SvelteSet()
+    maxSelectedRows: number = $state(99);
 
     constructor(datagrid: DataGrid<TOriginalRow>, config?: RowSelectionFeatureConfig) {
         this.datagrid = datagrid;
@@ -18,7 +21,8 @@ export class RowSelectionFeature<TOriginalRow> {
     }
 
     initialize(config?: RowSelectionFeatureConfig) {
-        this.selectedBasicRowIdentifiers = config?.selectedBasicRowIdentifiers ?? this.selectedBasicRowIdentifiers;
+        this.maxSelectedRows = config?.maxSelectedRows ?? this.maxSelectedRows;
+        this.selectedBasicRowIdentifiers = config?.selectedRowIds ?? this.selectedBasicRowIdentifiers;
     }
 
     getSelectedIdentifiers() {

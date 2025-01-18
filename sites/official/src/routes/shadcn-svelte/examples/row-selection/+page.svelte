@@ -17,7 +17,7 @@
 					manualSorting: false,
 					maxMultiSortColCount: 2,
 					
-				}
+				},
 			}
 		}
 	});

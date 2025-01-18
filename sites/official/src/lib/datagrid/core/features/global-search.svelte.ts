@@ -8,6 +8,7 @@ export type GlobalSearchFeatureConfig = {
     delay?: number;
     fuzzy?: boolean;
     fuseInstance?: Fuse<any>;
+    onGlobalSearchChange?(value: string): void;
 }
 
 
@@ -29,6 +30,8 @@ export class GlobalSearchFeature {
     // The instance of Fuse.js for performing the search
     fuseInstance: Fuse<any> | null = null;
 
+    onGlobalSearchChange: (value: string) => void = () => { };
+
     constructor(config?: GlobalSearchFeatureConfig) {
         this.initialize(config);
     }
@@ -39,6 +42,7 @@ export class GlobalSearchFeature {
         this.delay = config?.delay ?? this.delay;
         this.fuzzy = config?.fuzzy ?? this.fuzzy;
         this.fuseInstance = config?.fuseInstance ?? this.fuseInstance;
+        this.onGlobalSearchChange = config?.onGlobalSearchChange ?? this.onGlobalSearchChange;
     }
 
     /**

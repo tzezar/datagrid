@@ -1,21 +1,28 @@
 import { GlobalSearchFeature } from "$lib/datagrid/core/features";
+import type { GlobalSearchFeatureConfig } from "$lib/datagrid/core/features/global-search.svelte";
+import type { TzezarsDatagrid } from "../index.svelte";
 
 
 export type ExtraGlobalSearchFeatureConfig = {
     enableGlobalSearch?: boolean;
-    onGlobalSearchChange?(value: string): void;
-}
+    onEnableGlobalSearchChange?(value: boolean): void;
+} & GlobalSearchFeatureConfig
 
 
 export class ExtraGlobalSearchFeature {
     base: GlobalSearchFeature = new GlobalSearchFeature();
-    
+
     enableGlobalSearch: boolean = $state(true);
-    onGlobalSearchChange: (value: string) => void = () => { };
-    constructor(config?: ExtraGlobalSearchFeatureConfig) {
+
+    onEnableGlobalSearchChange: (value: boolean) => void = () => { };
+
+    constructor(datagrid: TzezarsDatagrid, config?: ExtraGlobalSearchFeatureConfig) {
+        this.base = datagrid.features.globalSearch;
+        this.base.initialize(config);
+
         if (config) {
             this.enableGlobalSearch = config.enableGlobalSearch ?? this.enableGlobalSearch;
-            this.onGlobalSearchChange = config.onGlobalSearchChange ?? this.onGlobalSearchChange;
+            this.onEnableGlobalSearchChange = config.onEnableGlobalSearchChange ?? this.onEnableGlobalSearchChange;
         }
     }
 }

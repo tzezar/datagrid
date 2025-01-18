@@ -1,12 +1,15 @@
 import type { DataGrid } from "../index.svelte";
 
 export type PaginationFeatureConfig = {
-    manual: boolean;
+    manul: boolean;
     page: number;
     pageSize: number;
     pageSizes: number[];
     pageCount: number;
     visibleRowsCount: number;
+
+    autoResetPage?: boolean;
+    onPaginationChange?(config: PaginationFeature<any>): void;
 }
 
 /**
@@ -15,6 +18,10 @@ export type PaginationFeatureConfig = {
 export class PaginationFeature<TOriginalRow> {
     // The instance of the data grid associated with this feature
     datagrid: DataGrid<TOriginalRow>;
+
+
+    autoResetPage: boolean = $state(false);
+    onPaginationChange: (config: PaginationFeature<any>) => void = () => { };
 
     manual: boolean = $state(false);
 
@@ -43,12 +50,14 @@ export class PaginationFeature<TOriginalRow> {
     }
 
     initialize(config?: PaginationFeatureConfig) {
-        this.manual = config?.manual ?? this.manual;
+        this.manual = config?.manul ?? this.manual;
         this.pageSizes = config?.pageSizes ?? this.pageSizes;
         this.pageCount = config?.pageCount ?? this.pageCount;
         this.visibleRowsCount = config?.visibleRowsCount ?? this.visibleRowsCount;
         this.pageSize = config?.pageSize ?? this.pageSize;
         this.page = config?.page ?? this.page;
+        this.autoResetPage = config?.autoResetPage ?? this.autoResetPage;
+        this.onPaginationChange = config?.onPaginationChange ?? this.onPaginationChange;
     }
 
 

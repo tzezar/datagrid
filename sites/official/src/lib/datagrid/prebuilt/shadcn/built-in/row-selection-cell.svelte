@@ -11,6 +11,7 @@
 	};
 
 	let { datagrid, row }: Props = $props();
+	
 </script>
 
 <CellWithoutColumn {datagrid} {row}>

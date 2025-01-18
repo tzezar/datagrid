@@ -4,6 +4,7 @@ import type { FilterCondition, FilterOperator } from "../types";
 export type ColumnFilteringFeatureConfig = {
     conditions?: FilterCondition<any>[];
     manual?: boolean;
+    onColumnFilteringChange?(filteredColumns: string[]): void;
 }
 
 
@@ -16,13 +17,17 @@ export class ColumnFilteringFeature<TOriginalRow> {
     conditions: FilterCondition<TOriginalRow>[] = $state([]);
     manual: boolean = $state(false);
 
+    onColumnFilteringChange: (filteredColumns: string[]) => void = () => { };
+
     constructor(config?: ColumnFilteringFeatureConfig) {
         this.initialize(config);
     }
 
+
     initialize(config?: ColumnFilteringFeatureConfig) {
         this.conditions = config?.conditions ?? this.conditions;
         this.manual = config?.manual ?? this.manual;
+        this.onColumnFilteringChange = config?.onColumnFilteringChange ?? this.onColumnFilteringChange;
     }
 
 
