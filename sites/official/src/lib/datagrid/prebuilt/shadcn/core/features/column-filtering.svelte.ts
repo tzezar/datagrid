@@ -1,16 +1,21 @@
+import { ColumnFilteringFeature } from "$lib/datagrid/core/features";
+import type { ColumnFilteringFeatureConfig } from "$lib/datagrid/core/features/column-filtering.svelte";
+import type { TzezarsDatagrid } from "../index.svelte";
 
 
-export type ColumnFilteringFeatureConfig = {
+export type ExtraColumnFilteringFeatureConfig = {
     onColumnFilteringChange?(filteredColumns: string[]): void;
     enabled?: boolean;
 }
 
 
-export class ColumnFilteringFeature {
+export class ExtraColumnFilteringFeature {
+    base: ColumnFilteringFeature<any> = new ColumnFilteringFeature()
     onColumnFilteringChange?: (filteredColumns: string[]) => void
     enabled: boolean = $state(false);
 
-    constructor(config?: ColumnFilteringFeatureConfig) {
+    constructor(datagrid: TzezarsDatagrid, config?: ExtraColumnFilteringFeatureConfig & ColumnFilteringFeatureConfig) {
+        this.base = new ColumnFilteringFeature(config);
         if (config) {
             this.enabled = config.enabled ?? this.enabled;
             this.onColumnFilteringChange = config.onColumnFilteringChange ?? this.onColumnFilteringChange;

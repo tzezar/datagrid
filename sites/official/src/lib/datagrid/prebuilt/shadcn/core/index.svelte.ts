@@ -182,6 +182,7 @@ export class Extra {
 
 
         this.datagrid = datagrid;
+        this.initializeFeatures(config);
         this.features.exporting = new ExportingFeature(datagrid);
         this.title = config?.title; // Assign the title from config.extra
         this.state.highlightSelectedRow = config?.state?.highlightSelectedRow ?? this.state.highlightSelectedRow;
@@ -189,7 +190,7 @@ export class Extra {
         this.state.enableRowSelection = config?.state?.enablePagination ?? this.state.enableRowSelection
     }
 
-    initializeFeatures(config: TzezarsDatagridExtraStateConfig) {
+    initializeFeatures(config?: TzezarsDatagridExtraStateConfig) {
         this.features.clickToCopy = new ClickToCopyFeature(config?.features?.clickToCopy);
         this.features.columnFiltering = new ColumnFilteringFeature(config?.features?.columnFiltering);
         this.features.columnPinning = new ExtraColumnPinningFeature(this.datagrid, config?.features?.columnPinning);

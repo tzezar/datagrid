@@ -1,5 +1,5 @@
 import { ClickToCopyFeature } from "./click-to-copy.svelte";
-import { ColumnFilteringFeature } from "./column-filtering.svelte";
+import { ExtraColumnFilteringFeature } from "./column-filtering.svelte";
 import { ExtraColumnPinningFeature } from "./column-pinning.svelte";
 import { ExtraColumnSizingFeature } from "./column-resizing.svelte";
 import { ExtraColumnVisibilityFeature } from "./column-visibility.svelte";
@@ -20,7 +20,7 @@ import { ExtraSortingFeature } from "./sorting.svelte";
 
 
 import type { ClickToCopyFeatureConfig } from "./click-to-copy.svelte";
-import type { ColumnFilteringFeatureConfig } from "./column-filtering.svelte";
+import type { ExtraColumnFilteringFeatureConfig } from "./column-filtering.svelte";
 import type { ExtraColumnPinningFeatureConfig } from "./column-pinning.svelte";
 import type { ExtraColumnSizingFeatureConfig } from "./column-resizing.svelte";
 import type { ExtraColumnVisibilityFeatureConfig } from "./column-visibility.svelte";
@@ -43,7 +43,7 @@ import type { ExtraSortingFeatureConfig } from "./sorting.svelte";
 
 export {
     ClickToCopyFeature,
-    ColumnFilteringFeature,
+    ExtraColumnFilteringFeature as ColumnFilteringFeature,
     ExtraColumnPinningFeature,
     ExtraColumnSizingFeature,
     ExtraColumnVisibilityFeature,
@@ -66,7 +66,7 @@ export {
 
 export type {
     ClickToCopyFeatureConfig,
-    ColumnFilteringFeatureConfig,
+    ExtraColumnFilteringFeatureConfig as ColumnFilteringFeatureConfig,
     ExtraColumnPinningFeatureConfig,
     ExtraColumnSizingFeatureConfig,
     ExtraColumnVisibilityFeatureConfig,

@@ -3,6 +3,7 @@ import type { FilterCondition, FilterOperator } from "../types";
 
 export type ColumnFilteringFeatureConfig = {
     conditions?: FilterCondition<any>[];
+    manual?: boolean;
 }
 
 
@@ -21,6 +22,7 @@ export class ColumnFilteringFeature<TOriginalRow> {
 
     initialize(config?: ColumnFilteringFeatureConfig) {
         this.conditions = config?.conditions ?? this.conditions;
+        this.manual = config?.manual ?? this.manual;
     }
 
 
