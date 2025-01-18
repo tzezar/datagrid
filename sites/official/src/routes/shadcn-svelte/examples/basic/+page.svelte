@@ -24,7 +24,19 @@
 
 	let datagrid = new TzezarsDatagrid({
 		columns: userColumns,
-		data: data.users
+		data: data.users,
+
+		
+		extra: {
+			features: {
+				fullscreen: {
+					onFullscreenChange(config) {
+						console.log(config.isFullscreen)
+					}
+				}
+			}
+		}
+
 	});
 
 	let columns = $derived(

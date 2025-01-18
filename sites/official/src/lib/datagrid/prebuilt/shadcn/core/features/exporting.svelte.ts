@@ -4,12 +4,18 @@ import { XMLBuilder } from 'fast-xml-parser';
 import { TzezarsDatagrid } from '../index.svelte';
 import type { LeafColumn } from '$lib/datagrid/core/types';
 
+
+export type ExportingFeatureConfig = {
+    fileName?: string;
+}
+
 export class ExportingFeature<T> {
     private datagrid: TzezarsDatagrid<T>;
     fileName: string = $state('table');
 
-    constructor(datagrid: TzezarsDatagrid<T>) {
+    constructor(datagrid: TzezarsDatagrid<T>, config?: ExportingFeatureConfig) {
         this.datagrid = datagrid;
+        this.fileName = config?.fileName ?? this.fileName;
     }
 
     /**

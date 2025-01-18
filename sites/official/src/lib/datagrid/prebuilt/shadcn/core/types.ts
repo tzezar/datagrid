@@ -10,5 +10,3 @@ export type ShadcnColumnMeta = {
         headerCell?: string;
     }
 }
-
-
