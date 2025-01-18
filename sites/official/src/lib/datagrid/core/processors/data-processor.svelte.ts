@@ -19,7 +19,6 @@ export class DataProcessor<TOriginalRow> {
     executeFullDataTransformation(): void {
         const shouldRunGrouping = this.datagrid.features.grouping.groupByColumns.length > 0 || this.datagrid.features.grouping.manual;
 
-
         this.metrics.clear();
 
         // Create a copy of the data to avoid mutating the original data
@@ -48,6 +47,8 @@ export class DataProcessor<TOriginalRow> {
     }
 
     applyGlobalSearch(data: TOriginalRow[]): TOriginalRow[] {
+        data = this.datagrid.lifecycleHooks.executePreGlobalSearch(data);
+
         const isManualSortingEnabled = this.datagrid.features.globalSearch.manual
         const valueIsEmpty = this.datagrid.features.globalSearch.value === ''
 
@@ -81,10 +82,13 @@ export class DataProcessor<TOriginalRow> {
                 data = applySimpleSearch(data);
             }
         });
-        return data;
+
+        return  this.datagrid.lifecycleHooks.executePostGlobalSearch(data);
     }
 
     applyColumnFilters(data: TOriginalRow[]): TOriginalRow[] {
+        data = this.datagrid.lifecycleHooks.executePreFilter(data);
+
         const isMnualSortingEnabled = this.datagrid.features.globalSearch.manual
         const noFilters = this.datagrid.features.filtering.conditions.length === 0
 
@@ -110,10 +114,12 @@ export class DataProcessor<TOriginalRow> {
             data = filterData(data, getActiveFilters());
         })
 
-        return data;
+        return this.datagrid.lifecycleHooks.executePostFilter(data);
     }
 
     applySorting(data: TOriginalRow[]): TOriginalRow[] {
+        data = this.datagrid.lifecycleHooks.executePreSort(data);
+
         const isMnualSortingEnabled = this.datagrid.features.globalSearch.manual
         const noSorting = this.datagrid.features.sorting.sortings.length === 0
         if (isMnualSortingEnabled || noSorting) return data
@@ -134,7 +140,8 @@ export class DataProcessor<TOriginalRow> {
             data = sort(data).by(sortInstructions as any);
         });
 
-        return data
+        return this.datagrid.lifecycleHooks.executePostSort(data);
+
     }
 
 
@@ -173,6 +180,8 @@ export class DataProcessor<TOriginalRow> {
 
         // this has to run always
         this.datagrid.features.rowPinning.updatePinnedRows();
+
+
     }
 
     private processRegularData(data: TOriginalRow[]): void {

@@ -19,7 +19,7 @@
 
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
-	import Pagination from '$lib/datagrid/prebuilt/native/pagination.svelte';
+	import Pagination from '$lib/datagrid/prebuilt/native/blocks/pagination.svelte';
 
 	const data = generateData(generateUser, 100);
 

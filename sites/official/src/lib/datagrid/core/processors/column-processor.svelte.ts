@@ -12,16 +12,20 @@ export class ColumnProcessor<TOriginalRow> {
     }
 
     initializeColumns = (columns: AnyColumn<any>[]): AnyColumn<any>[] => {
-        let columnsInOrder = this.placeGroupColumnsInFront(this.assignParentColumnIds(columns));
-        columnsInOrder.forEach(col => {
+        columns = this.datagrid.lifecycleHooks.executePreProcessColumns(columns);
+
+        columns = this.placeGroupColumnsInFront(columns);
+        // ? Might be better to move this to column creation fns
+        columns.forEach(col => {
             return {
                 isGroupColumn: () => col.type === 'group',
                 ...col,
             }
         })
-        columnsInOrder = this.datagrid.lifecycleHooks.executePreProcessColumns(columnsInOrder);
 
-        return columnsInOrder
+        columns = this.datagrid.lifecycleHooks.executePostProcessColumns(columns);
+
+        return columns
     };
 
     assignParentColumnIds(columns: AnyColumn<TOriginalRow>[], parentColumnId: ColumnId | null = null) {

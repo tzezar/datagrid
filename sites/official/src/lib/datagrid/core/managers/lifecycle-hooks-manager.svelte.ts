@@ -7,18 +7,18 @@ export class LifecycleHooks<TRow> {
 
     // Predefined hook names to avoid typos and provide better TypeScript support
     static readonly HOOKS = {
+        PRE_PROCESS_ORIGINAL_COLUMNS: 'preProcessOriginalColumns', // works on original columns
+        POST_PROCESS_ORIGINAL_COLUMNS: 'postProcessOriginalColumns', // works on original columns
         PRE_PROCESS_COLUMNS: 'preProcessColumns',
         POST_PROCESS_COLUMNS: 'postProcessColumns',
         PRE_PROCESS_DATA: 'preProcessData',
         POST_PROCESS_DATA: 'postProcessData',
         PRE_SORT: 'preSort',
         POST_SORT: 'postSort',
-        PRE_GROUP: 'preGroup',
-        POST_GROUP: 'postGroup',
+        PRE_GLOBAL_SEARCH: 'preGlobalSearch',
+        POST_GLOBAL_SEARCH: 'postGlobalSearch',
         PRE_FILTER: 'preFilter',
         POST_FILTER: 'postFilter',
-        PRE_PAGINATION: 'prePagination',
-        POST_PAGINATION: 'postPagination'
     } as const;
 
     constructor() {
@@ -67,6 +67,15 @@ export class LifecycleHooks<TRow> {
     /**
      * Convenience methods for common hooks
      */
+    
+    executePreProcessOriginalColumns(columns: AnyColumn<TRow>[]): AnyColumn<TRow>[] {
+        return this.execute(LifecycleHooks.HOOKS.PRE_PROCESS_ORIGINAL_COLUMNS, columns);
+    }
+
+    executePostProcessOriginalColumns(columns: AnyColumn<TRow>[]): AnyColumn<TRow>[] {
+        return this.execute(LifecycleHooks.HOOKS.POST_PROCESS_ORIGINAL_COLUMNS, columns);
+    }
+
     executePreProcessColumns(columns: AnyColumn<TRow>[]): AnyColumn<TRow>[] {
         return this.execute(LifecycleHooks.HOOKS.PRE_PROCESS_COLUMNS, columns);
     }
@@ -89,6 +98,23 @@ export class LifecycleHooks<TRow> {
 
     executePostSort(data: TRow[]): TRow[] {
         return this.execute(LifecycleHooks.HOOKS.POST_SORT, data);
+    }
+
+
+    executePreFilter(data: TRow[]): TRow[] {
+        return this.execute(LifecycleHooks.HOOKS.PRE_FILTER, data);
+    }
+
+    executePostFilter(data: TRow[]): TRow[] {
+        return this.execute(LifecycleHooks.HOOKS.POST_FILTER, data);
+    }
+
+    executePreGlobalSearch(data: TRow[]): TRow[] {
+        return this.execute(LifecycleHooks.HOOKS.PRE_GLOBAL_SEARCH, data);
+    }
+
+    executePostGlobalSearch(data: TRow[]): TRow[] {
+        return this.execute(LifecycleHooks.HOOKS.POST_GLOBAL_SEARCH, data);
     }
 
     /**

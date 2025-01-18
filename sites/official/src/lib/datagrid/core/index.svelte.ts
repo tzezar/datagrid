@@ -102,18 +102,33 @@ export class DataGrid<TOriginalRow> {
     }
 
     private initializeState(config: GridConfig<TOriginalRow>) {
-        this.initial.columns = config.columns;
-        this.initial.data = config.data;
+
+        this.initializeOriginalColumns(config.columns);
+        this.initializeOriginalData(config.data)
 
         this.columns = this.processors.column.initializeColumns(this.initial.columns)
         this.processors.data.executeFullDataTransformation();
-        
+
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
         this.features.columnFaceting.calculateFacets(this.cache.sortedData || [], this.columns);
 
         this.initializeFeatures(config);
     }
+
+    private initializeOriginalColumns(columns: AnyColumn<TOriginalRow>[]) {
+        // * Parent column Ids must be assigned before the columns are processed to ensure correct grouping
+        columns = this.lifecycleHooks.executePreProcessOriginalColumns(this.processors.column.assignParentColumnIds(columns));
+        this.initial.columns = columns;
+        this.initial.columns = this.lifecycleHooks.executePostProcessOriginalColumns(this.initial.columns);
+    }
+
+    private initializeOriginalData(data: TOriginalRow[]) {
+        data = this.lifecycleHooks.executePreProcessData(data);
+        this.initial.data = data;
+        this.initial.data = this.lifecycleHooks.executePostProcessData(this.initial.data);
+    }
+
 
     private initializeFeatures(config: GridConfig<TOriginalRow>) {
         this.features.columnFaceting = new ColumnFacetingFeature(this, config.features?.columnFaceting);
