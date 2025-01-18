@@ -16,7 +16,7 @@
 					enableSorting: true,
 					manualSorting: false,
 					maxMultiSortColCount: 2,
-					
+					isMultiSortEvent: () => true,
 				},
 			}
 		}

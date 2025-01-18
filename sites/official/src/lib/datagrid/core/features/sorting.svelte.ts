@@ -6,7 +6,7 @@ export type SortingFeatureConfig = {
     manualSorting: boolean;
     sortConfigs?: Sorting[];
 
-    // isMultiSortEvent?: (e: unknown) => boolean;
+    isMultiSortEvent?: (e: unknown) => boolean;
     maxMultiSortColCount?: number;
     onSortingChange?(config: any): void;
 
@@ -40,7 +40,7 @@ export class SortingFeature {
         this.sortings = config?.sortConfigs ?? this.sortings;
         this.maxMultiSortColCount = config?.maxMultiSortColCount ?? this.maxMultiSortColCount;
         this.onSortingChange = config?.onSortingChange ?? this.onSortingChange;
-        // this.isMultiSortEvent = config?.isMultiSortEvent ?? this.isMultiSortEvent;
+        this.isMultiSortEvent = config?.isMultiSortEvent ?? this.isMultiSortEvent;
     }
 
 

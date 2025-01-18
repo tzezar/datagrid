@@ -19,11 +19,12 @@ export class ExtraSortingFeature {
     constructor(datagrid: TzezarsDatagrid<any>, config?: ExtraSortingFeatureConfig) {
         this.base = datagrid.features.sorting
         this.base.initialize(config);
-  
+
         if (config) {
             this.enableSorting = config.enableSorting ?? this.enableSorting;
             this.enableSortingRemoval = config.enableSortingRemoval ?? this.enableSortingRemoval;
             this.enableMultiSort = config.enableMultiSort ?? this.enableMultiSort;
         }
     }
+
 }
