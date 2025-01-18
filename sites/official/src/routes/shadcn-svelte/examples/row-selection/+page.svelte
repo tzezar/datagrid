@@ -8,9 +8,21 @@
 
 	let datagrid = new TzezarsDatagrid({
 		columns: inventoryColumns,
-		data: data.users
+		data: data.users,
+		extra: {
+			features: {
+				sorting: {
+					enableMultiSort: true,
+					enableSorting: true,
+					manualSorting: false,
+					maxMultiSortColCount: 2,
+					
+				}
+			}
+		}
 	});
-	
+
+
 </script>
 
 <DatagridShadcnSvelte {datagrid} />

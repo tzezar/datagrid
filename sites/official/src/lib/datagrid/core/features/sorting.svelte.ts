@@ -3,8 +3,13 @@ import type { ColumnId, Sorting } from "../types";
 
 
 export type SortingFeatureConfig = {
-    manual: boolean;
+    manualSorting: boolean;
     sortConfigs?: Sorting[];
+
+    // isMultiSortEvent?: (e: unknown) => boolean;
+    maxMultiSortColCount?: number;
+    onSortingChange?(config: any): void;
+
 }
 
 /**
@@ -12,13 +17,14 @@ export type SortingFeatureConfig = {
  * It allows adding, removing, and changing the sorting direction of columns.
  */
 export class SortingFeature {
-    manual: boolean = $state(false);
-
-    // The instance of the data grid associated with this feature
     datagrid: DataGrid<any>;
+    manualSorting: boolean = $state(false);
 
-    // List of sort configurations, each representing a column's sort state
-    sortings: Sorting[] = $state([]);
+    sortings: Sorting[] = $state([]); // List of sort configurations, each representing a column's sort state
+
+    maxMultiSortColCount: number = $state(99);
+    onSortingChange: (config: SortingFeature) => void = () => { };
+    isMultiSortEvent: (e: unknown) => boolean = $state((e: unknown) => e instanceof MouseEvent && e.shiftKey);
 
     /**
      * Constructor to initialize the sorting feature with a reference to the data grid.
@@ -30,8 +36,11 @@ export class SortingFeature {
     }
 
     initialize(config?: SortingFeatureConfig) {
-        this.manual = config?.manual ?? this.manual;
+        this.manualSorting = config?.manualSorting ?? this.manualSorting;
         this.sortings = config?.sortConfigs ?? this.sortings;
+        this.maxMultiSortColCount = config?.maxMultiSortColCount ?? this.maxMultiSortColCount;
+        this.onSortingChange = config?.onSortingChange ?? this.onSortingChange;
+        // this.isMultiSortEvent = config?.isMultiSortEvent ?? this.isMultiSortEvent;
     }
 
 
@@ -91,6 +100,7 @@ export class SortingFeature {
      * @param desc - The sorting direction; true for descending, false for ascending.
      */
     addSortConfig(columnId: ColumnId, desc: boolean) {
+        if (this.sortings.length >= this.maxMultiSortColCount) return;
         this.sortings = [
             ...this.sortings,
             { columnId, desc, index: this.sortings.length }

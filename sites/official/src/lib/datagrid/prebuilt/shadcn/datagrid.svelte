@@ -78,7 +78,7 @@
 							{/if}
 
 							{#if datagrid.extra.features.rowExpanding.enableRowExpanding}
-							   <div class="size-4 self-center mx-2.5" ></div>
+								<div class="mx-2.5 size-4 self-center"></div>
 							{/if}
 
 							{#each headerColumns as column (column.columnId)}
@@ -267,7 +267,10 @@
 		<div
 			class="grid-header-cell-content {column.options.sortable ? 'sortable' : ''}"
 			onclick={(e) => {
-				const multisort = e.shiftKey;
+				let multisort = false;
+				if (datagrid.extra.features.sorting.enableMultiSort) {
+					multisort = e.shiftKey;
+				}
 				datagrid.handlers.sorting.toggleColumnSorting(column, multisort);
 			}}
 		>
@@ -283,8 +286,10 @@
 			{/if}
 
 			<div class="flex gap-1">
-				{#if column.isSortable()}
-					<ColumnSortingIndicator {datagrid} {column} />
+				{#if datagrid.extra.features.sorting.enableSorting}
+					{#if column.isSortable()}
+						<ColumnSortingIndicator {datagrid} {column} />
+					{/if}
 				{/if}
 				{#if column._meta.showColumnManagerDropdownMenu === true}
 					<HeaderCellDropdown {datagrid} {column} />

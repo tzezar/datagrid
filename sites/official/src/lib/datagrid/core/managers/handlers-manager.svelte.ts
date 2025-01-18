@@ -40,6 +40,13 @@ export class HandlersManager {
 
             const multipleColumnSort = () => {
                 if (!isColumnSorted) {
+                    const isOverMaxColCount = datagrid.features.sorting.sortings.length >= datagrid.features.sorting.maxMultiSortColCount;
+                    if (isOverMaxColCount) {
+                        // remove first sorting config
+                        console.log('removing first sorting config');
+                        datagrid.features.sorting.removeSortConfig(datagrid.features.sorting.sortings[0].columnId);
+                    }
+
                     datagrid.features.sorting.addSortConfig(columnId, false);
                 } else if (isColumnSortedAscending) {
                     datagrid.features.sorting.changeDirection(columnId, true);
@@ -54,6 +61,9 @@ export class HandlersManager {
 
             datagrid.cache.invalidate('sortedData');
             datagrid.processors.data.executeFullDataTransformation();
+
+            datagrid.features.sorting.onSortingChange(datagrid.features.sorting);
+
         },
 
 
