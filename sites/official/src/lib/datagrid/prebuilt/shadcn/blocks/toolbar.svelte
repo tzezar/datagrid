@@ -21,10 +21,10 @@
 <div
 	class={cn(
 		'flex items-end justify-end',
-		datagrid.extra.features.columnFiltering.isEnabled() && 'top-bar '
+		datagrid.extra.features.columnFiltering.enabled && 'top-bar '
 	)}
 >
-	{#if datagrid.extra.features.columnFiltering.isEnabled()}
+	{#if datagrid.extra.features.columnFiltering.enabled}
 		<GlobalSearch {datagrid} />
 	{:else}
 		<div class="flex h-full grow items-end pb-1 pl-2">
@@ -43,7 +43,7 @@
 		variant="outline"
 		onclick={() => datagrid.extra.features.columnFiltering.toggleColumnFiltering()}
 	>
-		{#if datagrid.extra.features.columnFiltering.isEnabled()}
+		{#if datagrid.extra.features.columnFiltering.enabled}
 			<FilterAlt />
 		{:else}
 			<FilterAltOff />
