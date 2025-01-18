@@ -1,7 +1,7 @@
 import type { DataGrid } from "../index.svelte";
 
 export type PaginationFeatureConfig = {
-    manul: boolean;
+    manual: boolean;
     page: number;
     pageSize: number;
     pageSizes: number[];
@@ -50,7 +50,7 @@ export class PaginationFeature<TOriginalRow> {
     }
 
     initialize(config?: PaginationFeatureConfig) {
-        this.manual = config?.manul ?? this.manual;
+        this.manual = config?.manual ?? this.manual;
         this.pageSizes = config?.pageSizes ?? this.pageSizes;
         this.pageCount = config?.pageCount ?? this.pageCount;
         this.visibleRowsCount = config?.visibleRowsCount ?? this.visibleRowsCount;

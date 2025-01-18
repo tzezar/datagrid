@@ -14,7 +14,6 @@ export class GroupHeadersVisibilityFeature {
         }
     }
 
-
     show() {
         this.showGroupHeaders = true;
     }

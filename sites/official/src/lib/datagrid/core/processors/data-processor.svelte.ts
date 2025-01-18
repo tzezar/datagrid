@@ -43,6 +43,7 @@ export class DataProcessor<TOriginalRow> {
         if (shouldRunGrouping) this.processGroupedData(data);
         else this.processRegularData(data);
 
+
         if (this.datagrid.config.measurePerformance) this.datagrid.metrics.print();
     }
 
@@ -198,6 +199,7 @@ export class DataProcessor<TOriginalRow> {
         this.metrics.measure('Row Pinning', () => {
             this.datagrid.features.rowPinning.updatePinnedRows();
         });
+
 
         this.datagrid.features.pagination.visibleRowsCount = data!.length;
         this.datagrid.features.pagination.pageCount = this.datagrid.features.pagination.getPageCount(data);

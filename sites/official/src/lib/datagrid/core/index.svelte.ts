@@ -79,41 +79,35 @@ export class DataGrid<TOriginalRow> {
     readonly lifecycleHooks = new LifecycleHooks<TOriginalRow>();
 
     constructor(config: GridConfig<TOriginalRow>) {
-        this.features.pagination = new PaginationFeature(this, config.features?.pagination);
 
         if (config.lifecycleHooks) {
             this.lifecycleHooks = config.lifecycleHooks;
         }
-
         this.validateConfigInputs(config);
-        // config.columns = this.lifecycleHooks.preProcessColumns(hook, config.columns);
         this.initializeState(config);
     }
 
 
 
-    private validateConfigInputs({ columns, data }: GridConfig<TOriginalRow>) {
-        if (!columns) throw new Error('Columns are required');
-        if (!data) throw new Error('Data is required');
-        if (!Array.isArray(data)) throw new Error('Data must be an array');
-        if (!Array.isArray(columns)) throw new Error('Columns must be an array');
-        if (columns.length === 0) throw new Error('Columns array must not be empty');
-        if (data.length === 0) throw new Error('Data array must not be empty');
-    }
-
     private initializeState(config: GridConfig<TOriginalRow>) {
+        // * Features has to be initialized first to prevent some bugs eg. not updating pagination
+        // * when there is wrapper around the datagrid that implements its own features
+        // * it might be worked around by processing data after extra features are initialized
+        // * but it involves extra processing which is not needed, maybe some refactoring is needed
+
+        this.initializeFeatures(config);
 
         this.initializeOriginalColumns(config.columns);
         this.initializeOriginalData(config.data)
 
         this.columns = this.processors.column.initializeColumns(this.initial.columns)
         this.processors.data.executeFullDataTransformation();
-
+        // here pagination is valid
+        
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
         this.features.columnFaceting.calculateFacets(this.cache.sortedData || [], this.columns);
-
-        this.initializeFeatures(config);
+        
     }
 
     private initializeOriginalColumns(columns: AnyColumn<TOriginalRow>[]) {
@@ -178,4 +172,12 @@ export class DataGrid<TOriginalRow> {
         if (this.config.measurePerformance) console.log(`Operation took ${performance.now() - timeStart}ms`);
     }
 
+    private validateConfigInputs({ columns, data }: GridConfig<TOriginalRow>) {
+        if (!columns) throw new Error('Columns are required');
+        if (!data) throw new Error('Data is required');
+        if (!Array.isArray(data)) throw new Error('Data must be an array');
+        if (!Array.isArray(columns)) throw new Error('Columns must be an array');
+        if (columns.length === 0) throw new Error('Columns array must not be empty');
+        if (data.length === 0) throw new Error('Data array must not be empty');
+    }
 }

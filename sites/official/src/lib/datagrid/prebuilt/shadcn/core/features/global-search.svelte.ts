@@ -13,7 +13,6 @@ export class ExtraGlobalSearchFeature {
     base: GlobalSearchFeature = new GlobalSearchFeature();
 
     enableGlobalSearch: boolean = $state(true);
-
     onEnableGlobalSearchChange: (value: boolean) => void = () => { };
 
     constructor(datagrid: TzezarsDatagrid, config?: ExtraGlobalSearchFeatureConfig) {

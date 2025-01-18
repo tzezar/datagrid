@@ -146,14 +146,10 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
                 return hierarchicalColumns;
             }
         );
-        super(config);
 
-        // Initialize Extra with `config.extra`
+        super(config);
         this.extra = new Extra(this, config.extra);
     }
-
-
-
 
     isFullscreenEnabled() {
         return this.extra.features.fullscreen.isFullscreen;
@@ -169,13 +165,8 @@ export class Extra {
     features = {} as TrzezarsDatagridFeatures;
 
     constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig) {
-        this.features.fullscreen = new FullscreenFeature(config?.features?.fullscreen);
-        this.features.credentials = new CredentialsFeature(config?.features?.credentials);
-        this.features.rowSelection = new ExtraRowSelectionFeature(datagrid, config?.features?.rowSelection);
-
         this.datagrid = datagrid;
         this.initializeFeatures(config);
-        this.features.exporting = new ExportingFeature(datagrid);
         this.title = config?.title; // Assign the title from config.extra
     }
 
@@ -189,7 +180,7 @@ export class Extra {
         this.features.densityToggle = new DensityToggleFeature(config?.features?.densityToggle);
         this.features.exporting = new ExportingFeature(this.datagrid, config?.features?.exporting);
         this.features.fullscreen = new FullscreenFeature(config?.features?.fullscreen);
-        this.features.globalSearch = new ExtraGlobalSearchFeature(config?.features?.globalSearch);
+        this.features.globalSearch = new ExtraGlobalSearchFeature(this.datagrid, config?.features?.globalSearch);
         this.features.groupHeadersVisibility = new GroupHeadersVisibilityFeature(config?.features?.groupHeadersVisibility);
         this.features.grouping = new ExtraGroupingFeature(this.datagrid, config?.features?.grouping);
         this.features.loadingIndicator = new LoadingIndicatorFeature(config?.features?.loadingIndicator);
@@ -197,11 +188,10 @@ export class Extra {
         this.features.rowActions = new RowActionsFeature(config?.features?.rowActions);
         this.features.rowExpanding = new ExtraRowExpandingFeature(this.datagrid, config?.features?.rowExpanding);
         this.features.rowNumbers = new RowNumbersFeature(config?.features?.rowNumbers);
-        
-        
-        
         this.features.rowSelection = new ExtraRowSelectionFeature(this.datagrid, config?.features?.rowSelection);
         this.features.sorting = new ExtraSortingFeature(this.datagrid, config?.features?.sorting);
+
+        // this.datagrid.processors.data.executeFullDataTransformation();
     }
 
 
@@ -209,5 +199,5 @@ export class Extra {
     getTitle(): string | undefined {
         return this.title; // Getter for consistent access
     }
- 
+
 }

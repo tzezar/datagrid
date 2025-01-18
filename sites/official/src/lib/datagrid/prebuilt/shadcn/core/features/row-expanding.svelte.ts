@@ -8,8 +8,8 @@ export type ExtraRowExpandingFeatureConfig = {
     enableRowExpanding?: boolean;
     expandingMode?: 'single' | 'multiple';
     expandingPosition?: 'left' | 'right';
-    onExpandingChange?(config: ExtraRowExpandingFeatureConfig): void;
-}
+    maxExpandedRows?: number;
+} & RowExpandingFeatureConfig
 
 
 export class ExtraRowExpandingFeature {
@@ -17,16 +17,17 @@ export class ExtraRowExpandingFeature {
     enableRowExpanding: boolean = $state(true);
     expandingMode: 'single' | 'multiple' = $state('single');
     expandingPosition: 'left' | 'right' = $state('left');
-    onExpandingChange: (config: ExtraRowExpandingFeatureConfig) => void = () => { };
+    maxExpandedRows: number = $state(999999999);
 
     constructor(datagrid: TzezarsDatagrid<any>, config?: ExtraRowExpandingFeatureConfig & RowExpandingFeatureConfig) {
-        this.base = new RowExpandingFeature(datagrid, config);
+        this.base = datagrid.features.rowExpanding;
+        this.base.initialize(config);
 
         if (config) {
             this.enableRowExpanding = config.enableRowExpanding ?? this.enableRowExpanding;
             this.expandingMode = config.expandingMode ?? this.expandingMode;
             this.expandingPosition = config.expandingPosition ?? this.expandingPosition;
-            this.onExpandingChange = config.onExpandingChange ?? this.onExpandingChange;
+            this.maxExpandedRows = config.maxExpandedRows ?? this.maxExpandedRows;
         }
     }
     
