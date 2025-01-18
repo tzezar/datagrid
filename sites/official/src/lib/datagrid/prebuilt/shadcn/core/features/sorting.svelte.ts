@@ -3,14 +3,11 @@ import type { SortingFeatureConfig } from "$lib/datagrid/core/features/sorting.s
 import type { DataGrid } from "$lib/datagrid/core/index.svelte";
 import type { TzezarsDatagrid } from "../index.svelte";
 
-
-
 export type ExtraSortingFeatureConfig = {
     enableSorting?: boolean;
     enableMultiSort?: boolean;
     enableSortingRemoval?: boolean;
 } & SortingFeatureConfig
-
 
 export class ExtraSortingFeature {
     base: SortingFeature = new SortingFeature({} as DataGrid<any>);
