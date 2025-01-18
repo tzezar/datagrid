@@ -18,13 +18,12 @@
 </script>
 
 <Cell {datagrid} {row} {column}>
-	<div class="flex gap-2">
+	<div class="flex gap-2 justify-center items-center">
 		<button onclick={handleClick}>
 			<LayoutNavbarExpandFilled
-			class={`${datagrid.features.rowExpanding.isRowExpanded(row.identifier) ? 'rotate-180' : ''} transition-all`}
+			class={`${row.isExpanded() ? 'rotate-180' : ''} transition-all`}
 			/>
 		</button>
 		<BodyRowActionsCellDropdownMenuWithOptions {row} {column} {datagrid} />
 	</div>
-	
 </Cell>

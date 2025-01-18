@@ -15,8 +15,8 @@
 
 <div
 	class={cn(
-		'grid-body-cell',
-		datagrid.extra.state.highlightSelectedRow &&
+		'test flex relative box-border h-full w-full grow p-2',
+		datagrid.extra.features.rowSelection.highlightSelectedRow &&
 			datagrid.features.rowSelection.isRowSelected(row.identifier)
 			? 'bg-blue-400/10'
 			: '',
@@ -25,3 +25,13 @@
 >
 	{@render children()}
 </div>
+
+
+<style>
+	.test {
+	width: var(--width);
+	min-width: var(--min-width);
+	max-width: var(--max-width);
+	
+}
+</style>

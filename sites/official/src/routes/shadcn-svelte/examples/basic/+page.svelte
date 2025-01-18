@@ -29,11 +29,8 @@
 		
 		extra: {
 			features: {
-				fullscreen: {
-					onFullscreenChange(config) {
-						console.log(config.isFullscreen)
-					}
-				}
+				
+				
 			}
 		}
 
@@ -146,7 +143,7 @@
 												class={cn(
 													'grid-body-cell',
 													column._meta.styles?.bodyCell,
-													datagrid.extra.state.highlightSelectedRow &&
+													datagrid.extra.features.rowSelection.highlightSelectedRow &&
 														datagrid.features.rowSelection.isRowSelected(row.identifier)
 														? 'bg-blue-400/10'
 														: ''

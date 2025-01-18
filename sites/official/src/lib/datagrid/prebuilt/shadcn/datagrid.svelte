@@ -21,6 +21,7 @@
 	import type { Snippet } from 'svelte';
 	import RowSelectionCell from './built-in/row-selection-cell.svelte';
 	import RowSelectionHeaderCell from './built-in/row-selection-header-cell.svelte';
+	import RowExpandingCell from './built-in/row-expanding-cell.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
@@ -72,8 +73,12 @@
 				{:else}
 					<div class="grid-header">
 						<div class="grid-header-row">
-							{#if datagrid.extra.state.enableRowSelection}
-									<RowSelectionHeaderCell {datagrid} />
+							{#if datagrid.extra.features.rowSelection.enableRowSelection}
+								<RowSelectionHeaderCell {datagrid} />
+							{/if}
+
+							{#if datagrid.extra.features.rowExpanding.enableRowExpanding}
+							   <div class="size-4 self-center mx-2.5" ></div>
 							{/if}
 
 							{#each headerColumns as column (column.columnId)}
@@ -153,8 +158,11 @@
 								</div>
 							{:else}
 								<div class="grid-body-row">
-									{#if datagrid.extra.state.enableRowSelection}
-										<RowSelectionCell {row} {datagrid}/>
+									{#if datagrid.extra.features.rowSelection.enableRowSelection}
+										<RowSelectionCell {row} {datagrid} />
+									{/if}
+									{#if datagrid.extra.features.rowExpanding.enableRowExpanding}
+										<RowExpandingCell {row} {datagrid} />
 									{/if}
 									{#each leafColumns as column (column.columnId)}
 										{#if column.isVisible()}
@@ -170,7 +178,7 @@
 													class={cn(
 														'grid-body-cell',
 														column._meta.styles?.bodyCell,
-														datagrid.extra.state.highlightSelectedRow &&
+														datagrid.extra.features.rowSelection.highlightSelectedRow &&
 															datagrid.features.rowSelection.isRowSelected(row.identifier)
 															? 'bg-blue-400/10'
 															: ''
@@ -213,14 +221,14 @@
 				{@render footerContent?.()}
 			</div>
 		{/if}
-		{#if datagrid.extra.state.withPagination === true}
+		{#if datagrid.extra.features.pagination.enablePagination === true}
 			{#if pagination}
 				{@render pagination()}
 			{:else}
 				<Pagination {datagrid} />
 			{/if}
 		{/if}
-		{#if datagrid.extra.showCredentials()}
+		{#if datagrid.extra.features.credentials.enabled}
 			<MadeWithLoveByTzezar />
 		{/if}
 	</div>

@@ -136,7 +136,9 @@
 
 .grid-body-row {
 	display: flex;
+	align-items: center;
 	flex-direction: row;
+	/* height: 100%; */
 	width: 100%;
 	border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
 }
@@ -169,12 +171,12 @@
 }
 
 .grid-body-cell .cell-content {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-} 
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 
 /* .grid-body-cell {
     display: flex;

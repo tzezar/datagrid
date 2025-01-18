@@ -161,18 +161,11 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
 }
 
 
-export class ExtraState {
-    highlightSelectedRow = $state(true)
-    showCredentials = $state(true)
-    withPagination = $state(true)
-    enableRowSelection = $state(true)
 
-}
 
 export class Extra {
     private datagrid: TzezarsDatagrid<any>;
     title: string | undefined;
-    state = new ExtraState();
     features = {} as TrzezarsDatagridFeatures;
 
     constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig) {
@@ -180,19 +173,15 @@ export class Extra {
         this.features.credentials = new CredentialsFeature(config?.features?.credentials);
         this.features.rowSelection = new ExtraRowSelectionFeature(datagrid, config?.features?.rowSelection);
 
-
         this.datagrid = datagrid;
         this.initializeFeatures(config);
         this.features.exporting = new ExportingFeature(datagrid);
         this.title = config?.title; // Assign the title from config.extra
-        this.state.highlightSelectedRow = config?.state?.highlightSelectedRow ?? this.state.highlightSelectedRow;
-        this.state.showCredentials = config?.state?.showCredentials ?? this.state.showCredentials;
-        this.state.enableRowSelection = config?.state?.enablePagination ?? this.state.enableRowSelection
     }
 
     initializeFeatures(config?: TzezarsDatagridExtraStateConfig) {
         this.features.clickToCopy = new ClickToCopyFeature(config?.features?.clickToCopy);
-        this.features.columnFiltering = new ColumnFilteringFeature(config?.features?.columnFiltering);
+        this.features.columnFiltering = new ColumnFilteringFeature(this.datagrid, config?.features?.columnFiltering);
         this.features.columnPinning = new ExtraColumnPinningFeature(this.datagrid, config?.features?.columnPinning);
         this.features.columnSizing = new ExtraColumnSizingFeature(this.datagrid, config?.features?.columnSizing);
         this.features.columnVisibility = new ExtraColumnVisibilityFeature(this.datagrid, config?.features?.columnVisibility);
@@ -217,7 +206,5 @@ export class Extra {
     getTitle(): string | undefined {
         return this.title; // Getter for consistent access
     }
-    showCredentials(): boolean {
-        return this.state.showCredentials;
-    }
+ 
 }
