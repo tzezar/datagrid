@@ -14,6 +14,7 @@ export class ExtraSortingFeature {
 
     enableSorting: boolean = $state(true);
     enableMultiSort: boolean = $state(true);
+    // ? not used yet
     enableSortingRemoval: boolean = $state(true);
 
     constructor(datagrid: TzezarsDatagrid<any>, config?: ExtraSortingFeatureConfig) {
