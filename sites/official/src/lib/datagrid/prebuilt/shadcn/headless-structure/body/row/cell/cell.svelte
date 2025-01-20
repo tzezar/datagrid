@@ -17,11 +17,11 @@
 	<div
 		class={cn(
 			'grid-body-cell',
-			column._meta.styles?.bodyCell,
 			datagrid.extra.features.rowSelection.highlightSelectedRow &&
 				datagrid.features.rowSelection.isRowSelected(row.identifier)
 				? 'bg-blue-400/10'
-				: ''
+				: '',
+			column._meta.styles?.bodyCell
 		)}
 		class:justify-center={column?._meta?.align === 'center'}
 		data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
