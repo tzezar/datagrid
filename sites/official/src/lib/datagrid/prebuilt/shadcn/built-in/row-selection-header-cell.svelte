@@ -2,7 +2,7 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { cn } from '$lib/utils';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
-	import CellWithoutColumn from '../structure/body/row/cell/cell-without-column.svelte';
+	import CellWithoutColumn from '../headless-structure/body/row/cell/cell-without-column.svelte';
 
 	let { datagrid }: { datagrid: TzezarsDatagrid<any> } = $props();
 

@@ -2,8 +2,8 @@
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
 	import type { AnyColumn, CustomCellProps, GridBasicRow, GridRow } from '$lib/datagrid/core/types';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
-	import CellWithoutColumn from '../structure/body/row/cell/cell-without-column.svelte';
-	import Cell from '../structure/body/row/cell/cell.svelte';
+	import CellWithoutColumn from '../headless-structure/body/row/cell/cell-without-column.svelte';
+	import Cell from '../headless-structure/body/row/cell/cell.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;

@@ -2,7 +2,7 @@
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import LayoutNavbarExpandFilled from '$lib/datagrid/icons/tabler/layout-navbar-expand-filled.svelte';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
-	import Cell from '../structure/body/row/cell/cell.svelte';
+	import Cell from '../headless-structure/body/row/cell/cell.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { cn } from '$lib/utils';
 	import { buttonVariants } from '$lib/components/ui/button';

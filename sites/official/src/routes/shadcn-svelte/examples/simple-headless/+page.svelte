@@ -23,17 +23,15 @@
 		RenderLeafColumnCaption,
 		GroupColumnChildren,
 		GroupColumnCellCaption
-	} from '$lib/datagrid/prebuilt/shadcn/structure';
+	} from '$lib/datagrid/prebuilt/shadcn/headless-structure';
 
 
-	import {
-		GroupCellAggregations,
-		LeafColumnCellCaptionOptions
-	} from '$lib/datagrid/prebuilt/shadcn/components';
 
 	import { userColumns } from './columns.svelte';
 	import HeaderCellColumnFilter from '$lib/datagrid/prebuilt/shadcn/built-in/header-cell-column-filter.svelte';
 	import HeaderCellDropdown from '$lib/datagrid/prebuilt/shadcn/built-in/header-cell-dropdown.svelte';
+	import GroupCellAggregations from '$lib/datagrid/prebuilt/shadcn/built-in/group-cell-aggregations.svelte';
+	import LeafColumnCellCaptionOptions from '$lib/datagrid/prebuilt/shadcn/built-in/leaf-column-cell-caption-options.svelte';
 
 	let { data } = $props();
 
