@@ -17,14 +17,17 @@ export class StatusIndicatorFeature {
     onLoadingIndicatorChange: (isLoading: boolean, isSaving: boolean, isError: boolean) => void = () => { };
 
     constructor(config?: StatusIndicatorFeatureConfig) {
-        if (config) {
-            this.enableLoadingIndicator = config.enableLoadingIndicator ?? this.enableLoadingIndicator;
-            this.isLoading = config.isLoading ?? this.isLoading;
-            this.isSaving = config.isSaving ?? this.isSaving;
-            this.isError = config.isError ?? this.isError;
-            this.onLoadingIndicatorChange = config.onLoadingIndicatorChange ?? this.onLoadingIndicatorChange;
-        }
+        this.initialize(config);
     }
+
+    initialize(config?: StatusIndicatorFeatureConfig) {
+        this.enableLoadingIndicator = config?.enableLoadingIndicator ?? this.enableLoadingIndicator;
+        this.isLoading = config?.isLoading ?? this.isLoading;
+        this.isSaving = config?.isSaving ?? this.isSaving;
+        this.isError = config?.isError ?? this.isError;
+        this.onLoadingIndicatorChange = config?.onLoadingIndicatorChange ?? this.onLoadingIndicatorChange;
+    }
+
 
     shouldShowLoadingIndicator(target: 'top' | 'bottom' | 'both') {
         // loading indicator is disabled

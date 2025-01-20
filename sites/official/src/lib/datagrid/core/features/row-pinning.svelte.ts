@@ -9,7 +9,7 @@ export type RowPinningFeatureConfig = {
 }
 
 
-export class RowPinningFeature<TOriginalRow> {
+export class RowPinningFeature<TOriginalRow = any> {
     datagrid: DataGrid<TOriginalRow>;
     rowIdsPinnedTop: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
     rowIdsPinnedBottom: SvelteSet<GridRowIdentifier> = new SvelteSet([]);

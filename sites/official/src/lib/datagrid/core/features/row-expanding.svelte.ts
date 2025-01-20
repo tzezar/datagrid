@@ -14,7 +14,7 @@ export type RowExpandingFeatureConfig = {
  * Manages row expansion functionality within the data grid.
  * Allows expanding and collapsing rows, with the state tracked via expanded row IDs.
  */
-export class RowExpandingFeature<TOriginalRow> {
+export class RowExpandingFeature<TOriginalRow = any> {
     // The instance of the data grid associated with this feature
     datagrid: DataGrid<TOriginalRow>;
 

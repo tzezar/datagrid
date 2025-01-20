@@ -3,9 +3,10 @@ import type { RowSelectionFeatureConfig } from "$lib/datagrid/core/features/row-
 import type { DataGrid } from "$lib/datagrid/core/index.svelte";
 import type { GridRowIdentifier } from "$lib/datagrid/core/types";
 import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnchancedFeature } from "./types";
 
 
-export type ExtraRowSelectionFeatureConfig = {
+export type RowSelectionEnchancedFeatureConfig = {
     enableRowSelection?: boolean;
     enableMultiRowSelection?: boolean;
     rowSelectionMode?: 'single' | 'multiple';
@@ -13,7 +14,7 @@ export type ExtraRowSelectionFeatureConfig = {
     highlightSelectedRow?: boolean;
 } & RowSelectionFeatureConfig
 
-export class ExtraRowSelectionFeature {
+export class RowSelectionEnchancedFeature implements EnchancedFeature {
     public base: RowSelectionFeature<any> = new RowSelectionFeature<any>({} as DataGrid<any>);
 
     enableRowSelection: boolean = $state(true);
@@ -23,17 +24,22 @@ export class ExtraRowSelectionFeature {
     highlightSelectedRow: boolean = $state(true);
 
 
-    constructor(datagrid: TzezarsDatagrid<any>, config?: ExtraRowSelectionFeatureConfig) {
+    constructor(datagrid: TzezarsDatagrid<any>, config?: RowSelectionEnchancedFeatureConfig) {
+        this.initializeBase(datagrid, config);
+        this.initialize(config);
+    }
+
+    initialize(config?: RowSelectionEnchancedFeatureConfig) {
+        this.enableRowSelection = config?.enableRowSelection ?? this.enableRowSelection;
+        this.enableMultiRowSelection = config?.enableMultiRowSelection ?? this.enableMultiRowSelection;
+        this.rowSelectionMode = config?.rowSelectionMode ?? this.rowSelectionMode;
+        this.enableSelectAll = config?.enableSelectAll ?? this.enableSelectAll;
+        this.highlightSelectedRow = config?.highlightSelectedRow ?? this.highlightSelectedRow;
+    }
+
+    initializeBase(datagrid: TzezarsDatagrid<any>, config?: RowSelectionFeatureConfig) {
         this.base = datagrid.features.rowSelection;
         this.base.initialize(config);
-
-        if (config) {
-            this.enableRowSelection = config.enableRowSelection ?? this.enableRowSelection;
-            this.enableMultiRowSelection = config.enableMultiRowSelection ?? this.enableMultiRowSelection;
-            this.rowSelectionMode = config.rowSelectionMode ?? this.rowSelectionMode;
-            this.enableSelectAll = config.enableSelectAll ?? this.enableSelectAll;
-            this.highlightSelectedRow = config.highlightSelectedRow ?? this.highlightSelectedRow;
-        }
     }
 
     toggleRowSelection(identifier: GridRowIdentifier) {
@@ -42,13 +48,13 @@ export class ExtraRowSelectionFeature {
             this.unselectRow(identifier);
             return
         }
-        
+
         const isSelectingMoreThanAllowed = this.base.maxSelectedRows !== undefined && this.base.selectedBasicRowIdentifiers.size >= this.base.maxSelectedRows;
         if (isSelectingMoreThanAllowed) {
             console.log('selecting more than allowed')
             return
         }
-        
+
     }
 
     selectRow(identifier: GridRowIdentifier) {

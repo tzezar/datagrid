@@ -12,7 +12,7 @@ export type ColumnFilteringFeatureConfig = {
  * Manages column filtering functionality for a data grid.
  * Provides utilities for evaluating filter conditions and toggling the visibility of filters.
  */
-export class ColumnFilteringFeature<TOriginalRow> {
+export class ColumnFilteringFeature<TOriginalRow = any> {
     // Stores all filter conditions for the columns
     conditions: FilterCondition<TOriginalRow>[] = $state([]);
     manual: boolean = $state(false);

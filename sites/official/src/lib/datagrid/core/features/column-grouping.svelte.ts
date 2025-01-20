@@ -8,7 +8,7 @@ import { findColumnById, flattenColumnStructurePreservingGroups } from "../utils
  * Manages column grouping functionality for a data grid, including finding,
  * renaming, and deleting group columns, as well as handling column nesting.
  */
-export class ColumnGroupingFeature<TOriginalRow> {
+export class ColumnGroupingFeature<TOriginalRow = any> {
     // Reference to the parent DataGrid instance
     private datagrid: DataGrid<TOriginalRow>;
 

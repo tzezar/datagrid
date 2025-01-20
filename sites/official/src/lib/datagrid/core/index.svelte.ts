@@ -34,7 +34,7 @@ export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColu
     }
 }
 
-export class DataGrid<TOriginalRow> {
+export class DataGrid<TOriginalRow = any> {
     readonly metrics = new PerformanceMetrics();
     initial = $state.raw({
         columns: [] as AnyColumn<TOriginalRow>[],

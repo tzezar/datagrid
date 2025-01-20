@@ -10,7 +10,7 @@ export type ColumnVisibilityFeatureConfig = {
 /**
  * Manages column visibility functionality for a DataGrid.
  */
-export class ColumnVisibilityFeature<TOriginalRow> {
+export class ColumnVisibilityFeature<TOriginalRow = any> {
     // Reference to the DataGrid instance
     datagrid: DataGrid<TOriginalRow>;
 

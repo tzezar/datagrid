@@ -1,28 +1,31 @@
 import { ColumnFilteringFeature } from "$lib/datagrid/core/features";
 import type { ColumnFilteringFeatureConfig } from "$lib/datagrid/core/features/column-filtering.svelte";
 import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnchancedFeature } from "./types";
 
-
-export type ExtraColumnFilteringFeatureConfig = {
+export type ColumnFilteringEnchancedFeatureConfig = {
     enabled?: boolean;
     visible?: boolean;
 } & ColumnFilteringFeatureConfig
 
-
-export class ExtraColumnFilteringFeature {
+export class ColumnFilteringEnchancedFeature implements EnchancedFeature {
     base: ColumnFilteringFeature<any> = new ColumnFilteringFeature()
-
     enabled: boolean = $state(true);
-    visible: boolean = $state(true);
+    isButtonVisible: boolean = $state(true);
 
-    constructor(datagrid: TzezarsDatagrid, config?: ExtraColumnFilteringFeatureConfig & ColumnFilteringFeatureConfig) {
-        this.base = datagrid.features.filtering;
+    constructor(datagrid: TzezarsDatagrid, config?: ColumnFilteringEnchancedFeatureConfig & ColumnFilteringFeatureConfig) {
+        this.initializeBase(datagrid, config);
+        this.initialize(config);
+    }
+
+    initialize(config?: ColumnFilteringEnchancedFeatureConfig) {
+        this.enabled = config?.enabled ?? this.enabled;
+        this.isButtonVisible = config?.visible ?? this.isButtonVisible;
+    }
+
+    initializeBase(datagrid: TzezarsDatagrid, config?: ColumnFilteringFeatureConfig) {
+        this.base = datagrid.features.filtering
         this.base.initialize(config);
-
-        if (config) {
-            this.enabled = config.enabled ?? this.enabled;
-            this.visible = config.visible ?? this.visible;
-        }
     }
 
     disable() {
@@ -42,19 +45,19 @@ export class ExtraColumnFilteringFeature {
     }
 
     showButton() {
-        this.visible = true;
+        this.isButtonVisible = true;
     }
 
     hideButton() {
-        this.visible = false;
+        this.isButtonVisible = false;
     }
 
     toggleButtonVisibility() {
-        this.visible = !this.visible;
+        this.isButtonVisible = !this.isButtonVisible;
     }
 
-    isButtonVisible() {
-        return this.visible;
+    shouldDisplayButton() {
+        return this.isButtonVisible;
     }
 
 }

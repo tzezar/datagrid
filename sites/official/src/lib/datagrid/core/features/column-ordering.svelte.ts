@@ -19,7 +19,7 @@ export type ColumnOrderingFeatureConfig = {
 /**
  * Manages column ordering functionality for a DataGrid.
  */
-export class ColumnOrderingFeature<TOriginalRow> {
+export class ColumnOrderingFeature<TOriginalRow = any> {
     private readonly datagrid: DataGrid<TOriginalRow>;
 
     constructor(datagrid: DataGrid<TOriginalRow>) {

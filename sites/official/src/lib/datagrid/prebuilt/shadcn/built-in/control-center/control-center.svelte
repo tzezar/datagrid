@@ -22,11 +22,11 @@
 
 	const showColumnGroupingSeparator = $derived(
 		datagrid.extra.features.groupHeadersVisibility.showGroupHeaders ||
-			datagrid.extra.features.grouping.enableGrouping
+			datagrid.extra.features.grouping.enabled
 	);
 </script>
 
-{#if datagrid.extra.features.controlCenter.enableControlCenter}
+{#if datagrid.extra.features.controlCenter.enabled}
 	<DropdownMenu.Root>
 		<DropdownMenu.Trigger
 			class={`${buttonVariants({ variant: 'outline' })} rounded-none border-b-0`}
@@ -42,18 +42,18 @@
 						<Sorting {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.columnOrdering.enableColumnOrdering}
+					{#if datagrid.extra.features.columnOrdering.enabled}
 						<ColumnReordering {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.columnPinning.enableColumnPinning}
+					{#if datagrid.extra.features.columnPinning.enabled}
 						<ColumnFreezing {datagrid} />
 					{/if}
-					{#if datagrid.extra.features.columnSizing.enableColumnSizing}
+					{#if datagrid.extra.features.columnSizing.enabled}
 						<ColumnResizing {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.columnVisibility.enableColumnVisibility}
+					{#if datagrid.extra.features.columnVisibility.enabled}
 						<ColumnVisibility {datagrid} />
 					{/if}
 
@@ -81,7 +81,7 @@
 						<ColumnGroupsVisibility {datagrid} />
 					{/if}
 					<DropdownMenu.Separator />
-					{#if datagrid.extra.features.grouping.enableGrouping}
+					{#if datagrid.extra.features.grouping.enabled}
 						<DropdownMenu.GroupHeading>Data grouping</DropdownMenu.GroupHeading>
 						<GroupingDropdown {datagrid} />
 					{/if}

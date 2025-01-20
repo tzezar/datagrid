@@ -7,25 +7,27 @@ export type ClickToCopyFeatureConfig = {
 };
 
 export class ClickToCopyFeature {
-    enableClickToCopyOnAllCells: boolean = $state(true);
+    enableInAllValidCells: boolean = $state(true);
     onClickToCopy: (value: string | number) => void = () => { };
 
     constructor(config?: ClickToCopyFeatureConfig) {
-        if (config) {
-            this.enableClickToCopyOnAllCells = config.enableClickToCopy ?? this.enableClickToCopyOnAllCells;
-            this.onClickToCopy = config.onClickToCopy ?? this.onClickToCopy;
-        }
+        this.initialize(config);
     }
 
-    handleClickToCopy(row: any, column: AccessorColumn<any> | ComputedColumn<any>) {
-        const value: CellValue = getCellContent(column, row);
-        
-        if (typeof value !== 'string' && typeof value !== 'number') {
-            return;
-        }
-        
-        this.copyToClipboard(value);
+    initialize(config?: ClickToCopyFeatureConfig) {
+        this.enableInAllValidCells = config?.enableClickToCopy ?? this.enableInAllValidCells;
+        this.onClickToCopy = config?.onClickToCopy ?? this.onClickToCopy;
     }
+
+    shouldDisplayCopyButton(column: AccessorColumn<any> | ComputedColumn<any>) {
+        return (this.enableInAllValidCells === true && column._meta.clickToCopy !== false) ||
+            column._meta.clickToCopy === true;
+    }
+
+    isValidColumn(column: AnyColumn<any>): column is AccessorColumn<any> | ComputedColumn<any> {
+        return column.type === 'accessor' || column.type === 'computed';
+    }
+
 
     private copyToClipboard(value: string | number) {
         const stringValue = String(value);
@@ -33,12 +35,14 @@ export class ClickToCopyFeature {
         this.onClickToCopy(value);
     }
 
-    shouldDisplayCopyButton(column: AccessorColumn<any> | ComputedColumn<any>) {
-        return (this.enableClickToCopyOnAllCells === true && column._meta.clickToCopy !== false) ||
-            column._meta.clickToCopy === true;
-    }
 
-    isValidColumn(column: AnyColumn<any>): column is AccessorColumn<any> | ComputedColumn<any> {
-        return column.type === 'accessor' || column.type === 'computed';
+    handleClickToCopy(row: any, column: AccessorColumn<any> | ComputedColumn<any>) {
+        const value: CellValue = getCellContent(column, row);
+
+        if (typeof value !== 'string' && typeof value !== 'number') {
+            return;
+        }
+
+        this.copyToClipboard(value);
     }
 }

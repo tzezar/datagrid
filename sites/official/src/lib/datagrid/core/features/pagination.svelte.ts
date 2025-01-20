@@ -15,7 +15,7 @@ export type PaginationFeatureConfig = {
 /**
  * Manages pagination functionality within the data grid.
  */
-export class PaginationFeature<TOriginalRow> {
+export class PaginationFeature<TOriginalRow = any> {
     // The instance of the data grid associated with this feature
     datagrid: DataGrid<TOriginalRow>;
 

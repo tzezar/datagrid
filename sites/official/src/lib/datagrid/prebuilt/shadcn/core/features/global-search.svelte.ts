@@ -1,30 +1,35 @@
 import { GlobalSearchFeature } from "$lib/datagrid/core/features";
 import type { GlobalSearchFeatureConfig } from "$lib/datagrid/core/features/global-search.svelte";
 import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnchancedFeature } from "./types";
 
 
-export type ExtraGlobalSearchFeatureConfig = {
-    enableGlobalSearch?: boolean;
+export type GlobalSearchEnchancedFeatureConfig = {
+    enabled?: boolean;
     onEnableGlobalSearchChange?(value: boolean): void;
 } & GlobalSearchFeatureConfig
 
 
-export class ExtraGlobalSearchFeature {
+export class GlobalSearchEnchancedFeature implements EnchancedFeature {
     base: GlobalSearchFeature = new GlobalSearchFeature();
 
     private inputVisible: boolean = $state(false);
 
-    enableGlobalSearch: boolean = $state(true);
+    enabled: boolean = $state(true);
     onEnableGlobalSearchChange: (value: boolean) => void = () => { };
 
-    constructor(datagrid: TzezarsDatagrid, config?: ExtraGlobalSearchFeatureConfig) {
+    constructor(datagrid: TzezarsDatagrid, config?: GlobalSearchEnchancedFeatureConfig) {
+        this.initializeBase(datagrid, config);
+        this.initialize(config);
+    }
+
+    initialize(config?: GlobalSearchEnchancedFeatureConfig) {
+        this.enabled = config?.enabled ?? this.enabled;
+    }
+
+    initializeBase(datagrid: TzezarsDatagrid, config?: GlobalSearchFeatureConfig) {
         this.base = datagrid.features.globalSearch;
         this.base.initialize(config);
-
-        if (config) {
-            this.enableGlobalSearch = config.enableGlobalSearch ?? this.enableGlobalSearch;
-            this.onEnableGlobalSearchChange = config.onEnableGlobalSearchChange ?? this.onEnableGlobalSearchChange;
-        }
     }
 
     hideInput() {
@@ -39,7 +44,7 @@ export class ExtraGlobalSearchFeature {
         this.inputVisible = !this.inputVisible;
     }
 
-    isInputVisible() {
+    shouldDisplayInput() {
         return this.inputVisible;
     }
 

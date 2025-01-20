@@ -79,7 +79,7 @@
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
 			</div> -->
-		{#if datagrid.extra.features.pagination.enablePagination === true}
+		{#if datagrid.extra.features.pagination.shouldDisplayPagination()}
 			{#if ['both', 'top'].includes(datagrid.extra.features.pagination.positionPagination)}
 				{#if pagination}
 					{@render pagination()}
@@ -261,7 +261,7 @@
 				{@render footerContent?.()}
 			</div>
 		{/if}
-		{#if datagrid.extra.features.pagination.enablePagination === true}
+		{#if datagrid.extra.features.pagination.shouldDisplayPagination()}
 			{#if ['bottom', 'both'].includes(datagrid.extra.features.pagination.positionPagination)}
 				{#if pagination}
 					{@render pagination()}

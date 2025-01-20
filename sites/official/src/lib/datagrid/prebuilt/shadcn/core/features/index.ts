@@ -1,94 +1,94 @@
 import { ClickToCopyFeature } from "./click-to-copy.svelte";
-import { ExtraColumnFilteringFeature } from "./column-filtering.svelte";
-import { ExtraColumnPinningFeature } from "./column-pinning.svelte";
-import { ExtraColumnSizingFeature } from "./column-resizing.svelte";
-import { ExtraColumnVisibilityFeature } from "./column-visibility.svelte";
+import { ColumnFilteringEnchancedFeature } from "./column-filtering.svelte";
+import { ColumnPinningEnchancedFeature } from "./column-pinning.svelte";
+import { ColumnSizingEnchancedFeature } from "./column-resizing.svelte";
+import { ColumnVisibilityEnchancedFeature } from "./column-visibility.svelte";
 import { CredentialsFeature } from "./credentials.svelte";
 import { DensityToggleFeature } from "./density-toggle.svelte";
 import { ExportingFeature } from "./exporting.svelte";
 import { FullscreenFeature } from "./fullscreen.svelte";
-import { ExtraGlobalSearchFeature } from "./global-search.svelte";
+import { GlobalSearchEnchancedFeature } from "./global-search.svelte";
 import { GroupHeadersVisibilityFeature } from "./group-headers-visibility.svelte";
-import { ExtraGroupingFeature } from "./grouping.svelte";
+import { GroupingEnchancedFeature } from "./grouping.svelte";
 import { StatusIndicatorFeature } from "./status-indicator.svelte";
-import { ExtraPaginationFeature } from "./pagination.svelte";
+import { PaginationEnchancedFeature } from "./pagination.svelte";
 import { RowActionsFeature } from "./row-actions.svelte";
-import { ExtraRowExpandingFeature } from "./row-expanding.svelte";
+import { RowExpandingEnchancedFeature } from "./row-expanding.svelte";
 import { RowNumbersFeature } from "./row-numbers.svelte";
-import { ExtraRowSelectionFeature } from "./row-selection.svelte";
-import { ExtraSortingFeature } from "./sorting.svelte";
-import { ExtraColumnOrderingFeature } from "./column-ordering.svelte";
+import { RowSelectionEnchancedFeature } from "./row-selection.svelte";
+import { SortingEnchancedFeature } from "./sorting.svelte";
+import { ColumnOrderingEnchancedFeature } from "./column-ordering.svelte";
 import { ControlCenterFeature } from "./control-center.svelte";
 
 
 import type { ClickToCopyFeatureConfig } from "./click-to-copy.svelte";
-import type { ExtraColumnFilteringFeatureConfig } from "./column-filtering.svelte";
-import type { ExtraColumnPinningFeatureConfig } from "./column-pinning.svelte";
-import type { ExtraColumnSizingFeatureConfig } from "./column-resizing.svelte";
-import type { ExtraColumnVisibilityFeatureConfig } from "./column-visibility.svelte";
+import type { ColumnFilteringEnchancedFeatureConfig } from "./column-filtering.svelte";
+import type { ColumnPinningEnchancedFeatureConfig } from "./column-pinning.svelte";
+import type { ColumnSizingEnchancedFeatureConfig } from "./column-resizing.svelte";
+import type { ColumnVisibilityEnchancedFeatureConfig } from "./column-visibility.svelte";
 import type { CredentialsFeatureConfig } from "./credentials.svelte";
 import type { DensityToggleFeatureConfig } from "./density-toggle.svelte";
 import type { ExportingFeatureConfig } from "./exporting.svelte";
 import type { FullscreenFeatureConfig } from "./fullscreen.svelte";
-import type { ExtraGlobalSearchFeatureConfig } from "./global-search.svelte";
+import type { GlobalSearchEnchancedFeatureConfig } from "./global-search.svelte";
 import type { GroupHeadersVisibilityFeatureConfig } from "./group-headers-visibility.svelte";
-import type { ExtraGroupingFeatureConfig } from "./grouping.svelte";
+import type { GroupingEnchancedFeatureConfig } from "./grouping.svelte";
 import type { StatusIndicatorFeatureConfig } from "./status-indicator.svelte";
-import type { ExtraPaginationFeatureConfig } from "./pagination.svelte";
+import type { PaginationEnchancedFeatureConfig } from "./pagination.svelte";
 import type { RowActionsFeatureConfig } from "./row-actions.svelte";
-import type { ExtraRowExpandingFeatureConfig } from "./row-expanding.svelte";
+import type { RowExpandingEnchancedFeatureConfig } from "./row-expanding.svelte";
 import type { RowNumbersFeatureConfig } from "./row-numbers.svelte";
-import type { ExtraRowSelectionFeatureConfig } from "./row-selection.svelte";
-import type { ExtraSortingFeatureConfig } from "./sorting.svelte";
-import type { ExtraColumnOrderingFeatureConfig } from "./column-ordering.svelte";
+import type { RowSelectionEnchancedFeatureConfig } from "./row-selection.svelte";
+import type { SortingEnchancedFeatureConfig } from "./sorting.svelte";
+import type { ColumnOrderingEnchancedFeatureConfig } from "./column-ordering.svelte";
 import type { ControlCenterFeatureConfig } from "./control-center.svelte";
 
 export {
     ClickToCopyFeature,
-    ExtraColumnFilteringFeature as ColumnFilteringFeature,
-    ExtraColumnPinningFeature,
-    ExtraColumnSizingFeature,
-    ExtraColumnVisibilityFeature,
+    ColumnFilteringEnchancedFeature as ColumnFilteringFeature,
+    ColumnPinningEnchancedFeature as ExtraColumnPinningFeature,
+    ColumnSizingEnchancedFeature as ExtraColumnSizingFeature,
+    ColumnVisibilityEnchancedFeature as ExtraColumnVisibilityFeature,
     CredentialsFeature,
     DensityToggleFeature,
     ExportingFeature,
     FullscreenFeature,
-    ExtraGlobalSearchFeature,
+    GlobalSearchEnchancedFeature as ExtraGlobalSearchFeature,
     GroupHeadersVisibilityFeature,
-    ExtraGroupingFeature,
+    GroupingEnchancedFeature as ExtraGroupingFeature,
     StatusIndicatorFeature as LoadingIndicatorFeature,
-    ExtraPaginationFeature,
+    PaginationEnchancedFeature as ExtraPaginationFeature,
     RowActionsFeature,
-    ExtraRowExpandingFeature,
+    RowExpandingEnchancedFeature as ExtraRowExpandingFeature,
     RowNumbersFeature,
-    ExtraRowSelectionFeature,
-    ExtraSortingFeature,
-    ExtraColumnOrderingFeature,
+    RowSelectionEnchancedFeature as ExtraRowSelectionFeature,
+    SortingEnchancedFeature as ExtraSortingFeature,
+    ColumnOrderingEnchancedFeature as ExtraColumnOrderingFeature,
     ControlCenterFeature,
 }
 
 
 export type {
     ClickToCopyFeatureConfig,
-    ExtraColumnFilteringFeatureConfig as ColumnFilteringFeatureConfig,
-    ExtraColumnPinningFeatureConfig,
-    ExtraColumnSizingFeatureConfig,
-    ExtraColumnVisibilityFeatureConfig,
+    ColumnFilteringEnchancedFeatureConfig as ColumnFilteringFeatureConfig,
+    ColumnPinningEnchancedFeatureConfig as ExtraColumnPinningFeatureConfig,
+    ColumnSizingEnchancedFeatureConfig as ExtraColumnSizingFeatureConfig,
+    ColumnVisibilityEnchancedFeatureConfig as ExtraColumnVisibilityFeatureConfig,
     CredentialsFeatureConfig,
     DensityToggleFeatureConfig,
     ExportingFeatureConfig,
     FullscreenFeatureConfig,
-    ExtraGlobalSearchFeatureConfig,
+    GlobalSearchEnchancedFeatureConfig as ExtraGlobalSearchFeatureConfig,
     GroupHeadersVisibilityFeatureConfig,
-    ExtraGroupingFeatureConfig,
+    GroupingEnchancedFeatureConfig as ExtraGroupingFeatureConfig,
     StatusIndicatorFeatureConfig as StatusIndicatorFeatureConfig,
-    ExtraPaginationFeatureConfig,
+    PaginationEnchancedFeatureConfig as ExtraPaginationFeatureConfig,
     RowActionsFeatureConfig,
-    ExtraRowExpandingFeatureConfig,
+    RowExpandingEnchancedFeatureConfig as ExtraRowExpandingFeatureConfig,
     RowNumbersFeatureConfig,
-    ExtraRowSelectionFeatureConfig,
-    ExtraSortingFeatureConfig,
-    ExtraColumnOrderingFeatureConfig,
+    RowSelectionEnchancedFeatureConfig as ExtraRowSelectionFeatureConfig,
+    SortingEnchancedFeatureConfig as ExtraSortingFeatureConfig,
+    ColumnOrderingEnchancedFeatureConfig as ExtraColumnOrderingFeatureConfig,
     ControlCenterFeatureConfig,
 }
 

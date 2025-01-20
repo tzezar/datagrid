@@ -12,7 +12,7 @@ export type ColumnFacetingFeatureConfig = {
  * Handles facet calculations for numeric and categorical data in a data grid.
  * Provides utilities for retrieving and calculating facets for columns.
  */
-export class ColumnFacetingFeature<TOriginalRow> {
+export class ColumnFacetingFeature<TOriginalRow = any> {
     // Reference to the parent DataGrid
     private datagrid: DataGrid<TOriginalRow>;
 

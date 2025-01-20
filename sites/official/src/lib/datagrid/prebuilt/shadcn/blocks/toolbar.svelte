@@ -26,10 +26,10 @@
 <div
 	class={cn(
 		'flex items-end justify-end',
-		datagrid.extra.features.columnFiltering.visible && 'top-bar '
+		datagrid.extra.features.columnFiltering.shouldDisplayButton() && 'top-bar '
 	)}
 >
-	{#if datagrid.extra.features.globalSearch.isInputVisible()}
+	{#if datagrid.extra.features.globalSearch.shouldDisplayInput()}
 		<GlobalSearch {datagrid} />
 	{:else}
 		<div class="flex h-full grow items-center pb-1 pl-2 border-t border-l">
@@ -43,11 +43,11 @@
 		</div>
 	{/if}
 
-	{#if datagrid.extra.features.columnFiltering.isButtonVisible()}
+	{#if datagrid.extra.features.columnFiltering.shouldDisplayButton()}
 		{@render columnFilteringToggleButton()}
 	{/if}
 
-	{#if datagrid.extra.features.fullscreen.enableFullscreen}
+	{#if datagrid.extra.features.fullscreen.shouldDisplayFullscreenToggleButton()}
 		{@render fullscreenToggleButton()}
 	{/if}
 

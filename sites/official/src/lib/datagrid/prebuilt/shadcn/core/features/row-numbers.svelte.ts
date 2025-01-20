@@ -1,7 +1,5 @@
 
 
-
-
 export type RowNumbersFeatureConfig = {
     enableRowNumbers?: boolean;
     rowNumberMode?: 'original' | 'static';
@@ -12,9 +10,12 @@ export class RowNumbersFeature {
     rowNumberMode: 'original' | 'static' = $state('static');
 
     constructor(config?: RowNumbersFeatureConfig) {
-        if (config) {
-            this.enableRowNumbers = config.enableRowNumbers ?? this.enableRowNumbers;
-            this.rowNumberMode = config.rowNumberMode ?? this.rowNumberMode;
-        }
+        this.initialize(config);
     }
+
+    initialize(config?: RowNumbersFeatureConfig) {
+        this.enableRowNumbers = config?.enableRowNumbers ?? this.enableRowNumbers;
+        this.rowNumberMode = config?.rowNumberMode ?? this.rowNumberMode;
+    }
+
 }

@@ -9,7 +9,7 @@ export type ColumnSizingFeatureConfig = {
 /**
  * Handles column sizing logic for a DataGrid.
  */
-export class ColumnSizingFeature<TOriginalRow> {
+export class ColumnSizingFeature<TOriginalRow = any> {
     // Reference to the DataGrid instance
     datagrid: DataGrid<TOriginalRow>;
 
