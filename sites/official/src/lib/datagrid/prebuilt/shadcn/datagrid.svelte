@@ -45,6 +45,7 @@
 		footer?: Snippet;
 		footerContent?: Snippet;
 		pagination?: Snippet;
+
 	};
 
 	let {
@@ -66,7 +67,6 @@
 
 	// Crazy boost in performance
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
-	console.log($state.snapshot(leafColumns));
 </script>
 
 <Portal disabled={!datagrid.isFullscreenEnabled()}>

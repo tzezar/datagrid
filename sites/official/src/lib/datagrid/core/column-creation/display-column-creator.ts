@@ -10,7 +10,7 @@ const createDisplayColumnColumnId = ({ columnId, header }: { columnId?: string, 
 }
 
 export function createDisplayColumn<TOriginalRow extends Record<string, any>>(
-  { header, cell, columnId, _meta, options, state, ...rest }: CreateDisplayColumnProps<TOriginalRow>
+  { header, cell, columnId, _meta, options, state, align, ...rest }: CreateDisplayColumnProps<TOriginalRow>
 ): DisplayColumn<TOriginalRow> {
 
   const computedColumnId = createDisplayColumnColumnId({ header, columnId });
@@ -38,6 +38,7 @@ export function createDisplayColumn<TOriginalRow extends Record<string, any>>(
         offset: 0
       }
     },
+    align: align ?? 'left',
     _meta: _meta ?? {},
     ...rest,
     isVisible(): boolean {

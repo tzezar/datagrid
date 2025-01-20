@@ -12,7 +12,7 @@ const createComputedColumnColumnId = ({ columnId, header }: { columnId?: string,
 
 
 export function createComputedColumn<TOriginalRow extends Record<string, any>>(
-  { header, columnId, getValueFn: getValue, _meta = {}, options, state, ...rest }: CreateComputeColumnProps<TOriginalRow>
+  { header, columnId, getValueFn: getValue, _meta = {}, align, options, state, ...rest }: CreateComputeColumnProps<TOriginalRow>
 ): ComputedColumn<TOriginalRow> {
   const computedColumnId = createComputedColumnColumnId({ header, columnId });
   return {
@@ -39,6 +39,7 @@ export function createComputedColumn<TOriginalRow extends Record<string, any>>(
         offset: 0
       },
     },
+    align: align ?? 'left',
     _meta: _meta ?? {},
     ...rest,
     isVisible(): boolean {

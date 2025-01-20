@@ -271,6 +271,8 @@ export type DotNestedKeys<T> = (T extends object ? {
 }[Exclude<keyof T, symbol>] : "") extends infer D ? Extract<D, string> : never;
 // Specific interfaces for different column types
 
+export type ColumnAlign = 'left' | 'center' | 'right';
+
 export interface AccessorColumn<TOriginalRow, TMeta = any> {
   type: 'accessor';
   header: string;
@@ -300,6 +302,7 @@ export interface AccessorColumn<TOriginalRow, TMeta = any> {
     visible: boolean;
     pinning: ColumnPinningState
   };
+  align: ColumnAlign
   _meta: TMeta
   isVisible(): boolean;
   isSortable(): boolean;
@@ -334,6 +337,7 @@ export interface ComputedColumn<TOriginalRow, TMeta = any> {
     visible: boolean;
     pinning: ColumnPinningState
   };
+  align: ColumnAlign
   _meta: TMeta;
   isVisible(): boolean;
   isSortable(): boolean;
@@ -364,6 +368,7 @@ export interface DisplayColumn<TOriginalRow, TMeta = any> {
     pinning: ColumnPinningState
 
   };
+  align: ColumnAlign
   _meta: TMeta;
   isVisible(): boolean;
   isSortable(): boolean;

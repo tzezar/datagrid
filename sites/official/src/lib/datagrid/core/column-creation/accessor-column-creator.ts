@@ -60,7 +60,7 @@ export function createAccessorColumn<
   TOriginalRow extends Record<string, any>,
   TKey extends DotNestedKeys<TOriginalRow>
 >(
-  { header, accessorKey, columnId, getValueFn: getValue, options, _meta = {}, state, ...rest }: CreateAccessorColumnProps<TOriginalRow, TKey>
+  { header, accessorKey, columnId, getValueFn: getValue, align, options, _meta = {}, state, ...rest }: CreateAccessorColumnProps<TOriginalRow, TKey>
 ): AccessorColumn<TOriginalRow> {
 
   if (!accessorKey) throw new Error(`accessorKey must be defined`);
@@ -102,6 +102,7 @@ export function createAccessorColumn<
         offset: 0
       },
     },
+    align: align ?? 'left',
     _meta: _meta ?? {},
     ...rest,
     isVisible(): boolean {
