@@ -62,8 +62,6 @@ export type TzezarsDatagridConfig<TOriginalRow = any> = GridConfig<TOriginalRow>
     extra?: TzezarsDatagridExtraStateConfig;
 }
 
-export type Density = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-
 
 export type TrzezarsDatagridFeatures = {
     clickToCopy: ClickToCopyFeature,
@@ -73,13 +71,13 @@ export type TrzezarsDatagridFeatures = {
     columnVisibility: ColumnVisibilityEnchancedFeature,
     credentials: CredentialsFeature,
     densityToggle: DensityToggleFeature,
-    exporting: ExportingFeature<any>,
+    exporting: ExportingFeature,
     fullscreen: FullscreenFeature,
     globalSearch: GlobalSearchEnchancedFeature,
     groupHeadersVisibility: GroupHeadersVisibilityFeature,
     grouping: GroupingEnchancedFeature,
     loadingIndicator: StatusIndicatorFeature,
-    pagination: PaginationEnchancedFeature<any>,
+    pagination: PaginationEnchancedFeature,
     rowActions: RowActionsFeature,
     rowExpanding: RowExpandingEnchancedFeature,
     rowNumbers: RowNumbersFeature,

@@ -10,7 +10,7 @@ export type PaginationEnchancedFeatureConfig = {
     paginationPosition?: 'top' | 'bottom' | 'both';
 }
 
-export class PaginationEnchancedFeature<TOriginalRow> implements EnchancedFeature {
+export class PaginationEnchancedFeature<TOriginalRow = any> implements EnchancedFeature {
     base: PaginationFeature<TOriginalRow> = new PaginationFeature<TOriginalRow>({} as DataGrid<TOriginalRow>);
     enabled: boolean = $state(true);
     paginationPosition: 'top' | 'bottom' | 'both' = $state('bottom');

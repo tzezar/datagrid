@@ -14,7 +14,7 @@ export type ExportingFeatureConfig = {
     exportMethods?: ExportMethods[];
 }
 
-export class ExportingFeature<T> {
+export class ExportingFeature<T = any> {
     private datagrid: TzezarsDatagrid<T>;
 
     exportMethods: ExportMethods[] = ['toExcel', 'toCSV', 'toJSON', 'toXML'];
