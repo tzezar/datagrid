@@ -16,6 +16,11 @@
 	};
 
 	let { datagrid, title }: Props = $props();
+
+	const toggleColumnFiltersVisibility = () => {
+		datagrid.extra.features.globalSearch.toggleInputVisibility();
+		datagrid.extra.features.columnFiltering.toggle();
+	};
 </script>
 
 <div
@@ -24,10 +29,10 @@
 		datagrid.extra.features.columnFiltering.visible && 'top-bar '
 	)}
 >
-	{#if datagrid.extra.features.columnFiltering.visible}
+	{#if datagrid.extra.features.globalSearch.isInputVisible()}
 		<GlobalSearch {datagrid} />
 	{:else}
-		<div class="flex h-full grow items-end pb-1 pl-2">
+		<div class="flex h-full grow items-center pb-1 pl-2">
 			<span class="w-full text-lg font-semibold">
 				{#if title}
 					{title}
@@ -53,7 +58,7 @@
 	<Button
 		class="rounded-none border-b-0 border-r-0"
 		variant="outline"
-		onclick={() => datagrid.extra.features.columnFiltering.toggle()}
+		onclick={toggleColumnFiltersVisibility}
 	>
 		{#if datagrid.extra.features.columnFiltering.isEnabled()}
 			<FilterAlt />
