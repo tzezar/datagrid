@@ -33,11 +33,11 @@
 		<GlobalSearch {datagrid} />
 	{:else}
 		<div class="flex h-full grow items-center pb-1 pl-2 border-t border-l">
-			<span class="w-full text-lg font-semibold">
+			<span class="w-full text-md">
 				{#if title}
 					{title}
 				{:else}
-					Your data, Tzezar's datagrid
+					Your data, Tzezar's Datagrid
 				{/if}
 			</span>
 		</div>
