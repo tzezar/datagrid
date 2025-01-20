@@ -2,6 +2,7 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { cn } from '$lib/utils';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import CellWithoutColumn from '../structure/body/row/cell/cell-without-column.svelte';
 
 	let { datagrid }: { datagrid: TzezarsDatagrid<any> } = $props();
 
@@ -29,36 +30,36 @@
 	};
 </script>
 
-<div class={cn('flex')}>
-	<DropdownMenu.Root>
-		<DropdownMenu.Trigger
-			class={cn(
-				'flex',
-				datagrid.extra.features.columnFiltering.isEnabled() ? 'self-center' : 'self-end'
-			)}
-		>
-			<button class="bg-primary m-2 size-4" aria-label="Toggle row selection"></button>
-		</DropdownMenu.Trigger>
-		<DropdownMenu.Content side="right">
-			<DropdownMenu.Group>
-				<DropdownMenu.Label>Row selection</DropdownMenu.Label>
-				<DropdownMenu.Separator />
-				<DropdownMenu.Item onclick={() => handleSelectionAction('selectAll')}>
-					Select every row
-				</DropdownMenu.Item>
-				<DropdownMenu.Item onclick={() => handleSelectionAction('selectPage')}>
-					Select current page
-				</DropdownMenu.Item>
+<div class={cn('flex p-2 flex-col justify-end self-end h-full text-[0.75rem] leading-none', '')}>
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger >
+				<button class="bg-primary size-4" aria-label="Toggle row selection"></button>
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Content side="right">
+				<DropdownMenu.Group>
+					<DropdownMenu.Label>Row selection</DropdownMenu.Label>
+					<DropdownMenu.Separator />
+					<DropdownMenu.Item onclick={() => handleSelectionAction('selectAll')}>
+						Select every row
+					</DropdownMenu.Item>
+					<DropdownMenu.Item onclick={() => handleSelectionAction('selectPage')}>
+						Select current page
+					</DropdownMenu.Item>
 
-				<DropdownMenu.Separator />
+					<DropdownMenu.Separator />
 
-				<DropdownMenu.Item onclick={() => handleSelectionAction('deselectAll')}>
-					Deselect every row
-				</DropdownMenu.Item>
-				<DropdownMenu.Item onclick={() => handleSelectionAction('deselectPage')}>
-					Deselect current page
-				</DropdownMenu.Item>
-			</DropdownMenu.Group>
-		</DropdownMenu.Content>
-	</DropdownMenu.Root>
+					<DropdownMenu.Item onclick={() => handleSelectionAction('deselectAll')}>
+						Deselect every row
+					</DropdownMenu.Item>
+					<DropdownMenu.Item onclick={() => handleSelectionAction('deselectPage')}>
+						Deselect current page
+					</DropdownMenu.Item>
+				</DropdownMenu.Group>
+			</DropdownMenu.Content>
+		</DropdownMenu.Root>
+
+		<!-- some space for the column filtering -->
+		{#if datagrid.extra.features.columnFiltering.isEnabled()}
+			<div class="h-9 w-full pt-1"></div>
+		{/if}
 </div>
