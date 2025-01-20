@@ -8,46 +8,48 @@ import {
     CredentialsFeature,
     DensityToggleFeature,
     ExportingFeature,
-    ExtraColumnPinningFeature,
-    ExtraColumnSizingFeature,
-    ExtraColumnVisibilityFeature,
-    ExtraGroupingFeature,
-    LoadingIndicatorFeature,
+    ColumnPinningEnchancedFeature,
+    ColumnSizingEnchancedFeature,
+    ColumnVisibilityEnchancedFeature,
+    GroupingEnchancedFeature,
+    StatusIndicatorFeature,
     RowActionsFeature,
-    ExtraRowExpandingFeature,
+    RowExpandingEnchancedFeature,
     RowNumbersFeature,
-    ExtraRowSelectionFeature,
-    ExtraSortingFeature,
+    RowSelectionEnchancedFeature,
+    SortingEnchancedFeature,
     FullscreenFeature,
     GroupHeadersVisibilityFeature,
-    ExtraPaginationFeature,
-    ExtraGlobalSearchFeature,
+    PaginationEnchancedFeature,
+    GlobalSearchEnchancedFeature,
     ClickToCopyFeature,
-    ColumnFilteringFeature,
+    ColumnFilteringEnchancedFeature,
     type ClickToCopyFeatureConfig,
-    type ColumnFilteringFeatureConfig,
-    type ExtraColumnPinningFeatureConfig,
-    type ExtraColumnSizingFeatureConfig,
-    type ExtraColumnVisibilityFeatureConfig,
+    type ColumnFilteringEnchancedFeatureConfig,
+    type ColumnPinningEnchancedFeatureConfig,
+    type ColumnSizingEnchancedFeatureConfig,
+    type ColumnVisibilityEnchancedFeatureConfig,
     type CredentialsFeatureConfig,
     type DensityToggleFeatureConfig,
     type ExportingFeatureConfig,
     type FullscreenFeatureConfig,
-    type ExtraGlobalSearchFeatureConfig,
+    type GlobalSearchEnchancedFeatureConfig,
     type GroupHeadersVisibilityFeatureConfig,
-    type ExtraGroupingFeatureConfig,
+    type GroupingEnchancedFeatureConfig,
     type StatusIndicatorFeatureConfig,
-    type ExtraPaginationFeatureConfig,
+    type PaginationEnchancedFeatureConfig,
     type RowActionsFeatureConfig,
-    type ExtraRowExpandingFeatureConfig,
+    type RowExpandingEnchancedFeatureConfig,
     type RowNumbersFeatureConfig,
-    type ExtraRowSelectionFeatureConfig,
-    type ExtraSortingFeatureConfig,
-    ExtraColumnOrderingFeature,
-    type ExtraColumnOrderingFeatureConfig,
+    type RowSelectionEnchancedFeatureConfig,
+    type SortingEnchancedFeatureConfig,
+    ColumnOrderingEnchancedFeature,
+    type ColumnOrderingEnchancedFeatureConfig,
     ControlCenterFeature,
     type ControlCenterFeatureConfig,
 } from "./features";
+
+
 import type { SortingFeatureConfig } from "$lib/datagrid/core/features/sorting.svelte";
 import type { PaginationFeatureConfig } from "$lib/datagrid/core/features/pagination.svelte";
 import type { GroupingFeatureConfig } from "$lib/datagrid/core/features/grouping.svelte";
@@ -65,25 +67,25 @@ export type Density = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 export type TrzezarsDatagridFeatures = {
     clickToCopy: ClickToCopyFeature,
-    columnFiltering: ColumnFilteringFeature,
-    columnPinning: ExtraColumnPinningFeature,
-    columnSizing: ExtraColumnSizingFeature,
-    columnVisibility: ExtraColumnVisibilityFeature,
+    columnFiltering: ColumnFilteringEnchancedFeature,
+    columnPinning: ColumnPinningEnchancedFeature,
+    columnSizing: ColumnSizingEnchancedFeature,
+    columnVisibility: ColumnVisibilityEnchancedFeature,
     credentials: CredentialsFeature,
     densityToggle: DensityToggleFeature,
     exporting: ExportingFeature<any>,
     fullscreen: FullscreenFeature,
-    globalSearch: ExtraGlobalSearchFeature,
+    globalSearch: GlobalSearchEnchancedFeature,
     groupHeadersVisibility: GroupHeadersVisibilityFeature,
-    grouping: ExtraGroupingFeature,
-    loadingIndicator: LoadingIndicatorFeature,
-    pagination: ExtraPaginationFeature<any>,
+    grouping: GroupingEnchancedFeature,
+    loadingIndicator: StatusIndicatorFeature,
+    pagination: PaginationEnchancedFeature<any>,
     rowActions: RowActionsFeature,
-    rowExpanding: ExtraRowExpandingFeature,
+    rowExpanding: RowExpandingEnchancedFeature,
     rowNumbers: RowNumbersFeature,
-    rowSelection: ExtraRowSelectionFeature,
-    sorting: ExtraSortingFeature,
-    columnOrdering: ExtraColumnOrderingFeature,
+    rowSelection: RowSelectionEnchancedFeature,
+    sorting: SortingEnchancedFeature,
+    columnOrdering: ColumnOrderingEnchancedFeature,
     controlCenter: ControlCenterFeature,
 }
 
@@ -93,25 +95,25 @@ export type TrzezarsDatagridFeatures = {
 export type TzezarsDatagridExtraStateConfig = {
     features?: {
         clickToCopy?: ClickToCopyFeatureConfig,
-        columnFiltering?: ColumnFilteringFeatureConfig,
-        columnPinning?: ExtraColumnPinningFeatureConfig,
-        columnSizing?: ExtraColumnSizingFeatureConfig,
-        columnVisibility?: ExtraColumnVisibilityFeatureConfig,
+        columnFiltering?: ColumnFilteringEnchancedFeatureConfig,
+        columnPinning?: ColumnPinningEnchancedFeatureConfig,
+        columnSizing?: ColumnSizingEnchancedFeatureConfig,
+        columnVisibility?: ColumnVisibilityEnchancedFeatureConfig,
         credentials?: CredentialsFeatureConfig,
         densityToggle?: DensityToggleFeatureConfig,
         exporting?: ExportingFeatureConfig,
         fullscreen?: FullscreenFeatureConfig,
-        globalSearch?: ExtraGlobalSearchFeatureConfig,
+        globalSearch?: GlobalSearchEnchancedFeatureConfig,
         groupHeadersVisibility?: GroupHeadersVisibilityFeatureConfig,
-        grouping?: ExtraGroupingFeatureConfig & GroupingFeatureConfig,
+        grouping?: GroupingEnchancedFeatureConfig & GroupingFeatureConfig,
         statusIndicator?: StatusIndicatorFeatureConfig,
-        pagination?: ExtraPaginationFeatureConfig & PaginationFeatureConfig,
+        pagination?: PaginationEnchancedFeatureConfig & PaginationFeatureConfig,
         rowActions?: RowActionsFeatureConfig,
-        rowExpanding?: ExtraRowExpandingFeatureConfig,
+        rowExpanding?: RowExpandingEnchancedFeatureConfig,
         rowNumbers?: RowNumbersFeatureConfig,
-        rowSelection?: ExtraRowSelectionFeatureConfig,
-        sorting?: ExtraSortingFeatureConfig & SortingFeatureConfig
-        columnOrdering?: ExtraColumnOrderingFeatureConfig & ColumnOrderingFeatureConfig
+        rowSelection?: RowSelectionEnchancedFeatureConfig,
+        sorting?: SortingEnchancedFeatureConfig & SortingFeatureConfig
+        columnOrdering?: ColumnOrderingEnchancedFeatureConfig & ColumnOrderingFeatureConfig
         controlCenter?: ControlCenterFeatureConfig
     }
 
@@ -181,25 +183,25 @@ export class Extra {
 
     initializeFeatures(config?: TzezarsDatagridExtraStateConfig) {
         this.features.clickToCopy = new ClickToCopyFeature(config?.features?.clickToCopy);
-        this.features.columnFiltering = new ColumnFilteringFeature(this.datagrid, config?.features?.columnFiltering);
-        this.features.columnPinning = new ExtraColumnPinningFeature(this.datagrid, config?.features?.columnPinning);
-        this.features.columnSizing = new ExtraColumnSizingFeature(this.datagrid, config?.features?.columnSizing);
-        this.features.columnVisibility = new ExtraColumnVisibilityFeature(this.datagrid, config?.features?.columnVisibility);
+        this.features.columnFiltering = new ColumnFilteringEnchancedFeature(this.datagrid, config?.features?.columnFiltering);
+        this.features.columnPinning = new ColumnPinningEnchancedFeature(this.datagrid, config?.features?.columnPinning);
+        this.features.columnSizing = new ColumnSizingEnchancedFeature(this.datagrid, config?.features?.columnSizing);
+        this.features.columnVisibility = new ColumnVisibilityEnchancedFeature(this.datagrid, config?.features?.columnVisibility);
         this.features.credentials = new CredentialsFeature(config?.features?.credentials);
         this.features.densityToggle = new DensityToggleFeature(config?.features?.densityToggle);
         this.features.exporting = new ExportingFeature(this.datagrid, config?.features?.exporting);
         this.features.fullscreen = new FullscreenFeature(config?.features?.fullscreen);
-        this.features.globalSearch = new ExtraGlobalSearchFeature(this.datagrid, config?.features?.globalSearch);
+        this.features.globalSearch = new GlobalSearchEnchancedFeature(this.datagrid, config?.features?.globalSearch);
         this.features.groupHeadersVisibility = new GroupHeadersVisibilityFeature(config?.features?.groupHeadersVisibility);
-        this.features.grouping = new ExtraGroupingFeature(this.datagrid, config?.features?.grouping);
-        this.features.loadingIndicator = new LoadingIndicatorFeature(config?.features?.statusIndicator);
-        this.features.pagination = new ExtraPaginationFeature(this.datagrid, config?.features?.pagination);
+        this.features.grouping = new GroupingEnchancedFeature(this.datagrid, config?.features?.grouping);
+        this.features.loadingIndicator = new StatusIndicatorFeature(config?.features?.statusIndicator);
+        this.features.pagination = new PaginationEnchancedFeature(this.datagrid, config?.features?.pagination);
         this.features.rowActions = new RowActionsFeature(config?.features?.rowActions);
-        this.features.rowExpanding = new ExtraRowExpandingFeature(this.datagrid, config?.features?.rowExpanding);
+        this.features.rowExpanding = new RowExpandingEnchancedFeature(this.datagrid, config?.features?.rowExpanding);
         this.features.rowNumbers = new RowNumbersFeature(config?.features?.rowNumbers);
-        this.features.rowSelection = new ExtraRowSelectionFeature(this.datagrid, config?.features?.rowSelection);
-        this.features.sorting = new ExtraSortingFeature(this.datagrid, config?.features?.sorting);
-        this.features.columnOrdering = new ExtraColumnOrderingFeature(this.datagrid, config?.features?.columnOrdering);
+        this.features.rowSelection = new RowSelectionEnchancedFeature(this.datagrid, config?.features?.rowSelection);
+        this.features.sorting = new SortingEnchancedFeature(this.datagrid, config?.features?.sorting);
+        this.features.columnOrdering = new ColumnOrderingEnchancedFeature(this.datagrid, config?.features?.columnOrdering);
         this.features.controlCenter = new ControlCenterFeature(config?.features?.controlCenter);
         // this.datagrid.processors.data.executeFullDataTransformation();
     }
