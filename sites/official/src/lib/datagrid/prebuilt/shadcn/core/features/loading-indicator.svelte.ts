@@ -10,9 +10,10 @@ export type LoadingIndicatorFeatureConfig = {
 
 export class LoadingIndicatorFeature {
     enableLoadingIndicator: boolean = $state(true);
-    isLoading: boolean = $state(false);
-    isSaving: boolean = $state(false);
-    isError: boolean = $state(false);
+    position: 'top' | 'bottom' | 'both' = $state('both');
+    isLoading: boolean = $state(true);
+    isSaving: boolean = $state(true);
+    isError: boolean = $state(true);
     onLoadingIndicatorChange: (isLoading: boolean, isSaving: boolean, isError: boolean) => void = () => { };
 
     constructor(config?: LoadingIndicatorFeatureConfig) {
@@ -23,5 +24,19 @@ export class LoadingIndicatorFeature {
             this.isError = config.isError ?? this.isError;
             this.onLoadingIndicatorChange = config.onLoadingIndicatorChange ?? this.onLoadingIndicatorChange;
         }
+    }
+
+    shouldShowLoadingIndicator(target: 'top' | 'bottom' | 'both') {
+        // loading indicator is disabled
+        if (!this.enableLoadingIndicator) return false;
+
+        if (target === 'top') {
+            if (this.position === 'top' || this.position === 'both') return true;
+        } else if (target === 'bottom') {
+            if (this.position === 'bottom' || this.position === 'both') return true;
+        } else if (target === 'both') {
+            if (this.position === 'both') return true;
+        }
+        return false;
     }
 }

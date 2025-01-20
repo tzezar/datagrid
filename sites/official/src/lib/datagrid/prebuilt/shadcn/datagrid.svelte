@@ -22,6 +22,7 @@
 	import RowSelectionCell from './built-in/row-selection-cell.svelte';
 	import RowSelectionHeaderCell from './built-in/row-selection-header-cell.svelte';
 	import RowExpandingCell from './built-in/row-expanding-cell.svelte';
+	import StatusIndicator from './built-in/status-indicator.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
@@ -65,7 +66,7 @@
 		{/if}
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
-		</div> -->
+			</div> -->
 		{#if datagrid.extra.features.pagination.enablePagination === true}
 			{#if ['both', 'top'].includes(datagrid.extra.features.pagination.positionPagination)}
 				{#if pagination}
@@ -99,6 +100,9 @@
 							{/each}
 						</div>
 					</div>
+				{/if}
+				{#if datagrid.extra.features.loadingIndicator.shouldShowLoadingIndicator('top')}
+					<StatusIndicator {datagrid} position='top'/>
 				{/if}
 				{#if body}
 					{@render body()}
@@ -222,6 +226,9 @@
 					</div>
 				{/if}
 			</div>
+			{#if datagrid.extra.features.loadingIndicator.shouldShowLoadingIndicator('bottom')}
+				<StatusIndicator {datagrid} position='bottom'/>
+			{/if}
 		</div>
 		{#if footer}
 			{@render footer()}
