@@ -17,7 +17,7 @@ import { ExtraRowExpandingFeature } from "./row-expanding.svelte";
 import { RowNumbersFeature } from "./row-numbers.svelte";
 import { ExtraRowSelectionFeature } from "./row-selection.svelte";
 import { ExtraSortingFeature } from "./sorting.svelte";
-
+import { ExtraColumnOrderingFeature } from "./column-ordering.svelte";
 
 import type { ClickToCopyFeatureConfig } from "./click-to-copy.svelte";
 import type { ExtraColumnFilteringFeatureConfig } from "./column-filtering.svelte";
@@ -38,7 +38,7 @@ import type { ExtraRowExpandingFeatureConfig } from "./row-expanding.svelte";
 import type { RowNumbersFeatureConfig } from "./row-numbers.svelte";
 import type { ExtraRowSelectionFeatureConfig } from "./row-selection.svelte";
 import type { ExtraSortingFeatureConfig } from "./sorting.svelte";
-
+import type { ExtraColumnOrderingFeatureConfig } from "./column-ordering.svelte";
 
 
 export {
@@ -61,6 +61,7 @@ export {
     RowNumbersFeature,
     ExtraRowSelectionFeature,
     ExtraSortingFeature,
+    ExtraColumnOrderingFeature,
 }
 
 
@@ -84,6 +85,7 @@ export type {
     RowNumbersFeatureConfig,
     ExtraRowSelectionFeatureConfig,
     ExtraSortingFeatureConfig,
+    ExtraColumnOrderingFeatureConfig,
 }
 
 

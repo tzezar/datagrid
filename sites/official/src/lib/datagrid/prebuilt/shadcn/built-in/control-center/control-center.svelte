@@ -35,10 +35,17 @@
 			<DropdownMenu.GroupHeading>Datagrid control center</DropdownMenu.GroupHeading>
 			<DropdownMenu.Separator />
 			<DropdownMenu.Group>
-				<Sorting {datagrid} />
-				<ColumnReordering {datagrid} />
-				<ColumnFreezing {datagrid} />
+				{#if datagrid.extra.features.sorting.enableSorting}
+					<Sorting {datagrid} />
+				{/if}
 
+				{#if datagrid.extra.features.columnOrdering.enableColumnOrdering}
+					<ColumnReordering {datagrid} />
+				{/if}
+
+				{#if datagrid.extra.features.columnPinning.enableColumnPinning}
+					<ColumnFreezing {datagrid} />
+				{/if}
 				{#if datagrid.extra.features.columnSizing.enableColumnSizing}
 					<ColumnResizing {datagrid} />
 				{/if}

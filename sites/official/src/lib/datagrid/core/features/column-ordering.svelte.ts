@@ -13,6 +13,9 @@ interface MoveOperation {
     };
 }
 
+export type ColumnOrderingFeatureConfig = {
+}
+
 /**
  * Manages column ordering functionality for a DataGrid.
  */
@@ -22,6 +25,11 @@ export class ColumnOrderingFeature<TOriginalRow> {
     constructor(datagrid: DataGrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    initialize(config?: ColumnOrderingFeatureConfig) {
+    }
+
 
     /**
      * Moves a column left in the column hierarchy
