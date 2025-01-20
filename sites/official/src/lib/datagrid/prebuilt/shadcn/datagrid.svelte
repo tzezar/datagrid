@@ -22,10 +22,10 @@
 	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
 
 	// Blocks
-	import HeaderCellDropdown from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-dropdown.svelte';
-	import HeaderCellColumnFilter from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-column-filter.svelte';
-	import ColumnSortingIndicator from '$lib/datagrid/prebuilt/shadcn/blocks/column-sorting-indicator.svelte';
-	import Pagination from '$lib/datagrid/prebuilt/shadcn/blocks/pagination.svelte';
+	import HeaderCellDropdown from '$lib/datagrid/prebuilt/shadcn/built-in/header-cell-dropdown.svelte';
+	import HeaderCellColumnFilter from '$lib/datagrid/prebuilt/shadcn/built-in/header-cell-column-filter.svelte';
+	import ColumnSortingIndicator from '$lib/datagrid/prebuilt/shadcn/built-in/column-sorting-indicator.svelte';
+	import Pagination from '$lib/datagrid/prebuilt/shadcn/built-in/pagination.svelte';
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
 	import type { Snippet } from 'svelte';
 	import RowSelectionCell from './built-in/row-selection-cell.svelte';

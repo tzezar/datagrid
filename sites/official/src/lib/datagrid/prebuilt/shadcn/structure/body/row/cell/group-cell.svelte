@@ -4,7 +4,7 @@
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 	import GroupCellContent from './group-cell-content.svelte';
-	import GroupCellAggregations from '$lib/datagrid/prebuilt/shadcn/components/group-cell-aggregations.svelte';
+	import GroupCellAggregations from '$lib/datagrid/prebuilt/shadcn/built-in/group-cell-aggregations.svelte';
 
 	type Props = {
 		column: LeafColumn<any>;

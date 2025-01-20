@@ -4,7 +4,7 @@
 	import type { TzezarsDatagrid } from '../../../core/index.svelte';
 	import GroupCell from './cell/group-cell.svelte';
 	import GroupCellContent from './cell/group-cell-content.svelte';
-	import GroupCellAggregations from '../../../components/group-cell-aggregations.svelte';
+	import GroupCellAggregations from '../../../built-in/group-cell-aggregations.svelte';
 
 	type Props = {
 		columns: LeafColumn<any>[];

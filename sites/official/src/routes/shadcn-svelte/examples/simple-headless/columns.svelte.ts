@@ -1,9 +1,9 @@
 
 import { type AnyColumn } from "$lib/datagrid/core/types";
 import { displayColumn, accessorColumn, columnGroup, computedColumn } from "$lib/datagrid/core/column-creation";
-import RowSelectionColumnHeaderCell from "$lib/datagrid/prebuilt/shadcn/components/row-selection-column-header-cell.svelte";
-import RowSelectionBodyRowCell from "$lib/datagrid/prebuilt/shadcn/components/row-selection-body-row-cell.svelte";
-import BodyRowActionsCell from "$lib/datagrid/prebuilt/shadcn/components/body-row-actions-cell.svelte";
+import RowSelectionColumnHeaderCell from "$lib/datagrid/prebuilt/shadcn/built-in/row-selection-column-header-cell.svelte";
+import RowSelectionBodyRowCell from "$lib/datagrid/prebuilt/shadcn/built-in/row-selection-body-row-cell.svelte";
+import BodyRowActionsCell from "$lib/datagrid/prebuilt/shadcn/built-in/body-row-actions-cell.svelte";
 import type { User } from "$lib/data-generators/generate/user";
 import type { ShadcnColumnMeta } from "$lib/datagrid/prebuilt/shadcn/core/types";
 

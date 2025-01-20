@@ -7,7 +7,7 @@
 	import type { Snippet } from 'svelte';
 	import BasicRow from '../../body/row/basic-row.svelte';
 	import GroupRow from '../../body/row/group-row.svelte';
-	import GroupCellAggregations from '../../../components/group-cell-aggregations.svelte';
+	import GroupCellAggregations from '../../../built-in/group-cell-aggregations.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;

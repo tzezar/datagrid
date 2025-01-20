@@ -2,7 +2,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import FilterAltOff from '$lib/datagrid/icons/material-symbols/filter-alt-off.svelte';
 	import FilterAlt from '$lib/datagrid/icons/material-symbols/filter-alt.svelte';
-	import GlobalSearch from '$lib/datagrid/prebuilt/shadcn/blocks/global-search-input.svelte';
+	import GlobalSearch from '$lib/datagrid/prebuilt/shadcn/built-in/global-search-input.svelte';
 	import Fullscreen from '$lib/datagrid/icons/material-symbols/fullscreen.svelte';
 	import FullscreenExit from '$lib/datagrid/icons/material-symbols/fullscreen-exit.svelte';
 	import { cn } from '$lib/utils';

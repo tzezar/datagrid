@@ -25,16 +25,15 @@
 		GroupColumnCellCaption
 	} from '$lib/datagrid/prebuilt/shadcn/structure';
 
-	import {
-		HeaderCellColumnFilter,
-		HeaderCellDropdown
-	} from '$lib/datagrid/prebuilt/shadcn/blocks';
+
 	import {
 		GroupCellAggregations,
 		LeafColumnCellCaptionOptions
 	} from '$lib/datagrid/prebuilt/shadcn/components';
 
 	import { userColumns } from './columns.svelte';
+	import HeaderCellColumnFilter from '$lib/datagrid/prebuilt/shadcn/built-in/header-cell-column-filter.svelte';
+	import HeaderCellDropdown from '$lib/datagrid/prebuilt/shadcn/built-in/header-cell-dropdown.svelte';
 
 	let { data } = $props();
 
