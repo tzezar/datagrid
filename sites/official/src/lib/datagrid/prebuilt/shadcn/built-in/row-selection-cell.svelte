@@ -11,18 +11,25 @@
 	};
 
 	let { datagrid, row }: Props = $props();
-	let selected = $state(datagrid.features.rowSelection.isRowSelected(row.identifier));
+
+	// I am not able to make it work with shadcn svelte checkbox
+	// it doesn't update the checkbox state to properly reflect the row selection
+	// so it does not play well with the row selection feature that allows multi selection
+	// or single selection depending on the configuration
 </script>
 
 <CellWithoutColumn {datagrid} {row}>
-	<div class="flex items-center">
-		<Checkbox
-			bind:checked={selected}
-			onCheckedChange={() => {
-				datagrid.extra.features.rowSelection.toggleRowSelection(row.identifier);
-				// workaround for shadcn svelte behaviour that doesn't update the checkbox state to properly reflect the row selection
-				selected = datagrid.features.rowSelection.isRowSelected(row.identifier);
-			}}
-		/>
-	</div>
+	<input
+		class="size-4"
+		type="checkbox"
+		checked={datagrid.features.rowSelection.isRowSelected(row.identifier)}
+		onchange={(e) => {
+			if (e.currentTarget.checked) {
+				datagrid.extra.features.rowSelection.selectRow(row.identifier);
+			} else {
+				datagrid.extra.features.rowSelection.unselectRow(row.identifier);
+			}
+			e.currentTarget.checked = datagrid.features.rowSelection.isRowSelected(row.identifier);
+		}}
+	/>
 </CellWithoutColumn>

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import {
+	import type {
 		Command as CommandPrimitive,
 		Dialog as DialogPrimitive,
-		type WithoutChildrenOrChild,
+		WithoutChildrenOrChild,
 	} from "bits-ui";
 	import type { Snippet } from "svelte";
 	import Command from "./command.svelte";
@@ -23,9 +23,9 @@
 </script>
 
 <Dialog.Root bind:open {...restProps}>
-	<Dialog.Content class="overflow-hidden p-0" {portalProps}>
+	<Dialog.Content class="overflow-hidden p-0 shadow-lg" {portalProps}>
 		<Command
-			class="[&_[data-cmdk-group-heading]]:px-2 [&_[data-cmdk-group-heading]]:font-medium [&_[data-cmdk-group]:not([hidden])_~[data-cmdk-group]]:pt-0 [&_[data-cmdk-group]]:px-2 [&_[data-cmdk-input-wrapper]_svg]:h-5 [&_[data-cmdk-input-wrapper]_svg]:w-5 [&_[data-cmdk-input]]:h-12 [&_[data-cmdk-item]]:px-2 [&_[data-cmdk-item]]:py-3 [&_[data-cmdk-item]_svg]:h-5 [&_[data-cmdk-item]_svg]:w-5"
+			class="[&_[data-command-group]:not([hidden])_~[data-command-group]]:pt-0 [&_[data-command-group]]:px-2 [&_[data-command-input-wrapper]_svg]:h-5 [&_[data-command-input-wrapper]_svg]:w-5 [&_[data-command-input]]:h-12 [&_[data-command-item]]:px-2 [&_[data-command-item]]:py-3 [&_[data-command-item]_svg]:h-5 [&_[data-command-item]_svg]:w-5"
 			{...restProps}
 			bind:value
 			bind:ref

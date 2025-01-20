@@ -1,5 +1,4 @@
 import { AlertDialog as AlertDialogPrimitive } from "bits-ui";
-
 import Title from "./alert-dialog-title.svelte";
 import Action from "./alert-dialog-action.svelte";
 import Cancel from "./alert-dialog-cancel.svelte";

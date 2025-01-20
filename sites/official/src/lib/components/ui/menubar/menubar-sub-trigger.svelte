@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { Menubar as MenubarPrimitive } from "bits-ui";
+	import { Menubar as MenubarPrimitive, type WithoutChild } from "bits-ui";
 	import ChevronRight from "lucide-svelte/icons/chevron-right";
 	import { cn } from "$lib/utils.js";
 
 	let {
 		ref = $bindable(null),
 		class: className,
-		inset,
+		inset = undefined,
 		children,
 		...restProps
-	}: MenubarPrimitive.SubTriggerProps & {
+	}: WithoutChild<MenubarPrimitive.SubTriggerProps> & {
 		inset?: boolean;
 	} = $props();
 </script>

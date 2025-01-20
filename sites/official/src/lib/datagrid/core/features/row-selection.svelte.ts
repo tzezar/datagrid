@@ -60,5 +60,10 @@ export class RowSelectionFeature<TOriginalRow> {
         identifiers.forEach(identifier => this.unselectRow(identifier));
     }
 
+    clearSelection() {
+        this.selectedBasicRowIdentifiers.clear();
+    }
+
+
     
 }

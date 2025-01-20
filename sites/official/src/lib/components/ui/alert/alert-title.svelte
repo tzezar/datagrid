@@ -15,8 +15,9 @@
 </script>
 
 <div
-	bind:this={ref}
+	role="heading"
 	aria-level={level}
+	bind:this={ref}
 	class={cn("mb-1 font-medium leading-none tracking-tight", className)}
 	{...restProps}
 >

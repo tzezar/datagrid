@@ -18,7 +18,7 @@ export class ExtraRowSelectionFeature {
 
     enableRowSelection: boolean = $state(true);
     enableMultiRowSelection: boolean = $state(true);
-    rowSelectionMode: 'single' | 'multiple' = $state('single');
+    rowSelectionMode: 'single' | 'multiple' = $state('multiple');
     enableSelectAll: boolean = $state(true);
     highlightSelectedRow: boolean = $state(true);
 
@@ -37,23 +37,44 @@ export class ExtraRowSelectionFeature {
     }
 
     toggleRowSelection(identifier: GridRowIdentifier) {
-        // TODO
-        if (this.enableMultiRowSelection) {
-            const isRowSelected = this.base.isRowSelected(identifier);
-            if (isRowSelected) {
-                this.base.unselectRow(identifier);
-                return
-            }
-            
-            const isSelectingMoreThanAllowed = this.base.maxSelectedRows !== undefined && this.base.selectedBasicRowIdentifiers.size >= this.base.maxSelectedRows;
-            if (isSelectingMoreThanAllowed) {
-                console.log('selecting more than allowed')
-                return
-            }
-            this.base.toggleRowSelection(identifier);
-
+        const isRowSelected = this.base.isRowSelected(identifier);
+        if (isRowSelected) {
+            this.unselectRow(identifier);
             return
         }
+        
+        const isSelectingMoreThanAllowed = this.base.maxSelectedRows !== undefined && this.base.selectedBasicRowIdentifiers.size >= this.base.maxSelectedRows;
+        if (isSelectingMoreThanAllowed) {
+            console.log('selecting more than allowed')
+            return
+        }
+        
     }
+
+    selectRow(identifier: GridRowIdentifier) {
+        if (this.rowSelectionMode === 'single') {
+            this.base.clearSelection()
+            this.base.selectRow(identifier);
+            return
+        }
+
+        const isMaxSelectedRowsReached = this.base.maxSelectedRows !== undefined && this.base.selectedBasicRowIdentifiers.size >= this.base.maxSelectedRows;
+        if (isMaxSelectedRowsReached) {
+            console.log('selecting more than allowed')
+            return
+        }
+
+        this.base.selectRow(identifier);
+    }
+
+    unselectRow(identifier: GridRowIdentifier) {
+        if (this.rowSelectionMode === 'single') {
+            this.base.clearSelection()
+            return
+        }
+
+        this.base.unselectRow(identifier);
+    }
+
 
 }

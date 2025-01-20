@@ -78,7 +78,7 @@
 							{/if}
 
 							{#if datagrid.extra.features.rowExpanding.enableRowExpanding}
-								<div class="mx-2.5 size-4 self-center"></div>
+								<div class="mx-2.5 size-4 self-center ml-0"></div>
 							{/if}
 
 							{#each headerColumns as column (column.columnId)}

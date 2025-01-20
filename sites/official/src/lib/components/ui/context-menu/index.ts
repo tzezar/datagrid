@@ -10,23 +10,23 @@ import SubContent from "./context-menu-sub-content.svelte";
 import SubTrigger from "./context-menu-sub-trigger.svelte";
 import CheckboxItem from "./context-menu-checkbox-item.svelte";
 
-const Sub: typeof ContextMenuPrimitive.Sub = ContextMenuPrimitive.Sub;
-const Root: typeof ContextMenuPrimitive.Root = ContextMenuPrimitive.Root;
-const Trigger: typeof ContextMenuPrimitive.Trigger = ContextMenuPrimitive.Trigger;
-const Group: typeof ContextMenuPrimitive.Group = ContextMenuPrimitive.Group;
-const RadioGroup: typeof ContextMenuPrimitive.RadioGroup = ContextMenuPrimitive.RadioGroup;
+const Sub = ContextMenuPrimitive.Sub;
+const Root = ContextMenuPrimitive.Root;
+const Trigger = ContextMenuPrimitive.Trigger;
+const Group = ContextMenuPrimitive.Group;
+const RadioGroup = ContextMenuPrimitive.RadioGroup;
 
 export {
 	Sub,
 	Root,
 	Item,
+	GroupHeading,
 	Group,
 	Trigger,
 	Content,
 	Shortcut,
 	Separator,
 	RadioItem,
-	GroupHeading,
 	SubContent,
 	SubTrigger,
 	RadioGroup,
@@ -35,13 +35,13 @@ export {
 	Root as ContextMenu,
 	Sub as ContextMenuSub,
 	Item as ContextMenuItem,
+	GroupHeading as ContextMenuGroupHeading,
 	Group as ContextMenuGroup,
 	Content as ContextMenuContent,
 	Trigger as ContextMenuTrigger,
 	Shortcut as ContextMenuShortcut,
 	RadioItem as ContextMenuRadioItem,
 	Separator as ContextMenuSeparator,
-	GroupHeading as ContextMenuGroupHeading,
 	RadioGroup as ContextMenuRadioGroup,
 	SubContent as ContextMenuSubContent,
 	SubTrigger as ContextMenuSubTrigger,

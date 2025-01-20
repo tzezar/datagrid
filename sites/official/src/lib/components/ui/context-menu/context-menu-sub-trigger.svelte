@@ -6,8 +6,8 @@
 	let {
 		ref = $bindable(null),
 		class: className,
-		children,
 		inset,
+		children,
 		...restProps
 	}: WithoutChild<ContextMenuPrimitive.SubTriggerProps> & {
 		inset?: boolean;

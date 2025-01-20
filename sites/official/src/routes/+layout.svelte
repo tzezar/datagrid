@@ -16,7 +16,6 @@
 	import { onNavigate } from '$app/navigation';
 	import { afterNavigate } from '$app/navigation';
 
-
 	let schema = $derived($mode || 'dark');
 
 	let scrollFix: HTMLDivElement;
@@ -45,10 +44,10 @@
 <div class="flex h-screen w-full">
 	<div class="flex h-full w-full">
 		<!-- Desktop Sidebar -->
-		<div class="hidden h-full w-64 shrink-0 flex-col overflow-auto border-r lg:flex  ">
+		<div class="hidden h-full w-64 shrink-0 flex-col overflow-auto border-r lg:flex">
 			<!-- Logo Section -->
 			<a href="/" class="">
-				<div class="bg-primary-foreground sticky top-0 flex items-center justify-center gap-4 py-4">
+				<div class="sticky top-0 flex items-center justify-center gap-4 bg-primary-foreground py-4">
 					<div class="flex h-10 flex-row items-center justify-center align-middle">
 						{#if schema == 'dark'}
 							<img src={logoWhite} alt="Logo" class="h-[42px] w-[42px]" />
@@ -68,7 +67,7 @@
 			</div>
 
 			<!-- Sidebar Footer -->
-			<div class="bg-primary-foreground sticky bottom-0 mt-auto h-20 border-t px-8 py-4">
+			<div class="sticky bottom-0 mt-auto h-20 border-t bg-primary-foreground px-8 py-4">
 				<div class="flex items-center justify-between gap-4">
 					<a href="https://github.com/tzezar/datagrid" class="font-semibold">GITHUB</a>
 					<ThemeSwitcher />
@@ -79,9 +78,9 @@
 		<!-- Main Content Area -->
 		<div class="relative flex h-screen w-full flex-col overflow-auto" bind:this={scrollFix}>
 			<!-- Mobile Header -->
-			<div class="bg-primary-foreground sticky top-0 flex w-full border-b lg:hidden  ">
+			<div class="sticky top-0 flex w-full border-b bg-primary-foreground lg:hidden">
 				<div
-					class="bg-primary-foreground flex w-full flex-row items-center justify-between gap-1 px-4 py-2 lg:px-6"
+					class="flex w-full flex-row items-center justify-between gap-1 bg-primary-foreground px-4 py-2 lg:px-6"
 				>
 					<a href="/" class="flex items-center justify-center gap-4">
 						<div class="flex h-10 flex-row items-center justify-between align-middle">

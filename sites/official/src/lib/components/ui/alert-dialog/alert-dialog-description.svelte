@@ -3,8 +3,8 @@
 	import { cn } from "$lib/utils.js";
 
 	let {
-		class: className,
 		ref = $bindable(null),
+		class: className,
 		...restProps
 	}: AlertDialogPrimitive.DescriptionProps = $props();
 </script>

@@ -5,7 +5,7 @@
 	let {
 		ref = $bindable(null),
 		class: className,
-		inset,
+		inset = undefined,
 		...restProps
 	}: MenubarPrimitive.ItemProps & {
 		inset?: boolean;

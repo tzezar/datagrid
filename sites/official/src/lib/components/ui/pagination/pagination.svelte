@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Pagination as PaginationPrimitive } from "bits-ui";
+
 	import { cn } from "$lib/utils.js";
 
 	let {

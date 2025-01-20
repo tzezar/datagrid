@@ -32,6 +32,6 @@
 	{...restProps}
 	bind:ref
 >
-	<ArrowLeft />
+	<ArrowLeft class="size-4" />
 	<span class="sr-only">Previous slide</span>
 </Button>

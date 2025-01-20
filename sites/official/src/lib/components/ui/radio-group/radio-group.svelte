@@ -5,9 +5,9 @@
 	let {
 		ref = $bindable(null),
 		class: className,
-		value = $bindable(),
+		value = $bindable(""),
 		...restProps
 	}: RadioGroupPrimitive.RootProps = $props();
 </script>
 
-<RadioGroupPrimitive.Root bind:value class={cn("grid gap-2", className)} {...restProps} bind:ref />
+<RadioGroupPrimitive.Root bind:ref bind:value class={cn("grid gap-2", className)} {...restProps} />

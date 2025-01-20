@@ -136,28 +136,23 @@
 
 .grid-body-row {
 	display: flex;
-	align-items: center;
 	flex-direction: row;
-	/* height: 100%; */
-	width: 100%;
 	border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
 }
 
 .grid-body-cell {
 	display: flex;
+	height: 100%;
 	/* background-color: hsl(var(--grid-body-cell)); */
 	width: var(--width);
 	min-width: var(--min-width);
 	max-width: var(--max-width);
-	flex-shrink: 0;
 	padding: 8px;
-	margin: 0;
-	line-height: 1;
+	/* box-sizing: border-box; */
 	/* overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap; */
 	position: relative;
-	box-sizing: border-box;
 	/* Move border to pseudo-element
 	&:not(:last-child)::after {
 		content: '';

@@ -19,18 +19,15 @@
 					isMultiSortEvent: () => true
 				},
 				rowSelection: {
+					rowSelectionMode: 'multiple',
 					enableMultiRowSelection: true,
-					maxSelectedRows: 2
+					maxSelectedRows: 2,
 				}
 			}
 		}
 	});
 
 
-	$effect(() => {
-		// console.log(datagrid.features.rowSelection.maxSelectedRows);
-		console.log(datagrid.features.rowSelection.selectedBasicRowIdentifiers);
-	});
 </script>
 
 <DatagridShadcnSvelte {datagrid} />

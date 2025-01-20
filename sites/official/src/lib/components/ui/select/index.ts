@@ -13,9 +13,9 @@ const Group = SelectPrimitive.Group;
 
 export {
 	Root,
-	Item,
 	Group,
 	GroupHeading,
+	Item,
 	Content,
 	Trigger,
 	Separator,
@@ -23,9 +23,9 @@ export {
 	ScrollUpButton,
 	//
 	Root as Select,
-	Item as SelectItem,
 	Group as SelectGroup,
 	GroupHeading as SelectGroupHeading,
+	Item as SelectItem,
 	Content as SelectContent,
 	Trigger as SelectTrigger,
 	Separator as SelectSeparator,

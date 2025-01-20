@@ -13,7 +13,7 @@
 </script>
 
 {#snippet Fallback()}
-	<ChevronLeft />
+	<ChevronLeft class="size-4" />
 {/snippet}
 
 <CalendarPrimitive.PrevButton
@@ -23,6 +23,6 @@
 		"size-7 bg-transparent p-0 opacity-50 hover:opacity-100",
 		className
 	)}
-	{...restProps}
 	children={children || Fallback}
+	{...restProps}
 />

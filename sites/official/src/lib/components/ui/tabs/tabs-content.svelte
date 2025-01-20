@@ -5,7 +5,6 @@
 	let {
 		ref = $bindable(null),
 		class: className,
-		value,
 		...restProps
 	}: TabsPrimitive.ContentProps = $props();
 </script>
@@ -16,6 +15,5 @@
 		"ring-offset-background focus-visible:ring-ring mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
 		className
 	)}
-	{value}
 	{...restProps}
 />
