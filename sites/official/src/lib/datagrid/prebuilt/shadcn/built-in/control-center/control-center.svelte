@@ -38,7 +38,10 @@
 				<Sorting {datagrid} />
 				<ColumnReordering {datagrid} />
 				<ColumnFreezing {datagrid} />
-				<ColumnResizing {datagrid} />
+
+				{#if datagrid.extra.features.columnSizing.enableColumnSizing}
+					<ColumnResizing {datagrid} />
+				{/if}
 
 				{#if datagrid.extra.features.columnVisibility.enableColumnVisibility}
 					<ColumnVisibility {datagrid} />
