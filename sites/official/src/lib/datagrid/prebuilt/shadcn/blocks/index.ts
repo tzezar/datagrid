@@ -3,8 +3,7 @@ import GlobalSearchInput from "./global-search-input.svelte";
 import HeaderCellColumnFilter from "./header-cell-column-filter.svelte";
 import HeaderCellDropdown from "./header-cell-dropdown.svelte";
 import Pagination from "./pagination.svelte";
-import SortingIndicator from "./sorting-indicator.svelte";
-import Toolbar from "./toolbar.svelte";
+import SortingIndicator from "../built-in/sorting-indicator.svelte";
 
 
 
@@ -15,7 +14,6 @@ export {
     HeaderCellDropdown,
     Pagination,
     SortingIndicator,
-    Toolbar
 }
 
 

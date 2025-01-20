@@ -59,7 +59,7 @@ export const userColumns = [
         _meta: {
             showColumnManagerDropdownMenu: false,
             align: 'center'
-        } as ColumnMeta
+        } as ShadcnColumnMeta
     }),
 
     // displayColumn({
@@ -83,7 +83,7 @@ export const userColumns = [
         aggregate: 'count',
         _meta: {
             filterType: 'number',
-        } as ColumnMeta
+        } as ShadcnColumnMeta
     }),
     columnGroup({
         header: 'Person',

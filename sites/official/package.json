@@ -9,7 +9,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint ."
+		"lint": "prettier --check . && eslint .",
+		"svelte-check": "svelte-check --watch --preserveWatchOutput --threshold error"
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^9.2.0",
@@ -41,7 +42,7 @@
 		"prettier-plugin-svelte": "^3.2.6",
 		"prettier-plugin-tailwindcss": "^0.6.10",
 		"svelte": "^5.0.0",
-		"svelte-check": "^4.0.0",
+		"svelte-check": "^4.1.4",
 		"svelte-radix": "^2.0.1",
 		"svelte-sonner": "^0.3.28",
 		"sveltekit-superforms": "^2.22.1",

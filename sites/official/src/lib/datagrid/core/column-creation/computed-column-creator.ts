@@ -1,6 +1,7 @@
 import { DEFAULT_COLUMN_SIZE } from "../defaults";
+import type { ComputedColumn } from "../types";
 import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
-import type { CreateComputeColumnProps, ComputedColumn } from "./types";
+import type { CreateComputeColumnProps } from "./types";
 
 
 const createComputedColumnColumnId = ({ columnId, header }: { columnId?: string, header?: string }): string => {

@@ -1,6 +1,7 @@
 import { DEFAULT_COLUMN_SIZE } from "../defaults";
+import type { DisplayColumn } from "../types";
 import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
-import type { CreateDisplayColumnProps, DisplayColumn } from "./types";
+import type { CreateDisplayColumnProps } from "./types";
 
 const createDisplayColumnColumnId = ({ columnId, header }: { columnId?: string, header?: string }): string => {
   if (columnId) return columnId;

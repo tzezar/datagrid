@@ -16,9 +16,9 @@
 	import HeaderCellDropdown from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-dropdown.svelte';
 	import HeaderCellColumnFilter from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-column-filter.svelte';
 	import ColumnSortingIndicator from '$lib/datagrid/prebuilt/shadcn/blocks/column-sorting-indicator.svelte';
-	import Toolbar from '$lib/datagrid/prebuilt/shadcn/blocks/toolbar.svelte';
 	import Pagination from '$lib/datagrid/prebuilt/shadcn/blocks/pagination.svelte';
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
+	import Toolbar from '$lib/datagrid/prebuilt/shadcn/built-in/toolbar.svelte';
 
 	let { data } = $props();
 

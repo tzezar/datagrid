@@ -4,7 +4,7 @@
 	import { userColumns } from './columns.svelte';
 	import { DataGrid } from '$lib/datagrid/core/index.svelte';
 
-	import { generateUser } from '$lib/data-generators/generate/user';
+	import { generateUser, type User } from '$lib/data-generators/generate/user';
 	import { generateData } from '$lib/data-generators/generate-data';
 	import { VirtualList } from 'svelte-virtuallists';
 
@@ -23,17 +23,18 @@
 
 	let datagrid = new DataGrid({
 		columns: userColumns,
-		data: data,
+		data: data
 
-		features: {
-			pagination: {
-				page: 1,
-				pageSize: 1000000,
-				pageSizes: [1000000, 100000, 10000, 1000, 100, 10, 1],
-				pageCount: 1,
-				visibleRowsCount: 1000000
-			}
-		}
+		// TODO
+		// features: {
+		// 	pagination: {
+		// 		page: 1,
+		// 		pageSize: 1000000,
+		// 		pageSizes: [1000000, 100000, 10000, 1000, 100, 10, 1],
+		// 		pageCount: 1,
+		// 		visibleRowsCount: 1000000
+		// 	}
+		// }
 	});
 
 	const columns = datagrid.columnManager.getLeafColumnsInOrder();
@@ -86,18 +87,14 @@
 {/snippet}
 
 <div class="flex flex-col">
-			<VirtualList
-				items={datagrid.rows.getBasicRows()}
-				class="list-table"
-				style="height:600px"
-			>
-				{#snippet header()}
-					{@render HeaderSnippet()}
-				{/snippet}
-				{#snippet vl_slot({ item, index }: { item: GridBasicRow<any>; index: number })}
-					{@render BodyRow(item)}
-				{/snippet}
-			</VirtualList>
+	<VirtualList items={datagrid.rows.getBasicRows()} class="list-table" style="height:600px">
+		{#snippet header()}
+			{@render HeaderSnippet()}
+		{/snippet}
+		{#snippet vl_slot({ item, index }: { item: GridBasicRow<User>; index: string | number })}
+			{@render BodyRow(item)}
+		{/snippet}
+	</VirtualList>
 	<MadeWithLoveByTzezar />
 </div>
 

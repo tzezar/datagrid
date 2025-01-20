@@ -16,11 +16,11 @@
 	import HeaderCellDropdown from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-dropdown.svelte';
 	import HeaderCellColumnFilter from '$lib/datagrid/prebuilt/shadcn/blocks/header-cell-column-filter.svelte';
 	import ColumnSortingIndicator from '$lib/datagrid/prebuilt/shadcn/blocks/column-sorting-indicator.svelte';
-	import Toolbar from '$lib/datagrid/prebuilt/shadcn/blocks/toolbar.svelte';
 	import Pagination from '$lib/datagrid/prebuilt/shadcn/blocks/pagination.svelte';
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
 
 	import { VirtualList } from 'svelte-virtuallists';
+	import Toolbar from '$lib/datagrid/prebuilt/shadcn/built-in/toolbar.svelte';
 
 	let { data } = $props();
 
@@ -65,7 +65,7 @@
 						</div>
 					</div>
 				{/snippet}
-				{#snippet vl_slot({ item: row, index }: { item: GridRow<any>; index: number })}
+				{#snippet vl_slot({ item: row, index })}
 					{#if row.isGroupRow()}
 						<div
 							class="grid-body-group-row"

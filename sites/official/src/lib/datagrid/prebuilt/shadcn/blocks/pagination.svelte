@@ -99,8 +99,8 @@
 <div
 	class={cn(
 		'flex flex-row items-center justify-between gap-2 p-3 md:flex-row border',
-		datagrid.extra.features.pagination.positionPagination === 'top' && 'border-b-0 border-t',
-		datagrid.extra.features.pagination.positionPagination === 'bottom' && 'border-b border-t-0'
+		datagrid.extra.features.pagination.paginationPosition === 'top' && 'border-b-0 border-t',
+		datagrid.extra.features.pagination.paginationPosition === 'bottom' && 'border-b border-t-0'
 	)}
 >
 	{@render status()}

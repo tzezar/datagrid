@@ -75,7 +75,7 @@
 {/snippet}
 
 <ColumnOrderingControls {datagrid} />
-<div class='flex flex-col'>
+<div class="flex flex-col">
 	<div class="grid-wrapper">
 		<div class="grid-container">
 			<div class="grid-header">
@@ -96,7 +96,7 @@
 				{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
 					<div class="grid-body-row">
 						{#each datagrid.columnManager.getLeafColumnsInOrder() as column (column.columnId)}
-							{#if column.isVisible()}
+							{#if !row.isGroupRow()}
 								<div
 									class="grid-body-cell"
 									style:--width={column.state.size.width + 'px'}
