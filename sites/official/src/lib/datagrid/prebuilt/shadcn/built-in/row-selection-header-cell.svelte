@@ -30,7 +30,7 @@
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger>
+	<DropdownMenu.Trigger class='flex items-start'>
 		<button class="bg-primary size-4 m-2" aria-label="Toggle row selection"></button>
 		<!-- <Button size="sm" class="m-0 h-full rounded-none">O</Button> -->
 	</DropdownMenu.Trigger>
