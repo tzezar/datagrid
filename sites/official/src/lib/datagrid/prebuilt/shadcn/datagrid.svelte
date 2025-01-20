@@ -101,9 +101,7 @@
 						</div>
 					</div>
 				{/if}
-				{#if datagrid.extra.features.loadingIndicator.shouldShowLoadingIndicator('top')}
-					<StatusIndicator {datagrid} position='top'/>
-				{/if}
+				<StatusIndicator {datagrid} position="top" />
 				{#if body}
 					{@render body()}
 				{:else}
@@ -226,9 +224,7 @@
 					</div>
 				{/if}
 			</div>
-			{#if datagrid.extra.features.loadingIndicator.shouldShowLoadingIndicator('bottom')}
-				<StatusIndicator {datagrid} position='bottom'/>
-			{/if}
+			<StatusIndicator {datagrid} position="bottom" />
 		</div>
 		{#if footer}
 			{@render footer()}

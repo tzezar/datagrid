@@ -7,7 +7,7 @@
 	import FullscreenExit from '$lib/datagrid/icons/material-symbols/fullscreen-exit.svelte';
 	import { cn } from '$lib/utils';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
-	import ControlCenterDropdown from './control-center-dropdown.svelte';
+	import ControlCenter from '../built-in/control-center/control-center.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;
@@ -60,7 +60,7 @@
 			<Fullscreen />
 		{/if}
 	</Button>
-	<ControlCenterDropdown {datagrid} />
+	<ControlCenter {datagrid} />
 </div>
 
 <style>

@@ -1,0 +1,38 @@
+<script lang="ts">
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import Slider from '$lib/components/ui/slider/slider.svelte';
+	import Width from '$lib/datagrid/icons/material-symbols/width.svelte';
+	import type { TzezarsDatagrid } from '../../core/index.svelte';
+
+	type Props = {
+		datagrid: TzezarsDatagrid<any>;
+	};
+
+	let { datagrid }: Props = $props();
+
+	const leafColumns = datagrid.columnManager.getLeafColumns();
+</script>
+
+<DropdownMenu.Sub>
+	<DropdownMenu.SubTrigger>
+		<Width class="mr-2 size-4" />
+		<span>Resizing</span>
+	</DropdownMenu.SubTrigger>
+	<DropdownMenu.SubContent>
+		{#each leafColumns as column}
+			<DropdownMenu.Item closeOnSelect={false} class="flex flex-col">
+				<span>{column.header}</span>
+				<Slider
+					class="ml-auto"
+					type="single"
+					min={column.state.size.minWidth}
+					max={column.state.size.maxWidth}
+					value={column.state.size.width}
+					onValueChange={(value: number) => {
+						datagrid.handlers.columnSizing.updateColumnSize(column.columnId, Number(value));
+					}}
+				/>
+			</DropdownMenu.Item>
+		{/each}
+	</DropdownMenu.SubContent>
+</DropdownMenu.Sub>

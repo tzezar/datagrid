@@ -9,17 +9,14 @@ export type ExtraGroupingFeatureConfig = {
 
 export class ExtraGroupingFeature {
     base: GroupingFeature = new GroupingFeature();
-
-
     enableGrouping: boolean = $state(true);
-    onGroupingChange: (expandedGroups: string[]) => void = () => { };
+    
     constructor(datagrid: DataGrid<any>, config?: ExtraGroupingFeatureConfig & GroupingFeatureConfig) {
         this.base = datagrid.features.grouping;
         this.base.initialize(config);
 
         if (config) {
             this.enableGrouping = config.enableGrouping ?? this.enableGrouping;
-            this.onGroupingChange = config.onGroupingChange ?? this.onGroupingChange;
         }
     }
 }

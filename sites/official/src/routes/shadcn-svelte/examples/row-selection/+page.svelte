@@ -22,6 +22,9 @@
 					rowSelectionMode: 'multiple',
 					enableMultiRowSelection: true,
 					maxSelectedRows: 2,
+				},
+				statusIndicator: {
+					isLoading: true,
 				}
 			}
 		}

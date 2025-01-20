@@ -10,7 +10,7 @@ import { FullscreenFeature } from "./fullscreen.svelte";
 import { ExtraGlobalSearchFeature } from "./global-search.svelte";
 import { GroupHeadersVisibilityFeature } from "./group-headers-visibility.svelte";
 import { ExtraGroupingFeature } from "./grouping.svelte";
-import { LoadingIndicatorFeature } from "./loading-indicator.svelte";
+import { StatusIndicatorFeature } from "./status-indicator.svelte";
 import { ExtraPaginationFeature } from "./pagination.svelte";
 import { RowActionsFeature } from "./row-actions.svelte";
 import { ExtraRowExpandingFeature } from "./row-expanding.svelte";
@@ -31,7 +31,7 @@ import type { FullscreenFeatureConfig } from "./fullscreen.svelte";
 import type { ExtraGlobalSearchFeatureConfig } from "./global-search.svelte";
 import type { GroupHeadersVisibilityFeatureConfig } from "./group-headers-visibility.svelte";
 import type { ExtraGroupingFeatureConfig } from "./grouping.svelte";
-import type { LoadingIndicatorFeatureConfig } from "./loading-indicator.svelte";
+import type { StatusIndicatorFeatureConfig } from "./status-indicator.svelte";
 import type { ExtraPaginationFeatureConfig } from "./pagination.svelte";
 import type { RowActionsFeatureConfig } from "./row-actions.svelte";
 import type { ExtraRowExpandingFeatureConfig } from "./row-expanding.svelte";
@@ -54,7 +54,7 @@ export {
     ExtraGlobalSearchFeature,
     GroupHeadersVisibilityFeature,
     ExtraGroupingFeature,
-    LoadingIndicatorFeature,
+    StatusIndicatorFeature as LoadingIndicatorFeature,
     ExtraPaginationFeature,
     RowActionsFeature,
     ExtraRowExpandingFeature,
@@ -77,7 +77,7 @@ export type {
     ExtraGlobalSearchFeatureConfig,
     GroupHeadersVisibilityFeatureConfig,
     ExtraGroupingFeatureConfig,
-    LoadingIndicatorFeatureConfig,
+    StatusIndicatorFeatureConfig as StatusIndicatorFeatureConfig,
     ExtraPaginationFeatureConfig,
     RowActionsFeatureConfig,
     ExtraRowExpandingFeatureConfig,

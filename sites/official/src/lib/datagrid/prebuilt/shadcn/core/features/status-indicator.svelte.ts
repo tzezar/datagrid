@@ -1,5 +1,5 @@
 
-export type LoadingIndicatorFeatureConfig = {
+export type StatusIndicatorFeatureConfig = {
     enableLoadingIndicator?: boolean;
     isLoading?: boolean;
     isSaving?: boolean;
@@ -8,15 +8,15 @@ export type LoadingIndicatorFeatureConfig = {
 }
 
 
-export class LoadingIndicatorFeature {
+export class StatusIndicatorFeature {
     enableLoadingIndicator: boolean = $state(true);
-    position: 'top' | 'bottom' | 'both' = $state('both');
-    isLoading: boolean = $state(true);
-    isSaving: boolean = $state(true);
-    isError: boolean = $state(true);
+    position: 'top' | 'bottom' | 'both' = $state('top');
+    isLoading: boolean = $state(false);
+    isSaving: boolean = $state(false);
+    isError: boolean = $state(false);
     onLoadingIndicatorChange: (isLoading: boolean, isSaving: boolean, isError: boolean) => void = () => { };
 
-    constructor(config?: LoadingIndicatorFeatureConfig) {
+    constructor(config?: StatusIndicatorFeatureConfig) {
         if (config) {
             this.enableLoadingIndicator = config.enableLoadingIndicator ?? this.enableLoadingIndicator;
             this.isLoading = config.isLoading ?? this.isLoading;

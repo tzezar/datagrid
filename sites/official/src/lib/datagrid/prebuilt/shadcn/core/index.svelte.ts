@@ -36,7 +36,7 @@ import {
     type ExtraGlobalSearchFeatureConfig,
     type GroupHeadersVisibilityFeatureConfig,
     type ExtraGroupingFeatureConfig,
-    type LoadingIndicatorFeatureConfig,
+    type StatusIndicatorFeatureConfig,
     type ExtraPaginationFeatureConfig,
     type RowActionsFeatureConfig,
     type ExtraRowExpandingFeatureConfig,
@@ -97,7 +97,7 @@ export type TzezarsDatagridExtraStateConfig = {
         globalSearch?: ExtraGlobalSearchFeatureConfig,
         groupHeadersVisibility?: GroupHeadersVisibilityFeatureConfig,
         grouping?: ExtraGroupingFeatureConfig & GroupingFeatureConfig,
-        loadingIndicator?: LoadingIndicatorFeatureConfig,
+        statusIndicator?: StatusIndicatorFeatureConfig,
         pagination?: ExtraPaginationFeatureConfig & PaginationFeatureConfig,
         rowActions?: RowActionsFeatureConfig,
         rowExpanding?: ExtraRowExpandingFeatureConfig,
@@ -183,7 +183,7 @@ export class Extra {
         this.features.globalSearch = new ExtraGlobalSearchFeature(this.datagrid, config?.features?.globalSearch);
         this.features.groupHeadersVisibility = new GroupHeadersVisibilityFeature(config?.features?.groupHeadersVisibility);
         this.features.grouping = new ExtraGroupingFeature(this.datagrid, config?.features?.grouping);
-        this.features.loadingIndicator = new LoadingIndicatorFeature(config?.features?.loadingIndicator);
+        this.features.loadingIndicator = new LoadingIndicatorFeature(config?.features?.statusIndicator);
         this.features.pagination = new ExtraPaginationFeature(this.datagrid, config?.features?.pagination);
         this.features.rowActions = new RowActionsFeature(config?.features?.rowActions);
         this.features.rowExpanding = new ExtraRowExpandingFeature(this.datagrid, config?.features?.rowExpanding);
