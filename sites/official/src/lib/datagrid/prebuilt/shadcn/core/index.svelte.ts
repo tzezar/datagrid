@@ -70,7 +70,7 @@ export type TrzezarsDatagridFeatures = {
     fullscreen: FullscreenFeature,
     globalSearch: ExtraGlobalSearchFeature,
     groupHeadersVisibility: GroupHeadersVisibilityFeature,
-    grouping?: ExtraGroupingFeature,
+    grouping: ExtraGroupingFeature,
     loadingIndicator: LoadingIndicatorFeature,
     pagination: ExtraPaginationFeature<any>,
     rowActions: RowActionsFeature,

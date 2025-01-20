@@ -3,7 +3,7 @@
 	import type { TzezarsDatagrid } from '../../core/index.svelte';
 	import DeleteOutline from '$lib/datagrid/icons/material-symbols/delete-outline.svelte';
 	import ColumnGrouping from './column-grouping.svelte';
-	import Ordering from './ordering.svelte';
+	import Ordering from './column-ordering.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;

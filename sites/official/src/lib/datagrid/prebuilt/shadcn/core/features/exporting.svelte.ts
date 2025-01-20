@@ -5,18 +5,35 @@ import { TzezarsDatagrid } from '../index.svelte';
 import type { LeafColumn } from '$lib/datagrid/core/types';
 
 
+export type ExportMethods = 'toExcel' | 'toCSV' | 'toJSON' | 'toXML';
+
 export type ExportingFeatureConfig = {
     fileName?: string;
+    
+    enableExporting?: boolean;
+    exportMethods?: ExportMethods[];
 }
 
 export class ExportingFeature<T> {
     private datagrid: TzezarsDatagrid<T>;
+
+    exportMethods: ExportMethods[] = ['toExcel', 'toCSV', 'toJSON', 'toXML'];
+
+    enableExporting: boolean = $state(true);
+
     fileName: string = $state('table');
 
     constructor(datagrid: TzezarsDatagrid<T>, config?: ExportingFeatureConfig) {
         this.datagrid = datagrid;
-        this.fileName = config?.fileName ?? this.fileName;
+        this.initialize(config);
     }
+
+    initialize(config?: ExportingFeatureConfig) {
+        this.enableExporting = config?.enableExporting ?? this.enableExporting;
+        this.fileName = config?.fileName ?? this.fileName;
+        this.exportMethods = config?.exportMethods ?? this.exportMethods;
+    }
+
 
     /**
      * Exports data to JSON format and triggers download

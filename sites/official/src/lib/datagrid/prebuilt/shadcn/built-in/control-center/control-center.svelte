@@ -1,29 +1,30 @@
 <script lang="ts">
 	import { buttonVariants } from '$lib/components/ui/button';
-    import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import AdGroupOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-outline-sharp.svelte';
-	import ExpandLess from '$lib/datagrid/icons/material-symbols/expand-less.svelte';
-	import ExpandMore from '$lib/datagrid/icons/material-symbols/expand-more.svelte';
 	import Settings from '$lib/datagrid/icons/material-symbols/settings.svelte';
 	import type { TzezarsDatagrid } from '../../core/index.svelte';
 	import ColumnFreezing from './column-freezing.svelte';
+	import ColumnGroupsVisibility from './column-groups-visibility.svelte';
 	import ColumnReordering from './column-reordering.svelte';
 	import ColumnResizing from './column-resizing.svelte';
 	import ColumnVisibility from './column-visibility.svelte';
-	import CreateGrouping from './create-grouping.svelte';
-	import Exporting from './exporting.svelte';
+	import ColumnGroupsCreation from './column-groups-creation.svelte';
+	import DataExporting from './data-exporting.svelte';
 	import GroupingDropdown from './grouping-dropdown.svelte';
 	import Sorting from './sorting.svelte';
 
-    type Props = {
-        datagrid: TzezarsDatagrid<any>;
-    }
+	type Props = {
+		datagrid: TzezarsDatagrid<any>;
+	};
 
-    const { datagrid }: Props = $props();
+	const { datagrid }: Props = $props();
 
-
+	const showColumnGroupingSeparator = $derived(
+		datagrid.extra.features.groupHeadersVisibility.showGroupHeaders ||
+			datagrid.extra.features.grouping.enableGrouping
+	);
 </script>
-
 
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger class={`${buttonVariants({ variant: 'outline' })} rounded-none border-b-0`}>
@@ -38,36 +39,37 @@
 				<ColumnReordering {datagrid} />
 				<ColumnFreezing {datagrid} />
 				<ColumnResizing {datagrid} />
-				<ColumnVisibility  {datagrid} />
-				<Exporting {datagrid} />
+				<ColumnVisibility {datagrid} />
 
+				{#if datagrid.extra.features.exporting.enableExporting}
+					<DataExporting {datagrid} />
+				{/if}
+
+				{#if showColumnGroupingSeparator}
+					<DropdownMenu.Separator />
+				{/if}
+
+				{#if datagrid.extra.features.groupHeadersVisibility.enableColumnGroupsCreation}
+					<DropdownMenu.Sub>
+						<DropdownMenu.SubTrigger>
+							<AdGroupOutlineSharp class="mr-2 size-4" />
+							<span>Create column group</span>
+						</DropdownMenu.SubTrigger>
+						<DropdownMenu.SubContent>
+							<ColumnGroupsCreation {datagrid} />
+						</DropdownMenu.SubContent>
+					</DropdownMenu.Sub>
+				{/if}
+
+				{#if datagrid.extra.features.groupHeadersVisibility.enableGroupHeadersHiding}
+					<ColumnGroupsVisibility {datagrid} />
+				{/if}
 				<DropdownMenu.Separator />
-				<DropdownMenu.Sub>
-					<DropdownMenu.SubTrigger>
-						<AdGroupOutlineSharp class="mr-2 size-4" />
-						<span>Create column group</span>
-					</DropdownMenu.SubTrigger>
-					<DropdownMenu.SubContent>
-						<CreateGrouping {datagrid} />
-					</DropdownMenu.SubContent>
-				</DropdownMenu.Sub>
-				<DropdownMenu.Item
-					closeOnSelect={false}
-					onclick={() => datagrid.extra.features.groupHeadersVisibility.toggleGroupHeaders()}
-				>
-					{#if datagrid.extra.features.groupHeadersVisibility.showGroupHeaders}
-						<ExpandLess class="mr-2 size-4" />
-						Hide column groups
-					{:else}
-						<ExpandMore class="mr-2 size-4" />
-						Show column groups
-					{/if}
-				</DropdownMenu.Item>
-				<DropdownMenu.Separator />
-				<DropdownMenu.GroupHeading>Data grouping</DropdownMenu.GroupHeading>
-				<GroupingDropdown {datagrid} />
+				{#if datagrid.extra.features.grouping.enableGrouping}
+					<DropdownMenu.GroupHeading>Data grouping</DropdownMenu.GroupHeading>
+					<GroupingDropdown {datagrid} />
+				{/if}
 			</DropdownMenu.Group>
-			<!-- <DropdownMenu.Separator /> -->
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

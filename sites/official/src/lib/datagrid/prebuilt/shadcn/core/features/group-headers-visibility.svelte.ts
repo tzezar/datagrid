@@ -6,6 +6,9 @@ export type GroupHeadersVisibilityFeatureConfig = {
 
 
 export class GroupHeadersVisibilityFeature {
+    enableGroupHeadersHiding: boolean = $state(true);
+    enableColumnGroupsCreation: boolean = $state(true);
+    
     showGroupHeaders: boolean = $state(true);
 
     constructor(config?: GroupHeadersVisibilityFeatureConfig) {

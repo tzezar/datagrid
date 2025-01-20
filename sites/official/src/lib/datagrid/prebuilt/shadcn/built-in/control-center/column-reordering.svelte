@@ -3,7 +3,7 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
 	import type { TzezarsDatagrid } from '../../core/index.svelte';
-	import Ordering from './ordering.svelte';
+	import Ordering from './column-ordering.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
