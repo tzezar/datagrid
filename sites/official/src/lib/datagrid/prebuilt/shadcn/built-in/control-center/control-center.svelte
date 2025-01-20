@@ -26,63 +26,67 @@
 	);
 </script>
 
-<DropdownMenu.Root>
-	<DropdownMenu.Trigger class={`${buttonVariants({ variant: 'outline' })} rounded-none border-b-0`}>
-		<Settings />
-	</DropdownMenu.Trigger>
-	<DropdownMenu.Content class="w-56">
-		<DropdownMenu.Group>
-			<DropdownMenu.GroupHeading>Datagrid control center</DropdownMenu.GroupHeading>
-			<DropdownMenu.Separator />
+{#if datagrid.extra.features.controlCenter.enableControlCenter}
+	<DropdownMenu.Root>
+		<DropdownMenu.Trigger
+			class={`${buttonVariants({ variant: 'outline' })} rounded-none border-b-0`}
+		>
+			<Settings />
+		</DropdownMenu.Trigger>
+		<DropdownMenu.Content class="w-56">
 			<DropdownMenu.Group>
-				{#if datagrid.extra.features.sorting.enableSorting}
-					<Sorting {datagrid} />
-				{/if}
-
-				{#if datagrid.extra.features.columnOrdering.enableColumnOrdering}
-					<ColumnReordering {datagrid} />
-				{/if}
-
-				{#if datagrid.extra.features.columnPinning.enableColumnPinning}
-					<ColumnFreezing {datagrid} />
-				{/if}
-				{#if datagrid.extra.features.columnSizing.enableColumnSizing}
-					<ColumnResizing {datagrid} />
-				{/if}
-
-				{#if datagrid.extra.features.columnVisibility.enableColumnVisibility}
-					<ColumnVisibility {datagrid} />
-				{/if}
-
-				{#if datagrid.extra.features.exporting.enableExporting}
-					<DataExporting {datagrid} />
-				{/if}
-
-				{#if showColumnGroupingSeparator}
-					<DropdownMenu.Separator />
-				{/if}
-
-				{#if datagrid.extra.features.groupHeadersVisibility.enableColumnGroupsCreation}
-					<DropdownMenu.Sub>
-						<DropdownMenu.SubTrigger>
-							<AdGroupOutlineSharp class="mr-2 size-4" />
-							<span>Create column group</span>
-						</DropdownMenu.SubTrigger>
-						<DropdownMenu.SubContent>
-							<ColumnGroupsCreation {datagrid} />
-						</DropdownMenu.SubContent>
-					</DropdownMenu.Sub>
-				{/if}
-
-				{#if datagrid.extra.features.groupHeadersVisibility.enableGroupHeadersHiding}
-					<ColumnGroupsVisibility {datagrid} />
-				{/if}
+				<DropdownMenu.GroupHeading>Datagrid control center</DropdownMenu.GroupHeading>
 				<DropdownMenu.Separator />
-				{#if datagrid.extra.features.grouping.enableGrouping}
-					<DropdownMenu.GroupHeading>Data grouping</DropdownMenu.GroupHeading>
-					<GroupingDropdown {datagrid} />
-				{/if}
+				<DropdownMenu.Group>
+					{#if datagrid.extra.features.sorting.enableSorting}
+						<Sorting {datagrid} />
+					{/if}
+
+					{#if datagrid.extra.features.columnOrdering.enableColumnOrdering}
+						<ColumnReordering {datagrid} />
+					{/if}
+
+					{#if datagrid.extra.features.columnPinning.enableColumnPinning}
+						<ColumnFreezing {datagrid} />
+					{/if}
+					{#if datagrid.extra.features.columnSizing.enableColumnSizing}
+						<ColumnResizing {datagrid} />
+					{/if}
+
+					{#if datagrid.extra.features.columnVisibility.enableColumnVisibility}
+						<ColumnVisibility {datagrid} />
+					{/if}
+
+					{#if datagrid.extra.features.exporting.enableExporting}
+						<DataExporting {datagrid} />
+					{/if}
+
+					{#if showColumnGroupingSeparator}
+						<DropdownMenu.Separator />
+					{/if}
+
+					{#if datagrid.extra.features.groupHeadersVisibility.enableColumnGroupsCreation}
+						<DropdownMenu.Sub>
+							<DropdownMenu.SubTrigger>
+								<AdGroupOutlineSharp class="mr-2 size-4" />
+								<span>Create column group</span>
+							</DropdownMenu.SubTrigger>
+							<DropdownMenu.SubContent>
+								<ColumnGroupsCreation {datagrid} />
+							</DropdownMenu.SubContent>
+						</DropdownMenu.Sub>
+					{/if}
+
+					{#if datagrid.extra.features.groupHeadersVisibility.enableGroupHeadersHiding}
+						<ColumnGroupsVisibility {datagrid} />
+					{/if}
+					<DropdownMenu.Separator />
+					{#if datagrid.extra.features.grouping.enableGrouping}
+						<DropdownMenu.GroupHeading>Data grouping</DropdownMenu.GroupHeading>
+						<GroupingDropdown {datagrid} />
+					{/if}
+				</DropdownMenu.Group>
 			</DropdownMenu.Group>
-		</DropdownMenu.Group>
-	</DropdownMenu.Content>
-</DropdownMenu.Root>
+		</DropdownMenu.Content>
+	</DropdownMenu.Root>
+{/if}

@@ -45,6 +45,8 @@ import {
     type ExtraSortingFeatureConfig,
     ExtraColumnOrderingFeature,
     type ExtraColumnOrderingFeatureConfig,
+    ControlCenterFeature,
+    type ControlCenterFeatureConfig,
 } from "./features";
 import type { SortingFeatureConfig } from "$lib/datagrid/core/features/sorting.svelte";
 import type { PaginationFeatureConfig } from "$lib/datagrid/core/features/pagination.svelte";
@@ -82,6 +84,7 @@ export type TrzezarsDatagridFeatures = {
     rowSelection: ExtraRowSelectionFeature,
     sorting: ExtraSortingFeature,
     columnOrdering: ExtraColumnOrderingFeature,
+    controlCenter: ControlCenterFeature,
 }
 
 
@@ -109,6 +112,7 @@ export type TzezarsDatagridExtraStateConfig = {
         rowSelection?: ExtraRowSelectionFeatureConfig,
         sorting?: ExtraSortingFeatureConfig & SortingFeatureConfig
         columnOrdering?: ExtraColumnOrderingFeatureConfig & ColumnOrderingFeatureConfig
+        controlCenter?: ControlCenterFeatureConfig
     }
 
     title?: string
@@ -196,7 +200,7 @@ export class Extra {
         this.features.rowSelection = new ExtraRowSelectionFeature(this.datagrid, config?.features?.rowSelection);
         this.features.sorting = new ExtraSortingFeature(this.datagrid, config?.features?.sorting);
         this.features.columnOrdering = new ExtraColumnOrderingFeature(this.datagrid, config?.features?.columnOrdering);
-        
+        this.features.controlCenter = new ControlCenterFeature(config?.features?.controlCenter);
         // this.datagrid.processors.data.executeFullDataTransformation();
     }
 
