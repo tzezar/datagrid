@@ -12,6 +12,8 @@ export type ExtraGlobalSearchFeatureConfig = {
 export class ExtraGlobalSearchFeature {
     base: GlobalSearchFeature = new GlobalSearchFeature();
 
+    private inputVisible: boolean = $state(false);
+
     enableGlobalSearch: boolean = $state(true);
     onEnableGlobalSearchChange: (value: boolean) => void = () => { };
 
@@ -24,4 +26,21 @@ export class ExtraGlobalSearchFeature {
             this.onEnableGlobalSearchChange = config.onEnableGlobalSearchChange ?? this.onEnableGlobalSearchChange;
         }
     }
+
+    hideInput() {
+        this.inputVisible = false;
+    }
+
+    showInput() {
+        this.inputVisible = true;
+    }
+
+    toggleInputVisibility() {
+        this.inputVisible = !this.inputVisible;
+    }
+
+    isInputVisible() {
+        return this.inputVisible;
+    }
+
 }
