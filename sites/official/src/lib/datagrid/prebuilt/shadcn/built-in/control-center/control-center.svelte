@@ -39,7 +39,10 @@
 				<ColumnReordering {datagrid} />
 				<ColumnFreezing {datagrid} />
 				<ColumnResizing {datagrid} />
-				<ColumnVisibility {datagrid} />
+
+				{#if datagrid.extra.features.columnVisibility.enableColumnVisibility}
+					<ColumnVisibility {datagrid} />
+				{/if}
 
 				{#if datagrid.extra.features.exporting.enableExporting}
 					<DataExporting {datagrid} />

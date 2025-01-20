@@ -13,6 +13,7 @@ export class ExtraColumnVisibilityFeature {
     base: ColumnVisibilityFeature<any> = new ColumnVisibilityFeature<any>({} as DataGrid<any>); 
 
     enableColumnVisibility: boolean = $state(true);
+    
     constructor(datagrid: DataGrid<any>, config?: ExtraColumnVisibilityFeatureConfig) {
         this.base = datagrid.features.columnVisibility;
         this.base.initialize(config);
