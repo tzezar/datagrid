@@ -5,12 +5,15 @@ import type { TzezarsDatagrid } from "../index.svelte";
 
 export type ExtraColumnFilteringFeatureConfig = {
     enabled?: boolean;
+    visible?: boolean;
 } & ColumnFilteringFeatureConfig
 
 
 export class ExtraColumnFilteringFeature {
     base: ColumnFilteringFeature<any> = new ColumnFilteringFeature()
-    enabled: boolean = $state(false);
+
+    enabled: boolean = $state(true);
+    visible: boolean = $state(true);
 
     constructor(datagrid: TzezarsDatagrid, config?: ExtraColumnFilteringFeatureConfig & ColumnFilteringFeatureConfig) {
         this.base = datagrid.features.filtering;
@@ -18,18 +21,19 @@ export class ExtraColumnFilteringFeature {
 
         if (config) {
             this.enabled = config.enabled ?? this.enabled;
+            this.visible = config.visible ?? this.visible;
         }
     }
 
-    enableColumnFiltering() {
-        this.enabled = true;
-    }
-
-    disableColumnFiltering() {
+    disable() {
         this.enabled = false;
     }
 
-    toggleColumnFiltering() {
+    enable() {
+        this.enabled = true;
+    }
+
+    toggle() {
         this.enabled = !this.enabled;
     }
 
@@ -37,5 +41,20 @@ export class ExtraColumnFilteringFeature {
         return this.enabled;
     }
 
+    showButton() {
+        this.visible = true;
+    }
+
+    hideButton() {
+        this.visible = false;
+    }
+
+    toggleButtonVisibility() {
+        this.visible = !this.visible;
+    }
+
+    isButtonVisible() {
+        return this.visible;
+    }
 
 }

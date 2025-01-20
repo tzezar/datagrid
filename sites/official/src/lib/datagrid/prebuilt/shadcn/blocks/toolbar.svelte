@@ -21,10 +21,10 @@
 <div
 	class={cn(
 		'flex items-end justify-end',
-		datagrid.extra.features.columnFiltering.enabled && 'top-bar '
+		datagrid.extra.features.columnFiltering.visible && 'top-bar '
 	)}
 >
-	{#if datagrid.extra.features.columnFiltering.enabled}
+	{#if datagrid.extra.features.columnFiltering.visible}
 		<GlobalSearch {datagrid} />
 	{:else}
 		<div class="flex h-full grow items-end pb-1 pl-2">
@@ -38,17 +38,9 @@
 		</div>
 	{/if}
 
-	<Button
-		class="rounded-none border-b-0 border-r-0"
-		variant="outline"
-		onclick={() => datagrid.extra.features.columnFiltering.toggleColumnFiltering()}
-	>
-		{#if datagrid.extra.features.columnFiltering.enabled}
-			<FilterAlt />
-		{:else}
-			<FilterAltOff />
-		{/if}
-	</Button>
+	{#if datagrid.extra.features.columnFiltering.isButtonVisible()}
+		{@render columnFilteringToggleButton()}
+	{/if}
 
 	{#if datagrid.extra.features.fullscreen.enableFullscreen}
 		{@render fullscreenToggleButton()}
@@ -56,6 +48,20 @@
 
 	<ControlCenter {datagrid} />
 </div>
+
+{#snippet columnFilteringToggleButton()}
+	<Button
+		class="rounded-none border-b-0 border-r-0"
+		variant="outline"
+		onclick={() => datagrid.extra.features.columnFiltering.toggle()}
+	>
+		{#if datagrid.extra.features.columnFiltering.isEnabled()}
+			<FilterAlt />
+		{:else}
+			<FilterAltOff />
+		{/if}
+	</Button>
+{/snippet}
 
 {#snippet fullscreenToggleButton()}
 	<Button
