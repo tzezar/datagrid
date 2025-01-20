@@ -39,4 +39,12 @@ export class LoadingIndicatorFeature {
         }
         return false;
     }
+
+    changeLoadingIndicatorState(isLoading: boolean, isSaving: boolean, isError: boolean) {
+        this.isLoading = isLoading;
+        this.isSaving = isSaving;
+        this.isError = isError;
+        this.onLoadingIndicatorChange(isLoading, isSaving, isError);
+    }
+
 }

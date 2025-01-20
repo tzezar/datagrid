@@ -4,23 +4,13 @@
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
-		position: 'top' | 'bottom';
+		position: 'top' | 'bottom'
 	};
 
 	let { datagrid, position }: Props = $props();
 
 	const { isLoading, isSaving, isError } = $derived(datagrid.extra.features.loadingIndicator);
 </script>
-
-<!-- <div
-	class={cn(
-		'sticky left-0 w-full bg-gray-200 h-2 overflow-hidden',
-		position === 'top' && 'top-0',
-		position === 'bottom' && 'bottom-0'
-	)}
->
-	<div class="indicator"></div>
-</div> -->
 
 {#if datagrid.extra.features.loadingIndicator.shouldShowLoadingIndicator(position)}
 	<div
