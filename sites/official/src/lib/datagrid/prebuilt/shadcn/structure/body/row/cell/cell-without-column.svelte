@@ -15,7 +15,7 @@
 
 <div
 	class={cn(
-		'flex items-center p-2',
+		'flex p-2 items-center justify-center',
 		datagrid.extra.features.rowSelection.highlightSelectedRow &&
 			datagrid.features.rowSelection.isRowSelected(row.identifier)
 			? 'bg-blue-400/10'
@@ -23,11 +23,8 @@
 		_class
 	)}
 >
-	<div class="cell-content">
-		{@render children()}
-	</div>
+	{@render children()}
 </div>
 
 <style>
-
 </style>

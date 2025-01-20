@@ -66,6 +66,15 @@
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
 		</div> -->
+		{#if datagrid.extra.features.pagination.enablePagination === true}
+			{#if ['both', 'top'].includes(datagrid.extra.features.pagination.positionPagination)}
+				{#if pagination}
+					{@render pagination()}
+				{:else}
+					<Pagination {datagrid} />
+				{/if}
+			{/if}
+		{/if}
 		<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-container-wrapper">
 			<div class="grid-container">
 				{#if header}
@@ -78,7 +87,7 @@
 							{/if}
 
 							{#if datagrid.extra.features.rowExpanding.enableRowExpanding}
-								<div class="mx-2.5 size-4 self-center ml-0"></div>
+								<div class="mx-2.5 ml-0 size-4 self-center"></div>
 							{/if}
 
 							{#each headerColumns as column (column.columnId)}
@@ -95,7 +104,7 @@
 					{@render body()}
 				{:else}
 					<div class="grid-body">
-						{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
+						{#each datagrid.rows.getVisibleRows() as row, rowIndex (row.identifier)}
 							{#if row.isGroupRow()}
 								<div
 									class="grid-body-group-row"
@@ -222,10 +231,12 @@
 			</div>
 		{/if}
 		{#if datagrid.extra.features.pagination.enablePagination === true}
-			{#if pagination}
-				{@render pagination()}
-			{:else}
-				<Pagination {datagrid} />
+			{#if ['bottom', 'both'].includes(datagrid.extra.features.pagination.positionPagination)}
+				{#if pagination}
+					{@render pagination()}
+				{:else}
+					<Pagination {datagrid} />
+				{/if}
 			{/if}
 		{/if}
 		{#if datagrid.extra.features.credentials.enabled}
