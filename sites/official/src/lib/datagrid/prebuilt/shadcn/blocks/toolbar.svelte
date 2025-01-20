@@ -49,6 +49,15 @@
 			<FilterAltOff />
 		{/if}
 	</Button>
+
+	{#if datagrid.extra.features.fullscreen.enableFullscreen}
+		{@render fullscreenToggleButton()}
+	{/if}
+
+	<ControlCenter {datagrid} />
+</div>
+
+{#snippet fullscreenToggleButton()}
 	<Button
 		class="rounded-none border-b-0 border-r-0"
 		variant="outline"
@@ -60,8 +69,7 @@
 			<Fullscreen />
 		{/if}
 	</Button>
-	<ControlCenter {datagrid} />
-</div>
+{/snippet}
 
 <style>
 	.top-bar {
