@@ -1,9 +1,9 @@
 <script lang="ts" generics="T">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import Button from '$lib/components/ui/button/button.svelte';
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+	import { cn } from '$lib/utils';
+	import type { TzezarsDatagrid } from '../core/index.svelte';
 
-	let { datagrid }: { datagrid: DataGrid<any> } = $props();
+	let { datagrid }: { datagrid: TzezarsDatagrid<any> } = $props();
 
 	type SelectionAction = 'selectAll' | 'deselectAll' | 'selectPage' | 'deselectPage';
 
@@ -29,29 +29,36 @@
 	};
 </script>
 
-<DropdownMenu.Root>
-	<DropdownMenu.Trigger class='flex items-start'>
-		<button class="bg-primary size-4 m-2" aria-label="Toggle row selection"></button>
-	</DropdownMenu.Trigger>
-	<DropdownMenu.Content side="right">
-		<DropdownMenu.Group>
-			<DropdownMenu.Label>Row selection</DropdownMenu.Label>
-			<DropdownMenu.Separator />
-			<DropdownMenu.Item onclick={() => handleSelectionAction('selectAll')}>
-				Select every row
-			</DropdownMenu.Item>
-			<DropdownMenu.Item onclick={() => handleSelectionAction('selectPage')}>
-				Select current page
-			</DropdownMenu.Item>
+<div class={cn('flex')}>
+	<DropdownMenu.Root>
+		<DropdownMenu.Trigger
+			class={cn(
+				'flex',
+				datagrid.extra.features.columnFiltering.isEnabled() ? 'self-center' : 'self-end'
+			)}
+		>
+			<button class="bg-primary m-2 size-4" aria-label="Toggle row selection"></button>
+		</DropdownMenu.Trigger>
+		<DropdownMenu.Content side="right">
+			<DropdownMenu.Group>
+				<DropdownMenu.Label>Row selection</DropdownMenu.Label>
+				<DropdownMenu.Separator />
+				<DropdownMenu.Item onclick={() => handleSelectionAction('selectAll')}>
+					Select every row
+				</DropdownMenu.Item>
+				<DropdownMenu.Item onclick={() => handleSelectionAction('selectPage')}>
+					Select current page
+				</DropdownMenu.Item>
 
-			<DropdownMenu.Separator />
+				<DropdownMenu.Separator />
 
-			<DropdownMenu.Item onclick={() => handleSelectionAction('deselectAll')}>
-				Deselect every row
-			</DropdownMenu.Item>
-			<DropdownMenu.Item onclick={() => handleSelectionAction('deselectPage')}>
-				Deselect current page
-			</DropdownMenu.Item>
-		</DropdownMenu.Group>
-	</DropdownMenu.Content>
-</DropdownMenu.Root>
+				<DropdownMenu.Item onclick={() => handleSelectionAction('deselectAll')}>
+					Deselect every row
+				</DropdownMenu.Item>
+				<DropdownMenu.Item onclick={() => handleSelectionAction('deselectPage')}>
+					Deselect current page
+				</DropdownMenu.Item>
+			</DropdownMenu.Group>
+		</DropdownMenu.Content>
+	</DropdownMenu.Root>
+</div>
