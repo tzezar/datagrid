@@ -24,7 +24,6 @@
 					maxSelectedRows: 2,
 				},
 				statusIndicator: {
-					isLoading: true,
 				}
 			}
 		}
