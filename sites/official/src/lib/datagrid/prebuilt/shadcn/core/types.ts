@@ -4,6 +4,7 @@ export type ShadcnColumnMeta = {
     filterType?: 'text' | 'number' | 'select'
     filterOptions?: { label: string, value: string }[];
     showColumnManagerDropdownMenu?: boolean;
+    clickToCopy?: boolean;
     // TODO add more types and apply them in components
     styles?: {
         bodyCell?: string;

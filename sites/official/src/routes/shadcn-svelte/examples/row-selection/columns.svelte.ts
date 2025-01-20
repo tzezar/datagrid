@@ -1,8 +1,6 @@
 
 import { type AnyColumn } from "$lib/datagrid/core/types";
-import { displayColumn, accessorColumn, columnGroup, computedColumn } from "$lib/datagrid/core/column-creation";
-import RowSelectionColumnHeaderCell from "$lib/datagrid/prebuilt/shadcn/components/row-selection-column-header-cell.svelte";
-import RowSelectionBodyRowCell from "$lib/datagrid/prebuilt/shadcn/components/row-selection-body-row-cell.svelte";
+import { accessorColumn, } from "$lib/datagrid/core/column-creation";
 import type { ShadcnColumnMeta } from "$lib/datagrid/prebuilt/shadcn/core/types";
 import type { InventoryItem } from "$lib/data-generators/generate/inventory";
 
@@ -38,10 +36,16 @@ export const inventoryColumns = [
         accessorKey: 'id'
     }),
     accessorColumn({
-        accessorKey: 'name'
+        accessorKey: 'name',
+        _meta: {
+            clickToCopy: true
+        } as ShadcnColumnMeta
     }),
     accessorColumn({
-        accessorKey: 'category'
+        accessorKey: 'category',
+        _meta: {
+            clickToCopy: false
+        } as ShadcnColumnMeta
     }),
     accessorColumn({
         header: 'Price',
@@ -70,5 +74,5 @@ export const inventoryColumns = [
     accessorColumn({
         accessorKey: 'status'
     }),
-   
+
 ] satisfies AnyColumn<InventoryItem>[]

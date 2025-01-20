@@ -2,11 +2,21 @@
 	import '$lib/datagrid/prebuilt/shadcn/styles.css';
 	import { cn } from '$lib/utils';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
-	import type { LeafColumn, GroupColumn, AnyColumn } from '$lib/datagrid/core/types';
+	import type {
+		LeafColumn,
+		GroupColumn,
+		AnyColumn,
+		AccessorColumn,
+		ComputedColumn
+	} from '$lib/datagrid/core/types';
 
 	import { Portal } from 'bits-ui';
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
-	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
+	import {
+		isAccessorColumn,
+		isComputedColumn,
+		isGroupColumn
+	} from '$lib/datagrid/core/helpers/column-guards';
 
 	// Icones
 	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
@@ -23,6 +33,7 @@
 	import RowSelectionHeaderCell from './built-in/row-selection-header-cell.svelte';
 	import RowExpandingCell from './built-in/row-expanding-cell.svelte';
 	import StatusIndicator from './built-in/status-indicator.svelte';
+	import ContentCopyOutline from '$lib/datagrid/icons/material-symbols/content-copy-outline.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
@@ -55,6 +66,7 @@
 
 	// Crazy boost in performance
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
+	console.log($state.snapshot(leafColumns));
 </script>
 
 <Portal disabled={!datagrid.isFullscreenEnabled()}>
@@ -187,7 +199,7 @@
 											{:else}
 												<div
 													class={cn(
-														'grid-body-cell',
+														'grid-body-cell group',
 														column._meta.styles?.bodyCell,
 														datagrid.extra.features.rowSelection.highlightSelectedRow &&
 															datagrid.features.rowSelection.isRowSelected(row.identifier)
@@ -204,9 +216,25 @@
 													style:--pin-left-offset={column.state.pinning.offset + 'px'}
 													style:--pin-right-offset={column.state.pinning.offset + 'px'}
 												>
-													<span class="cell-content">
+													<span class={cn('cell-content')}>
 														{@html getCellContent(column, row.original)}
 													</span>
+
+													{#if datagrid.extra.features.clickToCopy.isValidColumn(column)}
+														{#if datagrid.extra.features.clickToCopy.shouldDisplayCopyButton(column)}
+															<button
+																class="hidden pl-1 group-hover:block"
+																onclick={() => {
+																	datagrid.extra.features.clickToCopy.handleClickToCopy(
+																		row.original,
+																		column
+																	);
+																}}
+															>
+																<ContentCopyOutline width="0.75rem" />
+															</button>
+														{/if}
+													{/if}
 												</div>
 											{/if}
 										{/if}
