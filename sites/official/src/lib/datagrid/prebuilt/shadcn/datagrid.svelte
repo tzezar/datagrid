@@ -60,9 +60,7 @@
 			: datagrid.columnManager.getLeafColumnsInOrder()
 	);
 
-	$effect(() => {
-		console.log($state.snapshot(datagrid.columns));
-	});
+
 
 	// Crazy boost in performance
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
@@ -193,11 +191,9 @@
 									{/if}
 
 									{#each leafColumns as column (column.columnId)}
-										<div
-											animate:flip={{
-												duration: (len) => datagrid.extra.features.animations.getFlipDuration(len)
-											}}
-										>
+										<div animate:flip={{
+											duration: (len) => datagrid.extra.features.animations.getFlipDuration(len)
+										}}>
 											{#if column.isVisible()}
 												{#if column.cell}
 													{@const cellContent = column.cell({ datagrid, column, row })}
