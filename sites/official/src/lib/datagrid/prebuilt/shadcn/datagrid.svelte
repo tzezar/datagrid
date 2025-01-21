@@ -60,6 +60,10 @@
 			: datagrid.columnManager.getLeafColumnsInOrder()
 	);
 
+	$effect(() => {
+		console.log($state.snapshot(datagrid.columns));
+	});
+
 	// Crazy boost in performance
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
 </script>

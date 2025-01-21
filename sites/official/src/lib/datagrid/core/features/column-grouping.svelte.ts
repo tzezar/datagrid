@@ -1,8 +1,14 @@
 
 import { type GroupColumn } from "../types";
 import type { DataGrid } from "../index.svelte";
-import { findColumnById, flattenColumnStructurePreservingGroups } from "../utils.svelte";
+import { findColumnById, flattenColumnStructurePreservingGroups, generateRandomColumnId } from "../utils.svelte";
+import { createColumnGroup } from "../column-creation/group-column-creator";
+import type { MoveOperation } from "./column-ordering.svelte";
 
+export interface CreateGroupParams {
+    newGroupName: string;
+    selectedColumns: Record<string, boolean>;
+}
 
 /**
  * Manages column grouping functionality for a data grid, including finding,
@@ -61,4 +67,44 @@ export class ColumnGroupingFeature<TOriginalRow = any> {
 
         this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
+
+    createGroup({ newGroupName, selectedColumns }: CreateGroupParams) {
+        // Create the new group column
+        const groupColumn = createColumnGroup({
+            header: newGroupName,
+            columnId: generateRandomColumnId(),
+            parentColumnId: null,
+            columns: []
+        });
+    
+        // Add the group directly to the root level
+        this.datagrid.columns.push(groupColumn);
+    
+        // Get the column IDs that need to be grouped
+        const columnIdsToBeGrouped = Object.entries(selectedColumns)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            .filter(([_, selected]) => selected)
+            .map(([columnId]) => columnId);
+    
+        // Move each selected column into the new group
+        for (const columnId of columnIdsToBeGrouped) {
+            const column = this.datagrid.features.columnOrdering.findColumnOrThrow(columnId);
+    
+            const moveOperation: MoveOperation = {
+                sourceColumn: column,
+                targetLocation: {
+                    parentId: groupColumn.columnId,
+                    index: groupColumn.columns.length
+                }
+            };
+    
+            this.datagrid.features.columnOrdering.validateMove(moveOperation);
+            this.datagrid.features.columnOrdering.executeMove(moveOperation);
+        }
+    
+        // Refresh the column state
+        this.datagrid.features.columnOrdering.refreshColumnState();
+    }
+
+
 }

@@ -1,8 +1,8 @@
-import { createColumnGroup } from "../column-creation/group-column-creator";
 import type { AnyColumn, GroupColumn } from "../types";
 import type { DataGrid } from "../index.svelte";
 import type { ColumnId, FilterableColumn, FilterOperator, GridBasicRow, GridGroupRow, GridRowIdentifier, LeafColumn, PinningPosition } from "../types";
-import { findColumnById, flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups, generateRandomColumnId } from "../utils.svelte";
+import { findColumnById, flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups } from "../utils.svelte";
+import type { CreateGroupParams } from "../features/column-grouping.svelte";
 
 
 
@@ -203,31 +203,11 @@ export class HandlersManager {
         }
     }
     columnGrouping = {
-        createGroup: ({ newGroupName, selectedColumns }: { newGroupName: string, selectedColumns: Record<string, boolean> }) => {
-            const groupColumn = createColumnGroup({
-                header: newGroupName,
-                columnId: generateRandomColumnId(),
-                parentColumnId: null,
-                columns: []
-            });
-            this.datagrid.columns.push(groupColumn);
-
-            this.datagrid.processors.column.refreshColumnPinningOffsets();
-
-            const columnIdsToBeGrouped = Object.entries(selectedColumns)
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                .filter(([_, selected]) => selected)
-                .map(([columnId]) => columnId);
-
-            for (const columnId of columnIdsToBeGrouped) {
-                const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), columnId);
-                if (!column) throw new Error(`Column ${columnId} not found`);
-                column.parentColumnId = groupColumn.columnId;
-            }
+        createGroup: ({ newGroupName, selectedColumns }: CreateGroupParams) => {
+            this.datagrid.features.columnGrouping.createGroup({ newGroupName, selectedColumns });
         },
         deleteGroupColumn: (groupColumn: GroupColumn<any>) => {
             this.datagrid.features.columnGrouping.deleteGroupColumn(groupColumn);
-            this.datagrid.processors.column.refreshColumnPinningOffsets();
         }
     }
     rowSelection = {
