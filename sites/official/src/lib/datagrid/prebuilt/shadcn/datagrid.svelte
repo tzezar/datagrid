@@ -2,16 +2,11 @@
 	import '$lib/datagrid/prebuilt/shadcn/styles.css';
 	import { cn } from '$lib/utils';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
-	import type {
-		LeafColumn,
-		GroupColumn,
-	} from '$lib/datagrid/core/types';
+	import type { LeafColumn, GroupColumn } from '$lib/datagrid/core/types';
 
 	import { Portal } from 'bits-ui';
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
-	import {
-		isGroupColumn
-	} from '$lib/datagrid/core/helpers/column-guards';
+	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 
 	// Icones
 	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
@@ -62,6 +57,13 @@
 
 	// Crazy boost in performance
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
+
+	function addCopyFeedback(element: HTMLElement) {
+		element.classList.add('copy-feedback');
+		setTimeout(() => {
+			element.classList.remove('copy-feedback');
+		}, 1000);
+	}
 </script>
 
 <Portal disabled={!datagrid.isFullscreenEnabled()}>
@@ -104,7 +106,6 @@
 									{@render HeaderCellSnippet(column)}
 								{/if}
 							{/each}
-						
 						</div>
 					</div>
 				{/if}
@@ -182,7 +183,7 @@
 									{#if datagrid.extra.features.rowExpanding.enableRowExpanding}
 										<RowExpandingCell {row} {datagrid} />
 									{/if}
-						
+
 									{#each leafColumns as column (column.columnId)}
 										{#if column.isVisible()}
 											{#if column.cell}
@@ -217,11 +218,18 @@
 														{#if datagrid.extra.features.clickToCopy.shouldDisplayCopyButton(column)}
 															<button
 																class="hidden pl-1 group-hover:block"
-																onclick={() => {
+																onclick={(e) => {
 																	datagrid.extra.features.clickToCopy.handleClickToCopy(
 																		row.original,
 																		column
 																	);
+
+																	const cellElement = (e.target as HTMLElement).closest(
+																		'.grid-body-cell'
+																	);
+																	if (cellElement) {
+																		addCopyFeedback(cellElement);
+																	}
 																}}
 															>
 																<ContentCopyOutline width="0.75rem" />
@@ -232,7 +240,6 @@
 											{/if}
 										{/if}
 									{/each}
-							
 								</div>
 								{#if row.isExpanded()}
 									<div class="grid-body-row">
@@ -339,3 +346,18 @@
 		{/if}
 	</div>
 {/snippet}
+
+<style>
+	.copy-feedback {
+		animation: copyFeedback 1s ease;
+	}
+
+	@keyframes copyFeedback {
+		0% {
+			background-color: rgb(59 130 246 / 0.2); /* bg-blue-500/20 */
+		}
+		100% {
+			background-color: transparent;
+		}
+	}
+</style>
