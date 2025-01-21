@@ -5,16 +5,11 @@
 	import type {
 		LeafColumn,
 		GroupColumn,
-		AnyColumn,
-		AccessorColumn,
-		ComputedColumn
 	} from '$lib/datagrid/core/types';
 
 	import { Portal } from 'bits-ui';
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import {
-		isAccessorColumn,
-		isComputedColumn,
 		isGroupColumn
 	} from '$lib/datagrid/core/helpers/column-guards';
 
@@ -98,9 +93,8 @@
 							{#if datagrid.extra.features.rowSelection.enableRowSelection}
 								<RowSelectionHeaderCell {datagrid} />
 							{/if}
-
 							{#if datagrid.extra.features.rowExpanding.enableRowExpanding}
-								<div class="mx-2.5 ml-0 size-4 self-center"></div>
+								<div class="mx-[8px] size-4 self-center"></div>
 							{/if}
 
 							{#each headerColumns as column (column.columnId)}
@@ -110,6 +104,7 @@
 									{@render HeaderCellSnippet(column)}
 								{/if}
 							{/each}
+						
 						</div>
 					</div>
 				{/if}
@@ -180,13 +175,14 @@
 									{/each}
 								</div>
 							{:else}
-								<div class="grid-body-row">
+								<div class="grid-body-row flex">
 									{#if datagrid.extra.features.rowSelection.enableRowSelection}
 										<RowSelectionCell {row} {datagrid} />
 									{/if}
 									{#if datagrid.extra.features.rowExpanding.enableRowExpanding}
 										<RowExpandingCell {row} {datagrid} />
 									{/if}
+						
 									{#each leafColumns as column (column.columnId)}
 										{#if column.isVisible()}
 											{#if column.cell}
@@ -199,7 +195,7 @@
 											{:else}
 												<div
 													class={cn(
-														'grid-body-cell group',
+														'grid-body-cell group  items-center',
 														shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
 														column._meta.styles?.bodyCell({ datagrid, column, row })
 													)}
@@ -213,7 +209,7 @@
 													style:--pin-left-offset={column.state.pinning.offset + 'px'}
 													style:--pin-right-offset={column.state.pinning.offset + 'px'}
 												>
-													<span class={cn('cell-content')}>
+													<span class={cn('cell-content  ')}>
 														{@html getCellContent(column, row.original)}
 													</span>
 
@@ -236,6 +232,7 @@
 											{/if}
 										{/if}
 									{/each}
+							
 								</div>
 								{#if row.isExpanded()}
 									<div class="grid-body-row">

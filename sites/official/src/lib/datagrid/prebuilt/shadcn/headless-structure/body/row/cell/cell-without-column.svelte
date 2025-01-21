@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import type { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
+	import { shouldHighlightSelectedRow } from '$lib/datagrid/prebuilt/shadcn/utils';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 
@@ -15,15 +16,14 @@
 
 <div
 	class={cn(
-		'flex p-2 items-center justify-center',
-		datagrid.extra.features.rowSelection.highlightSelectedRow &&
-			datagrid.features.rowSelection.isRowSelected(row.identifier)
-			? 'bg-blue-400/10'
-			: '',
+		'flex items-center justify-center p-2 ',
+		shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
 		_class
 	)}
 >
-	{@render children()}
+	<div class={cn('')}>
+		{@render children()}
+	</div>
 </div>
 
 <style>

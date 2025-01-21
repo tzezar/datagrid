@@ -13,7 +13,6 @@ import {
     ColumnVisibilityEnchancedFeature,
     GroupingEnchancedFeature,
     StatusIndicatorFeature,
-    RowActionsFeature,
     RowExpandingEnchancedFeature,
     RowNumbersFeature,
     RowSelectionEnchancedFeature,
@@ -38,7 +37,6 @@ import {
     type GroupingEnchancedFeatureConfig,
     type StatusIndicatorFeatureConfig,
     type PaginationEnchancedFeatureConfig,
-    type RowActionsFeatureConfig,
     type RowExpandingEnchancedFeatureConfig,
     type RowNumbersFeatureConfig,
     type RowSelectionEnchancedFeatureConfig,
@@ -78,7 +76,6 @@ export type TrzezarsDatagridFeatures = {
     grouping: GroupingEnchancedFeature,
     loadingIndicator: StatusIndicatorFeature,
     pagination: PaginationEnchancedFeature,
-    rowActions: RowActionsFeature,
     rowExpanding: RowExpandingEnchancedFeature,
     rowNumbers: RowNumbersFeature,
     rowSelection: RowSelectionEnchancedFeature,
@@ -106,7 +103,6 @@ export type TzezarsDatagridExtraStateConfig = {
         grouping?: GroupingEnchancedFeatureConfig & GroupingFeatureConfig,
         statusIndicator?: StatusIndicatorFeatureConfig,
         pagination?: PaginationEnchancedFeatureConfig & PaginationFeatureConfig,
-        rowActions?: RowActionsFeatureConfig,
         rowExpanding?: RowExpandingEnchancedFeatureConfig,
         rowNumbers?: RowNumbersFeatureConfig,
         rowSelection?: RowSelectionEnchancedFeatureConfig,
@@ -194,7 +190,6 @@ export class Extra {
         this.features.grouping = new GroupingEnchancedFeature(this.datagrid, config?.features?.grouping);
         this.features.loadingIndicator = new StatusIndicatorFeature(config?.features?.statusIndicator);
         this.features.pagination = new PaginationEnchancedFeature(this.datagrid, config?.features?.pagination);
-        this.features.rowActions = new RowActionsFeature(config?.features?.rowActions);
         this.features.rowExpanding = new RowExpandingEnchancedFeature(this.datagrid, config?.features?.rowExpanding);
         this.features.rowNumbers = new RowNumbersFeature(config?.features?.rowNumbers);
         this.features.rowSelection = new RowSelectionEnchancedFeature(this.datagrid, config?.features?.rowSelection);

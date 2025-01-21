@@ -12,7 +12,6 @@ import { GroupHeadersVisibilityFeature } from "./group-headers-visibility.svelte
 import { GroupingEnchancedFeature } from "./grouping.svelte";
 import { StatusIndicatorFeature } from "./status-indicator.svelte";
 import { PaginationEnchancedFeature } from "./pagination.svelte";
-import { RowActionsFeature } from "./row-actions.svelte";
 import { RowExpandingEnchancedFeature } from "./row-expanding.svelte";
 import { RowNumbersFeature } from "./row-numbers.svelte";
 import { RowSelectionEnchancedFeature } from "./row-selection.svelte";
@@ -35,7 +34,6 @@ import type { GroupHeadersVisibilityFeatureConfig } from "./group-headers-visibi
 import type { GroupingEnchancedFeatureConfig } from "./grouping.svelte";
 import type { StatusIndicatorFeatureConfig } from "./status-indicator.svelte";
 import type { PaginationEnchancedFeatureConfig } from "./pagination.svelte";
-import type { RowActionsFeatureConfig } from "./row-actions.svelte";
 import type { RowExpandingEnchancedFeatureConfig } from "./row-expanding.svelte";
 import type { RowNumbersFeatureConfig } from "./row-numbers.svelte";
 import type { RowSelectionEnchancedFeatureConfig } from "./row-selection.svelte";
@@ -58,7 +56,6 @@ export {
     GroupingEnchancedFeature,
     StatusIndicatorFeature,
     PaginationEnchancedFeature,
-    RowActionsFeature,
     RowExpandingEnchancedFeature,
     RowNumbersFeature,
     RowSelectionEnchancedFeature,
@@ -83,7 +80,6 @@ export type {
     GroupingEnchancedFeatureConfig,
     StatusIndicatorFeatureConfig,
     PaginationEnchancedFeatureConfig,
-    RowActionsFeatureConfig,
     RowExpandingEnchancedFeatureConfig,
     RowNumbersFeatureConfig,
     RowSelectionEnchancedFeatureConfig,

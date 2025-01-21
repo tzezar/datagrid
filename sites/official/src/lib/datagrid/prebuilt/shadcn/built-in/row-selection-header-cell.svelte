@@ -30,7 +30,7 @@
 	};
 </script>
 
-<div class={cn('flex p-2 flex-col justify-end self-end h-full text-[0.75rem] leading-none', '')}>
+<div class={cn('flex p-2 px-[8px] flex-col justify-end self-end h-full text-[0.75rem] leading-none', '')}>
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger >
 				<button class="bg-primary size-4" aria-label="Toggle row selection"></button>
