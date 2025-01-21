@@ -3,6 +3,8 @@ import { type AnyColumn } from "$lib/datagrid/core/types";
 import { accessorColumn, } from "$lib/datagrid/core/column-creation";
 import type { ShadcnColumnMeta } from "$lib/datagrid/prebuilt/shadcn/core/types";
 import type { InventoryItem } from "$lib/data-generators/generate/inventory";
+import { cn } from "$lib/utils";
+import { shouldHighlightSelectedRow } from "$lib/datagrid/prebuilt/shadcn/utils";
 
 
 // const exampleFn = (value) => {
@@ -33,7 +35,16 @@ export const inventoryColumns = [
     //     } as ShadcnColumnMeta
     // }),
     accessorColumn({
-        accessorKey: 'id'
+        accessorKey: 'id',
+        _meta: {
+            styles: {
+                bodyCell(props) {
+                    const { row, datagrid } = props
+                    if (row.isGroupRow()) return ""
+                    return cn(row.original.id === 1 && 'bg-green-400', shouldHighlightSelectedRow(datagrid, row) && 'bg-red-400')
+                },
+            }
+        } as ShadcnColumnMeta<InventoryItem>
     }),
     accessorColumn({
         accessorKey: 'name',
@@ -53,8 +64,17 @@ export const inventoryColumns = [
         getValueFn: (row) => row.price,
         options: { sortable: true },
         _meta: {
-            filterType: 'number'
-        }
+            filterType: 'number',
+            styles: {
+                bodyCell(props) {
+                    const { row } = props
+                    if (row.isGroupRow()) return ""
+                    return cn(row.original.price < 400 && 'border-r-2 border-red-400', row.original.price > 1000 && 'border-r-2 border-green-400')
+                
+                },
+
+            }
+        } as ShadcnColumnMeta<InventoryItem>
     }),
     accessorColumn({
         accessorKey: 'quantity'

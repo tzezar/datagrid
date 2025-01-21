@@ -34,6 +34,7 @@
 	import StatusIndicator from './built-in/status-indicator.svelte';
 	import ContentCopyOutline from '$lib/datagrid/icons/material-symbols/content-copy-outline.svelte';
 	import Toolbar from './built-in/toolbar.svelte';
+	import { shouldHighlightSelectedRow } from './utils';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
@@ -45,7 +46,6 @@
 		footer?: Snippet;
 		footerContent?: Snippet;
 		pagination?: Snippet;
-
 	};
 
 	let {
@@ -200,11 +200,8 @@
 												<div
 													class={cn(
 														'grid-body-cell group',
-														column._meta.styles?.bodyCell,
-														datagrid.extra.features.rowSelection.highlightSelectedRow &&
-															datagrid.features.rowSelection.isRowSelected(row.identifier)
-															? 'bg-blue-400/10'
-															: ''
+														shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
+														column._meta.styles?.bodyCell({ datagrid, column, row })
 													)}
 													class:justify-center={column?._meta?.align === 'center'}
 													data-pinned={column.state.pinning.position !== 'none'
