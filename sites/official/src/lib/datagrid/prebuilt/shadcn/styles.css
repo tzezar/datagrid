@@ -90,7 +90,6 @@
 }
 
 .grid-header-group {
-	
 	background-color: hsl(var(--grid-header-group));
 	display: flex;
 	flex-direction: column;
@@ -121,7 +120,6 @@
 }
 
 .grid-header-group-cell {
-	
 	font-weight: bold;
 	width: 100%;
 	padding: 8px;
@@ -158,7 +156,6 @@
 	padding: 4px 8px;
 }
 
-
 .grid-body-cell .cell-content {
 	flex: 1;
 	min-width: 0;
@@ -166,7 +163,6 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
-
 
 /* Odd rows */
 /* .grid-body-row:nth-child(odd) {

@@ -109,7 +109,3 @@ export const getSortDirection = (datagrid: DataGrid<any>, column: AnyColumn<any>
 export function isCellComponent(value: any): value is CustomCellComponentWithProps {
     return value && typeof value === 'object' && 'component' in value
 }
-
-
-  
-

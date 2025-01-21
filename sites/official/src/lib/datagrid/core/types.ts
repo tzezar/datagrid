@@ -31,8 +31,11 @@ export type ColumnSizeState = {
     minWidth: number;
     maxWidth: number;
 };
+
+export type ColumnPinningPosition = "left" | "right" | "none";
+
 export type ColumnPinningState = {
-    position: "left" | "right" | "none";
+    position: ColumnPinningPosition
     offset: number;
 };
 

@@ -1,4 +1,4 @@
-import type { AnyColumn } from "$lib/datagrid/core/types";
+import type { AnyColumn, ColumnId } from "$lib/datagrid/core/types";
 import { DataGrid, type GridConfig } from "$lib/datagrid/core/index.svelte";
 import { LifecycleHooks } from "$lib/datagrid/core/managers/lifecycle-hooks-manager.svelte";
 import { ColumnProcessor } from "$lib/datagrid/core/processors";
@@ -58,6 +58,7 @@ import { createDisplayColumn } from "$lib/datagrid/core/column-creation/display-
 import RowSelectionCell from "../built-in/row-selection-cell.svelte";
 import RowExpandingCell from "../built-in/row-expanding-cell.svelte";
 import RowSelectionColumnHeaderCell from "../built-in/row-selection-column-header-cell.svelte";
+import RowExpandingColumnHeaderCell from "../built-in/row-expanding-column-header-cell.svelte";
 
 
 
@@ -144,6 +145,52 @@ function transformColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
 
 
 
+
+
+function updateColumnPinningOffsets(columns: AnyColumn<any>[]) {
+    function calculateOffset(columns: AnyColumn<any>[], columnId: ColumnId, position: 'left' | 'right' | null): number {
+        if (position === null) return -1; // No offset for unpinned columns
+
+        // Get all visible columns pinned to the specified position
+        const pinnedColumns = columns.filter(
+            (column) => column.state.visible !== false && column.state.pinning.position === position
+        );
+
+        // Find the index of the column with the specified ID
+        const index = pinnedColumns.findIndex((column) => column.columnId === columnId);
+
+        // If the column is not found or is the first in the pinned list, return 0
+        if (index === -1 || index === 0) {
+            return 0;
+        }
+
+        // Calculate the total width of all columns before the specified column
+        const widthSumOfPreviousIndexes = pinnedColumns
+            .slice(0, index) // Get all columns before the specified column
+            .reduce((sum, column) => {
+                // Use a default width of 0 if column width is not defined
+                const width = column.state.size.width || 0;
+                return sum + width;
+            }, 0);
+
+        return widthSumOfPreviousIndexes; // Return the total width as the offset
+    }
+
+    const newColumns: AnyColumn<any>[] = [];
+    for (let i = 0; i < columns.length; i++) {
+        const col = columns[i];
+        if (col.state.pinning.position === 'none') {
+            col.state.pinning.offset = 0;
+        } else {
+            col.state.pinning.offset = calculateOffset(columns, col.columnId, col.state.pinning.position);
+        }
+
+        newColumns.push(col);
+    }
+    return newColumns;
+}
+
+
 export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> {
     extra: Extra;
 
@@ -164,6 +211,16 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
                                 component: RowSelectionCell,
                             }
                         },
+                        state: {
+                            pinning: {
+                                position: 'left',
+                            },
+                            size: {
+                                maxWidth: 40,
+                                minWidth: 40,
+                                width: 40
+                            }
+                        },
                         headerCell: () => {
                             return {
                                 component: RowSelectionColumnHeaderCell
@@ -178,10 +235,29 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
                                 component: RowExpandingCell,
                             }
                         },
-                        headerCell: () => `<div class="pr-3 border-r w-10 h-full"></div></div>`
+                        state: {
+                            pinning: {
+                                position: 'left',
+                            },
+                            size: {
+                                maxWidth: 40,
+                                minWidth: 40,
+                                width: 40
+                            }
+                        },
+                        headerCell: ({column}) => {
+                            return {
+                                component: RowExpandingColumnHeaderCell,
+                                props: {
+                                    column
+                                }
+                            }
+                        }
                     })
                 ]
-                const transformedColumns = transformColumns([...additionalColumns, ...flattenedColumns,]);
+
+                let transformedColumns = transformColumns([...additionalColumns, ...flattenedColumns,]);
+                transformedColumns = updateColumnPinningOffsets(transformedColumns);
 
                 // const transformedColumns = transformColumns([...flattenedColumns]);
                 const hierarchicalColumns = columnProcessor.createColumnHierarchy(transformedColumns);

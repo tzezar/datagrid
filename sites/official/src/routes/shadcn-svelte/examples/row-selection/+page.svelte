@@ -29,6 +29,9 @@
 		}
 	});
 
+	$effect(() => {
+		console.log($state.snapshot(datagrid.columns))
+	});
 
 </script>
 

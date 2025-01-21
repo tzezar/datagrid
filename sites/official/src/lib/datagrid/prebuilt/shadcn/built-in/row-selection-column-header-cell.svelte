@@ -1,8 +1,8 @@
 <script lang="ts" generics="T">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import Button from '$lib/components/ui/button/button.svelte';
 	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
+	import LeafColumnCell from '../headless-structure/header/row/cell/leaf-column-cell.svelte';
 
 	let { datagrid, column }: { datagrid: DataGrid<any>; column: LeafColumn<any> } = $props();
 
@@ -30,7 +30,7 @@
 	};
 </script>
 
-<div class="flex h-full w-10 items-center justify-center px-2 border-r ">
+<LeafColumnCell {column} class="flex h-full w-10 items-center justify-center px-2 border-r ">
 	<DropdownMenu.Root>
 		<DropdownMenu.Trigger>
 			<button class="bg-primary size-[14px]" aria-label="Toggle row selection"></button>
@@ -57,4 +57,4 @@
 			</DropdownMenu.Group>
 		</DropdownMenu.Content>
 	</DropdownMenu.Root>
-</div>
+</LeafColumnCell>

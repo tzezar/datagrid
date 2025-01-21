@@ -31,8 +31,12 @@ export class AnimationsFeature {
         return this.animateRows;
     }
 
-    getFlipDuration(len: number): number {
+    getHeadersFlipDuration(len: number): number {
         return this.animateHeaders ? len * this.flipMultiplier : 0
+    }
+
+    getRowsFlipDuration(len: number): number {
+        return this.animateRows ? len * this.flipMultiplier : 0
     }
 
 }

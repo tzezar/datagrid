@@ -86,7 +86,7 @@ export type CreateGroupColumnProps<TOriginalRow> = {
 type ColumnCreationStateProps = {
   size?: ColumnSizeState;
   visible?: boolean;
-  pinning?: ColumnPinningState;
+  pinning?: Partial<ColumnPinningState>;
 }
 
 type CommonColumnCreationProps = {

@@ -6,13 +6,14 @@
 	type Props = {
 		column: LeafColumn<any>;
 		children: Snippet;
+		class?: string;
 	};
-	let { column, children }: Props = $props();
+	let { column, children, class: _class }: Props = $props();
 </script>
 
 {#if column.state.visible === true}
 	<div
-		class={cn('grid-header-cell')}
+		class={cn('grid-header-cell', _class)}
 		data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 		style:--pin-left-offset={column.state.pinning.offset + 'px'}
 		style:--pin-right-offset={column.state.pinning.offset + 'px'}

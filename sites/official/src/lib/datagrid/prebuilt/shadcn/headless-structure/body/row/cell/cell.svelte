@@ -10,8 +10,9 @@
 		column: LeafColumn<any>;
 		row: GridBasicRow<any>;
 		children: Snippet;
+		class?: string;
 	};
-	let { datagrid, row, column, children }: Props = $props();
+	let { datagrid, row, column, children, class: _class }: Props = $props();
 </script>
 
 {#if column.isVisible()}
@@ -19,7 +20,8 @@
 		class={cn(
 			'grid-body-cell',
 			shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
-			column._meta.styles?.bodyCell
+			column._meta.styles?.bodyCell,
+			_class
 		)}
 		class:justify-center={column?._meta?.align === 'center'}
 		data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
@@ -32,3 +34,4 @@
 		{@render children()}
 	</div>
 {/if}
+

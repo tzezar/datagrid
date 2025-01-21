@@ -183,6 +183,8 @@ export class HandlersManager {
             const column = findColumnById(flattenColumnStructurePreservingGroups(this.datagrid.columns), columnId);
             if (!column) return;
             this.datagrid.features.columnPinning.changeColumnPinningPosition(column, position);
+            this.datagrid.processors.column.refreshColumnPinningOffsets();
+
         },
         changeColumnPinningPosition: (columnId: string, position: PinningPosition) => {
             const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), columnId);

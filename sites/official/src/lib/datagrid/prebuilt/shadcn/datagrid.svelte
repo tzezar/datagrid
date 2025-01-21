@@ -90,17 +90,14 @@
 				{:else}
 					<div class="grid-header">
 						<div class="grid-header-row">
-							<!-- {#if datagrid.extra.features.rowSelection.enableRowSelection}
-								<RowSelectionHeaderCell {datagrid} />
-							{/if}
-							{#if datagrid.extra.features.rowExpanding.enableRowExpanding}
-								<div class="mx-[8px] size-4 self-center"></div>
-							{/if} -->
-
 							{#each headerColumns as column (column.columnId)}
 								<div
+									class={cn(
+										!datagrid.extra.features.animations.shouldAnimateHeaders() && 'contents'
+									)}
 									animate:flip={{
-										duration: (len) => datagrid.extra.features.animations.getFlipDuration(len)
+										duration: (len) =>
+											datagrid.extra.features.animations.getHeadersFlipDuration(len)
 									}}
 								>
 									{#if isGroupColumn(column)}
@@ -181,17 +178,14 @@
 								</div>
 							{:else}
 								<div class="grid-body-row flex">
-									<!-- {#if datagrid.extra.features.rowSelection.enableRowSelection}
-										<RowSelectionCell {row} {datagrid} />
-									{/if}
-									{#if datagrid.extra.features.rowExpanding.enableRowExpanding}
-										<RowExpandingCell {row} {datagrid} />
-									{/if} -->
-
 									{#each leafColumns as column (column.columnId)}
 										<div
+											class={cn(
+												!datagrid.extra.features.animations.shouldAnimateHeaders() && 'contents'
+											)}
 											animate:flip={{
-												duration: (len) => datagrid.extra.features.animations.getFlipDuration(len)
+												duration: (len) =>
+													datagrid.extra.features.animations.getRowsFlipDuration(len)
 											}}
 										>
 											{#if column.isVisible()}
