@@ -158,15 +158,7 @@
 	padding: 4px 8px;
 }
 
-/* .grid-body-cell .cell-content {
-	width: 100%;
-	height: 100%;
-	width: 100%;
-	
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-} */
+
 .grid-body-cell .cell-content {
 	flex: 1;
 	min-width: 0;
@@ -174,20 +166,7 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
-/* .grid-body-cell {
-    display: flex;
-    width: var(--width);
-    min-width: var(--min-width);
-    max-width: var(--max-width);
-    flex-shrink: 0;
-    padding: 8px;
-    margin: 0;
-    line-height: 1;
-    position: relative;
-    box-sizing: border-box;
-}
 
-*/
 
 /* Odd rows */
 /* .grid-body-row:nth-child(odd) {
