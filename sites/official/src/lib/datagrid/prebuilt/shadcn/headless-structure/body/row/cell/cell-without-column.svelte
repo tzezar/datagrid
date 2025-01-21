@@ -16,7 +16,7 @@
 
 <div
 	class={cn(
-		'flex items-center justify-center p-2 ',
+		'flex items-center justify-center px-2 py-1 ',
 		shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
 		_class
 	)}
