@@ -45,6 +45,8 @@ import {
     type ColumnOrderingEnchancedFeatureConfig,
     ControlCenterFeature,
     type ControlCenterFeatureConfig,
+    AnimationsFeature,
+    type AnimationsFeatureConfig,
 } from "./features";
 
 
@@ -82,6 +84,7 @@ export type TrzezarsDatagridFeatures = {
     sorting: SortingEnchancedFeature,
     columnOrdering: ColumnOrderingEnchancedFeature,
     controlCenter: ControlCenterFeature,
+    animations: AnimationsFeature,
 }
 
 
@@ -108,7 +111,8 @@ export type TzezarsDatagridExtraStateConfig = {
         rowSelection?: RowSelectionEnchancedFeatureConfig,
         sorting?: SortingEnchancedFeatureConfig & SortingFeatureConfig
         columnOrdering?: ColumnOrderingEnchancedFeatureConfig & ColumnOrderingFeatureConfig
-        controlCenter?: ControlCenterFeatureConfig
+        controlCenter?: ControlCenterFeatureConfig,
+        animations?: AnimationsFeatureConfig
     }
 
     title?: string
@@ -196,7 +200,7 @@ export class Extra {
         this.features.sorting = new SortingEnchancedFeature(this.datagrid, config?.features?.sorting);
         this.features.columnOrdering = new ColumnOrderingEnchancedFeature(this.datagrid, config?.features?.columnOrdering);
         this.features.controlCenter = new ControlCenterFeature(config?.features?.controlCenter);
-        // this.datagrid.processors.data.executeFullDataTransformation();
+        this.features.animations = new AnimationsFeature(config?.features?.animations);
     }
 
 

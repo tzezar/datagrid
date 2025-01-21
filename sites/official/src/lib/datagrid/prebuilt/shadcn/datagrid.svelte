@@ -25,6 +25,11 @@
 	import ContentCopyOutline from '$lib/datagrid/icons/material-symbols/content-copy-outline.svelte';
 	import Toolbar from './built-in/toolbar.svelte';
 	import { shouldHighlightSelectedRow } from './utils';
+	import { blur, fade, fly, scale } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
+	import BodyRowActionsCell from './built-in/body-row-actions-cell.svelte';
+	import { quartIn } from 'svelte/easing';
+	import { fa } from '@faker-js/faker';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
@@ -57,13 +62,6 @@
 
 	// Crazy boost in performance
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
-
-	function addCopyFeedback(element: HTMLElement) {
-		element.classList.add('copy-feedback');
-		setTimeout(() => {
-			element.classList.remove('copy-feedback');
-		}, 1000);
-	}
 </script>
 
 <Portal disabled={!datagrid.isFullscreenEnabled()}>
@@ -100,11 +98,17 @@
 							{/if}
 
 							{#each headerColumns as column (column.columnId)}
-								{#if isGroupColumn(column)}
-									{@render HeaderGroupCellSnippet(column)}
-								{:else if column.state.visible === true}
-									{@render HeaderCellSnippet(column)}
-								{/if}
+								<div
+									animate:flip={{
+										duration: (len) => datagrid.extra.features.animations.getFlipDuration(len)
+									}}
+								>
+									{#if isGroupColumn(column)}
+										{@render HeaderGroupCellSnippet(column)}
+									{:else if column.state.visible === true}
+										{@render HeaderCellSnippet(column)}
+									{/if}
+								</div>
 							{/each}
 						</div>
 					</div>
@@ -185,60 +189,71 @@
 									{/if}
 
 									{#each leafColumns as column (column.columnId)}
-										{#if column.isVisible()}
-											{#if column.cell}
-												{@const cellContent = column.cell({ datagrid, column, row })}
-												{#if typeof cellContent === 'string'}
-													{@html cellContent}
-												{:else if isCellComponent(cellContent)}
-													<cellContent.component {datagrid} {row} {column} />
-												{/if}
-											{:else}
-												<div
-													class={cn(
-														'grid-body-cell group  items-center',
-														shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
-														column._meta.styles?.bodyCell({ datagrid, column, row })
-													)}
-													class:justify-center={column?._meta?.align === 'center'}
-													data-pinned={column.state.pinning.position !== 'none'
-														? column.state.pinning.position
-														: null}
-													style:--width={column.state.size.width + 'px'}
-													style:--min-width={column.state.size.minWidth + 'px'}
-													style:--max-width={column.state.size.maxWidth + 'px'}
-													style:--pin-left-offset={column.state.pinning.offset + 'px'}
-													style:--pin-right-offset={column.state.pinning.offset + 'px'}
-												>
-													<span class={cn('cell-content  ')}>
-														{@html getCellContent(column, row.original)}
-													</span>
-
-													{#if datagrid.extra.features.clickToCopy.isValidColumn(column)}
-														{#if datagrid.extra.features.clickToCopy.shouldDisplayCopyButton(column)}
-															<button
-																class="hidden pl-1 group-hover:block"
-																onclick={(e) => {
-																	datagrid.extra.features.clickToCopy.handleClickToCopy(
-																		row.original,
-																		column
-																	);
-
-																	const cellElement = (e.target as HTMLElement).closest(
-																		'.grid-body-cell'
-																	);
-																	if (cellElement) {
-																		addCopyFeedback(cellElement);
-																	}
-																}}
-															>
-																<ContentCopyOutline width="0.75rem" />
-															</button>
-														{/if}
+										<div
+											animate:flip={{
+												duration: (len) => datagrid.extra.features.animations.getFlipDuration(len)
+											}}
+										>
+											{#if column.isVisible()}
+												{#if column.cell}
+													{@const cellContent = column.cell({ datagrid, column, row })}
+													{#if typeof cellContent === 'string'}
+														{@html cellContent}
+													{:else if isCellComponent(cellContent)}
+														<cellContent.component {datagrid} {row} {column} />
 													{/if}
-												</div>
+												{:else}
+													<div
+														class={cn(
+															'grid-body-cell group items-center transition-all duration-300',
+															shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
+															column._meta.styles?.bodyCell({ datagrid, column, row })
+														)}
+														class:justify-center={column?._meta?.align === 'center'}
+														data-pinned={column.state.pinning.position !== 'none'
+															? column.state.pinning.position
+															: null}
+														style:--width={column.state.size.width + 'px'}
+														style:--min-width={column.state.size.minWidth + 'px'}
+														style:--max-width={column.state.size.maxWidth + 'px'}
+														style:--pin-left-offset={column.state.pinning.offset + 'px'}
+														style:--pin-right-offset={column.state.pinning.offset + 'px'}
+													>
+														<span class={cn('cell-content  ')}>
+															{@html getCellContent(column, row.original)}
+														</span>
+
+														{#if datagrid.extra.features.clickToCopy.isValidColumn(column)}
+															{#if datagrid.extra.features.clickToCopy.shouldDisplayCopyButton(column)}
+																<button
+																	class="pl-1"
+																	onclick={(e) => {
+																		datagrid.extra.features.clickToCopy.handleClickToCopy(
+																			row.original,
+																			column
+																		);
+
+																		const cellElement = (e.target as HTMLElement).closest(
+																			'.grid-body-cell'
+																		);
+																		if (cellElement) {
+																			datagrid.extra.features.clickToCopy.addCopyFeedback(
+																				cellElement as HTMLElement
+																			);
+																		}
+																	}}
+																>
+																	<ContentCopyOutline
+																		width="0.75rem"
+																		class={cn('opacity-0 transition-all group-hover:opacity-100 ')}
+																	/>
+																</button>
+															{/if}
+														{/if}
+													</div>
+												{/if}
 											{/if}
-										{/if}
+										</div>
 									{/each}
 								</div>
 								{#if row.isExpanded()}
@@ -285,11 +300,13 @@
 		</div>
 		<div class="flex grow flex-row">
 			{#each column.columns ?? [] as subColumn (subColumn.columnId)}
-				{#if isGroupColumn(subColumn)}
-					{@render HeaderGroupCellSnippet(subColumn)}
-				{:else if subColumn.state.visible === true}
-					{@render HeaderCellSnippet(subColumn)}
-				{/if}
+				<div animate:flip>
+					{#if isGroupColumn(subColumn)}
+						{@render HeaderGroupCellSnippet(subColumn)}
+					{:else if subColumn.state.visible === true}
+						{@render HeaderCellSnippet(subColumn)}
+					{/if}
+				</div>
 			{/each}
 		</div>
 	</div>

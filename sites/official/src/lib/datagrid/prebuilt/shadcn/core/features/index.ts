@@ -18,6 +18,8 @@ import { RowSelectionEnchancedFeature } from "./row-selection.svelte";
 import { SortingEnchancedFeature } from "./sorting.svelte";
 import { ColumnOrderingEnchancedFeature } from "./column-ordering.svelte";
 import { ControlCenterFeature } from "./control-center.svelte";
+import { AnimationsFeature } from "./animations.svelte";
+
 
 
 import type { ClickToCopyFeatureConfig } from "./click-to-copy.svelte";
@@ -40,6 +42,7 @@ import type { RowSelectionEnchancedFeatureConfig } from "./row-selection.svelte"
 import type { SortingEnchancedFeatureConfig } from "./sorting.svelte";
 import type { ColumnOrderingEnchancedFeatureConfig } from "./column-ordering.svelte";
 import type { ControlCenterFeatureConfig } from "./control-center.svelte";
+import type { AnimationsFeatureConfig } from "./animations.svelte";
 
 export {
     ClickToCopyFeature,
@@ -62,6 +65,7 @@ export {
     SortingEnchancedFeature,
     ColumnOrderingEnchancedFeature,
     ControlCenterFeature,
+    AnimationsFeature,
 }
 
 
@@ -86,6 +90,7 @@ export type {
     SortingEnchancedFeatureConfig,
     ColumnOrderingEnchancedFeatureConfig,
     ControlCenterFeatureConfig,
+    AnimationsFeatureConfig,
 }
 
 
