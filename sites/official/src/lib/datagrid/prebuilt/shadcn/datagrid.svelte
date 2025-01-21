@@ -60,8 +60,6 @@
 			: datagrid.columnManager.getLeafColumnsInOrder()
 	);
 
-
-
 	// Crazy boost in performance
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
 </script>
@@ -92,12 +90,12 @@
 				{:else}
 					<div class="grid-header">
 						<div class="grid-header-row">
-							{#if datagrid.extra.features.rowSelection.enableRowSelection}
+							<!-- {#if datagrid.extra.features.rowSelection.enableRowSelection}
 								<RowSelectionHeaderCell {datagrid} />
 							{/if}
 							{#if datagrid.extra.features.rowExpanding.enableRowExpanding}
 								<div class="mx-[8px] size-4 self-center"></div>
-							{/if}
+							{/if} -->
 
 							{#each headerColumns as column (column.columnId)}
 								<div
@@ -183,17 +181,19 @@
 								</div>
 							{:else}
 								<div class="grid-body-row flex">
-									{#if datagrid.extra.features.rowSelection.enableRowSelection}
+									<!-- {#if datagrid.extra.features.rowSelection.enableRowSelection}
 										<RowSelectionCell {row} {datagrid} />
 									{/if}
 									{#if datagrid.extra.features.rowExpanding.enableRowExpanding}
 										<RowExpandingCell {row} {datagrid} />
-									{/if}
+									{/if} -->
 
 									{#each leafColumns as column (column.columnId)}
-										<div animate:flip={{
-											duration: (len) => datagrid.extra.features.animations.getFlipDuration(len)
-										}}>
+										<div
+											animate:flip={{
+												duration: (len) => datagrid.extra.features.animations.getFlipDuration(len)
+											}}
+										>
 											{#if column.isVisible()}
 												{#if column.cell}
 													{@const cellContent = column.cell({ datagrid, column, row })}
@@ -313,55 +313,55 @@
 {/snippet}
 
 {#snippet HeaderCellSnippet(column: LeafColumn<any>)}
-	<div
-		class={cn('grid-header-cell')}
-		data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
-		style:--pin-left-offset={column.state.pinning.offset + 'px'}
-		style:--pin-right-offset={column.state.pinning.offset + 'px'}
-		style:--width={column.state.size.width + 'px'}
-		style:--min-width={column.state.size.minWidth + 'px'}
-		style:--max-width={column.state.size.maxWidth + 'px'}
-	>
-		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<div
-			class="grid-header-cell-content {column.options.sortable ? 'sortable' : ''}"
-			onclick={(e) => {
-				let multisort = false;
-				if (datagrid.extra.features.sorting.enableMultiSort) {
-					multisort = e.shiftKey;
-				}
-				datagrid.handlers.sorting.toggleColumnSorting(column, multisort);
-			}}
-		>
-			{#if column.headerCell}
-				{@const cellContent = column.headerCell({ datagrid, column })}
-				{#if typeof cellContent === 'string'}
-					{@html cellContent}
-				{:else if isCellComponent(cellContent)}
-					<cellContent.component {datagrid} {column} />
-				{/if}
-			{:else}
-				<span class="grid-header-cell-content-header">{column.header}</span>
-			{/if}
-
-			<div class="flex gap-1">
-				{#if datagrid.extra.features.sorting.enableSorting}
-					{#if column.isSortable()}
-						<ColumnSortingIndicator {datagrid} {column} />
-					{/if}
-				{/if}
-				{#if column._meta.showColumnManagerDropdownMenu === true}
-					<HeaderCellDropdown {datagrid} {column} />
-				{/if}
-			</div>
-		</div>
-		{#if datagrid.extra.features.columnFiltering.isEnabled()}
-			<div class="h-9 w-full pt-1">
-				<HeaderCellColumnFilter {datagrid} {column} />
-			</div>
+	{#if column.headerCell}
+		{@const cellContent = column.headerCell({ datagrid, column })}
+		{#if typeof cellContent === 'string'}
+			{@html cellContent}
+		{:else if isCellComponent(cellContent)}
+			<cellContent.component {datagrid} {column} />
 		{/if}
-	</div>
+	{:else}
+		<div
+			class={cn('grid-header-cell')}
+			data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
+			style:--pin-left-offset={column.state.pinning.offset + 'px'}
+			style:--pin-right-offset={column.state.pinning.offset + 'px'}
+			style:--width={column.state.size.width + 'px'}
+			style:--min-width={column.state.size.minWidth + 'px'}
+			style:--max-width={column.state.size.maxWidth + 'px'}
+		>
+			<!-- svelte-ignore a11y_no_static_element_interactions -->
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<div
+				class="grid-header-cell-content {column.options.sortable ? 'sortable' : ''}"
+				onclick={(e) => {
+					let multisort = false;
+					if (datagrid.extra.features.sorting.enableMultiSort) {
+						multisort = e.shiftKey;
+					}
+					datagrid.handlers.sorting.toggleColumnSorting(column, multisort);
+				}}
+			>
+				<span class="grid-header-cell-content-header">{column.header}</span>
+
+				<div class="flex gap-1">
+					{#if datagrid.extra.features.sorting.enableSorting}
+						{#if column.isSortable()}
+							<ColumnSortingIndicator {datagrid} {column} />
+						{/if}
+					{/if}
+					{#if column._meta.showColumnManagerDropdownMenu === true}
+						<HeaderCellDropdown {datagrid} {column} />
+					{/if}
+				</div>
+			</div>
+			{#if datagrid.extra.features.columnFiltering.isEnabled()}
+				<div class="h-9 w-full pt-1">
+					<HeaderCellColumnFilter {datagrid} {column} />
+				</div>
+			{/if}
+		</div>
+	{/if}
 {/snippet}
 
 <style>

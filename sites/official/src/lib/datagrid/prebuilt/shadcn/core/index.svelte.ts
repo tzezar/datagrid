@@ -54,6 +54,10 @@ import type { SortingFeatureConfig } from "$lib/datagrid/core/features/sorting.s
 import type { PaginationFeatureConfig } from "$lib/datagrid/core/features/pagination.svelte";
 import type { GroupingFeatureConfig } from "$lib/datagrid/core/features/grouping.svelte";
 import type { ColumnOrderingFeatureConfig } from "$lib/datagrid/core/features/column-ordering.svelte";
+import { createDisplayColumn } from "$lib/datagrid/core/column-creation/display-column-creator";
+import RowSelectionCell from "../built-in/row-selection-cell.svelte";
+import RowExpandingCell from "../built-in/row-expanding-cell.svelte";
+import RowSelectionColumnHeaderCell from "../built-in/row-selection-column-header-cell.svelte";
 
 
 
@@ -150,7 +154,36 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
             LifecycleHooks.HOOKS.PRE_PROCESS_COLUMNS,
             (columns: AnyColumn<TOriginalRow>[]) => {
                 const flattenedColumns = flattenColumnStructureAndClearGroups([...columns]);
-                const transformedColumns = transformColumns([...flattenedColumns]);
+
+                const additionalColumns = [
+                    createDisplayColumn({
+                        header: '',
+                        columnId: 'selection',
+                        cell: () => {
+                            return {
+                                component: RowSelectionCell,
+                            }
+                        },
+                        headerCell: () => {
+                            return {
+                                component: RowSelectionColumnHeaderCell
+                            }
+                        }
+                    }),
+                    createDisplayColumn({
+                        header: '',
+                        columnId: 'expand',
+                        cell: () => {
+                            return {
+                                component: RowExpandingCell,
+                            }
+                        },
+                        headerCell: () => `<div class="pr-3 border-r w-10 h-full"></div></div>`
+                    })
+                ]
+                const transformedColumns = transformColumns([...additionalColumns, ...flattenedColumns,]);
+
+                // const transformedColumns = transformColumns([...flattenedColumns]);
                 const hierarchicalColumns = columnProcessor.createColumnHierarchy(transformedColumns);
                 return hierarchicalColumns;
             }

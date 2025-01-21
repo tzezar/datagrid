@@ -20,7 +20,7 @@
 	};
 </script>
 
-<CellWithoutColumn {datagrid} {row} class="pr-3 border-r">
+<CellWithoutColumn {datagrid} {row} class="pr-3 border-r w-10">
 		<button onclick={handleClick} class="border-primary rounded-sm border">
 			<ExpandMoreSqureLine
 				class={cn('size-4 p-0.5 transition-all ', row.isExpanded() ? 'rotate-180' : '')}

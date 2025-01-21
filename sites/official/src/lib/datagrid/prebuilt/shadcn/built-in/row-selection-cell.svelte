@@ -18,7 +18,7 @@
 	// or single selection depending on the configuration
 </script>
 
-<CellWithoutColumn {datagrid} {row}>
+<CellWithoutColumn {datagrid} {row} class='w-10'>
 	<input
 		class="size-4"
 		type="checkbox"

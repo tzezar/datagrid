@@ -16,14 +16,12 @@
 
 <div
 	class={cn(
-		'flex items-center justify-center px-2 py-1 ',
+		'flex items-center justify-center px-2 py-1 h-full',
 		shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
 		_class
 	)}
 >
-	<div class={cn('')}>
 		{@render children()}
-	</div>
 </div>
 
 <style>

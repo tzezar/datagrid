@@ -9,8 +9,8 @@ export type AnimationsFeatureConfig = {
 
 
 export class AnimationsFeature {
-    animateHeaders: boolean = $state(true);
-    animateRows: boolean = $state(true);
+    animateHeaders: boolean = $state(false);
+    animateRows: boolean = $state(false);
     flipMultiplier: number = $state(3);
 
     constructor(config?: AnimationsFeatureConfig) {
@@ -34,6 +34,5 @@ export class AnimationsFeature {
     getFlipDuration(len: number): number {
         return this.animateHeaders ? len * this.flipMultiplier : 0
     }
-
 
 }
