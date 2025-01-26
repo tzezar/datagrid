@@ -1,7 +1,6 @@
 import type { AnyColumn, ColumnId } from "$lib/datagrid/core/types";
 import { DataGrid, type GridConfig } from "$lib/datagrid/core/index.svelte";
 import { LifecycleHooks } from "$lib/datagrid/core/managers/lifecycle-hooks-manager.svelte";
-import { ColumnProcessor } from "$lib/datagrid/core/processors";
 import { flattenColumnStructureAndClearGroups } from "$lib/datagrid/core/utils.svelte";
 
 import {
@@ -144,9 +143,6 @@ function transformColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
 }
 
 
-
-
-// TODO update original
 function updateColumnPinningOffsets(columns: AnyColumn<any>[]) {
     function calculateOffset(columns: AnyColumn<any>[], columnId: ColumnId, position: 'left' | 'right' | null): number {
         if (position === null) return -1; // No offset for unpinned columns
@@ -193,146 +189,54 @@ function updateColumnPinningOffsets(columns: AnyColumn<any>[]) {
 }
 
 const createAdditionalColumns = (datagrid: TzezarsDatagrid): {
-    leftCols: AnyColumn<any>[],
-    rightCols: AnyColumn<any>[],
+    leftCols: AnyColumn<any>[];
+    rightCols: AnyColumn<any>[];
 } => {
+    const createColumn = (
+        position: 'left' | 'right',
+        columnId: string,
+        component: any,
+        headerComponent: any,
+        headerProps?: Record<string, any>
+    ) => createDisplayColumn({
+        header: '',
+        columnId,
+        cell: ({ column, datagrid, row }) => ({
+            component,
+            props: { column, datagrid, row },
+        }),
+        state: {
+            pinning: { position },
+            size: { maxWidth: 40, minWidth: 40, width: 40 },
+        },
+        headerCell: () => ({
+            component: headerComponent,
+            props: headerProps,
+        }),
+    });
 
-    const leftCols = []
-    const rightCols = []
+    const leftCols: AnyColumn<any>[] = [];
+    const rightCols: AnyColumn<any>[] = [];
+    const { rowSelection, rowExpanding } = datagrid.extra.features;
 
-
-
-    if (datagrid.extra.features.rowSelection.displayBuiltInCheckboxPosition === 'left') {
-        const newCol = createDisplayColumn({
-            header: '',
-            columnId: 'selection',
-            cell: ({ column, datagrid, row }) => {
-                return {
-                    component: RowSelectionCell,
-                    props: {
-                        column,
-                        datagrid,
-                        row
-                    }
-                }
-            },
-            state: {
-                pinning: {
-                    position: 'left',
-                },
-                size: {
-                    maxWidth: 40,
-                    minWidth: 40,
-                    width: 40
-                }
-            },
-            headerCell: () => {
-                return {
-                    component: RowSelectionColumnHeaderCell
-                }
-            }
-        })
-        leftCols.push(newCol)
+    if (rowSelection?.displayBuiltInCheckboxPosition === 'left') {
+        leftCols.push(createColumn('left', 'selection', RowSelectionCell, RowSelectionColumnHeaderCell));
     }
 
-    if (datagrid.extra.features.rowExpanding.displayBuiltInButtonPosition === 'left') {
-        const newCol = createDisplayColumn({
-            header: '',
-            columnId: 'expand',
-            cell: () => {
-                return {
-                    component: RowExpandingCell,
-                }
-            },
-            state: {
-                pinning: {
-                    position: 'left',
-                },
-                size: {
-                    maxWidth: 40,
-                    minWidth: 40,
-                    width: 40
-                }
-            },
-            headerCell: ({ column }) => {
-                return {
-                    component: RowExpandingColumnHeaderCell,
-                    props: {
-                        column
-                    }
-                }
-            }
-        })
-        leftCols.push(newCol)
+    if (rowExpanding?.displayBuiltInButtonPosition === 'left') {
+        leftCols.push(createColumn('left', 'expand', RowExpandingCell, RowExpandingColumnHeaderCell));
     }
 
-    if (datagrid.extra.features.rowSelection.displayBuiltInCheckboxPosition === 'right') {
-        const newCol = createDisplayColumn({
-            header: '',
-            columnId: 'selection',
-            cell: () => {
-                return {
-                    component: RowSelectionCell,
-                }
-            },
-            state: {
-                pinning: {
-                    position: 'right',
-                },
-                size: {
-                    maxWidth: 40,
-                    minWidth: 40,
-                    width: 40
-                }
-            },
-            headerCell: () => {
-                return {
-                    component: RowSelectionColumnHeaderCell
-                }
-            }
-        })
-        rightCols.push(newCol)
+    if (rowSelection?.displayBuiltInCheckboxPosition === 'right') {
+        rightCols.push(createColumn('right', 'selection', RowSelectionCell, RowSelectionColumnHeaderCell));
     }
 
-
-    if (datagrid.extra.features.rowExpanding.displayBuiltInButtonPosition === 'right') {
-        const newCol = createDisplayColumn({
-            header: '',
-            columnId: 'expand',
-            cell: () => {
-                return {
-                    component: RowExpandingCell,
-                }
-            },
-            state: {
-                pinning: {
-                    position: 'right',
-                },
-                size: {
-                    maxWidth: 40,
-                    minWidth: 40,
-                    width: 40
-                }
-            },
-            headerCell: ({ column }) => {
-                return {
-                    component: RowExpandingColumnHeaderCell,
-                    props: {
-                        column
-                    }
-                }
-            }
-        })
-        rightCols.push(newCol)
+    if (rowExpanding?.displayBuiltInButtonPosition === 'right') {
+        rightCols.push(createColumn('right', 'expand', RowExpandingCell, RowExpandingColumnHeaderCell));
     }
 
-
-    return {
-        leftCols,
-        rightCols
-    }
-}
-
+    return { leftCols, rightCols };
+};
 
 
 export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> {
@@ -340,44 +244,52 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
 
     constructor(config: TzezarsDatagridConfig<TOriginalRow>) {
         super(config, true);
-        const lifecycleHooks = this.lifecycleHooks
-        const columnProcessor = this.processors.column
         this.extra = new Extra(this, config.extra);
 
-
-        lifecycleHooks.register(
-            LifecycleHooks.HOOKS.PRE_PROCESS_ORIGINAL_COLUMNS,
-            (columns: AnyColumn<TOriginalRow>[]) => {
-                const flattenedColumns = flattenColumnStructureAndClearGroups([...columns]);
-                const additionalColumns = createAdditionalColumns(this);
-                let transformedColumns = transformColumns([...additionalColumns.leftCols, ...flattenedColumns, ...additionalColumns.rightCols]);
-                transformedColumns = updateColumnPinningOffsets(transformedColumns);
-                const hierarchicalColumns = columnProcessor.createColumnHierarchy(transformedColumns);
-                return hierarchicalColumns;
-            }
-        );
-
-        lifecycleHooks.register(
-            LifecycleHooks.HOOKS.PRE_PROCESS_COLUMNS,
-            (columns: AnyColumn<TOriginalRow>[]) => {
-                const flattenedColumns = flattenColumnStructureAndClearGroups([...columns]);
-                let transformedColumns = transformColumns([...flattenedColumns,]);
-                transformedColumns = updateColumnPinningOffsets(transformedColumns);
-
-                // const transformedColumns = transformColumns([...flattenedColumns]);
-                const hierarchicalColumns = columnProcessor.createColumnHierarchy(transformedColumns);
-                return hierarchicalColumns;
-            }
-        );
-
-        this.initializeState(config)
-
+        this.registerLifecycleHooks();
+        this.initializeState(config);
     }
 
-    isFullscreenEnabled() {
+    private registerLifecycleHooks() {
+        // * It might be better to place this logic into datagrid component itselt, it might allow easier styling
+        this.lifecycleHooks.register(
+            LifecycleHooks.HOOKS.PRE_PROCESS_ORIGINAL_COLUMNS,
+            (columns: AnyColumn<TOriginalRow>[]) => this.processColumnsWithExtras(columns)
+        );
+
+        this.lifecycleHooks.register(
+            LifecycleHooks.HOOKS.PRE_PROCESS_COLUMNS,
+            (columns: AnyColumn<TOriginalRow>[]) => this.processColumns(columns)
+        );
+    }
+
+    private processColumnsWithExtras(columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
+        const flattenedColumns = flattenColumnStructureAndClearGroups([...columns]);
+        const additionalColumns = createAdditionalColumns(this);
+        const allColumns = [
+            ...additionalColumns.leftCols,
+            ...flattenedColumns,
+            ...additionalColumns.rightCols,
+        ];
+        return this.createHierarchicalColumns(allColumns);
+    }
+
+    private processColumns(columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
+        const flattenedColumns = flattenColumnStructureAndClearGroups([...columns]);
+        return this.createHierarchicalColumns(flattenedColumns);
+    }
+
+    private createHierarchicalColumns(columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
+        let transformedColumns = transformColumns(columns);
+        transformedColumns = updateColumnPinningOffsets(transformedColumns);
+        return this.processors.column.createColumnHierarchy(transformedColumns);
+    }
+
+    isFullscreenEnabled(): boolean {
         return this.extra.features.fullscreen.isFullscreen;
     }
 }
+
 
 
 
@@ -416,8 +328,6 @@ export class Extra {
         this.features.animations = new AnimationsFeature(this.datagrid, config?.features?.animations);
         this.features.rowSelection = new RowSelectionEnchancedFeature(this.datagrid, config?.features?.rowSelection);
     }
-
-
 
     getTitle(): string | undefined {
         return this.title; // Getter for consistent access

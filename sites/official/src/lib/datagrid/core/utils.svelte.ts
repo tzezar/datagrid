@@ -1,4 +1,4 @@
-import type {  AnyColumn, GroupColumn } from "./types";
+import type { AnyColumn, GroupColumn } from "./types";
 import type { CellValue, ColumnId, CustomCellComponentWithProps, SortableColumn } from "./types";
 import type { DataGrid } from "./index.svelte";
 
@@ -37,37 +37,34 @@ export function getCellContent(column: AnyColumn<any>, originalRow: any): CellVa
 }
 
 
-
-export function flattenColumnStructureAndClearGroups(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+export function flattenColumnStructure(
+    columns: AnyColumn<any>[],
+    preserveGroups: boolean = false
+): AnyColumn<any>[] {
     const flattened: AnyColumn<any>[] = [];
 
-    for (let i = 0; i < columns.length; i++) {
-        const column = columns[i];
-        if (column.type === 'group') {
-            flattened.push(...flattenColumnStructureAndClearGroups(column.columns));
-            flattened.push({ ...column, columns: [] });
+    const processColumns = (columns: AnyColumn<any>[], result: AnyColumn<any>[]) => {
+        for (let i = 0; i < columns.length; i++) {
+            const column = columns[i];
+            if (column.type === 'group') {
+                processColumns(column.columns, result);
+                result.push(preserveGroups ? column : { ...column, columns: [] });
+            } else {
+                result.push(column);
+            }
         }
-        else {
-            flattened.push(column);
-        }
-    }
+    };
+
+    processColumns(columns, flattened);
     return flattened;
 }
 
-export function flattenColumnStructurePreservingGroups(columns: AnyColumn<any>[]): AnyColumn<any>[] {
-    const flattened: AnyColumn<any>[] = [];
+export function flattenColumnStructureAndClearGroups(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+    return flattenColumnStructure(columns, false);
+}
 
-    for (let i = 0; i < columns.length; i++) {
-        const column = columns[i];
-        if (column.type === 'group') {
-            flattened.push(...flattenColumnStructurePreservingGroups(column.columns));
-            flattened.push(column);
-        }
-        else {
-            flattened.push(column);
-        }
-    }
-    return flattened;
+export function flattenColumnStructurePreservingGroups(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+    return flattenColumnStructure(columns, true);
 }
 
 // Find column by ID in nested structure

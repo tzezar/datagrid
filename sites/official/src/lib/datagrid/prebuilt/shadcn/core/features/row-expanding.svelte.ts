@@ -22,7 +22,7 @@ export class RowExpandingEnchancedFeature implements EnchancedFeature {
     expandingMode: 'single' | 'multiple' = $state('single');
     expandingPosition: 'left' | 'right' = $state('left');
     maxExpandedRows: number = $state(DEFAULT_MAX_EXPANDED_ROWS);
-    displayBuiltInButtonPosition: "left" | "right" | 'none' = $state('right')
+    displayBuiltInButtonPosition: "left" | "right" | 'none' = $state('left')
 
     constructor(datagrid: TzezarsDatagrid, config?: RowExpandingEnchancedFeatureConfig & RowExpandingFeatureConfig) {
         this.datagrid = datagrid

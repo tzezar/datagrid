@@ -31,6 +31,8 @@
 	import { quartIn } from 'svelte/easing';
 	import { fa } from '@faker-js/faker';
 	import RowSelectionBodyRowCell from './built-in/row-selection-body-row-cell.svelte';
+	import RowSelectionColumnHeaderCell from './built-in/row-selection-column-header-cell.svelte';
+	import RowExpandingColumnHeaderCell from './built-in/row-expanding-column-header-cell.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
@@ -70,7 +72,7 @@
 		{#if toolbar}
 			{@render toolbar()}
 		{:else}
-			<Toolbar {datagrid}  />
+			<Toolbar {datagrid} />
 		{/if}
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
@@ -91,7 +93,24 @@
 				{:else}
 					<div class="grid-header">
 						<div class="grid-header-row">
-							{#each headerColumns as column (column.columnId)}
+							{#if datagrid.extra.features.rowSelection.displayBuiltInCheckboxPosition === 'left'}
+								<RowSelectionColumnHeaderCell
+									{datagrid}
+									column={headerColumns.find(
+										(col) => col.columnId === 'selection'
+									) as LeafColumn<any>}
+								/>
+							{/if}
+							{#if datagrid.extra.features.rowExpanding.displayBuiltInButtonPosition === 'left'}
+								<RowExpandingColumnHeaderCell
+									{datagrid}
+									column={headerColumns.find((col) => col.columnId === 'expand') as LeafColumn<any>}
+								/>
+							{/if}
+
+							{#each headerColumns
+								.filter((col) => col.columnId !== 'selection')
+								.filter((col) => col.columnId !== 'expand') as column (column.columnId)}
 								<div
 									class={cn(
 										!datagrid.extra.features.animations.shouldAnimateHeaders() && 'contents'
@@ -179,9 +198,27 @@
 								</div>
 							{:else}
 								<div class="grid-body-row flex">
-									
-									
-									{#each leafColumns as column (column.columnId)}
+									{#if datagrid.extra.features.rowSelection.displayBuiltInCheckboxPosition === 'left'}
+										<RowSelectionCell
+											{datagrid}
+											{row}
+											column={headerColumns.find(
+												(col) => col.columnId === 'selection'
+											) as LeafColumn<any>}
+										/>
+									{/if}
+									{#if datagrid.extra.features.rowExpanding.displayBuiltInButtonPosition === 'left'}
+										<RowExpandingCell
+											{datagrid}
+											{row}
+											column={headerColumns.find(
+												(col) => col.columnId === 'expand'
+											) as LeafColumn<any>}
+										/>
+									{/if}
+									{#each leafColumns
+										.filter((col) => col.columnId !== 'selection')
+										.filter((col) => col.columnId !== 'expand') as column (column.columnId)}
 										<div
 											class={cn(
 												!datagrid.extra.features.animations.shouldAnimateHeaders() && 'contents'

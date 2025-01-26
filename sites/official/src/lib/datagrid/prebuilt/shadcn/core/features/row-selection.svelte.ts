@@ -18,6 +18,7 @@ export class RowSelectionEnchancedFeature implements EnchancedFeature {
     datagrid: TzezarsDatagrid
 
     enableRowSelection: boolean = $state(true);
+
     enableMultiRowSelection: boolean = $state(true);
     rowSelectionMode: 'single' | 'multiple' = $state('multiple');
     enableSelectAll: boolean = $state(true);
