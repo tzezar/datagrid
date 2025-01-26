@@ -219,21 +219,26 @@ const createAdditionalColumns = (datagrid: TzezarsDatagrid): {
     const rightCols: AnyColumn<any>[] = [];
     const { rowSelection, rowExpanding } = datagrid.extra.features;
 
-    if (rowSelection?.displayBuiltInCheckboxPosition === 'left') {
-        leftCols.push(createColumn('left', 'selection', RowSelectionCell, RowSelectionColumnHeaderCell));
+    if (rowSelection?.displayBuiltInComponents === true) {
+        if (rowSelection?.displayBuiltInCheckboxPosition === 'left') {
+            leftCols.push(createColumn('left', 'selection', RowSelectionCell, RowSelectionColumnHeaderCell));
+        }
+
+        if (rowSelection?.displayBuiltInCheckboxPosition === 'right') {
+            rightCols.push(createColumn('right', 'selection', RowSelectionCell, RowSelectionColumnHeaderCell));
+        }
+
     }
 
-    if (rowExpanding?.displayBuiltInButtonPosition === 'left') {
-        leftCols.push(createColumn('left', 'expand', RowExpandingCell, RowExpandingColumnHeaderCell));
+    if (rowExpanding?.displayBuiltInComponents === true) {
+        if (rowExpanding?.displayBuiltInButtonPosition === 'right') {
+            rightCols.push(createColumn('right', 'expand', RowExpandingCell, RowExpandingColumnHeaderCell));
+        }
+        if (rowExpanding?.displayBuiltInButtonPosition === 'left') {
+            leftCols.push(createColumn('left', 'expand', RowExpandingCell, RowExpandingColumnHeaderCell));
+        }
     }
 
-    if (rowSelection?.displayBuiltInCheckboxPosition === 'right') {
-        rightCols.push(createColumn('right', 'selection', RowSelectionCell, RowSelectionColumnHeaderCell));
-    }
-
-    if (rowExpanding?.displayBuiltInButtonPosition === 'right') {
-        rightCols.push(createColumn('right', 'expand', RowExpandingCell, RowExpandingColumnHeaderCell));
-    }
 
     return { leftCols, rightCols };
 };

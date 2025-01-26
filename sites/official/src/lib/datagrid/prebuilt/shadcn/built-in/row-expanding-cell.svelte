@@ -1,17 +1,11 @@
 <script lang="ts">
-	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
 	import type {
-		AnyColumn,
-		CustomCellProps,
 		GridBasicRow,
-		GridRow,
 		LeafColumn
 	} from '$lib/datagrid/core/types';
 	import ExpandMoreSqureLine from '$lib/datagrid/icons/si/expand-more-squre-line.svelte';
-	import LayoutNavbarExpandFilled from '$lib/datagrid/icons/tabler/layout-navbar-expand-filled.svelte';
 	import { cn } from '$lib/utils';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
-	import CellWithoutColumn from '../headless-structure/body/row/cell/cell-without-column.svelte';
 	import Cell from '../headless-structure/body/row/cell/cell.svelte';
 
 	type Props = {
@@ -27,9 +21,9 @@
 	};
 </script>
 
-<Cell {datagrid} {row} {column} class=" m-0 items-center justify-center p-0">
+<Cell {datagrid} {row} {column} class="place-content-center">
 	<!-- <CellWithoutColumn {datagrid} {row} class="pr-3 border-r w-10"> -->
-	<button onclick={handleClick} class="border-primary rounded-sm border">
+	<button onclick={handleClick} class="border-primary rounded-sm border m-0 p-0 h-fit self-center">
 		<ExpandMoreSqureLine
 			class={cn('size-4 p-0.5 transition-all ', row.isExpanded() ? 'rotate-180' : '')}
 		/>

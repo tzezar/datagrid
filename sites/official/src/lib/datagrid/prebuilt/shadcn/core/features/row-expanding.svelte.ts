@@ -7,6 +7,7 @@ import type { EnchancedFeature } from "./types";
 const DEFAULT_MAX_EXPANDED_ROWS = 999999999;
 
 export type RowExpandingEnchancedFeatureConfig = {
+    displayBuiltInComponents?: boolean;
     enableRowExpanding?: boolean;
     expandingMode?: 'single' | 'multiple';
     expandingPosition?: 'left' | 'right';
@@ -17,8 +18,7 @@ export type RowExpandingEnchancedFeatureConfig = {
 
 export class RowExpandingEnchancedFeature implements EnchancedFeature {
     datagrid: TzezarsDatagrid
-
-    enableRowExpanding: boolean = $state(true);
+    displayBuiltInComponents: boolean = $state(true);
     expandingMode: 'single' | 'multiple' = $state('single');
     expandingPosition: 'left' | 'right' = $state('left');
     maxExpandedRows: number = $state(DEFAULT_MAX_EXPANDED_ROWS);
@@ -32,7 +32,7 @@ export class RowExpandingEnchancedFeature implements EnchancedFeature {
     get base(): RowExpandingFeature { return this.datagrid.features.rowExpanding }
 
     initialize(config?: RowExpandingEnchancedFeatureConfig) {
-        this.enableRowExpanding = config?.enableRowExpanding ?? this.enableRowExpanding;
+        this.displayBuiltInComponents = config?.displayBuiltInComponents ?? this.displayBuiltInComponents;
         this.expandingMode = config?.expandingMode ?? this.expandingMode;
         this.expandingPosition = config?.expandingPosition ?? this.expandingPosition;
         this.maxExpandedRows = config?.maxExpandedRows ?? this.maxExpandedRows;

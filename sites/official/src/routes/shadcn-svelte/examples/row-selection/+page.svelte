@@ -3,7 +3,6 @@
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
 	import { inventoryColumns } from './columns.svelte';
 	import DatagridShadcnSvelte from '$lib/datagrid/prebuilt/shadcn/datagrid.svelte';
-	import { onMount } from 'svelte';
 
 	let { data } = $props();
 
@@ -18,6 +17,15 @@
 					manualSorting: false,
 					maxMultiSortColCount: 2,
 					isMultiSortEvent: () => true
+				},
+				rowSelection: {
+					rowSelectionMode: 'multiple',
+					displayBuiltInComponents: true
+				},
+				rowExpanding: {
+					displayBuiltInButtonPosition: 'left',
+					displayBuiltInComponents: true,
+
 				}
 			}
 		}

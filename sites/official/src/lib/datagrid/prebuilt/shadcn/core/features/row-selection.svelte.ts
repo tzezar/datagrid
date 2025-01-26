@@ -6,8 +6,8 @@ import type { EnchancedFeature } from "./types";
 
 
 export type RowSelectionEnchancedFeatureConfig = {
-    enableRowSelection?: boolean;
-    enableMultiRowSelection?: boolean;
+
+    displayBuiltInComponents?: boolean;
     rowSelectionMode?: 'single' | 'multiple';
     enableSelectAll?: boolean;
     highlightSelectedRow?: boolean;
@@ -17,9 +17,8 @@ export type RowSelectionEnchancedFeatureConfig = {
 export class RowSelectionEnchancedFeature implements EnchancedFeature {
     datagrid: TzezarsDatagrid
 
-    enableRowSelection: boolean = $state(true);
-
-    enableMultiRowSelection: boolean = $state(true);
+    displayBuiltInComponents: boolean = $state(true);
+    
     rowSelectionMode: 'single' | 'multiple' = $state('multiple');
     enableSelectAll: boolean = $state(true);
     highlightSelectedRow: boolean = $state(true);
@@ -33,8 +32,7 @@ export class RowSelectionEnchancedFeature implements EnchancedFeature {
     }
 
     initialize(config?: RowSelectionEnchancedFeatureConfig) {
-        this.enableRowSelection = config?.enableRowSelection ?? this.enableRowSelection;
-        this.enableMultiRowSelection = config?.enableMultiRowSelection ?? this.enableMultiRowSelection;
+        this.displayBuiltInComponents = config?.displayBuiltInComponents ?? this.displayBuiltInComponents;
         this.rowSelectionMode = config?.rowSelectionMode ?? this.rowSelectionMode;
         this.enableSelectAll = config?.enableSelectAll ?? this.enableSelectAll;
         this.highlightSelectedRow = config?.highlightSelectedRow ?? this.highlightSelectedRow;

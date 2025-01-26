@@ -136,7 +136,7 @@
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	height: 100%;
+	/* height: 100%; */
 }
 
 .grid-body-row {
@@ -151,8 +151,6 @@
 	min-width: var(--min-width);
 	max-width: var(--max-width);
 	display: flex;
-	height: 100%;
-	position: relative;
 	padding: 4px 8px;
 }
 

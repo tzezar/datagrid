@@ -93,7 +93,7 @@
 				{:else}
 					<div class="grid-header">
 						<div class="grid-header-row">
-							{#if datagrid.extra.features.rowSelection.displayBuiltInCheckboxPosition === 'left'}
+							{#if datagrid.extra.features.rowSelection.displayBuiltInCheckboxPosition === 'left' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
 								<RowSelectionColumnHeaderCell
 									{datagrid}
 									column={headerColumns.find(
@@ -101,7 +101,7 @@
 									) as LeafColumn<any>}
 								/>
 							{/if}
-							{#if datagrid.extra.features.rowExpanding.displayBuiltInButtonPosition === 'left'}
+							{#if datagrid.extra.features.rowExpanding.displayBuiltInButtonPosition === 'left' && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
 								<RowExpandingColumnHeaderCell
 									{datagrid}
 									column={headerColumns.find((col) => col.columnId === 'expand') as LeafColumn<any>}
@@ -134,7 +134,7 @@
 				{#if body}
 					{@render body()}
 				{:else}
-					<div class="grid-body">
+					<div class="grid-body ">
 						{#each datagrid.rows.getVisibleRows() as row, rowIndex (row.identifier)}
 							{#if row.isGroupRow()}
 								<div
@@ -198,7 +198,7 @@
 								</div>
 							{:else}
 								<div class="grid-body-row flex">
-									{#if datagrid.extra.features.rowSelection.displayBuiltInCheckboxPosition === 'left'}
+									{#if datagrid.extra.features.rowSelection.displayBuiltInCheckboxPosition === 'left' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
 										<RowSelectionCell
 											{datagrid}
 											{row}
@@ -207,7 +207,7 @@
 											) as LeafColumn<any>}
 										/>
 									{/if}
-									{#if datagrid.extra.features.rowExpanding.displayBuiltInButtonPosition === 'left'}
+									{#if datagrid.extra.features.rowExpanding.displayBuiltInButtonPosition === 'left' && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
 										<RowExpandingCell
 											{datagrid}
 											{row}
@@ -290,13 +290,13 @@
 										</div>
 									{/each}
 								</div>
-								{#if row.isExpanded()}
-									<div class="grid-body-row">
-										<div class="grid-body-cell">
-											Content for row with ID {row.identifier}
-										</div>
+							{/if}
+							{#if row.isExpanded()}
+								<div class="grid-body-row sticky left-0">
+									<div class="grid-body-cell sticky left-0">
+										Content for row with ID {row.identifier}
 									</div>
-								{/if}
+								</div>
 							{/if}
 						{/each}
 					</div>
