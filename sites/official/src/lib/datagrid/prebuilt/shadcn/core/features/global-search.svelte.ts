@@ -11,7 +11,7 @@ export type GlobalSearchEnchancedFeatureConfig = {
 
 
 export class GlobalSearchEnchancedFeature implements EnchancedFeature {
-    base: GlobalSearchFeature = new GlobalSearchFeature();
+    datagrid: TzezarsDatagrid
 
     private inputVisible: boolean = $state(false);
 
@@ -19,17 +19,14 @@ export class GlobalSearchEnchancedFeature implements EnchancedFeature {
     onEnableGlobalSearchChange: (value: boolean) => void = () => { };
 
     constructor(datagrid: TzezarsDatagrid, config?: GlobalSearchEnchancedFeatureConfig) {
-        this.initializeBase(datagrid, config);
+        this.datagrid = datagrid
         this.initialize(config);
     }
 
+    get base(): GlobalSearchFeature { return this.datagrid.features.globalSearch }
+
     initialize(config?: GlobalSearchEnchancedFeatureConfig) {
         this.enabled = config?.enabled ?? this.enabled;
-    }
-
-    initializeBase(datagrid: TzezarsDatagrid, config?: GlobalSearchFeatureConfig) {
-        this.base = datagrid.features.globalSearch;
-        this.base.initialize(config);
     }
 
     hideInput() {

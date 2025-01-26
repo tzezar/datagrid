@@ -1,20 +1,25 @@
 import type { AccessorColumn, AnyColumn, CellValue, ComputedColumn } from "$lib/datagrid/core/types";
 import { getCellContent } from "$lib/datagrid/core/utils.svelte";
+import type { TzezarsDatagrid } from "../index.svelte";
+import type { Feature } from "./types";
 
 export type ClickToCopyFeatureConfig = {
     enableClickToCopy?: boolean;
     onClickToCopy?(value: string | number): void;
 };
 
-export class ClickToCopyFeature {
+export class ClickToCopyFeature implements Feature {
+    datagrid: TzezarsDatagrid
+
     enableInAllValidCells: boolean = $state(true);
     onClickToCopy: (value: string | number) => void = () => { };
 
-    constructor(config?: ClickToCopyFeatureConfig) {
+    constructor(datagrid: TzezarsDatagrid, config?: ClickToCopyFeatureConfig) {
+        this.datagrid = datagrid;
         this.initialize(config);
     }
 
-    initialize(config?: ClickToCopyFeatureConfig) {
+    initialize( config?: ClickToCopyFeatureConfig) {
         this.enableInAllValidCells = config?.enableClickToCopy ?? this.enableInAllValidCells;
         this.onClickToCopy = config?.onClickToCopy ?? this.onClickToCopy;
     }

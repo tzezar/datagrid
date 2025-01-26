@@ -1,6 +1,5 @@
 import { RowSelectionFeature } from "$lib/datagrid/core/features";
 import type { RowSelectionFeatureConfig } from "$lib/datagrid/core/features/row-selection.svelte";
-import type { DataGrid } from "$lib/datagrid/core/index.svelte";
 import type { GridRowIdentifier } from "$lib/datagrid/core/types";
 import type { TzezarsDatagrid } from "../index.svelte";
 import type { EnchancedFeature } from "./types";
@@ -12,20 +11,23 @@ export type RowSelectionEnchancedFeatureConfig = {
     rowSelectionMode?: 'single' | 'multiple';
     enableSelectAll?: boolean;
     highlightSelectedRow?: boolean;
+    displayBuiltInCheckboxPosition?: 'left' | "right" | 'none'
 } & RowSelectionFeatureConfig
 
 export class RowSelectionEnchancedFeature implements EnchancedFeature {
-    public base: RowSelectionFeature<any> = new RowSelectionFeature<any>({} as DataGrid<any>);
+    datagrid: TzezarsDatagrid
 
     enableRowSelection: boolean = $state(true);
     enableMultiRowSelection: boolean = $state(true);
     rowSelectionMode: 'single' | 'multiple' = $state('multiple');
     enableSelectAll: boolean = $state(true);
     highlightSelectedRow: boolean = $state(true);
+    displayBuiltInCheckboxPosition: "left" | "right" | 'none' = $state('left')
 
+    get base(): RowSelectionFeature { return this.datagrid.features.rowSelection }
 
     constructor(datagrid: TzezarsDatagrid<any>, config?: RowSelectionEnchancedFeatureConfig) {
-        this.initializeBase(datagrid, config);
+        this.datagrid = datagrid
         this.initialize(config);
     }
 
@@ -35,11 +37,7 @@ export class RowSelectionEnchancedFeature implements EnchancedFeature {
         this.rowSelectionMode = config?.rowSelectionMode ?? this.rowSelectionMode;
         this.enableSelectAll = config?.enableSelectAll ?? this.enableSelectAll;
         this.highlightSelectedRow = config?.highlightSelectedRow ?? this.highlightSelectedRow;
-    }
-
-    initializeBase(datagrid: TzezarsDatagrid<any>, config?: RowSelectionFeatureConfig) {
-        this.base = datagrid.features.rowSelection;
-        this.base.initialize(config);
+        this.displayBuiltInCheckboxPosition = config?.displayBuiltInCheckboxPosition ?? this.displayBuiltInCheckboxPosition
     }
 
     toggleRowSelection(identifier: GridRowIdentifier) {
@@ -66,7 +64,6 @@ export class RowSelectionEnchancedFeature implements EnchancedFeature {
 
         const isMaxSelectedRowsReached = this.base.maxSelectedRows !== undefined && this.base.selectedBasicRowIdentifiers.size >= this.base.maxSelectedRows;
         if (isMaxSelectedRowsReached) {
-            console.log('selecting more than allowed')
             return
         }
 

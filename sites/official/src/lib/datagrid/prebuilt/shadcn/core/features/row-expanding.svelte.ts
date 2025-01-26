@@ -1,6 +1,5 @@
 import { RowExpandingFeature } from "$lib/datagrid/core/features";
 import type { RowExpandingFeatureConfig } from "$lib/datagrid/core/features/row-expanding.svelte";
-import type { DataGrid } from "$lib/datagrid/core/index.svelte";
 import { TzezarsDatagrid } from "../index.svelte";
 import type { EnchancedFeature } from "./types";
 
@@ -12,31 +11,32 @@ export type RowExpandingEnchancedFeatureConfig = {
     expandingMode?: 'single' | 'multiple';
     expandingPosition?: 'left' | 'right';
     maxExpandedRows?: number;
+    displayBuiltInButtonPosition: 'left' | "right" | 'none'
 } & RowExpandingFeatureConfig
 
 
 export class RowExpandingEnchancedFeature implements EnchancedFeature {
-    base: RowExpandingFeature = new RowExpandingFeature<any>({} as DataGrid);
+    datagrid: TzezarsDatagrid
+
     enableRowExpanding: boolean = $state(true);
     expandingMode: 'single' | 'multiple' = $state('single');
     expandingPosition: 'left' | 'right' = $state('left');
     maxExpandedRows: number = $state(DEFAULT_MAX_EXPANDED_ROWS);
+    displayBuiltInButtonPosition: "left" | "right" | 'none' = $state('right')
 
     constructor(datagrid: TzezarsDatagrid, config?: RowExpandingEnchancedFeatureConfig & RowExpandingFeatureConfig) {
-        this.initializeBase(datagrid, config);
+        this.datagrid = datagrid
         this.initialize(config);
     }
+
+    get base(): RowExpandingFeature { return this.datagrid.features.rowExpanding }
 
     initialize(config?: RowExpandingEnchancedFeatureConfig) {
         this.enableRowExpanding = config?.enableRowExpanding ?? this.enableRowExpanding;
         this.expandingMode = config?.expandingMode ?? this.expandingMode;
         this.expandingPosition = config?.expandingPosition ?? this.expandingPosition;
         this.maxExpandedRows = config?.maxExpandedRows ?? this.maxExpandedRows;
-    }
-
-    initializeBase(datagrid: TzezarsDatagrid<any>, config?: RowExpandingFeatureConfig) {
-        this.base = datagrid.features.rowExpanding;
-        this.base.initialize(config);
+        this.displayBuiltInButtonPosition = config?.displayBuiltInButtonPosition ?? this.displayBuiltInButtonPosition
     }
 
 }

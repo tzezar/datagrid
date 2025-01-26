@@ -55,30 +55,27 @@ export class ColumnProcessor<TOriginalRow> {
         return [...groupedColumns, ...nonGroupedColumns];
     }
 
-    refreshColumnPinningOffsets() {
-        // const columns = flattenColumns(this.datagrid.columns);
-        const columns = flattenColumnStructureAndClearGroups(this.datagrid.columns);
-        const newColumns: AnyColumn<any>[] = this.updateColumnPinningOffsets(columns);
+    refreshColumnPinningOffsets(columns?: AnyColumn<any>[]) {
+        if (!columns) columns = flattenColumnStructureAndClearGroups(this.datagrid.columns);
 
-        const hierarchicalColumns = this.datagrid.processors.column.createColumnHierarchy(newColumns);
-
-        this.datagrid.columns = hierarchicalColumns
-    };
-
-    updateColumnPinningOffsets(columns: AnyColumn<any>[]) {
         const newColumns: AnyColumn<any>[] = [];
         for (let i = 0; i < columns.length; i++) {
             const col = columns[i];
             if (col.state.pinning.position === 'none') {
                 col.state.pinning.offset = 0;
             } else {
-                col.state.pinning.offset = this.datagrid.features.columnPinning.calculateOffset(col.columnId, col.state.pinning.position);
+                col.state.pinning.offset = this.datagrid.features.columnPinning.calculateOffset(columns, col.columnId, col.state.pinning.position);
             }
 
             newColumns.push(col);
         }
-        return newColumns;
-    }
+
+        const hierarchicalColumns = this.datagrid.processors.column.createColumnHierarchy(newColumns);
+
+        this.datagrid.columns = hierarchicalColumns
+    };
+
+
 
 
     createColumnHierarchy<TOriginalRow>(partialFlatColumns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {

@@ -9,23 +9,21 @@ export type ColumnFilteringEnchancedFeatureConfig = {
 } & ColumnFilteringFeatureConfig
 
 export class ColumnFilteringEnchancedFeature implements EnchancedFeature {
-    base: ColumnFilteringFeature<any> = new ColumnFilteringFeature()
+    datagrid: TzezarsDatagrid
+
     enabled: boolean = $state(true);
     isButtonVisible: boolean = $state(true);
 
     constructor(datagrid: TzezarsDatagrid, config?: ColumnFilteringEnchancedFeatureConfig & ColumnFilteringFeatureConfig) {
-        this.initializeBase(datagrid, config);
+        this.datagrid = datagrid
         this.initialize(config);
     }
+
+    get base(): ColumnFilteringFeature { return this.datagrid.features.filtering }
 
     initialize(config?: ColumnFilteringEnchancedFeatureConfig) {
         this.enabled = config?.enabled ?? this.enabled;
         this.isButtonVisible = config?.visible ?? this.isButtonVisible;
-    }
-
-    initializeBase(datagrid: TzezarsDatagrid, config?: ColumnFilteringFeatureConfig) {
-        this.base = datagrid.features.filtering
-        this.base.initialize(config);
     }
 
     disable() {

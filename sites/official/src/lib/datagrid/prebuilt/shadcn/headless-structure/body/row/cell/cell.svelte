@@ -13,6 +13,7 @@
 		class?: string;
 	};
 	let { datagrid, row, column, children, class: _class }: Props = $props();
+	
 </script>
 
 {#if column.isVisible()}
@@ -34,4 +35,3 @@
 		{@render children()}
 	</div>
 {/if}
-

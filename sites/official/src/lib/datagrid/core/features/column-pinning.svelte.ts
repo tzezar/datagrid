@@ -31,37 +31,33 @@ export class ColumnPinningFeature {
         column.state.pinning.position = position;
     }
 
-    /**
-     * Calculates the offset (in pixels) for a column based on its pinning position.
-     * @param columnId - The unique ID of the column.
-     * @param position - The pinning position ('left', 'right', or null).
-     * @returns The calculated offset for the column. Returns -1 if position is null.
-     */
-    calculateOffset(columnId: ColumnId, position: 'left' | 'right' | null): number {
+    calculateOffset(columns: AnyColumn<any>[], columnId: ColumnId, position: 'left' | 'right' | null): number {
         if (position === null) return -1; // No offset for unpinned columns
 
         // Get all visible columns pinned to the specified position
-        const pinnedColumns = this.datagrid.columnManager.getLeafColumns().filter(
+        const pinnedColumns = columns.filter(
             (column) => column.state.visible !== false && column.state.pinning.position === position
         );
 
         // Find the index of the column with the specified ID
         const index = pinnedColumns.findIndex((column) => column.columnId === columnId);
 
-        // If the column is not found or is the first in the pinned list, return 0
-        if (index === -1 || index === 0) {
+        // If column not found or if it's left-pinned and first, or right-pinned and last
+        if (index === -1 || (position === 'left' && index === 0) ||
+            (position === 'right' && index === pinnedColumns.length - 1)) {
             return 0;
         }
 
-        // Calculate the total width of all columns before the specified column
-        const widthSumOfPreviousIndexes = pinnedColumns
-            .slice(0, index) // Get all columns before the specified column
-            .reduce((sum, column) => {
-                // Use a default width of 0 if column width is not defined
-                const width = column.state.size.width || 0;
-                return sum + width;
-            }, 0);
-
-        return widthSumOfPreviousIndexes; // Return the total width as the offset
+        if (position === 'left') {
+            // For left-pinned columns, calculate from left to right
+            return pinnedColumns
+                .slice(0, index)
+                .reduce((sum, column) => sum + (column.state.size.width || 0), 0);
+        } else {
+            // For right-pinned columns, calculate from right to left
+            return pinnedColumns
+                .slice(index + 1)
+                .reduce((sum, column) => sum + (column.state.size.width || 0), 0);
+        }
     }
 }

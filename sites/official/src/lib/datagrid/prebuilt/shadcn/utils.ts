@@ -7,6 +7,12 @@ export function shouldShowColumnFilter(datagrid: TzezarsDatagrid): boolean {
 
 
 
-export const shouldHighlightSelectedRow = (datagrid: TzezarsDatagrid, row: GridRow<any>): boolean => {
-    return datagrid.extra.features.rowSelection.highlightSelectedRow && datagrid.features.rowSelection.isRowSelected(row.identifier)
+export const shouldHighlightSelectedRow = (
+    datagrid: TzezarsDatagrid,
+    row: GridRow<any>
+): boolean => {
+    return (
+        datagrid.extra.features.rowSelection.highlightSelectedRow &&
+        datagrid.features.rowSelection.isRowSelected(row.identifier)
+    );
 }

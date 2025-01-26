@@ -146,7 +146,7 @@ function transformColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
 
 
 
-
+// TODO update original
 function updateColumnPinningOffsets(columns: AnyColumn<any>[]) {
     function calculateOffset(columns: AnyColumn<any>[], columnId: ColumnId, position: 'left' | 'right' | null): number {
         if (position === null) return -1; // No offset for unpinned columns
@@ -159,21 +159,23 @@ function updateColumnPinningOffsets(columns: AnyColumn<any>[]) {
         // Find the index of the column with the specified ID
         const index = pinnedColumns.findIndex((column) => column.columnId === columnId);
 
-        // If the column is not found or is the first in the pinned list, return 0
-        if (index === -1 || index === 0) {
+        // If column not found or if it's left-pinned and first, or right-pinned and last
+        if (index === -1 || (position === 'left' && index === 0) ||
+            (position === 'right' && index === pinnedColumns.length - 1)) {
             return 0;
         }
 
-        // Calculate the total width of all columns before the specified column
-        const widthSumOfPreviousIndexes = pinnedColumns
-            .slice(0, index) // Get all columns before the specified column
-            .reduce((sum, column) => {
-                // Use a default width of 0 if column width is not defined
-                const width = column.state.size.width || 0;
-                return sum + width;
-            }, 0);
-
-        return widthSumOfPreviousIndexes; // Return the total width as the offset
+        if (position === 'left') {
+            // For left-pinned columns, calculate from left to right
+            return pinnedColumns
+                .slice(0, index)
+                .reduce((sum, column) => sum + (column.state.size.width || 0), 0);
+        } else {
+            // For right-pinned columns, calculate from right to left
+            return pinnedColumns
+                .slice(index + 1)
+                .reduce((sum, column) => sum + (column.state.size.width || 0), 0);
+        }
     }
 
     const newColumns: AnyColumn<any>[] = [];
@@ -190,73 +192,176 @@ function updateColumnPinningOffsets(columns: AnyColumn<any>[]) {
     return newColumns;
 }
 
+const createAdditionalColumns = (datagrid: TzezarsDatagrid): {
+    leftCols: AnyColumn<any>[],
+    rightCols: AnyColumn<any>[],
+} => {
+
+    const leftCols = []
+    const rightCols = []
+
+
+
+    if (datagrid.extra.features.rowSelection.displayBuiltInCheckboxPosition === 'left') {
+        const newCol = createDisplayColumn({
+            header: '',
+            columnId: 'selection',
+            cell: ({ column, datagrid, row }) => {
+                return {
+                    component: RowSelectionCell,
+                    props: {
+                        column,
+                        datagrid,
+                        row
+                    }
+                }
+            },
+            state: {
+                pinning: {
+                    position: 'left',
+                },
+                size: {
+                    maxWidth: 40,
+                    minWidth: 40,
+                    width: 40
+                }
+            },
+            headerCell: () => {
+                return {
+                    component: RowSelectionColumnHeaderCell
+                }
+            }
+        })
+        leftCols.push(newCol)
+    }
+
+    if (datagrid.extra.features.rowExpanding.displayBuiltInButtonPosition === 'left') {
+        const newCol = createDisplayColumn({
+            header: '',
+            columnId: 'expand',
+            cell: () => {
+                return {
+                    component: RowExpandingCell,
+                }
+            },
+            state: {
+                pinning: {
+                    position: 'left',
+                },
+                size: {
+                    maxWidth: 40,
+                    minWidth: 40,
+                    width: 40
+                }
+            },
+            headerCell: ({ column }) => {
+                return {
+                    component: RowExpandingColumnHeaderCell,
+                    props: {
+                        column
+                    }
+                }
+            }
+        })
+        leftCols.push(newCol)
+    }
+
+    if (datagrid.extra.features.rowSelection.displayBuiltInCheckboxPosition === 'right') {
+        const newCol = createDisplayColumn({
+            header: '',
+            columnId: 'selection',
+            cell: () => {
+                return {
+                    component: RowSelectionCell,
+                }
+            },
+            state: {
+                pinning: {
+                    position: 'right',
+                },
+                size: {
+                    maxWidth: 40,
+                    minWidth: 40,
+                    width: 40
+                }
+            },
+            headerCell: () => {
+                return {
+                    component: RowSelectionColumnHeaderCell
+                }
+            }
+        })
+        rightCols.push(newCol)
+    }
+
+
+    if (datagrid.extra.features.rowExpanding.displayBuiltInButtonPosition === 'right') {
+        const newCol = createDisplayColumn({
+            header: '',
+            columnId: 'expand',
+            cell: () => {
+                return {
+                    component: RowExpandingCell,
+                }
+            },
+            state: {
+                pinning: {
+                    position: 'right',
+                },
+                size: {
+                    maxWidth: 40,
+                    minWidth: 40,
+                    width: 40
+                }
+            },
+            headerCell: ({ column }) => {
+                return {
+                    component: RowExpandingColumnHeaderCell,
+                    props: {
+                        column
+                    }
+                }
+            }
+        })
+        rightCols.push(newCol)
+    }
+
+
+    return {
+        leftCols,
+        rightCols
+    }
+}
+
+
 
 export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> {
     extra: Extra;
 
     constructor(config: TzezarsDatagridConfig<TOriginalRow>) {
-        const columnProcessor = new ColumnProcessor<TOriginalRow>({} as DataGrid<TOriginalRow>);
-        config.lifecycleHooks = new LifecycleHooks<TOriginalRow>();
-        config.lifecycleHooks.register(
+        super(config, true);
+        const lifecycleHooks = this.lifecycleHooks
+        const columnProcessor = this.processors.column
+        this.extra = new Extra(this, config.extra);
+
+
+        lifecycleHooks.register(
+            LifecycleHooks.HOOKS.PRE_PROCESS_ORIGINAL_COLUMNS,
+            (columns: AnyColumn<TOriginalRow>[]) => {
+                const flattenedColumns = flattenColumnStructureAndClearGroups([...columns]);
+                const additionalColumns = createAdditionalColumns(this);
+                let transformedColumns = transformColumns([...additionalColumns.leftCols, ...flattenedColumns, ...additionalColumns.rightCols]);
+                transformedColumns = updateColumnPinningOffsets(transformedColumns);
+                const hierarchicalColumns = columnProcessor.createColumnHierarchy(transformedColumns);
+                return hierarchicalColumns;
+            }
+        );
+
+        lifecycleHooks.register(
             LifecycleHooks.HOOKS.PRE_PROCESS_COLUMNS,
             (columns: AnyColumn<TOriginalRow>[]) => {
                 const flattenedColumns = flattenColumnStructureAndClearGroups([...columns]);
-
-                const additionalColumns = [
-                    createDisplayColumn({
-                        header: '',
-                        columnId: 'selection',
-                        cell: () => {
-                            return {
-                                component: RowSelectionCell,
-                            }
-                        },
-                        state: {
-                            pinning: {
-                                position: 'left',
-                            },
-                            size: {
-                                maxWidth: 40,
-                                minWidth: 40,
-                                width: 40
-                            }
-                        },
-                        headerCell: () => {
-                            return {
-                                component: RowSelectionColumnHeaderCell
-                            }
-                        }
-                    }),
-                    createDisplayColumn({
-                        header: '',
-                        columnId: 'expand',
-                        cell: () => {
-                            return {
-                                component: RowExpandingCell,
-                            }
-                        },
-                        state: {
-                            pinning: {
-                                position: 'left',
-                            },
-                            size: {
-                                maxWidth: 40,
-                                minWidth: 40,
-                                width: 40
-                            }
-                        },
-                        headerCell: ({column}) => {
-                            return {
-                                component: RowExpandingColumnHeaderCell,
-                                props: {
-                                    column
-                                }
-                            }
-                        }
-                    })
-                ]
-
-                let transformedColumns = transformColumns([...additionalColumns, ...flattenedColumns,]);
+                let transformedColumns = transformColumns([...flattenedColumns,]);
                 transformedColumns = updateColumnPinningOffsets(transformedColumns);
 
                 // const transformedColumns = transformColumns([...flattenedColumns]);
@@ -265,8 +370,8 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
             }
         );
 
-        super(config);
-        this.extra = new Extra(this, config.extra);
+        this.initializeState(config)
+
     }
 
     isFullscreenEnabled() {
@@ -278,38 +383,38 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
 
 
 export class Extra {
-    private datagrid: TzezarsDatagrid<any>;
+    datagrid: TzezarsDatagrid<any>;
     title: string | undefined;
     features = {} as TrzezarsDatagridFeatures;
 
     constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig) {
         this.datagrid = datagrid;
         this.initializeFeatures(config);
-        this.title = config?.title; // Assign the title from config.extra
+        this.title = config?.title || "Your data, Tzezar's Datagrid"
     }
 
     initializeFeatures(config?: TzezarsDatagridExtraStateConfig) {
-        this.features.clickToCopy = new ClickToCopyFeature(config?.features?.clickToCopy);
+        this.features.clickToCopy = new ClickToCopyFeature(this.datagrid, config?.features?.clickToCopy);
         this.features.columnFiltering = new ColumnFilteringEnchancedFeature(this.datagrid, config?.features?.columnFiltering);
         this.features.columnPinning = new ColumnPinningEnchancedFeature(this.datagrid, config?.features?.columnPinning);
         this.features.columnSizing = new ColumnSizingEnchancedFeature(this.datagrid, config?.features?.columnSizing);
         this.features.columnVisibility = new ColumnVisibilityEnchancedFeature(this.datagrid, config?.features?.columnVisibility);
-        this.features.credentials = new CredentialsFeature(config?.features?.credentials);
-        this.features.densityToggle = new DensityToggleFeature(config?.features?.densityToggle);
+        this.features.credentials = new CredentialsFeature(this.datagrid, config?.features?.credentials);
+        this.features.densityToggle = new DensityToggleFeature(this.datagrid, config?.features?.densityToggle);
         this.features.exporting = new ExportingFeature(this.datagrid, config?.features?.exporting);
-        this.features.fullscreen = new FullscreenFeature(config?.features?.fullscreen);
+        this.features.fullscreen = new FullscreenFeature(this.datagrid, config?.features?.fullscreen);
         this.features.globalSearch = new GlobalSearchEnchancedFeature(this.datagrid, config?.features?.globalSearch);
-        this.features.groupHeadersVisibility = new GroupHeadersVisibilityFeature(config?.features?.groupHeadersVisibility);
+        this.features.groupHeadersVisibility = new GroupHeadersVisibilityFeature(this.datagrid, config?.features?.groupHeadersVisibility);
         this.features.grouping = new GroupingEnchancedFeature(this.datagrid, config?.features?.grouping);
-        this.features.loadingIndicator = new StatusIndicatorFeature(config?.features?.statusIndicator);
+        this.features.loadingIndicator = new StatusIndicatorFeature(this.datagrid, config?.features?.statusIndicator);
         this.features.pagination = new PaginationEnchancedFeature(this.datagrid, config?.features?.pagination);
         this.features.rowExpanding = new RowExpandingEnchancedFeature(this.datagrid, config?.features?.rowExpanding);
-        this.features.rowNumbers = new RowNumbersFeature(config?.features?.rowNumbers);
-        this.features.rowSelection = new RowSelectionEnchancedFeature(this.datagrid, config?.features?.rowSelection);
+        this.features.rowNumbers = new RowNumbersFeature(this.datagrid, config?.features?.rowNumbers);
         this.features.sorting = new SortingEnchancedFeature(this.datagrid, config?.features?.sorting);
         this.features.columnOrdering = new ColumnOrderingEnchancedFeature(this.datagrid, config?.features?.columnOrdering);
-        this.features.controlCenter = new ControlCenterFeature(config?.features?.controlCenter);
-        this.features.animations = new AnimationsFeature(config?.features?.animations);
+        this.features.controlCenter = new ControlCenterFeature(this.datagrid, config?.features?.controlCenter);
+        this.features.animations = new AnimationsFeature(this.datagrid, config?.features?.animations);
+        this.features.rowSelection = new RowSelectionEnchancedFeature(this.datagrid, config?.features?.rowSelection);
     }
 
 

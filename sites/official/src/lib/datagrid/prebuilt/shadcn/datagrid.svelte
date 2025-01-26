@@ -30,6 +30,7 @@
 	import BodyRowActionsCell from './built-in/body-row-actions-cell.svelte';
 	import { quartIn } from 'svelte/easing';
 	import { fa } from '@faker-js/faker';
+	import RowSelectionBodyRowCell from './built-in/row-selection-body-row-cell.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
@@ -69,7 +70,7 @@
 		{#if toolbar}
 			{@render toolbar()}
 		{:else}
-			<Toolbar {datagrid} title={datagrid.extra.getTitle()} />
+			<Toolbar {datagrid}  />
 		{/if}
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
@@ -178,6 +179,8 @@
 								</div>
 							{:else}
 								<div class="grid-body-row flex">
+									
+									
 									{#each leafColumns as column (column.columnId)}
 										<div
 											class={cn(
@@ -191,7 +194,7 @@
 											{#if column.isVisible()}
 												{#if column.cell}
 													{@const cellContent = column.cell({ datagrid, column, row })}
-													{#if typeof cellContent === 'string'}
+													{#if typeof column.cell({ datagrid, column, row }) === 'string'}
 														{@html cellContent}
 													{:else if isCellComponent(cellContent)}
 														<cellContent.component {datagrid} {row} {column} />

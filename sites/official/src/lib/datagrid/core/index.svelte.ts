@@ -76,20 +76,19 @@ export class DataGrid<TOriginalRow = any> {
         rowPinning: new RowPinningFeature(this),
     }
 
-    readonly lifecycleHooks = new LifecycleHooks<TOriginalRow>();
+    lifecycleHooks = new LifecycleHooks<TOriginalRow>();
 
-    constructor(config: GridConfig<TOriginalRow>) {
-
-        if (config.lifecycleHooks) {
-            this.lifecycleHooks = config.lifecycleHooks;
-        }
-        this.validateConfigInputs(config);
+    constructor(config: GridConfig<TOriginalRow>, lazy: boolean = true) {
+        if (config.lifecycleHooks) this.lifecycleHooks = config.lifecycleHooks;
+        if (lazy) return;
         this.initializeState(config);
     }
 
 
 
-    private initializeState(config: GridConfig<TOriginalRow>) {
+    initializeState(config: GridConfig<TOriginalRow>) {
+        this.validateConfigInputs(config);
+
         // * Features has to be initialized first to prevent some bugs eg. not updating pagination
         // * when there is wrapper around the datagrid that implements its own features
         // * it might be worked around by processing data after extra features are initialized
@@ -103,11 +102,11 @@ export class DataGrid<TOriginalRow = any> {
         this.columns = this.processors.column.initializeColumns(this.initial.columns)
         this.processors.data.executeFullDataTransformation();
         // here pagination is valid
-        
+
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
         this.features.columnFaceting.calculateFacets(this.cache.sortedData || [], this.columns);
-        
+
     }
 
     private initializeOriginalColumns(columns: AnyColumn<TOriginalRow>[]) {

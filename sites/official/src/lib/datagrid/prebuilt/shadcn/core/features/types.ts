@@ -1,7 +1,12 @@
 import type { BuiltInFeature } from "$lib/datagrid/core/features/types";
+import type { TzezarsDatagrid } from "../index.svelte";
 
 export type EnchancedFeature = {
-    base: BuiltInFeature;
-    initialize(config?: any): void;
-    initializeBase(datagrid: any, config?: any): void;
+    datagrid: TzezarsDatagrid
+    get base(): BuiltInFeature
+
+}
+
+export type Feature = {
+    datagrid: TzezarsDatagrid
 }

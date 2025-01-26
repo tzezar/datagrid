@@ -1,14 +1,6 @@
 <script lang="ts">
-	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
-	import type {
-		AnyColumn,
-		CustomCellProps,
-		GridBasicRow,
-		GridRow,
-		LeafColumn
-	} from '$lib/datagrid/core/types';
+	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
-	import CellWithoutColumn from '../headless-structure/body/row/cell/cell-without-column.svelte';
 	import Cell from '../headless-structure/body/row/cell/cell.svelte';
 
 	type Props = {
@@ -18,6 +10,19 @@
 	};
 
 	let { datagrid, row, column }: Props = $props();
+
+	const handleChange = (
+		e: Event & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) => {
+		if (e.currentTarget.checked) {
+			datagrid.extra.features.rowSelection.selectRow(row.identifier);
+		} else {
+			datagrid.extra.features.rowSelection.unselectRow(row.identifier);
+		}
+		e.currentTarget.checked = datagrid.features.rowSelection.isRowSelected(row.identifier);
+	};
 
 	// I am not able to make it work with shadcn svelte checkbox
 	// it doesn't update the checkbox state to properly reflect the row selection
@@ -30,13 +35,6 @@
 		class="m-0 mx-auto size-4 p-0"
 		type="checkbox"
 		checked={datagrid.features.rowSelection.isRowSelected(row.identifier)}
-		onchange={(e) => {
-			if (e.currentTarget.checked) {
-				datagrid.extra.features.rowSelection.selectRow(row.identifier);
-			} else {
-				datagrid.extra.features.rowSelection.unselectRow(row.identifier);
-			}
-			e.currentTarget.checked = datagrid.features.rowSelection.isRowSelected(row.identifier);
-		}}
+		onchange={handleChange}
 	/>
 </Cell>

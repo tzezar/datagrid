@@ -1,3 +1,5 @@
+import type { TzezarsDatagrid } from "../index.svelte";
+import type { Feature } from "./types";
 
 
 
@@ -8,12 +10,15 @@ export type AnimationsFeatureConfig = {
 }
 
 
-export class AnimationsFeature {
+export class AnimationsFeature implements Feature {
+    datagrid: TzezarsDatagrid
+
     animateHeaders: boolean = $state(false);
     animateRows: boolean = $state(false);
     flipMultiplier: number = $state(3);
 
-    constructor(config?: AnimationsFeatureConfig) {
+    constructor(datagrid: TzezarsDatagrid, config?: AnimationsFeatureConfig) {
+        this.datagrid = datagrid;
         this.initialize(config);
     }
 

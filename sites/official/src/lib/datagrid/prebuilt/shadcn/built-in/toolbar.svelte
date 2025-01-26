@@ -37,7 +37,7 @@
 				{#if title}
 					{title}
 				{:else}
-					Your data, Tzezar's Datagrid
+					{datagrid.extra.getTitle()}
 				{/if}
 			</span>
 		</div>

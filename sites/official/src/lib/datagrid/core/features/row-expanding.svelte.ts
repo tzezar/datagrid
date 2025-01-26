@@ -6,7 +6,7 @@ import type { GridRowIdentifier } from "../types";
 export type RowExpandingFeatureConfig = {
     expandedRowIds?: SvelteSet<GridRowIdentifier>;
     onExpandingChange?: (config: RowExpandingFeature<any>) => void;
-    
+
 }
 
 
@@ -19,7 +19,7 @@ export class RowExpandingFeature<TOriginalRow = any> {
     datagrid: DataGrid<TOriginalRow>;
 
     // Set of expanded row identifiers, used to track which rows are expanded
-    expandedRowIds: SvelteSet<GridRowIdentifier> = $state(new SvelteSet());
+    expandedRowIds: SvelteSet<GridRowIdentifier> = new SvelteSet()
 
     onExpandingChange: (config: RowExpandingFeature<any>) => void = () => { };
 
