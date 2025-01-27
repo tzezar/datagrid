@@ -52,6 +52,8 @@
 		footerContent?: Snippet;
 		pagination?: Snippet;
 		statusIndicator?: Snippet;
+		expandedRow?: Snippet<[row: GridBasicRow<any>]>;
+		expandedRowContent?: Snippet;
 	};
 
 	let {
@@ -63,6 +65,8 @@
 		footer,
 		footerContent,
 		pagination,
+		expandedRow,
+		expandedRowContent,
 		statusIndicator
 	}: Props = $props();
 
@@ -99,6 +103,28 @@
 	const shouldAnimateHeaders = $derived(datagrid.extra.features.animations.shouldAnimateHeaders());
 </script>
 
+<Portal disabled={!isFullscreenEnabled}>
+	<div use:identifier={'wrapper'} data-fullscreen={isFullscreenEnabled} class={cn('grid-wrapper')}>
+		{@render WrapperOverlaySnippet()}
+		{@render ToolbarSnippet()}
+		<!-- <div class="grid-toolbar-container">
+			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
+			</div> -->
+		{@render PaginationSnippet(['both', 'top'])}
+		{@render StatusIndicatorSnippet('top')}
+		<div data-fullscreen={isFullscreenEnabled} class="grid-container-wrapper">
+			<div class="grid-container">
+				{@render HeadSnippet()}
+				{@render BodySnippet()}
+			</div>
+		</div>
+		{@render FooterSnippet()}
+		{@render StatusIndicatorSnippet('bottom')}
+		{@render PaginationSnippet(['bottom', 'both'])}
+		{@render CredentialsSnippet()}
+	</div>
+</Portal>
+
 {#snippet HeadSnippet()}
 	<div use:identifier={'head'} class="grid-head">
 		<div use:identifier={'head-row'} class="grid-head-row">
@@ -129,13 +155,18 @@
 
 			{#each datagrid.rows.getVisibleRows() as row, rowIndex (row.identifier)}
 				{#if row.isGroupRow()}
-					<div class="group-row" data-depth={row.depth} data-expanded={row.isExpanded()}>
+					<div
+						use:identifier={'row-' + row.identifier}
+						class="group-row"
+						data-depth={row.depth}
+						data-expanded={row.isExpanded()}
+					>
 						{#each leafColumns as column, columnIndex (column.columnId)}
 							<RenderGroupCell {datagrid} {row} {column} />
 						{/each}
 					</div>
 				{:else}
-					<div class="row">
+					<div class="row" use:identifier={'row-' + row.identifier}>
 						{@render AdditionalBodyCells('left', row)}
 						{#each leafColumnsToDisplay as column (column.columnId)}
 							<div
@@ -150,43 +181,26 @@
 						{/each}
 						{@render AdditionalBodyCells('right', row)}
 					</div>
-				{/if}
-				{#if row.isExpanded()}
-					<div class="row">
-						<div class="cell sticky left-0">
-							Content for row with ID {row.identifier}
-						</div>
-					</div>
+					{#if row.isExpanded()}
+						{#if expandedRow}
+							{@render expandedRow(row)}
+						{:else}
+							<div class="expanded-row">
+								<div class="cell sticky left-0">
+									{#if expandedRowContent}
+										{@render expandedRowContent()}
+									{:else}
+										Place your content in the `expandedRowContent` snippet
+									{/if}
+								</div>
+							</div>
+						{/if}
+					{/if}
 				{/if}
 			{/each}
 		</div>
 	{/if}
 {/snippet}
-
-<Portal disabled={!isFullscreenEnabled}>
-	<div use:identifier={'wrapper'} data-fullscreen={isFullscreenEnabled} class={cn('grid-wrapper')}>
-		{@render WrapperOverlaySnippet()}
-		{@render ToolbarSnippet()}
-		<!-- <div class="grid-toolbar-container">
-			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
-			</div> -->
-		{@render PaginationSnippet(['both', 'top'])}
-		{@render StatusIndicatorSnippet('top')}
-		<div data-fullscreen={isFullscreenEnabled} class="grid-container-wrapper">
-			<div class="grid-container">
-				{@render HeadSnippet()}
-				{@render BodySnippet()}
-			</div>
-		</div>
-
-		{@render FooterSnippet()}
-		{@render StatusIndicatorSnippet('bottom')}
-		{@render PaginationSnippet(['bottom', 'both'])}
-		{#if datagrid.extra.features.credentials.enabled}
-			<MadeWithLoveByTzezar />
-		{/if}
-	</div>
-</Portal>
 
 {#snippet ToolbarSnippet()}
 	{#if toolbar}
@@ -206,7 +220,11 @@
 {/snippet}
 
 {#snippet StatusIndicatorSnippet(position: 'top' | 'bottom' | 'both')}
-	<StatusIndicator {datagrid} {position} />
+	{#if statusIndicator}
+		{@render statusIndicator()}
+	{:else}
+		<StatusIndicator {datagrid} {position} />
+	{/if}
 {/snippet}
 
 {#snippet PaginationSnippet(directions: ('top' | 'bottom' | 'both')[])}
@@ -218,6 +236,12 @@
 				<Pagination {datagrid} class={{ container: 'border-t' }} />
 			{/if}
 		{/if}
+	{/if}
+{/snippet}
+
+{#snippet CredentialsSnippet()}
+	{#if datagrid.extra.features.credentials.enabled}
+		<MadeWithLoveByTzezar />
 	{/if}
 {/snippet}
 

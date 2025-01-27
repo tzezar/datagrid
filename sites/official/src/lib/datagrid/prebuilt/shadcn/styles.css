@@ -160,6 +160,17 @@
 		border-bottom: none;
 	}
 
+	.expanded-row {
+		display: flex;
+		height: 100%;
+		flex-direction: row;
+		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
+	}
+
+	.expanded-row:last-child {
+		border-bottom: none;
+	}
+
 	.cell {
 		@apply transition-all duration-300;
 

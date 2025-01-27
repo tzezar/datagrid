@@ -10,9 +10,10 @@
 		row: GridBasicRow<any>;
 		column: LeafColumn<any>;
 		children: Snippet;
+		class?: string;
 	};
 
-	let { datagrid, row, column, children }: Props = $props();
+	let { datagrid, row, column, children, class: _class }: Props = $props();
 </script>
 
 <div
@@ -20,7 +21,8 @@
 	class={cn(
 		'cell group',
 		shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
-		column._meta.styles?.bodyCell({ datagrid, column, row })
+		column._meta.styles?.bodyCell({ datagrid, column, row }),
+		_class
 	)}
 	class:justify-center={column?._meta?.align === 'center'}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : 'none'}

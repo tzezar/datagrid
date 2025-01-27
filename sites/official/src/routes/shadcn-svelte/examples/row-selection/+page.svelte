@@ -32,12 +32,12 @@
 					manualSorting: false,
 					maxMultiSortColCount: 2,
 					isMultiSortEvent: () => true
-				},
+				}
 			}
 		}
 	});
-
 </script>
 
-<DatagridShadcnSvelte {datagrid} />
+<DatagridShadcnSvelte {datagrid}>
 
+</DatagridShadcnSvelte>

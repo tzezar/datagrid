@@ -6,7 +6,7 @@
 	import ExpandMoreSqureLine from '$lib/datagrid/icons/si/expand-more-squre-line.svelte';
 	import { cn } from '$lib/utils';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
-	import Cell from '../headless-structure/body/row/cell/cell.svelte';
+	import Cell from '../structure/cell.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;

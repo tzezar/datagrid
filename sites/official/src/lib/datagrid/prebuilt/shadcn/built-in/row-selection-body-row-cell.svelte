@@ -2,7 +2,7 @@
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
 	import type {  GridBasicRow,  LeafColumn } from '$lib/datagrid/core/types'; 
 	import type { TzezarsDatagrid } from '../core/index.svelte';
-	import Cell from '../headless-structure/body/row/cell/cell.svelte';
+	import Cell from '../structure/cell.svelte';
 
 	type Props = {
 		column: LeafColumn<any>;

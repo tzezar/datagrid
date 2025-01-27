@@ -3,7 +3,7 @@
 	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import { cn } from '$lib/utils';
-	import LeafColumnCell from '../headless-structure/head/row/cell/leaf-column-cell.svelte';
+	import LeafColumnCell from '../structure/leaf-column-cell.svelte';
 
 	let { datagrid, column }: { datagrid: DataGrid<any>; column: LeafColumn<any> } = $props();
 
