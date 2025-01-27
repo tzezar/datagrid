@@ -108,7 +108,7 @@
 	display: flex;
 	flex-direction: row;
 	height: 100%;
-	justify-content: center;
+	justify-content: left;
 	align-items: center;
 	gap: 0.5rem;
 	text-align: center;
