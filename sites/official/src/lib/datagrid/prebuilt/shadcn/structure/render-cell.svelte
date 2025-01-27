@@ -3,9 +3,9 @@
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
-	import Cell from './cell.svelte';
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import ContentCopyOutline from '$lib/datagrid/icons/material-symbols/content-copy-outline.svelte';
+	import Cell from './cell.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;

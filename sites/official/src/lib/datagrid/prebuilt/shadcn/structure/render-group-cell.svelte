@@ -3,7 +3,6 @@
 	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
 	import GroupCell from './group-cell.svelte';
-	import type { Snippet } from 'svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;

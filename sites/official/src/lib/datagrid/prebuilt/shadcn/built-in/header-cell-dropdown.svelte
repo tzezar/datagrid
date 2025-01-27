@@ -3,7 +3,6 @@
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import MoreVert from '$lib/datagrid/icons/material-symbols/more-vert.svelte';
 	import { cn } from '$lib/utils';
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import SortAscending from '$lib/datagrid/icons/tabler/sort-ascending.svelte';
 	import SortDescending from '$lib/datagrid/icons/tabler/sort-descending.svelte';
 	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';

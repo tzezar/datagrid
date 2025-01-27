@@ -1,42 +1,23 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
-	import type {
-		LeafColumn,
-		GroupColumn,
-		GridRow,
-		GridBasicRow,
-		GridGroupRow
-	} from '$lib/datagrid/core/types';
+	import type { LeafColumn, GridBasicRow } from '$lib/datagrid/core/types';
 
 	import { Portal } from 'bits-ui';
-	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
-	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 
 	// Icones
-	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
 
 	// Blocks
-	import ColumnSortingIndicator from '$lib/datagrid/prebuilt/shadcn/built-in/column-sorting-indicator.svelte';
 	import Pagination from '$lib/datagrid/prebuilt/shadcn/built-in/pagination.svelte';
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
 	import type { Snippet } from 'svelte';
 	import RowSelectionCell from './built-in/row-selection-cell.svelte';
 	import RowExpandingCell from './built-in/row-expanding-cell.svelte';
 	import StatusIndicator from './built-in/status-indicator.svelte';
-	import ContentCopyOutline from '$lib/datagrid/icons/material-symbols/content-copy-outline.svelte';
 	import Toolbar from './built-in/toolbar.svelte';
-	import { shouldHighlightSelectedRow } from './utils';
 	import { flip } from 'svelte/animate';
-	import type { Action } from 'svelte/action';
-	import LeafColumnCell from './structure/leaf-column-cell.svelte';
-	import HeaderCellDropdown from './built-in/header-cell-dropdown.svelte';
-	import HeaderCellColumnFilter from './built-in/header-cell-column-filter.svelte';
 	import RowSelectionColumnHeaderCell from './built-in/row-selection-column-header-cell.svelte';
 	import RowExpandingColumnHeaderCell from './built-in/row-expanding-column-header-cell.svelte';
-	import GroupColumnCell from './structure/group-column-cell.svelte';
-	import Cell from './structure/cell.svelte';
-	import GroupCell from './structure/group-cell.svelte';
 	import RenderCell from './structure/render-cell.svelte';
 	import RenderGroupCell from './structure/render-group-cell.svelte';
 	import RenderColumnCell from './structure/render-column-cell.svelte';
