@@ -27,8 +27,8 @@
 	</DropdownMenu.SubTrigger>
 	<DropdownMenu.SubContent>
 		{#each leafColumns as column}
-			<DropdownMenu.Item closeOnSelect={false} class="flex flex-row flex-nowrap gap-2">
-				<span>{column.header}</span>
+			<DropdownMenu.Item closeOnSelect={false} class="flex flex-col flex-nowrap gap-2">
+				<span class='w-full'>{column.header}</span>
 				<Select.Root
 					type="single"
 					name="pinningPosition"

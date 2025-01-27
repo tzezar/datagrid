@@ -12,9 +12,8 @@ export type AnimationsFeatureConfig = {
 
 export class AnimationsFeature implements Feature {
     datagrid: TzezarsDatagrid
-
-    animateHeaders: boolean = $state(false);
-    animateRows: boolean = $state(false);
+    animateHeaders: boolean = $state(true);
+    animateRows: boolean = $state(true);
     animationDuration: number = $state(60);
 
     constructor(datagrid: TzezarsDatagrid, config?: AnimationsFeatureConfig) {

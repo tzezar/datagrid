@@ -26,7 +26,7 @@
 	);
 </script>
 
-{#if datagrid.extra.features.controlCenter.enabled}
+{#if datagrid.extra.features.controlCenter.displayControlCenter}
 	<DropdownMenu.Root>
 		<DropdownMenu.Trigger
 			class={`${buttonVariants({ variant: 'outline' })} rounded-none border-b-0`}
@@ -46,14 +46,14 @@
 						<ColumnReordering {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.columnPinning.enabled}
+					{#if datagrid.extra.features.columnPinning.displayControls}
 						<ColumnFreezing {datagrid} />
 					{/if}
-					{#if datagrid.extra.features.columnSizing.enabled}
+					{#if datagrid.extra.features.columnSizing.displayControls}
 						<ColumnResizing {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.columnVisibility.enabled}
+					{#if datagrid.extra.features.columnVisibility.displayControlCenterControls}
 						<ColumnVisibility {datagrid} />
 					{/if}
 

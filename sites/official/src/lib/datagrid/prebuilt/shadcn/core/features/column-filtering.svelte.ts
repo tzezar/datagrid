@@ -11,8 +11,8 @@ export type ColumnFilteringEnchancedFeatureConfig = {
 export class ColumnFilteringEnchancedFeature implements EnchancedFeature {
     datagrid: TzezarsDatagrid
 
-    enabled: boolean = $state(true);
-    isButtonVisible: boolean = $state(true);
+    columnFiltersVisible: boolean = $state(false);
+    isToggleButtonVisible: boolean = $state(true);
 
     constructor(datagrid: TzezarsDatagrid, config?: ColumnFilteringEnchancedFeatureConfig & ColumnFilteringFeatureConfig) {
         this.datagrid = datagrid
@@ -22,40 +22,40 @@ export class ColumnFilteringEnchancedFeature implements EnchancedFeature {
     get base(): ColumnFilteringFeature { return this.datagrid.features.filtering }
 
     initialize(config?: ColumnFilteringEnchancedFeatureConfig) {
-        this.enabled = config?.enabled ?? this.enabled;
-        this.isButtonVisible = config?.visible ?? this.isButtonVisible;
+        this.columnFiltersVisible = config?.enabled ?? this.columnFiltersVisible;
+        this.isToggleButtonVisible = config?.visible ?? this.isToggleButtonVisible;
     }
 
     disable() {
-        this.enabled = false;
+        this.columnFiltersVisible = false;
     }
 
     enable() {
-        this.enabled = true;
+        this.columnFiltersVisible = true;
     }
 
     toggle() {
-        this.enabled = !this.enabled;
+        this.columnFiltersVisible = !this.columnFiltersVisible;
     }
 
     isEnabled() {
-        return this.enabled;
+        return this.columnFiltersVisible;
     }
 
     showButton() {
-        this.isButtonVisible = true;
+        this.isToggleButtonVisible = true;
     }
 
     hideButton() {
-        this.isButtonVisible = false;
+        this.isToggleButtonVisible = false;
     }
 
     toggleButtonVisibility() {
-        this.isButtonVisible = !this.isButtonVisible;
+        this.isToggleButtonVisible = !this.isToggleButtonVisible;
     }
 
     shouldDisplayButton() {
-        return this.isButtonVisible;
+        return this.isToggleButtonVisible;
     }
 
 }

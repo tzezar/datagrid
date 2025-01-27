@@ -21,15 +21,22 @@
 	<DropdownMenu.SubContent>
 		{#each leafColumns as column}
 			<DropdownMenu.Item closeOnSelect={false} class="flex flex-col">
-				<span>{column.header}</span>
+				<span class=' w-full'>{column.header}</span>
 				<Slider
 					class="ml-auto"
 					type="single"
 					min={column.state.size.minWidth}
 					max={column.state.size.maxWidth}
 					value={column.state.size.width}
+					onValueCommit={(value: number) => {
+						if (datagrid.extra.features.columnSizing.columnResizeMode === 'standard') {
+							datagrid.handlers.columnSizing.updateColumnSize(column.columnId, Number(value));
+						}
+					}}
 					onValueChange={(value: number) => {
-						datagrid.handlers.columnSizing.updateColumnSize(column.columnId, Number(value));
+						if (datagrid.extra.features.columnSizing.columnResizeMode === 'fluid') {
+							datagrid.handlers.columnSizing.updateColumnSize(column.columnId, Number(value));
+						}
 					}}
 				/>
 			</DropdownMenu.Item>

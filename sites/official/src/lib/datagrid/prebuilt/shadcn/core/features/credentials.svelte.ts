@@ -2,7 +2,7 @@ import type { TzezarsDatagrid } from "../index.svelte";
 import type { Feature } from "./types";
 
 export type CredentialsFeatureConfig = {
-    enabled?: boolean;
+    displayCredentials?: boolean;
     onCredentialsChange?(credentials: CredentialsFeatureConfig): void;
 }
 
@@ -18,7 +18,7 @@ export class CredentialsFeature implements Feature {
     }
 
     initialize(config?: CredentialsFeatureConfig) {
-        this.enabled = config?.enabled ?? this.enabled;
+        this.enabled = config?.displayCredentials ?? this.enabled;
         this.onCredentialsChange = config?.onCredentialsChange ?? this.onCredentialsChange;
     }
 

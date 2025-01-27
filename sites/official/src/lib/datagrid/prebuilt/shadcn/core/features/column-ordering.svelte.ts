@@ -8,7 +8,8 @@ export type ColumnOrderingEnchancedFeatureConfig = {
 
 export class ColumnOrderingEnchancedFeature implements EnchancedFeature {
     datagrid: TzezarsDatagrid
-    enabled: boolean = $state(true);
+
+    enabled: boolean = $state(false);
 
     constructor(datagrid: TzezarsDatagrid, config?: ColumnOrderingEnchancedFeatureConfig) {
         this.datagrid = datagrid

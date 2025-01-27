@@ -33,6 +33,7 @@
 	import Contains from '$lib/datagrid/icons/filter-operators/contains.svelte';
 	import EndsWith from '$lib/datagrid/icons/filter-operators/ends-with.svelte';
 	import StartsWith from '$lib/datagrid/icons/filter-operators/starts-with.svelte';
+	import type { TzezarsDatagrid } from '../core/index.svelte';
 
 	type NumberFilterOperator = {
 		label: string;
@@ -151,7 +152,7 @@
 		}
 	];
 
-	let { datagrid, column }: { datagrid: DataGrid<any>; column: AnyColumn<any> } = $props();
+	let { datagrid, column }: { datagrid: TzezarsDatagrid<any>; column: AnyColumn<any> } = $props();
 </script>
 
 {#snippet FilterOperator(
@@ -177,54 +178,56 @@
 			<DropdownMenu.Group>
 				<DropdownMenu.GroupHeading>{column.header} Group</DropdownMenu.GroupHeading>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
-					closeOnSelect={false}
-				>
-					<ArrowMoveLeft class="mr-2 size-4" />
-					<span>Move left</span>
-				</DropdownMenu.Item>
-				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}
-					closeOnSelect={false}
-				>
-					<ArrowMoveRight class="mr-2 size-4" />
-					<span>Move right</span>
-				</DropdownMenu.Item>
-				<DropdownMenu.Sub>
-					<DropdownMenu.SubTrigger>
-						<MoveUp class="mr-2 size-4" />
-						<span>Move to</span>
-					</DropdownMenu.SubTrigger>
-					<DropdownMenu.SubContent>
-						<DropdownMenu.Item
-							closeOnSelect={false}
-							onclick={() =>
-								datagrid.handlers.columnOrdering.moveColumnToPosition({
-									columnId: column.columnId,
-									targetGroupColumnId: ''
-								})}
-						>
-							<div class="flex flex-row gap-2">
-								<span>Root level</span>
-							</div>
-						</DropdownMenu.Item>
-						{#each datagrid.columnManager.getGroupColumns() as groupCol}
+				{#if datagrid.extra.features.columnOrdering.enabled === true}
+					<DropdownMenu.Item
+						onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
+						closeOnSelect={false}
+					>
+						<ArrowMoveLeft class="mr-2 size-4" />
+						<span>Move left</span>
+					</DropdownMenu.Item>
+					<DropdownMenu.Item
+						onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}
+						closeOnSelect={false}
+					>
+						<ArrowMoveRight class="mr-2 size-4" />
+						<span>Move right</span>
+					</DropdownMenu.Item>
+					<DropdownMenu.Sub>
+						<DropdownMenu.SubTrigger>
+							<MoveUp class="mr-2 size-4" />
+							<span>Move to</span>
+						</DropdownMenu.SubTrigger>
+						<DropdownMenu.SubContent>
 							<DropdownMenu.Item
 								closeOnSelect={false}
 								onclick={() =>
 									datagrid.handlers.columnOrdering.moveColumnToPosition({
 										columnId: column.columnId,
-										targetGroupColumnId: groupCol.columnId
+										targetGroupColumnId: ''
 									})}
 							>
 								<div class="flex flex-row gap-2">
-									<span>{groupCol.header}</span>
+									<span>Root level</span>
 								</div>
 							</DropdownMenu.Item>
-						{/each}
-					</DropdownMenu.SubContent>
-				</DropdownMenu.Sub>
+							{#each datagrid.columnManager.getGroupColumns() as groupCol}
+								<DropdownMenu.Item
+									closeOnSelect={false}
+									onclick={() =>
+										datagrid.handlers.columnOrdering.moveColumnToPosition({
+											columnId: column.columnId,
+											targetGroupColumnId: groupCol.columnId
+										})}
+								>
+									<div class="flex flex-row gap-2">
+										<span>{groupCol.header}</span>
+									</div>
+								</DropdownMenu.Item>
+							{/each}
+						</DropdownMenu.SubContent>
+					</DropdownMenu.Sub>
+				{/if}
 			</DropdownMenu.Group>
 		</DropdownMenu.Content>
 	</DropdownMenu.Root>
@@ -286,81 +289,95 @@
 						<span>Group by {column.header}</span>
 					{/if}
 				</DropdownMenu.Item>
-				<DropdownMenu.Separator />
+				{#if datagrid.extra.features.columnPinning.displayControls === true}
+					<DropdownMenu.Separator />
 
-				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'left')}
-				>
-					<FreezeColumn class="mr-2 size-4" />
-					<span>Pin to left</span>
-				</DropdownMenu.Item>
-				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'right')}
-				>
-					<FreezeColumn class="mr-2 size-4 rotate-180" />
-					<span>Pin to right</span>
-				</DropdownMenu.Item>
-				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'none')}
-				>
-					<ColumnsOff class="mr-2 size-4" />
-					<span>Unpin</span>
-				</DropdownMenu.Item>
+					<DropdownMenu.Item
+						disabled={column.options.pinnable === false || column.state.pinning.position === 'left'}
+						onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'left')}
+					>
+						<FreezeColumn class="mr-2 size-4" />
+						<span>Pin to left</span>
+					</DropdownMenu.Item>
+					<DropdownMenu.Item
+						disabled={column.options.pinnable === false || column.state.pinning.position === 'right'}
+						onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'right')}
+					>
+						<FreezeColumn class="mr-2 size-4 rotate-180" />
+						<span>Pin to right</span>
+					</DropdownMenu.Item>
+					<DropdownMenu.Item
+						disabled={column.options.pinnable === false || column.state.pinning.position === 'none'}
+						onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'none')}
+					>
+						<ColumnsOff class="mr-2 size-4" />
+						<span>Unpin</span>
+					</DropdownMenu.Item>
+				{/if}
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item onclick={() => datagrid.handlers.columnVisibility.toggleColumnVisibility(column.columnId)}>
-					<VisibilityOff class="mr-2 size-4" />
-					<span>Hide column</span>
-				</DropdownMenu.Item>
-				<DropdownMenu.Separator />
-				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
-					closeOnSelect={false}
-				>
-					<ArrowMoveLeft class="mr-2 size-4" />
-					<span>Move left</span>
-				</DropdownMenu.Item>
-				<DropdownMenu.Item
-					onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}
-					closeOnSelect={false}
-				>
-					<ArrowMoveRight class="mr-2 size-4" />
-					<span>Move right</span>
-				</DropdownMenu.Item>
+				{#if datagrid.extra.features.columnVisibility.displayInColumnDropdown}
+					<DropdownMenu.Item 
+						disabled={column.options.hideable === false}
+						onclick={() =>
+							datagrid.handlers.columnVisibility.toggleColumnVisibility(column.columnId)}
+					>
+						<VisibilityOff class="mr-2 size-4" />
+						<span>Hide column</span>
+					</DropdownMenu.Item>
+				{/if}
 
-				<DropdownMenu.Sub>
-					<DropdownMenu.SubTrigger>
-						<MoveUp class="mr-2 size-4" />
-						<span>Move to</span>
-					</DropdownMenu.SubTrigger>
-					<DropdownMenu.SubContent>
-						<DropdownMenu.Item
-							closeOnSelect={false}
-							onclick={() =>
-								datagrid.handlers.columnOrdering.moveColumnToPosition({
-									columnId: column.columnId,
-									targetGroupColumnId: ''
-								})}
-						>
-							<div class="flex flex-row gap-2">
-								<span>Root level</span>
-							</div>
-						</DropdownMenu.Item>
-						{#each datagrid.columnManager.getGroupColumns() as groupCol}
+				{#if datagrid.extra.features.columnOrdering.enabled === true}
+					<DropdownMenu.Separator />
+					<DropdownMenu.Item
+						onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
+						closeOnSelect={false}
+					>
+						<ArrowMoveLeft class="mr-2 size-4" />
+						<span>Move left</span>
+					</DropdownMenu.Item>
+					<DropdownMenu.Item
+						onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}
+						closeOnSelect={false}
+					>
+						<ArrowMoveRight class="mr-2 size-4" />
+						<span>Move right</span>
+					</DropdownMenu.Item>
+
+					<DropdownMenu.Sub>
+						<DropdownMenu.SubTrigger>
+							<MoveUp class="mr-2 size-4" />
+							<span>Move to</span>
+						</DropdownMenu.SubTrigger>
+						<DropdownMenu.SubContent>
 							<DropdownMenu.Item
 								closeOnSelect={false}
 								onclick={() =>
 									datagrid.handlers.columnOrdering.moveColumnToPosition({
 										columnId: column.columnId,
-										targetGroupColumnId: groupCol.columnId
+										targetGroupColumnId: ''
 									})}
 							>
 								<div class="flex flex-row gap-2">
-									<span>{groupCol.header}</span>
+									<span>Root level</span>
 								</div>
 							</DropdownMenu.Item>
-						{/each}
-					</DropdownMenu.SubContent>
-				</DropdownMenu.Sub>
+							{#each datagrid.columnManager.getGroupColumns() as groupCol}
+								<DropdownMenu.Item
+									closeOnSelect={false}
+									onclick={() =>
+										datagrid.handlers.columnOrdering.moveColumnToPosition({
+											columnId: column.columnId,
+											targetGroupColumnId: groupCol.columnId
+										})}
+								>
+									<div class="flex flex-row gap-2">
+										<span>{groupCol.header}</span>
+									</div>
+								</DropdownMenu.Item>
+							{/each}
+						</DropdownMenu.SubContent>
+					</DropdownMenu.Sub>
+				{/if}
 			</DropdownMenu.Group>
 		</DropdownMenu.Content>
 	</DropdownMenu.Root>

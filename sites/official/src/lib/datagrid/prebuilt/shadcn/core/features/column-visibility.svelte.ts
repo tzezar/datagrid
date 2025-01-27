@@ -3,13 +3,15 @@ import type { TzezarsDatagrid } from "../index.svelte";
 import type { EnchancedFeature } from "./types";
 
 export type ColumnVisibilityEnchancedFeatureConfig = {
-    enabled?: boolean;
+    displayControlCenterControls?: boolean;
+    displayInColumnDropdown?: boolean;
 } & ColumnVisibilityFeatureConfig
 
 export class ColumnVisibilityEnchancedFeature implements EnchancedFeature {
     datagrid: TzezarsDatagrid
 
-    enabled: boolean = $state(true);
+    displayControlCenterControls: boolean = $state(true);
+    displayInColumnDropdown: boolean = $state(true);
 
     constructor(datagrid: TzezarsDatagrid, config?: ColumnVisibilityEnchancedFeatureConfig) {
         this.datagrid = datagrid
@@ -19,7 +21,8 @@ export class ColumnVisibilityEnchancedFeature implements EnchancedFeature {
     get base(): ColumnVisibilityFeature { return this.datagrid.features.columnVisibility }
 
     initialize(config?: ColumnVisibilityEnchancedFeatureConfig) {
-        this.enabled = config?.enabled ?? this.enabled;
+        this.displayControlCenterControls = config?.displayControlCenterControls ?? this.displayControlCenterControls;
+        this.displayInColumnDropdown = config?.displayInColumnDropdown ?? this.displayInColumnDropdown;
     }
 
 }

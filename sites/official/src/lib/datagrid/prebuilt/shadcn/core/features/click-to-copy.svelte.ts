@@ -11,7 +11,11 @@ export type ClickToCopyFeatureConfig = {
 export class ClickToCopyFeature implements Feature {
     datagrid: TzezarsDatagrid
 
-    enableInAllValidCells: boolean = $state(true);
+    /**
+     * Displays the copy button, but only in valid cells
+    */
+    display: boolean = $state(true);
+    
     onClickToCopy: (value: string | number) => void = () => { };
 
     constructor(datagrid: TzezarsDatagrid, config?: ClickToCopyFeatureConfig) {
@@ -19,13 +23,13 @@ export class ClickToCopyFeature implements Feature {
         this.initialize(config);
     }
 
-    initialize( config?: ClickToCopyFeatureConfig) {
-        this.enableInAllValidCells = config?.enableClickToCopy ?? this.enableInAllValidCells;
+    initialize(config?: ClickToCopyFeatureConfig) {
+        this.display = config?.enableClickToCopy ?? this.display;
         this.onClickToCopy = config?.onClickToCopy ?? this.onClickToCopy;
     }
 
     shouldDisplayCopyButton(column: AccessorColumn<any> | ComputedColumn<any>) {
-        return (this.enableInAllValidCells === true && column._meta.clickToCopy !== false) ||
+        return (this.display === true && column._meta.clickToCopy !== false) ||
             column._meta.clickToCopy === true;
     }
 
@@ -53,9 +57,9 @@ export class ClickToCopyFeature implements Feature {
 
 
     addCopyFeedback(element: HTMLElement) {
-		element.classList.add('copy-feedback');
-		setTimeout(() => {
-			element.classList.remove('copy-feedback');
-		}, 1000);
-	}
+        element.classList.add('copy-feedback');
+        setTimeout(() => {
+            element.classList.remove('copy-feedback');
+        }, 1000);
+    }
 }
