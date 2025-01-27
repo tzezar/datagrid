@@ -3,16 +3,12 @@
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
 	import { inventoryColumns } from './columns.svelte';
 	import DatagridShadcnSvelte from '$lib/datagrid/prebuilt/shadcn/datagrid.svelte';
-	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
-	import type { GroupColumn, LeafColumn } from '$lib/datagrid/core/types';
 
 	let { data } = $props();
 
 	let datagrid = new TzezarsDatagrid({
 		columns: inventoryColumns,
 		data: data.users,
-
-		// todo fix this, tzezars datagrid is taking wrong config for datagrid core
 
 		features: {
 			rowSelection: {

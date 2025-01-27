@@ -35,6 +35,8 @@ export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColu
 }
 
 export class DataGrid<TOriginalRow = any> {
+    identifier = $state('tzezars-datagrid')
+
     readonly metrics = new PerformanceMetrics();
     initial = $state.raw({
         columns: [] as AnyColumn<TOriginalRow>[],

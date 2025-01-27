@@ -223,21 +223,21 @@ const createAdditionalColumns = (datagrid: TzezarsDatagrid): {
 
     if (rowSelection?.displayBuiltInComponents === true) {
         if (rowSelection?.position === 'left') {
-            leftCols.push(createColumn('left', 'selection', RowSelectionCell, RowSelectionColumnHeaderCell));
+            leftCols.push(createColumn('left', '_selection', RowSelectionCell, RowSelectionColumnHeaderCell));
         }
 
         if (rowSelection?.position === 'right') {
-            rightCols.push(createColumn('right', 'selection', RowSelectionCell, RowSelectionColumnHeaderCell));
+            rightCols.push(createColumn('right', '_selection', RowSelectionCell, RowSelectionColumnHeaderCell));
         }
 
     }
 
     if (rowExpanding?.displayBuiltInComponents === true) {
         if (rowExpanding?.position === 'right') {
-            rightCols.push(createColumn('right', 'expand', RowExpandingCell, RowExpandingColumnHeaderCell));
+            rightCols.push(createColumn('right', '_expand', RowExpandingCell, RowExpandingColumnHeaderCell));
         }
         if (rowExpanding?.position === 'left') {
-            leftCols.push(createColumn('left', 'expand', RowExpandingCell, RowExpandingColumnHeaderCell));
+            leftCols.push(createColumn('left', '_expand', RowExpandingCell, RowExpandingColumnHeaderCell));
         }
     }
 

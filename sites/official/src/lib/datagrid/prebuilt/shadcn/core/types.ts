@@ -3,6 +3,7 @@ import type { TzezarsDatagrid } from "./index.svelte";
 
 export type ShadcnColumnMeta<TOriginalRow = any> = {
     align?: 'start' | 'center' | 'end';
+    grow?: boolean;
     // filterType?: 'text' | 'number' | 'select' | 'date' | 'dateRange' | 'range';
     filterType?: 'text' | 'number' | 'select'
     filterOptions?: { label: string, value: string }[];
@@ -14,3 +15,7 @@ export type ShadcnColumnMeta<TOriginalRow = any> = {
         headerCell?: ((props: { datagrid: TzezarsDatagrid, column: AnyColumn<any> }) => string);
     }
 }
+
+
+
+

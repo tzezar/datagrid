@@ -1,8 +1,7 @@
 <script lang="ts">
-	import '$lib/datagrid/prebuilt/shadcn/styles.css';
 	import { cn } from '$lib/utils';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
-	import type { LeafColumn, GroupColumn } from '$lib/datagrid/core/types';
+	import type { LeafColumn, GroupColumn, GridRow, GridBasicRow } from '$lib/datagrid/core/types';
 
 	import { Portal } from 'bits-ui';
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
@@ -27,6 +26,7 @@
 	import { flip } from 'svelte/animate';
 	import RowSelectionColumnHeaderCell from './built-in/row-selection-column-header-cell.svelte';
 	import RowExpandingColumnHeaderCell from './built-in/row-expanding-column-header-cell.svelte';
+	import type { Action } from 'svelte/action';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
@@ -51,23 +51,44 @@
 		pagination
 	}: Props = $props();
 
-	let headerColumns = $derived(
-		datagrid.extra.features.groupHeadersVisibility.showGroupHeaders
-			? datagrid.columnManager.getColumnsInOrder()
-			: datagrid.columnManager.getLeafColumnsInOrder()
+	let headerColumns = $derived.by(() => {
+		if (datagrid.extra.features.groupHeadersVisibility.showGroupHeaders) {
+			return datagrid.columnManager.getColumnsInOrder();
+		}
+		return datagrid.columnManager.getLeafColumnsInOrder();
+	});
+
+	let headerColumnsWithoutAdditional = $derived(
+		headerColumns.filter((col) => !col.columnId.startsWith('_'))
 	);
 
 	// Crazy boost in performance
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
+	const leafColumnsToDisplay = $derived(leafColumns.filter((col) => !col.columnId.startsWith('_')));
+
+	const identifier: Action<HTMLElement, string> = (node, data) => {
+		$effect(() => {
+			node.id = datagrid.identifier + '-' + data;
+
+			return () => {
+				// teardown goes here
+			};
+		});
+	};
+
+	const isFullscreenEnabled = $derived(datagrid.extra.features.fullscreen.isFullscreenEnabled());
+	const showWrapperOverlay = $derived(datagrid.extra.features.overlay.shouldShowWrapperOverlay());
+	const shouldDisplayPagination = $derived(
+		datagrid.extra.features.pagination.shouldDisplayPagination()
+	);
+	const shouldAnimateHeaders = $derived(datagrid.extra.features.animations.shouldAnimateHeaders());
 </script>
 
-<Portal disabled={!datagrid.extra.features.fullscreen.isFullscreenEnabled()}>
-	<div
-		data-fullscreen={datagrid.extra.features.fullscreen.isFullscreenEnabled()}
-		class="grid-wrapper relative h-full max-h-fit"
-	>
-		{#if datagrid.extra.features.overlay.shouldShowWrapperOverlay()}
+<Portal disabled={!isFullscreenEnabled}>
+	<div use:identifier={'wrapper'} data-fullscreen={isFullscreenEnabled} class={cn('grid-wrapper')}>
+		{#if showWrapperOverlay}
 			<div
+				use:identifier={'wrapper-overlay'}
 				class="pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full bg-black opacity-50"
 			></div>
 		{/if}
@@ -79,7 +100,7 @@
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
 			</div> -->
-		{#if datagrid.extra.features.pagination.shouldDisplayPagination()}
+		{#if shouldDisplayPagination}
 			{#if ['both', 'top'].includes(datagrid.extra.features.pagination.paginationPosition)}
 				{#if pagination}
 					{@render pagination()}
@@ -89,72 +110,39 @@
 			{/if}
 		{/if}
 		<StatusIndicator {datagrid} position="top" />
-		<div data-fullscreen={datagrid.extra.features.fullscreen.isFullscreenEnabled()} class="grid-container-wrapper">
+		<div data-fullscreen={isFullscreenEnabled} class="grid-container-wrapper">
 			<div class="grid-container min-w-full">
 				{#if header}
 					{@render header()}
 				{:else}
-					<div class="grid-header">
-						<div class="grid-header-row w-full ">
-							{#if datagrid.extra.features.rowSelection.position === 'left' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
-								<RowSelectionColumnHeaderCell
-									{datagrid}
-									column={headerColumns.find(
-										(col) => col.columnId === 'selection'
-									) as LeafColumn<any>}
-								/>
-							{/if}
-							{#if datagrid.extra.features.rowExpanding.position === 'left' && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
-								<RowExpandingColumnHeaderCell
-									{datagrid}
-									column={headerColumns.find((col) => col.columnId === 'expand') as LeafColumn<any>}
-								/>
-							{/if}
-
-							{#each headerColumns
-								.filter((col) => col.columnId !== 'selection')
-								.filter((col) => col.columnId !== 'expand') as column (column.columnId)}
+					<div use:identifier={'header'} class="grid-header">
+						<div use:identifier={'header-row'} class="grid-header-row w-full">
+							{@render AdditionalHeaderCells('left')}
+							{#each headerColumnsWithoutAdditional as column (column.columnId)}
 								<div
-									class={cn(
-										!datagrid.extra.features.animations.shouldAnimateHeaders() && 'contents'
-									)}
+									class:contents={!shouldAnimateHeaders}
 									animate:flip={{
 										duration: (len) =>
 											datagrid.extra.features.animations.getHeadersFlipDuration(len)
 									}}
 								>
 									{#if isGroupColumn(column)}
-										{@render HeaderGroupCellSnippet(column)}
+										{@render ColumnGroupHeaderSnippet(column)}
 									{:else if column.state.visible === true}
-										{@render HeaderCellSnippet(column)}
+										{@render ColumnHeaderSnippet(column)}
 									{/if}
 								</div>
 							{/each}
-							{#if datagrid.extra.features.rowSelection.position === 'right' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
-								<RowSelectionColumnHeaderCell
-									{datagrid}
-									column={headerColumns.find(
-										(col) => col.columnId === 'selection'
-									) as LeafColumn<any>}
-								/>
-							{/if}
-							{#if datagrid.extra.features.rowExpanding.position === 'right' && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
-								<RowExpandingColumnHeaderCell
-									{datagrid}
-									column={headerColumns.find((col) => col.columnId === 'expand') as LeafColumn<any>}
-								/>
-							{/if}
+							{@render AdditionalHeaderCells('right')}
 						</div>
 					</div>
 				{/if}
 				{#if body}
 					{@render body()}
 				{:else}
-					<div class="grid-body relative">
+					<div use:identifier={'body'} class="grid-body">
 						{#if datagrid.extra.features.overlay.shouldShowBodyOverlay()}
-							<div
-								class="pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[5] h-full w-full bg-black opacity-50"
-							></div>
+							<div class="body-overlay"></div>
 						{/if}
 
 						{#each datagrid.rows.getVisibleRows() as row, rowIndex (row.identifier)}
@@ -219,33 +207,12 @@
 									{/each}
 								</div>
 							{:else}
-								<div class="grid-body-row flex last:border-b-0">
-									{#if datagrid.extra.features.rowSelection.position === 'left' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
-										<RowSelectionCell
-											{datagrid}
-											{row}
-											column={headerColumns.find(
-												(col) => col.columnId === 'selection'
-											) as LeafColumn<any>}
-										/>
-									{/if}
-									{#if datagrid.extra.features.rowExpanding.position === 'left' && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
-										<RowExpandingCell
-											{datagrid}
-											{row}
-											column={headerColumns.find(
-												(col) => col.columnId === 'expand'
-											) as LeafColumn<any>}
-										/>
-									{/if}
-									{#each leafColumns
-										.filter((col) => col.columnId !== 'selection')
-										.filter((col) => col.columnId !== 'expand') as column (column.columnId)}
+								<div class="grid-body-row">
+									{@render AdditionalBodyCells('left', row)}
+									{#each leafColumnsToDisplay as column (column.columnId)}
 										<div
-											class={cn(
-												'',
-												!datagrid.extra.features.animations.shouldAnimateRows() && 'contents'
-											)}
+											class:contents={!datagrid.extra.features.animations.shouldAnimateRows()}
+											class={cn()}
 											animate:flip={{
 												duration: (len) =>
 													datagrid.extra.features.animations.getRowsFlipDuration(len)
@@ -261,82 +228,37 @@
 													{/if}
 												{:else}
 													<div
+														class:grow={column?._meta?.grow}
 														class={cn(
-															'grid-body-cell group items-center transition-all duration-300',
+															'grid-body-cell group',
 															shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
-															column._meta.styles?.bodyCell({ datagrid, column, row }),
-															column._meta.grow && 'grow'
+															column._meta.styles?.bodyCell({ datagrid, column, row })
 														)}
 														class:justify-center={column?._meta?.align === 'center'}
 														data-pinned={column.state.pinning.position !== 'none'
 															? column.state.pinning.position
-															: null}
-														style:--width={ column.state.size.width + 'px'}
+															: 'none'}
+														style:--width={column.state.size.width + 'px'}
 														style:--min-width={column.state.size.minWidth + 'px'}
 														style:--max-width={column.state.size.maxWidth + 'px'}
 														style:--pin-left-offset={column.state.pinning.offset + 'px'}
 														style:--pin-right-offset={column.state.pinning.offset + 'px'}
 													>
-														<span class={cn('cell-content  w-full')}>
+														<span class={cn('cell-content')}>
 															{@html getCellContent(column, row.original)}
 														</span>
 
-														{#if datagrid.extra.features.clickToCopy.isValidColumn(column)}
-															{#if datagrid.extra.features.clickToCopy.shouldDisplayCopyButton(column)}
-																<button
-																	class="pl-1"
-																	onclick={(e) => {
-																		datagrid.extra.features.clickToCopy.handleClickToCopy(
-																			row.original,
-																			column
-																		);
-
-																		const cellElement = (e.target as HTMLElement).closest(
-																			'.grid-body-cell'
-																		);
-																		if (cellElement) {
-																			datagrid.extra.features.clickToCopy.addCopyFeedback(
-																				cellElement as HTMLElement
-																			);
-																		}
-																	}}
-																>
-																	<ContentCopyOutline
-																		width="0.75rem"
-																		class={cn(
-																			'hidden opacity-0 transition-all group-hover:block group-hover:opacity-100'
-																		)}
-																	/>
-																</button>
-															{/if}
-														{/if}
+														{@render CopyCellButton(column, row)}
 													</div>
 												{/if}
 											{/if}
 										</div>
 									{/each}
-									{#if datagrid.extra.features.rowSelection.position === 'right' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
-										<RowSelectionCell
-											{datagrid}
-											{row}
-											column={headerColumns.find(
-												(col) => col.columnId === 'selection'
-											) as LeafColumn<any>}
-										/>
-									{/if}
-									{#if datagrid.extra.features.rowExpanding.position === 'right' && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
-										<RowExpandingCell
-											{datagrid}
-											{row}
-											column={headerColumns.find(
-												(col) => col.columnId === 'expand'
-											) as LeafColumn<any>}
-										/>
-									{/if}
+									{@render AdditionalBodyCells('right', row)}
 								</div>
 							{/if}
 							{#if row.isExpanded()}
-								<div class="grid-body-row sticky left-0">
+								<div class="grid-body-row">
 									<div class="grid-body-cell sticky left-0">
 										Content for row with ID {row.identifier}
 									</div>
@@ -350,12 +272,12 @@
 		{#if footer}
 			{@render footer()}
 		{:else}
-			<div class={cn('grid-footer-container border-b', footerContent && 'p-2')}>
+			<div class={cn('grid-footer-container', footerContent && 'p-2')}>
 				{@render footerContent?.()}
 			</div>
 		{/if}
 		<StatusIndicator {datagrid} position="bottom" />
-		{#if datagrid.extra.features.pagination.shouldDisplayPagination()}
+		{#if shouldDisplayPagination}
 			{#if ['bottom', 'both'].includes(datagrid.extra.features.pagination.paginationPosition)}
 				{#if pagination}
 					{@render pagination()}
@@ -370,7 +292,7 @@
 	</div>
 </Portal>
 
-{#snippet HeaderGroupCellSnippet(column: GroupColumn<any>)}
+{#snippet ColumnGroupHeaderSnippet(column: GroupColumn<any>)}
 	<div class="grid-header-group">
 		<div class="grid-header-group-header">
 			{column.header}
@@ -380,9 +302,9 @@
 			{#each column.columns ?? [] as subColumn (subColumn.columnId)}
 				<div animate:flip>
 					{#if isGroupColumn(subColumn)}
-						{@render HeaderGroupCellSnippet(subColumn)}
+						{@render ColumnGroupHeaderSnippet(subColumn)}
 					{:else if subColumn.state.visible === true}
-						{@render HeaderCellSnippet(subColumn)}
+						{@render ColumnHeaderSnippet(subColumn)}
 					{/if}
 				</div>
 			{/each}
@@ -390,7 +312,7 @@
 	</div>
 {/snippet}
 
-{#snippet HeaderCellSnippet(column: LeafColumn<any>)}
+{#snippet ColumnHeaderSnippet(column: LeafColumn<any>)}
 	{#if column.headerCell}
 		{@const cellContent = column.headerCell({ datagrid, column })}
 		{#if typeof cellContent === 'string'}
@@ -404,9 +326,9 @@
 			data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 			style:--pin-left-offset={column.state.pinning.offset + 'px'}
 			style:--pin-right-offset={column.state.pinning.offset + 'px'}
-			style:--width={ column.state.size.width + 'px'}
-			style:--min-width={ column.state.size.minWidth + 'px'}
-			style:--max-width={ column.state.size.maxWidth + 'px'}
+			style:--width={column.state.size.width + 'px'}
+			style:--min-width={column.state.size.minWidth + 'px'}
+			style:--max-width={column.state.size.maxWidth + 'px'}
 		>
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -439,7 +361,7 @@
 				</div>
 			</div>
 			{#if datagrid.extra.features.columnFiltering.isEnabled()}
-				<div class="h-9 w-full pt-1">
+				<div class="column-filter">
 					<HeaderCellColumnFilter {datagrid} {column} />
 				</div>
 			{/if}
@@ -447,10 +369,353 @@
 	{/if}
 {/snippet}
 
-<style>
+{#snippet AdditionalHeaderCells(position: 'left' | 'right')}
+	{#if datagrid.extra.features.rowSelection.position === position && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
+		<RowSelectionColumnHeaderCell
+			{datagrid}
+			column={headerColumns.find((col) => col.columnId === '_selection') as LeafColumn<any>}
+		/>
+	{/if}
+	{#if datagrid.extra.features.rowExpanding.position === position && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
+		<RowExpandingColumnHeaderCell
+			{datagrid}
+			column={headerColumns.find((col) => col.columnId === '_expand') as LeafColumn<any>}
+		/>
+	{/if}
+{/snippet}
+
+{#snippet AdditionalBodyCells(position: 'left' | 'right', row: GridBasicRow<any>)}
+	{#if datagrid.extra.features.rowSelection.position === position && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
+		<RowSelectionCell
+			{datagrid}
+			{row}
+			column={headerColumns.find((col) => col.columnId === '_selection') as LeafColumn<any>}
+		/>
+	{/if}
+	{#if datagrid.extra.features.rowExpanding.position === position && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
+		<RowExpandingCell
+			{datagrid}
+			{row}
+			column={headerColumns.find((col) => col.columnId === '_expand') as LeafColumn<any>}
+		/>
+	{/if}
+{/snippet}
+
+{#snippet CopyCellButton(column: LeafColumn<any>, row: GridBasicRow<any>)}
+	{#if datagrid.extra.features.clickToCopy.isValidColumn(column)}
+		{#if datagrid.extra.features.clickToCopy.shouldDisplayCopyButton(column)}
+			<button
+				class="pl-1"
+				onclick={(e) => {
+					datagrid.extra.features.clickToCopy.handleClickToCopy(row.original, column);
+
+					const cellElement = (e.target as HTMLElement).closest('.grid-body-cell');
+					if (cellElement) {
+						datagrid.extra.features.clickToCopy.addCopyFeedback(cellElement as HTMLElement);
+					}
+				}}
+			>
+				<ContentCopyOutline
+					width="0.75rem"
+					class={cn('hidden opacity-0 transition-all group-hover:block group-hover:opacity-100')}
+				/>
+			</button>
+		{/if}
+	{/if}
+{/snippet}
+
+<style lang="postcss">
+	/* Grid */
+
+	.body-overlay {
+		@apply pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[5] h-full w-full bg-black opacity-50;
+	}
+
+	.grid-wrapper {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		max-height: fit-content;
+	}
+
+	[data-fullscreen='true'].grid-wrapper {
+		background-color: hsl(var(--background) / 0.8);
+		position: absolute;
+		inset: 0;
+		padding: 1rem;
+		z-index: 20;
+	}
+
+	.grid-container-wrapper {
+		width: 100%;
+		overflow: auto;
+		display: inline-block;
+		max-height: 600px;
+		border: var(--grid-border-width) solid hsl(var(--grid-border));
+		background-color: hsl(var(--grid-background));
+	}
+
+	[data-fullscreen='true'] .grid-container-wrapper {
+		height: 100%;
+		max-height: 100%;
+		overflow: auto;
+	}
+
+	.grid-container {
+		/* height: 100%; */
+		flex-grow: 0;
+		display: flex;
+		flex-direction: column;
+		/* overflow: auto; */
+		/* fix for coloring width not taking whole width */
+		display: inline-block;
+	}
+
+	/* Header */
+	.grid-header {
+		display: flex;
+		flex-direction: row;
+		position: sticky;
+		top: 0px;
+		z-index: 10;
+		background-color: hsl(var(--grid-header));
+	}
+
+	.grid-header-row {
+		display: flex;
+		flex-direction: row;
+		/* background-color: hsl(var(--grid-header)); */
+		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
+	}
+
+	.grid-header-cell {
+		display: flex;
+		flex-direction: column;
+		padding: 8px;
+		width: var(--width);
+		min-width: var(--min-width);
+		max-width: var(--max-width);
+		/* background-color: hsl(var(--grid-header-cell)); */
+		border-right: var(--grid-border-width) solid hsl(var(--grid-border));
+		/* border-top: var(--grid-border-width) solid hsl(var(--grid-border)); */
+		height: 100%;
+		justify-content: flex-end;
+		align-self: flex-end;
+		font-size: 0.75rem /* 12px */;
+		line-height: 1rem /* 16px */;
+		font-weight: 500;
+	}
+
+	.grid-header-cell-content {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		width: 100%;
+		justify-content: space-between;
+		align-items: flex-end;
+	}
+
+	.grid-header-cell-content-header {
+		text-overflow: ellipsis;
+		text-wrap: nowrap;
+		overflow: hidden;
+	}
+
+	.grid-header-group {
+		background-color: hsl(var(--grid-header-group));
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		font-size: 0.75rem /* 12px */;
+		line-height: 1rem /* 16px */;
+		font-weight: 500;
+	}
+
+	.grid-header-group-header {
+		padding: 8px;
+		border-right: var(--grid-border-width) solid hsl(var(--grid-border));
+		border-left: var(--grid-border-width) solid hsl(var(--grid-border));
+		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
+		/* box-sizing: border-box; */
+		display: flex;
+		flex-direction: row;
+		height: 100%;
+		justify-content: left;
+		align-items: center;
+		gap: 0.5rem;
+		text-align: center;
+	}
+
+	.grid-header-group-header:first-child {
+		border-right: var(--grid-border-width) solid hsl(var(--grid-border));
+		border-left: 0px;
+	}
+
+	.grid-header-group-cell {
+		font-weight: bold;
+		width: 100%;
+		padding: 8px;
+		margin: 0;
+		line-height: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		box-sizing: border-box;
+	}
+
+	/* Body */
+	.grid-body {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		/* height: 100%; */
+	}
+
+	.grid-body-row {
+		display: flex;
+		height: 100%;
+		flex-direction: row;
+		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
+	}
+
+	.grid-body-row:last-child {
+		border-bottom: none;
+	}
+
+	.grid-body-cell {
+		@apply transition-all duration-300;
+
+		width: var(--width);
+		min-width: var(--min-width);
+		max-width: var(--max-width);
+		display: flex;
+		padding: 4px 8px;
+		align-items: center;
+	}
+
+	.grid-body-cell .cell-content {
+		/* flex: 1; */
+		/* min-width: 0; */
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		width: 100%;
+	}
+
+	/* Odd rows */
+	/* .grid-body-row:nth-child(odd) {
+    background-color: hsl(var(--grid-body-row-odd)); 
+} */
+
+	/* Even rows */
+	/* .grid-body-row:nth-child(even) {
+    background-color: hsl(var(--grid-body-row-even)); 
+} */
+
+	.grid-body-group-row {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
+	}
+
+	/* Pinned columns base positioning */
+	[data-pinned='right'],
+	[data-pinned='left'] {
+		position: sticky;
+		z-index: 2;
+		background-clip: padding-box;
+	}
+
+	/* Pinned positions */
+	[data-pinned='right'] {
+		right: var(--pin-right-offset, 0);
+	}
+
+	[data-pinned='left'] {
+		left: var(--pin-left-offset, 0);
+	}
+
+	/* Pinned header cells */
+	[data-pinned='right'] .grid-header-cell,
+	[data-pinned='left'] .grid-header-cell {
+		background-color: hsl(var(--grid-pinned-header-cell));
+	}
+
+	/* Pinned body cells */
+	div[data-pinned='right'].grid-body-cell,
+	div[data-pinned='left'].grid-body-cell {
+		background-color: hsl(var(--grid-pinned-cell));
+	}
+
+	/* Sorting indicator */
+	.sortable {
+		cursor: pointer;
+		user-select: none;
+	}
+	.sortable:hover {
+		background-color: rgba(0, 0, 0, 0.05);
+	}
+
+	.sort-indicator {
+		display: flex;
+		align-items: center;
+		opacity: 0.5;
+	}
+
+	.sortable:hover .sort-indicator {
+		opacity: 1;
+	}
+
+	/* Footer */
+
+	.grid-footer-container {
+		position: sticky;
+		bottom: 0px;
+		left: 0px;
+		background-color: hsl(var(--grid-footer));
+		border-bottom-width: 1px;
+	}
+
+	.grid-toolbar-container {
+		position: sticky;
+		top: 0px;
+		left: 0px;
+		background-color: hsl(var(--grid-toolbar));
+	}
+	/* Pagination */
+
+	.pagination-container {
+		background-color: hsl(var(--grid-pagination));
+		border: var(--grid-border-width) solid var(--border-color);
+	}
+
+	.pagination-page-input {
+		border-color: hsl(var(--grid-border));
+	}
+
+	/* Column Filtering */
+
+	.column-filter-input {
+		background-color: hsl(var(--grid-border));
+		border: 1px solid hsl(var(--grid-border));
+		padding: 0 0.25rem;
+		border-radius: 0.25rem;
+		height: 1.25rem;
+		color: hsl(var(--muted-foreground));
+		font-size: 0.8rem;
+	}
+
 	.copy-feedback {
 		animation: copyFeedback 1s ease;
 	}
+
+	.column-filter {
+		@apply h-9 w-full pt-1;
+	}
+
 
 	@keyframes copyFeedback {
 		0% {
