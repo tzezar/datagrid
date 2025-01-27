@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
-	import type { LeafColumn, GroupColumn, GridRow, GridBasicRow } from '$lib/datagrid/core/types';
+	import type { LeafColumn, GroupColumn, GridRow, GridBasicRow, GridGroupRow } from '$lib/datagrid/core/types';
 
 	import { Portal } from 'bits-ui';
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
@@ -155,7 +155,7 @@
 									{#each leafColumns as column, columnIndex (column.columnId)}
 										{#if column.isVisible()}
 											<div
-												class={cn('grid-body-cell')}
+												class={cn('grid-body-cell !p-0')}
 												class:justify-center={column?._meta?.align === 'center'}
 												data-pinned={column.state.pinning.position !== 'none'
 													? column.state.pinning.position
@@ -167,40 +167,9 @@
 												style:--pin-right-offset={column.state.pinning.offset + 'px'}
 											>
 												{#if column.columnId == row.groupKey}
-													<div class="flex flex-col place-items-start justify-start gap-1">
-														<span class="text-muted-foreground flex place-items-center text-xs">
-															({row.children.length} items)
-														</span>
-														<button
-															class="flex gap-1"
-															onclick={() => datagrid.rows.toggleGroupRowExpansion(row)}
-														>
-															<span class="border-primary/30 rounded-sm border-[1px]">
-																<ArrowRight
-																	class={`${datagrid.rows.isGroupRowExpanded(row) && 'rotate-90'} transition-all `}
-																/>
-															</span>
-															<span class="">
-																{row.groupValue[0]}
-															</span>
-														</button>
-													</div>
+													{@render GroupCellHeaderSnippet(column, row)}
 												{:else if row.aggregations.some((agg) => agg.columnId === column.columnId)}
-													<div class="">
-														<div class="text-muted-foreground text-xs">
-															{#each row.aggregations.filter((agg) => agg.columnId === column.columnId) as aggregation}
-																<p>
-																	{aggregation.type}: {#if aggregation.type === 'percentChange'}
-																		{aggregation.value.toFixed(2)}%
-																	{:else if typeof aggregation.value === 'number'}
-																		{aggregation.value.toLocaleString()}
-																	{:else}
-																		{aggregation.value}
-																	{/if}
-																</p>
-															{/each}
-														</div>
-													</div>
+													{@render GroupCellAggregationSnippet(row, column)}
 												{/if}
 											</div>
 										{/if}
@@ -422,6 +391,51 @@
 			</button>
 		{/if}
 	{/if}
+{/snippet}
+
+{#snippet GroupCellHeaderSnippet(column: LeafColumn<any>, row: GridGroupRow<any>)}
+
+	<!-- padding: 4px 8px; -->
+
+	<div
+		class="group-row-cell  flex !min-h-full !h-full !px-[8px] !py-[4px] "
+		style:--width={column.state.size.width + 'px'}
+		style:--min-width={column.state.size.minWidth + 'px'}
+		style:--max-width={column.state.size.maxWidth + 'px'}
+	>
+		<button
+			class="flex w-full items-center justify-center gap-1 overflow-hidden "
+			onclick={() => datagrid.rows.toggleGroupRowExpansion(row)}
+		>
+			<span class="border-primary/30 rounded-sm border-[1px]">
+				<ArrowRight
+					class={`${datagrid.rows.isGroupRowExpanded(row) && 'rotate-90'} transition-all `}
+				/>
+			</span>
+			<span class="w-full overflow-hidden text-ellipsis whitespace-nowrap leading-normal">
+				{row.groupValue[0]}
+			</span>
+			<span class="text-muted-foreground flex place-items-center  pl-1 text-xs leading-none">
+				[{row.children.length}]
+			</span>
+		</button>
+	</div>
+{/snippet}
+
+{#snippet GroupCellAggregationSnippet(row: GridGroupRow<any>, column: LeafColumn<any>)}
+	<div class="text-muted-foreground text-xs">
+		{#each row.aggregations.filter((agg) => agg.columnId === column.columnId) as aggregation}
+			<p>
+				{aggregation.type}: {#if aggregation.type === 'percentChange'}
+					{aggregation.value.toFixed(2)}%
+				{:else if typeof aggregation.value === 'number'}
+					{aggregation.value.toLocaleString()}
+				{:else}
+					{aggregation.value}
+				{/if}
+			</p>
+		{/each}
+	</div>
 {/snippet}
 
 <style lang="postcss">
