@@ -13,7 +13,7 @@
 </script>
 
 <div
-	class={cn('cell !p-0')}
+	class={cn('cell bg-datagrid-bodyGroupCell !p-0')}
 	class:justify-center={column?._meta?.align === 'center'}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 	style:--width={column.state.size.width + 'px'}

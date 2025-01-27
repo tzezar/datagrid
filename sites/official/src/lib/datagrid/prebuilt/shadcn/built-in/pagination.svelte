@@ -6,15 +6,13 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
 	import { cn } from '$lib/utils';
+	import type { PaginationClasses } from './types';
+
+
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
-		class?: {
-			prevButton?: string;
-			nextButton?: string;
-			perPageSelect?: string;
-			container?: string;
-		};
+		class?: PaginationClasses
 	};
 
 	let { datagrid, class: _class }: Props = $props();
@@ -30,7 +28,7 @@
 {#snippet prevButton()}
 	<Button
 		variant="secondary"
-		class="size-6"
+		class={cn('size-6 bg-grid-pagination-prevButton', _class?.prevButton)}
 		size="sm"
 		disabled={datagrid.features.pagination.canGoToPrevPage()}
 		onclick={() => datagrid.handlers.pagination.goToPrevPage()}
@@ -42,7 +40,7 @@
 {#snippet nextButton()}
 	<Button
 		variant="secondary"
-		class="size-6"
+		class={cn('size-6 bg-grid-pagination-nextButton', _class?.nextButton)}
 		size="sm"
 		disabled={datagrid.features.pagination.canGoToNextPage()}
 		onclick={() => datagrid.handlers.pagination.goToNextPage()}
@@ -59,7 +57,7 @@
 		value={String(datagrid.features.pagination.pageSize)}
 		onValueChange={(value: string) => datagrid.handlers.pagination.changePageSize(Number(value))}
 	>
-		<Select.Trigger class="h-6 w-max max-w-[180px] p-2 text-xs">
+		<Select.Trigger class={cn("h-6 w-max max-w-[180px] p-2 text-xs bg-grid-pagination-perPageSelect", _class?.perPageSelect)}>
 			<span class="pr-2">{datagrid.features.pagination.pageSize} per page</span>
 		</Select.Trigger>
 		<Select.Content>
@@ -110,7 +108,7 @@
 
 <div
 	class={cn(
-		'bg-datagrid-pagination container flex min-w-full flex-row items-center justify-between gap-2 border-x p-3   md:flex-row',
+		'bg-grid-pagination-container container flex min-w-full flex-row items-center justify-between gap-2 border-x p-3   md:flex-row',
 		_class?.container
 	)}
 >

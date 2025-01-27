@@ -13,9 +13,10 @@
 		datagrid: TzezarsDatagrid;
 
 		title?: string;
+		class?: string;
 	};
 
-	let { datagrid, title }: Props = $props();
+	let { datagrid, title, class: _class }: Props = $props();
 
 	const toggleColumnFiltersVisibility = () => {
 		datagrid.extra.features.globalSearch.toggleInputVisibility();
@@ -25,15 +26,16 @@
 
 <div
 	class={cn(
-		'flex items-end justify-end  bg-blue-400',
-		datagrid.extra.features.columnFiltering.shouldDisplayButton() && 'top-bar '
+		'flex items-end justify-end bg-grid-toolbar',
+		datagrid.extra.features.columnFiltering.shouldDisplayButton() && 'top-bar ',
+		_class
 	)}
 >
 	{#if datagrid.extra.features.globalSearch.shouldDisplayInput()}
 		<GlobalSearch {datagrid} />
 	{:else}
-		<div class="flex h-full  grow items-center pl-2 border-t border-l">
-			<span class="w-full text-md">
+		<div class="flex h-full grow items-center border-l border-t pl-2">
+			<span class="text-md w-full">
 				{#if title}
 					{title}
 				{:else}
@@ -83,7 +85,5 @@
 {/snippet}
 
 <style>
-	.top-bar {
-		background-color: hsl(var(--grid-header));
-	}
+
 </style>

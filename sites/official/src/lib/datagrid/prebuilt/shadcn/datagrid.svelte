@@ -22,6 +22,7 @@
 	import RenderGroupCell from './structure/render-group-cell.svelte';
 	import RenderColumnCell from './structure/render-column-cell.svelte';
 	import { identifier } from './actions.svelte';
+	import type { PaginationClasses } from './built-in/types';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
@@ -36,6 +37,8 @@
 		statusIndicator?: Snippet;
 		expandedRow?: Snippet<[row: GridBasicRow<any>]>;
 		expandedRowContent?: Snippet;
+
+		
 	};
 
 	let {
@@ -48,7 +51,8 @@
 		pagination,
 		expandedRow,
 		expandedRowContent,
-		statusIndicator
+		statusIndicator,
+
 	}: Props = $props();
 
 	let headerColumns = $derived.by(() => {
@@ -78,7 +82,7 @@
 	<div
 		use:identifier={{ datagrid, value: 'wrapper' }}
 		data-fullscreen={isFullscreenEnabled}
-		class={cn('grid-wrapper')}
+		class={cn('grid-wrapper', 'bg-grid')}
 	>
 		{@render WrapperOverlaySnippet()}
 		{@render ToolbarSnippet()}
@@ -88,7 +92,7 @@
 		{@render PaginationSnippet(['both', 'top'])}
 		{@render StatusIndicatorSnippet('top')}
 		<div data-fullscreen={isFullscreenEnabled} class="grid-container-wrapper">
-			<div class="grid-container">
+			<div class={cn('grid-container', 'bg-grid-container', )}>
 				{@render HeadSnippet()}
 				{@render BodySnippet()}
 			</div>
@@ -104,16 +108,24 @@
 	<div use:identifier={{ datagrid, value: 'head' }} class="grid-head">
 		<div use:identifier={{ datagrid, value: 'head-row' }} class="grid-head-row">
 			{@render AdditionalHeaderCells('left')}
-			{#each headerColumnsWithoutAdditional as column (column.columnId)}
-				<div
-					class:contents={!shouldAnimateHeaders}
-					animate:flip={{
-						duration: (len) => datagrid.extra.features.animations.getHeadersFlipDuration(len)
-					}}
-				>
+
+			{#if shouldAnimateHeaders}
+				{#each headerColumnsWithoutAdditional as column (column.columnId)}
+					<div
+						class:contents={!shouldAnimateHeaders}
+						animate:flip={{
+							duration: (len) => datagrid.extra.features.animations.getHeadersFlipDuration(len)
+						}}
+					>
+						<RenderColumnCell {datagrid} {column} />
+					</div>
+				{/each}
+			{:else}
+				{#each headerColumnsWithoutAdditional as column (column.columnId)}
 					<RenderColumnCell {datagrid} {column} />
-				</div>
-			{/each}
+				{/each}
+			{/if}
+
 			{@render AdditionalHeaderCells('right')}
 		</div>
 	</div>
@@ -132,7 +144,7 @@
 				{#if row.isGroupRow()}
 					<div
 						use:identifier={{ datagrid, value: 'row-' + row.identifier }}
-						class="group-row"
+						class={cn('group-row', 'bg-datagrid-gro')}
 						data-depth={row.depth}
 						data-expanded={row.isExpanded()}
 					>
@@ -190,7 +202,7 @@
 	{#if toolbar}
 		{@render toolbar()}
 	{:else}
-		<Toolbar {datagrid} />
+		<Toolbar {datagrid}  />
 	{/if}
 {/snippet}
 
@@ -198,7 +210,9 @@
 	{#if showWrapperOverlay}
 		<div
 			use:identifier={{ datagrid, value: 'wrapper-overlay' }}
-			class="pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full bg-black opacity-50"
+			class={cn(
+				'bg-grid-wrapper-overlay pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full opacity-50',
+			)}
 		></div>
 	{/if}
 {/snippet}
@@ -219,7 +233,7 @@
 				{#if pagination}
 					{@render pagination()}
 				{:else}
-					<Pagination {datagrid} class={{ container: 'border-t' }} />
+					<Pagination {datagrid} class={{ container: 'border-t', }} />
 				{/if}
 			{/if}
 		{/if}
@@ -229,7 +243,10 @@
 				{#if pagination}
 					{@render pagination()}
 				{:else}
-					<Pagination {datagrid} class={{ container: 'border-b border-t-0' }} />
+					<Pagination
+						{datagrid}
+						class={{ container: 'border-b border-t-0',  }}
+					/>
 				{/if}
 			{/if}
 		{/if}

@@ -16,11 +16,6 @@ const config: Config = {
 		},
 		extend: {
 			colors: {
-
-				datagrid: {
-					pagination: "hsl(var(--grid-pagination-background-color) / <alpha-value>)",
-				},
-
 				border: "hsl(var(--border) / <alpha-value>)",
 				input: "hsl(var(--input) / <alpha-value>)",
 				ring: "hsl(var(--ring) / <alpha-value>)",

@@ -81,29 +81,10 @@
 		--sidebar-border: 240 3.7% 15.9%;
 		--sidebar-ring: 217.2 91.2% 59.8%;
 
+	
 
 
-		--grid-border-color: red;
-		--grid-border-width: 1px;
-        
-		--grid-head-background-color: red;
-		--grid-head-row-background-color: red;
-		--grid-leaf-column-cell-background-color: red;
-		--grid-group-column-cell-background-color: red;
-		--grid-group-column-cell-pinned-background-color: red;
 
-		--grid-body-background-color: red;
-		--grid-body-row-background-color: red;
-		--grid-body-row-even-background-color: red;
-		--grid-body-row-odd-background-color: red;
-		--grid-body-cell-background-color: red;
-		--grid-body-cell-pinned-background-color: red;
-		--grid-body-cell-selected-background-color: red;
-		--grid-body-cell-hover-background-color: red;
-
-		--grid-footer-background-color: red;
-		--grid-toolbar-background-color: red;
-		--grid-pagination-background-color: 20 100% 50%;  
 
 
 		/* --grid-border-width: 1px;

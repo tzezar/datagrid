@@ -71,16 +71,16 @@
 		width: var(--width);
 		min-width: var(--min-width);
 		max-width: var(--max-width);
-		/* background-color: hsl(var(--grid-head-cell)); */
 		border-right: var(--grid-border-width) solid hsl(var(--grid-border));
-		/* border-top: var(--grid-border-width) solid hsl(var(--grid-border)); */
 		height: 100%;
 		justify-content: flex-end;
 		align-self: flex-end;
-		font-size: 0.75rem /* 12px */;
-		line-height: 1rem /* 16px */;
+		font-size: 0.75rem;
+		line-height: 1rem;
 		font-weight: 500;
 	}
+	
+
 
 	.leaf-column-cell-content {
 		display: flex;

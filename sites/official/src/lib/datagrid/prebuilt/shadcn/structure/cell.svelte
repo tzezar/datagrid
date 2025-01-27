@@ -21,7 +21,7 @@
 	use:identifier={{ datagrid, value: `${row.identifier}-${column.columnId}` }}
 	class:grow={column?._meta?.grow}
 	class={cn(
-		'cell group',
+		'cell bg-datagrid-bodyCell group',
 		shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
 		column._meta.styles?.bodyCell({ datagrid, column, row }),
 		_class
