@@ -6,7 +6,7 @@ import type { Feature } from "./types";
 export type AnimationsFeatureConfig = {
     animateHeaders?: boolean;
     animateRows?: boolean;
-    animationDuration?: number;
+    animationMultiplier?: number;
 }
 
 
@@ -15,7 +15,7 @@ export class AnimationsFeature implements Feature {
 
     animateHeaders: boolean = $state(false);
     animateRows: boolean = $state(false);
-    flipMultiplier: number = $state(3);
+    animationDuration: number = $state(60);
 
     constructor(datagrid: TzezarsDatagrid, config?: AnimationsFeatureConfig) {
         this.datagrid = datagrid;
@@ -23,25 +23,29 @@ export class AnimationsFeature implements Feature {
     }
 
     initialize(config?: AnimationsFeatureConfig) {
-        this.flipMultiplier = config?.animationDuration ?? this.flipMultiplier;
+        this.animationDuration = config?.animationMultiplier ?? this.animationDuration;
         this.animateHeaders = config?.animateHeaders ?? this.animateHeaders;
         this.animateRows = config?.animateRows ?? this.animateRows;
     }
 
     shouldAnimateHeaders() {
-        return this.animateHeaders;
+        return this.animateHeaders && this.datagrid.columnManager.getLeafColumns()
+            .filter(col => col.state.pinning.position === 'left').length < 1 && this.datagrid.columnManager.getLeafColumns()
+                .filter(col => col.state.pinning.position === 'right').length < 1;
     }
 
     shouldAnimateRows() {
-        return this.animateRows;
+        return this.animateRows && this.datagrid.columnManager.getLeafColumns()
+            .filter(col => col.state.pinning.position === 'left').length < 1 && this.datagrid.columnManager.getLeafColumns()
+                .filter(col => col.state.pinning.position === 'right').length < 1;
     }
 
     getHeadersFlipDuration(len: number): number {
-        return this.animateHeaders ? len * this.flipMultiplier : 0
+        return this.animateHeaders ? Math.sqrt(len)  * this.animationDuration : 0
     }
 
     getRowsFlipDuration(len: number): number {
-        return this.animateRows ? len * this.flipMultiplier : 0
+        return this.animateRows ? Math.sqrt(len)  * this.animationDuration : 0
     }
 
 }

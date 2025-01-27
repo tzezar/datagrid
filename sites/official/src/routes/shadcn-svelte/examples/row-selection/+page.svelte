@@ -11,6 +11,10 @@
 		data: data.users,
 		extra: {
 			features: {
+				animations: {
+					animateRows: true,
+					animateHeaders: true
+				},
 				sorting: {
 					enableMultiSort: true,
 					enableSorting: true,
@@ -20,11 +24,11 @@
 				},
 				rowSelection: {
 					rowSelectionMode: 'multiple',
-					displayBuiltInComponents: true
+					displayBuiltInComponents: false
 				},
 				rowExpanding: {
 					displayBuiltInButtonPosition: 'left',
-					displayBuiltInComponents: true,
+					displayBuiltInComponents: false,
 
 				}
 			}

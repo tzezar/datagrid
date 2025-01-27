@@ -221,7 +221,7 @@
 										.filter((col) => col.columnId !== 'expand') as column (column.columnId)}
 										<div
 											class={cn(
-												!datagrid.extra.features.animations.shouldAnimateHeaders() && 'contents'
+												!datagrid.extra.features.animations.shouldAnimateRows() && 'contents'
 											)}
 											animate:flip={{
 												duration: (len) =>
