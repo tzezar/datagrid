@@ -29,22 +29,22 @@ export class AnimationsFeature implements Feature {
 
     shouldAnimateHeaders() {
         return this.animateHeaders && this.datagrid.columnManager.getLeafColumns()
-            .filter(col => col.state.pinning.position === 'left').length < 1 && this.datagrid.columnManager.getLeafColumns()
-                .filter(col => col.state.pinning.position === 'right').length < 1;
+            .filter(col => col.isVisible() && col.state.pinning.position === 'left').length < 1 && this.datagrid.columnManager.getLeafColumns()
+                .filter(col => col.isVisible() && col.state.pinning.position === 'right').length < 1;
     }
 
     shouldAnimateRows() {
         return this.animateRows && this.datagrid.columnManager.getLeafColumns()
-            .filter(col => col.state.pinning.position === 'left').length < 1 && this.datagrid.columnManager.getLeafColumns()
-                .filter(col => col.state.pinning.position === 'right').length < 1;
+            .filter(col => col.isVisible() && col.state.pinning.position === 'left').length < 1 && this.datagrid.columnManager.getLeafColumns()
+                .filter(col => col.isVisible() && col.state.pinning.position === 'right').length < 1;
     }
 
     getHeadersFlipDuration(len: number): number {
-        return this.animateHeaders ? Math.sqrt(len)  * this.animationDuration : 0
+        return this.animateHeaders ? Math.sqrt(len) * this.animationDuration : 0
     }
 
     getRowsFlipDuration(len: number): number {
-        return this.animateRows ? Math.sqrt(len)  * this.animationDuration : 0
+        return this.animateRows ? Math.sqrt(len) * this.animationDuration : 0
     }
 
 }

@@ -80,7 +80,7 @@
 		font-weight: 500;
 	}
 
-	.grid-header-cell-content {
+	.leaf-column-cell-content {
 		display: flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
@@ -89,10 +89,11 @@
 		align-items: flex-end;
 	}
 
-	.grid-header-cell-content-header {
-		text-overflow: ellipsis;
+	.group-column-cell-content {
+		@apply flex flex-row items-center px-2 py-2;
+		/* text-overflow: ellipsis;
 		text-wrap: nowrap;
-		overflow: hidden;
+		overflow: hidden; */
 	}
 
 	.group-column-cell{

@@ -37,6 +37,9 @@
 	import GroupColumnCell from './structure/group-column-cell.svelte';
 	import Cell from './structure/cell.svelte';
 	import GroupCell from './structure/group-cell.svelte';
+	import RenderCell from './structure/render-cell.svelte';
+	import RenderGroupCell from './structure/render-group-cell.svelte';
+	import RenderColumn from './structure/render-column.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
@@ -136,11 +139,7 @@
 											datagrid.extra.features.animations.getHeadersFlipDuration(len)
 									}}
 								>
-									{#if isGroupColumn(column)}
-										{@render ColumnGroupHeaderSnippet(column)}
-									{:else if column.state.visible === true}
-										{@render ColumnHeaderSnippet(column)}
-									{/if}
+									<RenderColumn {datagrid} {column} />
 								</div>
 							{/each}
 							{@render AdditionalHeaderCells('right')}
@@ -159,15 +158,7 @@
 							{#if row.isGroupRow()}
 								<div class="group-row" data-depth={row.depth} data-expanded={row.isExpanded()}>
 									{#each leafColumns as column, columnIndex (column.columnId)}
-										{#if column.isVisible()}
-											<GroupCell {column}>
-												{#if column.columnId == row.groupKey}
-													{@render GroupCellHeaderSnippet(column, row)}
-												{:else if row.aggregations.some((agg) => agg.columnId === column.columnId)}
-													{@render GroupCellAggregationSnippet(row, column)}
-												{/if}
-											</GroupCell>
-										{/if}
+										<RenderGroupCell {datagrid} {row} {column} />
 									{/each}
 								</div>
 							{:else}
@@ -182,24 +173,7 @@
 													datagrid.extra.features.animations.getRowsFlipDuration(len)
 											}}
 										>
-											{#if column.isVisible()}
-												{#if column.cell}
-													{@const cellContent = column.cell({ datagrid, column, row })}
-													{#if typeof column.cell({ datagrid, column, row }) === 'string'}
-														{@html cellContent}
-													{:else if isCellComponent(cellContent)}
-														<cellContent.component {datagrid} {row} {column} />
-													{/if}
-												{:else}
-													<Cell {datagrid} {row} {column}>
-														<span class={cn('cell-content')}>
-															{@html getCellContent(column, row.original)}
-														</span>
-
-														{@render CopyCellButton(column, row)}
-													</Cell>
-												{/if}
-											{/if}
+											<RenderCell {datagrid} {row} {column} />
 										</div>
 									{/each}
 									{@render AdditionalBodyCells('right', row)}
@@ -337,71 +311,4 @@
 			column={headerColumns.find((col) => col.columnId === '_expand') as LeafColumn<any>}
 		/>
 	{/if}
-{/snippet}
-
-{#snippet CopyCellButton(column: LeafColumn<any>, row: GridBasicRow<any>)}
-	{#if datagrid.extra.features.clickToCopy.isValidColumn(column)}
-		{#if datagrid.extra.features.clickToCopy.shouldDisplayCopyButton(column)}
-			<button
-				class="pl-1"
-				onclick={(e) => {
-					datagrid.extra.features.clickToCopy.handleClickToCopy(row.original, column);
-
-					const cellElement = (e.target as HTMLElement).closest('.cell');
-					if (cellElement) {
-						datagrid.extra.features.clickToCopy.addCopyFeedback(cellElement as HTMLElement);
-					}
-				}}
-			>
-				<ContentCopyOutline
-					width="0.75rem"
-					class={cn('hidden opacity-0 transition-all group-hover:block group-hover:opacity-100')}
-				/>
-			</button>
-		{/if}
-	{/if}
-{/snippet}
-
-{#snippet GroupCellHeaderSnippet(column: LeafColumn<any>, row: GridGroupRow<any>)}
-	<!-- padding: 4px 8px; -->
-
-	<div
-		class="group-row-cell flex !h-full !min-h-full overflow-hidden !px-[8px] !py-[4px]"
-		style:--width={column.state.size.width + 'px'}
-		style:--min-width={column.state.size.minWidth + 'px'}
-		style:--max-width={column.state.size.maxWidth + 'px'}
-	>
-		<button
-			class="flex w-full items-center justify-center gap-1 overflow-hidden"
-			onclick={() => datagrid.rows.toggleGroupRowExpansion(row)}
-		>
-			<span class="border-primary/30 rounded-sm border-[1px]">
-				<ArrowRight
-					class={`${datagrid.rows.isGroupRowExpanded(row) && 'rotate-90'} transition-all `}
-				/>
-			</span>
-			<span class="w-full overflow-hidden text-ellipsis whitespace-nowrap leading-normal">
-				{row.groupValue[0]}
-			</span>
-			<span class="text-muted-foreground flex place-items-center pl-1 text-xs leading-none">
-				[{row.children.length}]
-			</span>
-		</button>
-	</div>
-{/snippet}
-
-{#snippet GroupCellAggregationSnippet(row: GridGroupRow<any>, column: LeafColumn<any>)}
-	<div class="text-muted-foreground text-xs">
-		{#each row.aggregations.filter((agg) => agg.columnId === column.columnId) as aggregation}
-			<p>
-				{aggregation.type}: {#if aggregation.type === 'percentChange'}
-					{aggregation.value.toFixed(2)}%
-				{:else if typeof aggregation.value === 'number'}
-					{aggregation.value.toLocaleString()}
-				{:else}
-					{aggregation.value}
-				{/if}
-			</p>
-		{/each}
-	</div>
 {/snippet}

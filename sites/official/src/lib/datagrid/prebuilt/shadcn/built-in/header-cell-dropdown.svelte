@@ -171,7 +171,7 @@
 
 {#if isGroupColumn(column)}
 	<DropdownMenu.Root>
-		<DropdownMenu.Trigger class={cn(buttonVariants({ variant: 'ghost' }), 'size-4 p-2 ')}>
+		<DropdownMenu.Trigger class={cn(buttonVariants({ variant: 'ghost' }), 'size-4 p-2 ml-1 ')}>
 			<MoreVert />
 		</DropdownMenu.Trigger>
 		<DropdownMenu.Content class="w-56">
