@@ -110,8 +110,8 @@
 
 <div
 	class={cn(
-		'container flex flex-row items-center justify-between gap-2 border-x p-3 md:flex-row  min-w-full',
-		_class?.container,
+		'bg-datagrid-pagination container flex min-w-full flex-row items-center justify-between gap-2 border-x p-3   md:flex-row',
+		_class?.container
 	)}
 >
 	{@render status()}
@@ -127,7 +127,7 @@
 
 <style>
 	.container {
-		background-color: hsl(var(--grid-pagination));
+		/* background-color: hsl(var(--grid-pagination-background-color)); */
 		border-color: hsl(var(--grid-border));
 	}
 </style>

@@ -39,7 +39,7 @@
 	import GroupCell from './structure/group-cell.svelte';
 	import RenderCell from './structure/render-cell.svelte';
 	import RenderGroupCell from './structure/render-group-cell.svelte';
-	import RenderColumn from './structure/render-column.svelte';
+	import RenderColumnCell from './structure/render-column-cell.svelte';
 	import { identifier } from './actions.svelte';
 
 	type Props = {
@@ -47,7 +47,7 @@
 
 		// Blocks
 		toolbar?: Snippet;
-		header?: Snippet;
+		head?: Snippet;
 		body?: Snippet;
 		footer?: Snippet;
 		footerContent?: Snippet;
@@ -59,9 +59,8 @@
 
 	let {
 		datagrid,
-
 		toolbar,
-		header: head,
+		head,
 		body,
 		footer,
 		footerContent,
@@ -131,7 +130,7 @@
 						duration: (len) => datagrid.extra.features.animations.getHeadersFlipDuration(len)
 					}}
 				>
-					<RenderColumn {datagrid} {column} />
+					<RenderColumnCell {datagrid} {column} />
 				</div>
 			{/each}
 			{@render AdditionalHeaderCells('right')}
@@ -232,12 +231,25 @@
 {/snippet}
 
 {#snippet PaginationSnippet(directions: ('top' | 'bottom' | 'both')[])}
+	<!-- ? rewrite it later -->
 	{#if shouldDisplayPagination}
-		{#if directions.includes(datagrid.extra.features.pagination.paginationPosition)}
-			{#if pagination}
-				{@render pagination()}
-			{:else}
-				<Pagination {datagrid} class={{ container: 'border-t' }} />
+		{#if ['both', 'top'].includes(datagrid.extra.features.pagination.paginationPosition)}
+			{#if directions.includes('top' || 'both')}
+				{#if pagination}
+					{@render pagination()}
+				{:else}
+					<Pagination {datagrid} class={{ container: 'border-t' }} />
+				{/if}
+			{/if}
+		{/if}
+
+		{#if ['both', 'bottom'].includes(datagrid.extra.features.pagination.paginationPosition)}
+			{#if directions.includes('bottom' || 'both')}
+				{#if pagination}
+					{@render pagination()}
+				{:else}
+					<Pagination {datagrid} class={{ container: 'border-b border-t-0' }} />
+				{/if}
 			{/if}
 		{/if}
 	{/if}
