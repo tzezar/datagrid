@@ -68,7 +68,7 @@
 </script>
 
 <Portal disabled={!datagrid.isFullscreenEnabled()}>
-	<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-wrapper relative h-fit">
+	<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-wrapper relative h-full">
 		{#if datagrid.extra.features.overlay.shouldShowWrapperOverlay()}
 			<div
 				class="pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full bg-black opacity-50"

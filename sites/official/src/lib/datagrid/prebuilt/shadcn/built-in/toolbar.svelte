@@ -25,14 +25,14 @@
 
 <div
 	class={cn(
-		'flex items-end justify-end',
+		'flex items-end justify-end  bg-blue-400',
 		datagrid.extra.features.columnFiltering.shouldDisplayButton() && 'top-bar '
 	)}
 >
 	{#if datagrid.extra.features.globalSearch.shouldDisplayInput()}
 		<GlobalSearch {datagrid} />
 	{:else}
-		<div class="flex h-full grow items-center pb-1 pl-2 border-t border-l">
+		<div class="flex h-full  grow items-center pl-2 border-t border-l">
 			<span class="w-full text-md">
 				{#if title}
 					{title}

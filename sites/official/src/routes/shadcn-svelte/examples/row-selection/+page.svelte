@@ -9,6 +9,19 @@
 	let datagrid = new TzezarsDatagrid({
 		columns: inventoryColumns,
 		data: data.users,
+
+		// todo fix this, tzezars datagrid is taking wrong config for datagrid core
+
+		features: {
+			rowSelection: {
+				maxSelectedRows: 2,
+
+				onRowSelectionChange: (selection) => {
+					console.log(selection)
+				}
+			}
+		},
+
 		extra: {
 			features: {
 				animations: {
@@ -22,15 +35,17 @@
 					maxMultiSortColCount: 2,
 					isMultiSortEvent: () => true
 				},
+				rowSelection: {
+					maxSelectedRows: 2
+				}
 			}
 		}
 	});
 
-	
-
+	$effect(() => {
+		console.log(datagrid.features.rowSelection.maxSelectedRows)
+	})
 
 </script>
 
 <DatagridShadcnSvelte {datagrid} />
-
- dasdsadsa

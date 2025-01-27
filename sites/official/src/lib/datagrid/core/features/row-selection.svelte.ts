@@ -10,10 +10,13 @@ export type RowSelectionFeatureConfig = {
 }
 
 
+const DEFAULT_MAX_SELECTED_ROWS = 99999999;
+
+
 export class RowSelectionFeature<TOriginalRow = any> {
     datagrid: DataGrid<TOriginalRow>;
     selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier> = $state(new SvelteSet())
-    maxSelectedRows: number = $state(99);
+    maxSelectedRows: number = $state(DEFAULT_MAX_SELECTED_ROWS);
 
     constructor(datagrid: DataGrid<TOriginalRow>, config?: RowSelectionFeatureConfig) {
         this.datagrid = datagrid;
