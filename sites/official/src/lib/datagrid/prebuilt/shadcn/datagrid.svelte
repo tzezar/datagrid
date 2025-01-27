@@ -40,6 +40,7 @@
 	import RenderCell from './structure/render-cell.svelte';
 	import RenderGroupCell from './structure/render-group-cell.svelte';
 	import RenderColumn from './structure/render-column.svelte';
+	import { identifier } from './actions.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
@@ -85,16 +86,6 @@
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
 	const leafColumnsToDisplay = $derived(leafColumns.filter((col) => !col.columnId.startsWith('_')));
 
-	const identifier: Action<HTMLElement, string> = (node, data) => {
-		$effect(() => {
-			node.id = datagrid.identifier + '-' + data;
-
-			return () => {
-				// teardown goes here
-			};
-		});
-	};
-
 	const isFullscreenEnabled = $derived(datagrid.extra.features.fullscreen.isFullscreenEnabled());
 	const showWrapperOverlay = $derived(datagrid.extra.features.overlay.shouldShowWrapperOverlay());
 	const shouldDisplayPagination = $derived(
@@ -104,7 +95,11 @@
 </script>
 
 <Portal disabled={!isFullscreenEnabled}>
-	<div use:identifier={'wrapper'} data-fullscreen={isFullscreenEnabled} class={cn('grid-wrapper')}>
+	<div
+		use:identifier={{ datagrid, value: 'wrapper' }}
+		data-fullscreen={isFullscreenEnabled}
+		class={cn('grid-wrapper')}
+	>
 		{@render WrapperOverlaySnippet()}
 		{@render ToolbarSnippet()}
 		<!-- <div class="grid-toolbar-container">
@@ -126,8 +121,8 @@
 </Portal>
 
 {#snippet HeadSnippet()}
-	<div use:identifier={'head'} class="grid-head">
-		<div use:identifier={'head-row'} class="grid-head-row">
+	<div use:identifier={{ datagrid, value: 'head' }} class="grid-head">
+		<div use:identifier={{ datagrid, value: 'head-row' }} class="grid-head-row">
 			{@render AdditionalHeaderCells('left')}
 			{#each headerColumnsWithoutAdditional as column (column.columnId)}
 				<div
@@ -148,7 +143,7 @@
 	{#if body}
 		{@render body()}
 	{:else}
-		<div use:identifier={'body'} class="grid-body">
+		<div use:identifier={{ datagrid, value: 'body' }} class="grid-body">
 			{#if datagrid.extra.features.overlay.shouldShowBodyOverlay()}
 				<div class="body-overlay"></div>
 			{/if}
@@ -156,7 +151,7 @@
 			{#each datagrid.rows.getVisibleRows() as row, rowIndex (row.identifier)}
 				{#if row.isGroupRow()}
 					<div
-						use:identifier={'row-' + row.identifier}
+						use:identifier={{ datagrid, value: 'row-' + row.identifier }}
 						class="group-row"
 						data-depth={row.depth}
 						data-expanded={row.isExpanded()}
@@ -166,19 +161,28 @@
 						{/each}
 					</div>
 				{:else}
-					<div class="row" use:identifier={'row-' + row.identifier}>
+					<div
+						class={cn('row', datagrid.extra.features.stripedRows.applyStripedRows(row, rowIndex))}
+						use:identifier={{ datagrid, value: 'row-' + row.identifier }}
+					>
 						{@render AdditionalBodyCells('left', row)}
-						{#each leafColumnsToDisplay as column (column.columnId)}
-							<div
-								class:contents={!datagrid.extra.features.animations.shouldAnimateRows()}
-								class={cn()}
-								animate:flip={{
-									duration: (len) => datagrid.extra.features.animations.getRowsFlipDuration(len)
-								}}
-							>
+						{#if datagrid.extra.features.animations.shouldAnimateRows()}
+							{#each leafColumnsToDisplay as column (column.columnId)}
+								<div
+									class:contents={!datagrid.extra.features.animations.shouldAnimateRows()}
+									class={cn()}
+									animate:flip={{
+										duration: (len) => datagrid.extra.features.animations.getRowsFlipDuration(len)
+									}}
+								>
+									<RenderCell {datagrid} {row} {column} />
+								</div>
+							{/each}
+						{:else}
+							{#each leafColumnsToDisplay as column (column.columnId)}
 								<RenderCell {datagrid} {row} {column} />
-							</div>
-						{/each}
+							{/each}
+						{/if}
 						{@render AdditionalBodyCells('right', row)}
 					</div>
 					{#if row.isExpanded()}
@@ -213,7 +217,7 @@
 {#snippet WrapperOverlaySnippet()}
 	{#if showWrapperOverlay}
 		<div
-			use:identifier={'wrapper-overlay'}
+			use:identifier={{ datagrid, value: 'wrapper-overlay' }}
 			class="pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full bg-black opacity-50"
 		></div>
 	{/if}

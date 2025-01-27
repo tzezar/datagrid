@@ -4,6 +4,7 @@
 	import type { Snippet } from 'svelte';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
 	import { shouldHighlightSelectedRow } from '../utils';
+	import { identifier } from '../actions.svelte';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;
@@ -17,6 +18,7 @@
 </script>
 
 <div
+	use:identifier={{ datagrid, value: `${row.identifier}-${column.columnId}` }}
 	class:grow={column?._meta?.grow}
 	class={cn(
 		'cell group',

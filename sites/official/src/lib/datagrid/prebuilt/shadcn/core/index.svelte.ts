@@ -59,6 +59,7 @@ import RowExpandingCell from "../built-in/row-expanding-cell.svelte";
 import RowSelectionColumnHeaderCell from "../built-in/row-selection-column-header-cell.svelte";
 import RowExpandingColumnHeaderCell from "../built-in/row-expanding-column-header-cell.svelte";
 import { OverlayFeature, type OverlayFeatureConfig } from "./features/overlay.svelte";
+import { StripedRowsFeature, type StripedRowsFeatureConfig } from "./features/striped-rows.svelte";
 
 
 
@@ -89,7 +90,8 @@ export type TrzezarsDatagridFeatures = {
     columnOrdering: ColumnOrderingEnchancedFeature,
     controlCenter: ControlCenterFeature,
     animations: AnimationsFeature,
-    overlay: OverlayFeature
+    overlay: OverlayFeature,
+    stripedRows: StripedRowsFeature
 }
 
 
@@ -118,7 +120,8 @@ export type TzezarsDatagridExtraStateConfig = {
         columnOrdering?: ColumnOrderingEnchancedFeatureConfig & ColumnOrderingFeatureConfig
         controlCenter?: ControlCenterFeatureConfig,
         animations?: AnimationsFeatureConfig,
-        overlay?: OverlayFeatureConfig
+        overlay?: OverlayFeatureConfig,
+        stripedRows?: StripedRowsFeatureConfig
     }
 
     title?: string
@@ -291,7 +294,7 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
         transformedColumns = updateColumnPinningOffsets(transformedColumns);
         return this.processors.column.createColumnHierarchy(transformedColumns);
     }
-   
+
 }
 
 
@@ -310,28 +313,32 @@ export class Extra {
     }
 
     initializeFeatures(config?: TzezarsDatagridExtraStateConfig) {
+        // extra
         this.features.clickToCopy = new ClickToCopyFeature(this.datagrid, config?.features?.clickToCopy);
+        this.features.credentials = new CredentialsFeature(this.datagrid, config?.features?.credentials);
+        this.features.exporting = new ExportingFeature(this.datagrid, config?.features?.exporting);
+        this.features.fullscreen = new FullscreenFeature(this.datagrid, config?.features?.fullscreen);
+        this.features.groupHeadersVisibility = new GroupHeadersVisibilityFeature(this.datagrid, config?.features?.groupHeadersVisibility);
+        this.features.rowNumbers = new RowNumbersFeature(this.datagrid, config?.features?.rowNumbers);
+        this.features.stripedRows = new StripedRowsFeature(this.datagrid, config?.features?.stripedRows);
+        this.features.overlay = new OverlayFeature(this.datagrid, config?.features?.overlay);
+        this.features.animations = new AnimationsFeature(this.datagrid, config?.features?.animations);
+        this.features.controlCenter = new ControlCenterFeature(this.datagrid, config?.features?.controlCenter);
+        this.features.loadingIndicator = new StatusIndicatorFeature(this.datagrid, config?.features?.statusIndicator);
+        this.features.densityToggle = new DensityToggleFeature(this.datagrid, config?.features?.densityToggle);
+
+        // enhanced
         this.features.columnFiltering = new ColumnFilteringEnchancedFeature(this.datagrid, config?.features?.columnFiltering);
         this.features.columnPinning = new ColumnPinningEnchancedFeature(this.datagrid, config?.features?.columnPinning);
         this.features.columnSizing = new ColumnSizingEnchancedFeature(this.datagrid, config?.features?.columnSizing);
         this.features.columnVisibility = new ColumnVisibilityEnchancedFeature(this.datagrid, config?.features?.columnVisibility);
-        this.features.credentials = new CredentialsFeature(this.datagrid, config?.features?.credentials);
-        this.features.densityToggle = new DensityToggleFeature(this.datagrid, config?.features?.densityToggle);
-        this.features.exporting = new ExportingFeature(this.datagrid, config?.features?.exporting);
-        this.features.fullscreen = new FullscreenFeature(this.datagrid, config?.features?.fullscreen);
         this.features.globalSearch = new GlobalSearchEnchancedFeature(this.datagrid, config?.features?.globalSearch);
-        this.features.groupHeadersVisibility = new GroupHeadersVisibilityFeature(this.datagrid, config?.features?.groupHeadersVisibility);
         this.features.grouping = new GroupingEnchancedFeature(this.datagrid, config?.features?.grouping);
-        this.features.loadingIndicator = new StatusIndicatorFeature(this.datagrid, config?.features?.statusIndicator);
         this.features.pagination = new PaginationEnchancedFeature(this.datagrid, config?.features?.pagination);
         this.features.rowExpanding = new RowExpandingEnchancedFeature(this.datagrid, config?.features?.rowExpanding);
-        this.features.rowNumbers = new RowNumbersFeature(this.datagrid, config?.features?.rowNumbers);
         this.features.sorting = new SortingEnchancedFeature(this.datagrid, config?.features?.sorting);
         this.features.columnOrdering = new ColumnOrderingEnchancedFeature(this.datagrid, config?.features?.columnOrdering);
-        this.features.controlCenter = new ControlCenterFeature(this.datagrid, config?.features?.controlCenter);
-        this.features.animations = new AnimationsFeature(this.datagrid, config?.features?.animations);
         this.features.rowSelection = new RowSelectionEnchancedFeature(this.datagrid, config?.features?.rowSelection);
-        this.features.overlay = new OverlayFeature(this.datagrid, config?.features?.overlay);
     }
 
     getTitle(): string | undefined {
