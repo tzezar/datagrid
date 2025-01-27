@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
-	import type { LeafColumn, GroupColumn, GridRow, GridBasicRow } from '$lib/datagrid/core/types';
+	import type {
+		LeafColumn,
+		GroupColumn,
+		GridRow,
+		GridBasicRow,
+		GridGroupRow
+	} from '$lib/datagrid/core/types';
 
 	import { Portal } from 'bits-ui';
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
@@ -87,10 +93,7 @@
 <Portal disabled={!isFullscreenEnabled}>
 	<div use:identifier={'wrapper'} data-fullscreen={isFullscreenEnabled} class={cn('grid-wrapper')}>
 		{#if showWrapperOverlay}
-			<div
-				use:identifier={'wrapper-overlay'}
-				class="pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full bg-black opacity-50"
-			></div>
+			<div use:identifier={'wrapper-overlay'} class="wrapper-overlay"></div>
 		{/if}
 		{#if toolbar}
 			{@render toolbar()}
@@ -116,7 +119,7 @@
 					{@render header()}
 				{:else}
 					<div use:identifier={'header'} class="grid-header">
-						<div use:identifier={'header-row'} class="grid-header-row w-full">
+						<div use:identifier={'header-row'} class="header-row w-full">
 							{@render AdditionalHeaderCells('left')}
 							{#each headerColumnsWithoutAdditional as column (column.columnId)}
 								<div
@@ -147,15 +150,11 @@
 
 						{#each datagrid.rows.getVisibleRows() as row, rowIndex (row.identifier)}
 							{#if row.isGroupRow()}
-								<div
-									class="grid-body-group-row"
-									data-depth={row.depth}
-									data-expanded={row.isExpanded()}
-								>
+								<div class="group-row " data-depth={row.depth} data-expanded={row.isExpanded()}>
 									{#each leafColumns as column, columnIndex (column.columnId)}
 										{#if column.isVisible()}
 											<div
-												class={cn('grid-body-cell')}
+												class={cn('cell min-h-full !m-0 !p-0')}
 												class:justify-center={column?._meta?.align === 'center'}
 												data-pinned={column.state.pinning.position !== 'none'
 													? column.state.pinning.position
@@ -167,40 +166,9 @@
 												style:--pin-right-offset={column.state.pinning.offset + 'px'}
 											>
 												{#if column.columnId == row.groupKey}
-													<div class="flex flex-col place-items-start justify-start gap-1">
-														<span class="text-muted-foreground flex place-items-center text-xs">
-															({row.children.length} items)
-														</span>
-														<button
-															class="flex gap-1"
-															onclick={() => datagrid.rows.toggleGroupRowExpansion(row)}
-														>
-															<span class="border-primary/30 rounded-sm border-[1px]">
-																<ArrowRight
-																	class={`${datagrid.rows.isGroupRowExpanded(row) && 'rotate-90'} transition-all `}
-																/>
-															</span>
-															<span class="">
-																{row.groupValue[0]}
-															</span>
-														</button>
-													</div>
+													{@render GroupCellHeaderSnippet(column, row)}
 												{:else if row.aggregations.some((agg) => agg.columnId === column.columnId)}
-													<div class="">
-														<div class="text-muted-foreground text-xs">
-															{#each row.aggregations.filter((agg) => agg.columnId === column.columnId) as aggregation}
-																<p>
-																	{aggregation.type}: {#if aggregation.type === 'percentChange'}
-																		{aggregation.value.toFixed(2)}%
-																	{:else if typeof aggregation.value === 'number'}
-																		{aggregation.value.toLocaleString()}
-																	{:else}
-																		{aggregation.value}
-																	{/if}
-																</p>
-															{/each}
-														</div>
-													</div>
+													{@render GroupCellAggregationSnippet(row, column)}
 												{/if}
 											</div>
 										{/if}
@@ -230,7 +198,7 @@
 													<div
 														class:grow={column?._meta?.grow}
 														class={cn(
-															'grid-body-cell group',
+															'cell group',
 															shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
 															column._meta.styles?.bodyCell({ datagrid, column, row })
 														)}
@@ -259,7 +227,7 @@
 							{/if}
 							{#if row.isExpanded()}
 								<div class="grid-body-row">
-									<div class="grid-body-cell sticky left-0">
+									<div class="cell sticky left-0">
 										Content for row with ID {row.identifier}
 									</div>
 								</div>
@@ -322,7 +290,8 @@
 		{/if}
 	{:else}
 		<div
-			class={cn('grid-header-cell', column._meta.grow === true && 'grow ')}
+			class:grow={column._meta.grow === true}
+			class={cn('column-header-cell')}
 			data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 			style:--pin-left-offset={column.state.pinning.offset + 'px'}
 			style:--pin-right-offset={column.state.pinning.offset + 'px'}
@@ -333,10 +302,9 @@
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
-				class="grid-header-cell-content {column.options.sortable &&
-				datagrid.extra.features.sorting.enableSorting === true
-					? 'sortable'
-					: ''}"
+				class:sortable={column.options.sortable &&
+					datagrid.extra.features.sorting.enableSorting === true}
+				class="column-header-cell-content"
 				onclick={(e) => {
 					if (datagrid.extra.features.sorting.enableSorting === false) return;
 
@@ -347,9 +315,8 @@
 					datagrid.handlers.sorting.toggleColumnSorting(column, multisort);
 				}}
 			>
-				<span class="grid-header-cell-content-header">{column.header}</span>
-
-				<div class="flex gap-1">
+				<span class="column-header">{column.header}</span>
+				<div class="column-actions">
 					{#if datagrid.extra.features.sorting.enableSorting && datagrid.extra.features.sorting.enableSorting === true}
 						{#if column.isSortable()}
 							<ColumnSortingIndicator {datagrid} {column} />
@@ -409,7 +376,7 @@
 				onclick={(e) => {
 					datagrid.extra.features.clickToCopy.handleClickToCopy(row.original, column);
 
-					const cellElement = (e.target as HTMLElement).closest('.grid-body-cell');
+					const cellElement = (e.target as HTMLElement).closest('.cell');
 					if (cellElement) {
 						datagrid.extra.features.clickToCopy.addCopyFeedback(cellElement as HTMLElement);
 					}
@@ -424,8 +391,57 @@
 	{/if}
 {/snippet}
 
+{#snippet GroupCellHeaderSnippet(column: LeafColumn<any>, row: GridGroupRow<any>)}
+
+	<!-- padding: 4px 8px; -->
+
+	<div
+		class="group-row-cell  flex !min-h-full !h-full !px-[8px] !py-[4px] "
+		style:--width={column.state.size.width + 'px'}
+		style:--min-width={column.state.size.minWidth + 'px'}
+		style:--max-width={column.state.size.maxWidth + 'px'}
+	>
+		<button
+			class="flex w-full items-center justify-center gap-1 overflow-hidden "
+			onclick={() => datagrid.rows.toggleGroupRowExpansion(row)}
+		>
+			<span class="border-primary/30 rounded-sm border-[1px]">
+				<ArrowRight
+					class={`${datagrid.rows.isGroupRowExpanded(row) && 'rotate-90'} transition-all `}
+				/>
+			</span>
+			<span class="w-full overflow-hidden text-ellipsis whitespace-nowrap leading-normal">
+				{row.groupValue[0]}
+			</span>
+			<span class="text-muted-foreground flex place-items-center  pl-1 text-xs leading-none">
+				[{row.children.length}]
+			</span>
+		</button>
+	</div>
+{/snippet}
+
+{#snippet GroupCellAggregationSnippet(row: GridGroupRow<any>, column: LeafColumn<any>)}
+	<div class="text-muted-foreground text-xs">
+		{#each row.aggregations.filter((agg) => agg.columnId === column.columnId) as aggregation}
+			<p>
+				{aggregation.type}: {#if aggregation.type === 'percentChange'}
+					{aggregation.value.toFixed(2)}%
+				{:else if typeof aggregation.value === 'number'}
+					{aggregation.value.toLocaleString()}
+				{:else}
+					{aggregation.value}
+				{/if}
+			</p>
+		{/each}
+	</div>
+{/snippet}
+
 <style lang="postcss">
 	/* Grid */
+
+	.wrapper-overlay {
+		@apply pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full bg-black opacity-50;
+	}
 
 	.body-overlay {
 		@apply pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[5] h-full w-full bg-black opacity-50;
@@ -453,7 +469,7 @@
 		display: inline-block;
 		max-height: 600px;
 		border: var(--grid-border-width) solid hsl(var(--grid-border));
-		background-color: hsl(var(--grid-background));
+		/* background-color: hsl(var(--grid-background)); */
 	}
 
 	[data-fullscreen='true'] .grid-container-wrapper {
@@ -479,17 +495,17 @@
 		position: sticky;
 		top: 0px;
 		z-index: 10;
-		background-color: hsl(var(--grid-header));
+		/* background-color: hsl(var(--grid-header)); */
 	}
 
-	.grid-header-row {
+	.header-row {
 		display: flex;
 		flex-direction: row;
 		/* background-color: hsl(var(--grid-header)); */
 		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
 	}
 
-	.grid-header-cell {
+	.column-header-cell {
 		display: flex;
 		flex-direction: column;
 		padding: 8px;
@@ -507,7 +523,7 @@
 		font-weight: 500;
 	}
 
-	.grid-header-cell-content {
+	.column-header-cell-content {
 		display: flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
@@ -516,14 +532,14 @@
 		align-items: flex-end;
 	}
 
-	.grid-header-cell-content-header {
+	.column-header {
 		text-overflow: ellipsis;
 		text-wrap: nowrap;
 		overflow: hidden;
 	}
 
 	.grid-header-group {
-		background-color: hsl(var(--grid-header-group));
+		/* background-color: hsl(var(--grid-header-group)); */
 		display: flex;
 		flex-direction: column;
 		height: 100%;
@@ -584,7 +600,7 @@
 		border-bottom: none;
 	}
 
-	.grid-body-cell {
+	.cell {
 		@apply transition-all duration-300;
 
 		width: var(--width);
@@ -595,7 +611,7 @@
 		align-items: center;
 	}
 
-	.grid-body-cell .cell-content {
+	.cell .cell-content {
 		/* flex: 1; */
 		/* min-width: 0; */
 		overflow: hidden;
@@ -614,11 +630,18 @@
     background-color: hsl(var(--grid-body-row-even)); 
 } */
 
-	.grid-body-group-row {
+	.group-row {
 		display: flex;
 		flex-direction: row;
 		width: 100%;
 		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
+	}
+
+	.group-row-cell {
+		@apply flex flex-col place-items-start justify-start gap-1 h-full min-h-full;
+		width: var(--width);
+		min-width: var(--min-width);
+		max-width: var(--max-width);
 	}
 
 	/* Pinned columns base positioning */
@@ -639,15 +662,15 @@
 	}
 
 	/* Pinned header cells */
-	[data-pinned='right'] .grid-header-cell,
-	[data-pinned='left'] .grid-header-cell {
-		background-color: hsl(var(--grid-pinned-header-cell));
+	[data-pinned='right'] .column-header-cell,
+	[data-pinned='left'] .column-header-cell {
+		/* background-color: hsl(var(--grid-pinned-header-cell)); */
 	}
 
 	/* Pinned body cells */
-	div[data-pinned='right'].grid-body-cell,
-	div[data-pinned='left'].grid-body-cell {
-		background-color: hsl(var(--grid-pinned-cell));
+	div[data-pinned='right'].cell,
+	div[data-pinned='left'].cell {
+		/* background-color: hsl(var(--grid-pinned-cell)); */
 	}
 
 	/* Sorting indicator */
@@ -675,7 +698,7 @@
 		position: sticky;
 		bottom: 0px;
 		left: 0px;
-		background-color: hsl(var(--grid-footer));
+		/* background-color: hsl(var(--grid-footer)); */
 		border-bottom-width: 1px;
 	}
 
@@ -683,12 +706,12 @@
 		position: sticky;
 		top: 0px;
 		left: 0px;
-		background-color: hsl(var(--grid-toolbar));
+		/* background-color: hsl(var(--grid-toolbar)); */
 	}
 	/* Pagination */
 
 	.pagination-container {
-		background-color: hsl(var(--grid-pagination));
+		/* background-color: hsl(var(--grid-pagination)); */
 		border: var(--grid-border-width) solid var(--border-color);
 	}
 
@@ -699,7 +722,7 @@
 	/* Column Filtering */
 
 	.column-filter-input {
-		background-color: hsl(var(--grid-border));
+		/* background-color: hsl(var(--grid-border)); */
 		border: 1px solid hsl(var(--grid-border));
 		padding: 0 0.25rem;
 		border-radius: 0.25rem;
@@ -716,6 +739,9 @@
 		@apply h-9 w-full pt-1;
 	}
 
+	.column-actions {
+		@apply flex gap-1;
+	}
 
 	@keyframes copyFeedback {
 		0% {

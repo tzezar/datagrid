@@ -1,5 +1,4 @@
 <script lang="ts">
-	import '$lib/datagrid/prebuilt/shadcn/styles.css';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
 	import { inventoryColumns } from './columns.svelte';
 	import DatagridShadcnSvelte from '$lib/datagrid/prebuilt/shadcn/datagrid.svelte';
