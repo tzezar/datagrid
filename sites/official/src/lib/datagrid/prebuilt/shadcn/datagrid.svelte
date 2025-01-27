@@ -70,7 +70,7 @@
 <Portal disabled={!datagrid.isFullscreenEnabled()}>
 	<div
 		data-fullscreen={datagrid.isFullscreenEnabled()}
-		class="grid-wrapper relative h-full max-h-fit "
+		class="grid-wrapper relative h-full max-h-fit"
 	>
 		{#if datagrid.extra.features.overlay.shouldShowWrapperOverlay()}
 			<div
@@ -96,12 +96,12 @@
 		{/if}
 		<StatusIndicator {datagrid} position="top" />
 		<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-container-wrapper">
-			<div class="grid-container">
+			<div class="grid-container min-w-full">
 				{#if header}
 					{@render header()}
 				{:else}
 					<div class="grid-header">
-						<div class="grid-header-row">
+						<div class="grid-header-row w-full ">
 							{#if datagrid.extra.features.rowSelection.position === 'left' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
 								<RowSelectionColumnHeaderCell
 									{datagrid}
@@ -248,7 +248,8 @@
 										.filter((col) => col.columnId !== 'selection')
 										.filter((col) => col.columnId !== 'expand') as column (column.columnId)}
 										<div
-											class={cn('',
+											class={cn(
+												'',
 												!datagrid.extra.features.animations.shouldAnimateRows() && 'contents'
 											)}
 											animate:flip={{
@@ -270,19 +271,19 @@
 															'grid-body-cell group items-center transition-all duration-300',
 															shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
 															column._meta.styles?.bodyCell({ datagrid, column, row }),
-															column._meta.grow && 'w-full bg-red-400 min-w-full'
+															column._meta.grow && 'grow'
 														)}
 														class:justify-center={column?._meta?.align === 'center'}
 														data-pinned={column.state.pinning.position !== 'none'
 															? column.state.pinning.position
 															: null}
-														style:--width={!column._meta.grow && column.state.size.width + 'px'}
-														style:--min-width={!column._meta.grow && column.state.size.minWidth + 'px'}
-														style:--max-width={!column._meta.grow && column.state.size.maxWidth + 'px'}
+														style:--width={ column.state.size.width + 'px'}
+														style:--min-width={column.state.size.minWidth + 'px'}
+														style:--max-width={column.state.size.maxWidth + 'px'}
 														style:--pin-left-offset={column.state.pinning.offset + 'px'}
 														style:--pin-right-offset={column.state.pinning.offset + 'px'}
 													>
-														<span class={cn('cell-content bg-blue-400 w-full ')}>
+														<span class={cn('cell-content  w-full')}>
 															{@html getCellContent(column, row.original)}
 														</span>
 
@@ -308,7 +309,9 @@
 																>
 																	<ContentCopyOutline
 																		width="0.75rem"
-																		class={cn('opacity-0 transition-all group-hover:opacity-100 hidden group-hover:block')}
+																		class={cn(
+																			'hidden opacity-0 transition-all group-hover:block group-hover:opacity-100'
+																		)}
 																	/>
 																</button>
 															{/if}
@@ -403,13 +406,13 @@
 		{/if}
 	{:else}
 		<div
-			class={cn('grid-header-cell')}
+			class={cn('grid-header-cell', column._meta.grow === true && 'grow ')}
 			data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 			style:--pin-left-offset={column.state.pinning.offset + 'px'}
 			style:--pin-right-offset={column.state.pinning.offset + 'px'}
-			style:--width={column.state.size.width + 'px'}
-			style:--min-width={column.state.size.minWidth + 'px'}
-			style:--max-width={column.state.size.maxWidth + 'px'}
+			style:--width={ column.state.size.width + 'px'}
+			style:--min-width={ column.state.size.minWidth + 'px'}
+			style:--max-width={ column.state.size.maxWidth + 'px'}
 		>
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<!-- svelte-ignore a11y_click_events_have_key_events -->

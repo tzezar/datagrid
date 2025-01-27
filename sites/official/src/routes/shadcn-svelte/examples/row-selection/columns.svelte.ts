@@ -49,6 +49,7 @@ export const inventoryColumns = [
     accessorColumn({
         accessorKey: 'name',
         _meta: {
+            grow: true,
             clickToCopy: true
         } as ShadcnColumnMeta
     }),
@@ -93,16 +94,8 @@ export const inventoryColumns = [
     }),
     accessorColumn({
         accessorKey: 'status',
-        state: {
-            size: {
-                maxWidth: 9000,
-                minWidth: 100,
-                width: 100,
-            }
-        },
-        _meta: {
-            grow: true
-        }
+    
+      
     }),
 
 ] satisfies AnyColumn<InventoryItem>[]

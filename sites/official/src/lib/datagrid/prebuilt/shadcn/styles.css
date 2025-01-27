@@ -52,7 +52,7 @@
 .grid-header-row {
 	display: flex;
 	flex-direction: row;
-	background-color: hsl(var(--grid-header));
+	/* background-color: hsl(var(--grid-header)); */
 	border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
 }
 
@@ -63,7 +63,7 @@
 	width: var(--width);
 	min-width: var(--min-width);
 	max-width: var(--max-width);
-	background-color: hsl(var(--grid-header-cell));
+	/* background-color: hsl(var(--grid-header-cell)); */
 	border-right: var(--grid-border-width) solid hsl(var(--grid-border));
 	/* border-top: var(--grid-border-width) solid hsl(var(--grid-border)); */
 	height: 100%;
