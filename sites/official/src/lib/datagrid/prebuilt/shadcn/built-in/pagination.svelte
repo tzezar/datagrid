@@ -6,7 +6,19 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
 	import { cn } from '$lib/utils';
-	let { datagrid }: { datagrid: TzezarsDatagrid } = $props();
+
+	type Props = {
+		datagrid: TzezarsDatagrid<any>;
+		class?: {
+			prevButton?: string;
+			nextButton?: string;
+			perPageSelect?: string;
+			container?: string;
+		};
+	};
+
+	let { datagrid, class: _class }: Props = $props();
+
 	let pageSizes = datagrid.features.pagination.pageSizes.map((pageSize: number) => {
 		return {
 			value: pageSize.toString(),
@@ -98,9 +110,8 @@
 
 <div
 	class={cn(
-		'flex flex-row items-center justify-between gap-2 p-3 md:flex-row border pagination-container',
-		datagrid.extra.features.pagination.paginationPosition === 'top' && 'border-b-0 border-t',
-		datagrid.extra.features.pagination.paginationPosition === 'bottom' && 'border-b border-t-0'
+		'container flex flex-row items-center justify-between gap-2 border-x p-3 md:flex-row',
+		_class?.container,
 	)}
 >
 	{@render status()}
@@ -115,7 +126,7 @@
 </div>
 
 <style>
-	.pagination-container {
+	.container {
 		background-color: hsl(var(--grid-pagination));
 		border-color: hsl(var(--grid-border));
 	}

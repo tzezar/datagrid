@@ -27,7 +27,7 @@
 >
 	<Select.Trigger class="flex h-full w-full gap-x-2 gap-y-2 rounded-none border-0">
 		{#if datagrid.features.grouping.groupByColumns.length === 0}
-			<span>Select group by columns</span>
+			<span>Select columns</span>
 		{:else}
 			<div class='flex h-full w-full flex-wrap gap-2'>
 				{#each datagrid.features.grouping.groupByColumns as columnId}

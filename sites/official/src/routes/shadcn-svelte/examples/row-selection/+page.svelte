@@ -22,15 +22,6 @@
 					maxMultiSortColCount: 2,
 					isMultiSortEvent: () => true
 				},
-				rowSelection: {
-					rowSelectionMode: 'multiple',
-					displayBuiltInComponents: false
-				},
-				rowExpanding: {
-					displayBuiltInButtonPosition: 'left',
-					displayBuiltInComponents: false,
-
-				}
 			}
 		}
 	});

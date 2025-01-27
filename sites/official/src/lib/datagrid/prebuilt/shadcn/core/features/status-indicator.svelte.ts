@@ -2,7 +2,7 @@ import type { TzezarsDatagrid } from "../index.svelte";
 import type { Feature } from "./types";
 
 export type StatusIndicatorFeatureConfig = {
-    enableLoadingIndicator?: boolean;
+    enableStatusIndicator?: boolean;
     isLoading?: boolean;
     isSaving?: boolean;
     isError?: boolean;
@@ -13,9 +13,9 @@ export type StatusIndicatorFeatureConfig = {
 export class StatusIndicatorFeature implements Feature {
     datagrid: TzezarsDatagrid;
 
-    enableLoadingIndicator: boolean = $state(true);
-    position: 'top' | 'bottom' | 'both' = $state('top');
-    isLoading: boolean = $state(false);
+    enableStatusIndicator: boolean = $state(true);
+    position: 'top' | 'bottom' | 'both' = $state('both');
+    isLoading: boolean = $state(true);
     isSaving: boolean = $state(false);
     isError: boolean = $state(false);
     onLoadingIndicatorChange: (isLoading: boolean, isSaving: boolean, isError: boolean) => void = () => { };
@@ -26,7 +26,7 @@ export class StatusIndicatorFeature implements Feature {
     }
 
     initialize(config?: StatusIndicatorFeatureConfig) {
-        this.enableLoadingIndicator = config?.enableLoadingIndicator ?? this.enableLoadingIndicator;
+        this.enableStatusIndicator = config?.enableStatusIndicator ?? this.enableStatusIndicator;
         this.isLoading = config?.isLoading ?? this.isLoading;
         this.isSaving = config?.isSaving ?? this.isSaving;
         this.isError = config?.isError ?? this.isError;
@@ -36,7 +36,7 @@ export class StatusIndicatorFeature implements Feature {
 
     shouldShowLoadingIndicator(target: 'top' | 'bottom' | 'both') {
         // loading indicator is disabled
-        if (!this.enableLoadingIndicator) return false;
+        if (!this.enableStatusIndicator) return false;
 
         if (target === 'top') {
             if (this.position === 'top' || this.position === 'both') return true;

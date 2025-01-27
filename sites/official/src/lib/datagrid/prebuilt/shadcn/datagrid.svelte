@@ -82,7 +82,7 @@
 				{#if pagination}
 					{@render pagination()}
 				{:else}
-					<Pagination {datagrid} />
+					<Pagination {datagrid} class={{ container: 'border-t' }} />
 				{/if}
 			{/if}
 		{/if}
@@ -93,7 +93,7 @@
 				{:else}
 					<div class="grid-header">
 						<div class="grid-header-row">
-							{#if datagrid.extra.features.rowSelection.displayBuiltInCheckboxPosition === 'left' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
+							{#if datagrid.extra.features.rowSelection.position === 'left' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
 								<RowSelectionColumnHeaderCell
 									{datagrid}
 									column={headerColumns.find(
@@ -101,7 +101,7 @@
 									) as LeafColumn<any>}
 								/>
 							{/if}
-							{#if datagrid.extra.features.rowExpanding.displayBuiltInButtonPosition === 'left' && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
+							{#if datagrid.extra.features.rowExpanding.position === 'left' && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
 								<RowExpandingColumnHeaderCell
 									{datagrid}
 									column={headerColumns.find((col) => col.columnId === 'expand') as LeafColumn<any>}
@@ -127,6 +127,20 @@
 									{/if}
 								</div>
 							{/each}
+							{#if datagrid.extra.features.rowSelection.position === 'right' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
+								<RowSelectionColumnHeaderCell
+									{datagrid}
+									column={headerColumns.find(
+										(col) => col.columnId === 'selection'
+									) as LeafColumn<any>}
+								/>
+							{/if}
+							{#if datagrid.extra.features.rowExpanding.position === 'right' && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
+								<RowExpandingColumnHeaderCell
+									{datagrid}
+									column={headerColumns.find((col) => col.columnId === 'expand') as LeafColumn<any>}
+								/>
+							{/if}
 						</div>
 					</div>
 				{/if}
@@ -134,7 +148,7 @@
 				{#if body}
 					{@render body()}
 				{:else}
-					<div class="grid-body ">
+					<div class="grid-body">
 						{#each datagrid.rows.getVisibleRows() as row, rowIndex (row.identifier)}
 							{#if row.isGroupRow()}
 								<div
@@ -198,7 +212,7 @@
 								</div>
 							{:else}
 								<div class="grid-body-row flex">
-									{#if datagrid.extra.features.rowSelection.displayBuiltInCheckboxPosition === 'left' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
+									{#if datagrid.extra.features.rowSelection.position === 'left' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
 										<RowSelectionCell
 											{datagrid}
 											{row}
@@ -207,7 +221,7 @@
 											) as LeafColumn<any>}
 										/>
 									{/if}
-									{#if datagrid.extra.features.rowExpanding.displayBuiltInButtonPosition === 'left' && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
+									{#if datagrid.extra.features.rowExpanding.position === 'left' && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
 										<RowExpandingCell
 											{datagrid}
 											{row}
@@ -289,6 +303,24 @@
 											{/if}
 										</div>
 									{/each}
+									{#if datagrid.extra.features.rowSelection.position === 'right' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
+										<RowSelectionCell
+											{datagrid}
+											{row}
+											column={headerColumns.find(
+												(col) => col.columnId === 'selection'
+											) as LeafColumn<any>}
+										/>
+									{/if}
+									{#if datagrid.extra.features.rowExpanding.position === 'right' && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
+										<RowExpandingCell
+											{datagrid}
+											{row}
+											column={headerColumns.find(
+												(col) => col.columnId === 'expand'
+											) as LeafColumn<any>}
+										/>
+									{/if}
 								</div>
 							{/if}
 							{#if row.isExpanded()}
@@ -316,7 +348,7 @@
 				{#if pagination}
 					{@render pagination()}
 				{:else}
-					<Pagination {datagrid} />
+					<Pagination {datagrid} class={{ container: 'border-b' }} />
 				{/if}
 			{/if}
 		{/if}
@@ -367,8 +399,13 @@
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
-				class="grid-header-cell-content {column.options.sortable ? 'sortable' : ''}"
+				class="grid-header-cell-content {column.options.sortable &&
+				datagrid.extra.features.sorting.enableSorting === true
+					? 'sortable'
+					: ''}"
 				onclick={(e) => {
+					if (datagrid.extra.features.sorting.enableSorting === false) return;
+
 					let multisort = false;
 					if (datagrid.extra.features.sorting.enableMultiSort) {
 						multisort = e.shiftKey;
@@ -379,7 +416,7 @@
 				<span class="grid-header-cell-content-header">{column.header}</span>
 
 				<div class="flex gap-1">
-					{#if datagrid.extra.features.sorting.enableSorting}
+					{#if datagrid.extra.features.sorting.enableSorting && datagrid.extra.features.sorting.enableSorting === true}
 						{#if column.isSortable()}
 							<ColumnSortingIndicator {datagrid} {column} />
 						{/if}

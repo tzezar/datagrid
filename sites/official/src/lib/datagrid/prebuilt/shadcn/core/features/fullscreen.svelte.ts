@@ -5,7 +5,7 @@ import type { Feature } from "./types";
 export type FullscreenFeatureConfig = {
     isFullscreen?: boolean;
     enableFullscreen?: boolean;
-    onFullscreenChange?(config: FullscreenFeatureConfig): void;
+    onFullscreenChange?(state: FullscreenFeatureConfig): void;
 };
 
 export class FullscreenFeature implements Feature {

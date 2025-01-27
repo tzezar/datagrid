@@ -6,14 +6,14 @@ import type { EnchancedFeature } from "./types";
 
 
 export type PaginationEnchancedFeatureConfig = {
-    enabled?: boolean;
+    displayPagination?: boolean;
     paginationPosition?: 'top' | 'bottom' | 'both';
 }
 
 export class PaginationEnchancedFeature implements EnchancedFeature {
     datagrid: TzezarsDatagrid
 
-    enabled: boolean = $state(true);
+    displayPagination: boolean = $state(true);
     paginationPosition: 'top' | 'bottom' | 'both' = $state('bottom');
 
     constructor(datagrid: TzezarsDatagrid, config?: PaginationEnchancedFeatureConfig & PaginationFeatureConfig) {
@@ -24,11 +24,11 @@ export class PaginationEnchancedFeature implements EnchancedFeature {
     get base(): PaginationFeature { return this.datagrid.features.pagination }
 
     initialize(config?: PaginationEnchancedFeatureConfig) {
-        this.enabled = config?.enabled ?? this.enabled;
+        this.displayPagination = config?.displayPagination ?? this.displayPagination;
     }
 
     shouldDisplayPagination() {
-        return this.enabled;
+        return this.displayPagination;
     }
 
 }

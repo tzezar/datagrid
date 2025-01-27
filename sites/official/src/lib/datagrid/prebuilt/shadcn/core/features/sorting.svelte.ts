@@ -6,7 +6,8 @@ import type { EnchancedFeature } from "./types";
 export type SortingEnchancedFeatureConfig = {
     enableSorting?: boolean;
     enableMultiSort?: boolean;
-    enableSortingRemoval?: boolean;
+    displayInControlCenter?: boolean;
+    // enableSortingRemoval?: boolean;
 } & SortingFeatureConfig
 
 export class SortingEnchancedFeature implements EnchancedFeature {
@@ -14,8 +15,8 @@ export class SortingEnchancedFeature implements EnchancedFeature {
 
     enableSorting: boolean = $state(true);
     enableMultiSort: boolean = $state(true);
-    // ? not used yet, maybe in future
-    enableSortingRemoval: boolean = $state(true);
+    // enableSortingRemoval: boolean = $state(true);
+    displayInControlCenter: boolean = $state(false);
 
     constructor(datagrid: TzezarsDatagrid<any>, config?: SortingEnchancedFeatureConfig) {
         this.datagrid = datagrid
@@ -26,8 +27,9 @@ export class SortingEnchancedFeature implements EnchancedFeature {
 
     initialize(config?: SortingEnchancedFeatureConfig) {
         this.enableSorting = config?.enableSorting ?? this.enableSorting;
-        this.enableSortingRemoval = config?.enableSortingRemoval ?? this.enableSortingRemoval;
+        // this.enableSortingRemoval = config?.enableSortingRemoval ?? this.enableSortingRemoval;
         this.enableMultiSort = config?.enableMultiSort ?? this.enableMultiSort;
+        this.displayInControlCenter = config?.displayInControlCenter ?? this.displayInControlCenter;
     }
 
 

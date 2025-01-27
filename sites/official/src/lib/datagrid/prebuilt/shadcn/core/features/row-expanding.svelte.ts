@@ -12,7 +12,7 @@ export type RowExpandingEnchancedFeatureConfig = {
     expandingMode?: 'single' | 'multiple';
     expandingPosition?: 'left' | 'right';
     maxExpandedRows?: number;
-    displayBuiltInButtonPosition: 'left' | "right" | 'none'
+    position: 'left' | "right" | 'none'
 } & RowExpandingFeatureConfig
 
 
@@ -22,7 +22,7 @@ export class RowExpandingEnchancedFeature implements EnchancedFeature {
     expandingMode: 'single' | 'multiple' = $state('single');
     expandingPosition: 'left' | 'right' = $state('left');
     maxExpandedRows: number = $state(DEFAULT_MAX_EXPANDED_ROWS);
-    displayBuiltInButtonPosition: "left" | "right" | 'none' = $state('left')
+    position: "left" | "right" | 'none' = $state('right')
 
     constructor(datagrid: TzezarsDatagrid, config?: RowExpandingEnchancedFeatureConfig & RowExpandingFeatureConfig) {
         this.datagrid = datagrid
@@ -36,7 +36,7 @@ export class RowExpandingEnchancedFeature implements EnchancedFeature {
         this.expandingMode = config?.expandingMode ?? this.expandingMode;
         this.expandingPosition = config?.expandingPosition ?? this.expandingPosition;
         this.maxExpandedRows = config?.maxExpandedRows ?? this.maxExpandedRows;
-        this.displayBuiltInButtonPosition = config?.displayBuiltInButtonPosition ?? this.displayBuiltInButtonPosition
+        this.position = config?.position ?? this.position
     }
 
 }

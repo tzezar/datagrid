@@ -11,7 +11,7 @@ export type RowSelectionEnchancedFeatureConfig = {
     rowSelectionMode?: 'single' | 'multiple';
     enableSelectAll?: boolean;
     highlightSelectedRow?: boolean;
-    displayBuiltInCheckboxPosition?: 'left' | "right" | 'none'
+    position?: 'left' | "right" | 'none'
 } & RowSelectionFeatureConfig
 
 export class RowSelectionEnchancedFeature implements EnchancedFeature {
@@ -22,7 +22,7 @@ export class RowSelectionEnchancedFeature implements EnchancedFeature {
     rowSelectionMode: 'single' | 'multiple' = $state('multiple');
     enableSelectAll: boolean = $state(true);
     highlightSelectedRow: boolean = $state(true);
-    displayBuiltInCheckboxPosition: "left" | "right" | 'none' = $state('left')
+    position: "left" | "right" | 'none' = $state('right')
 
     get base(): RowSelectionFeature { return this.datagrid.features.rowSelection }
 
@@ -36,7 +36,7 @@ export class RowSelectionEnchancedFeature implements EnchancedFeature {
         this.rowSelectionMode = config?.rowSelectionMode ?? this.rowSelectionMode;
         this.enableSelectAll = config?.enableSelectAll ?? this.enableSelectAll;
         this.highlightSelectedRow = config?.highlightSelectedRow ?? this.highlightSelectedRow;
-        this.displayBuiltInCheckboxPosition = config?.displayBuiltInCheckboxPosition ?? this.displayBuiltInCheckboxPosition
+        this.position = config?.position ?? this.position
     }
 
     toggleRowSelection(identifier: GridRowIdentifier) {

@@ -19,11 +19,6 @@
 	};
 
 	const { datagrid }: Props = $props();
-
-	const showColumnGroupingSeparator = $derived(
-		datagrid.extra.features.groupHeadersVisibility.showGroupHeaders ||
-			datagrid.extra.features.grouping.enabled
-	);
 </script>
 
 {#if datagrid.extra.features.controlCenter.displayControlCenter}
@@ -38,7 +33,7 @@
 				<DropdownMenu.GroupHeading>Datagrid control center</DropdownMenu.GroupHeading>
 				<DropdownMenu.Separator />
 				<DropdownMenu.Group>
-					{#if datagrid.extra.features.sorting.enableSorting}
+					{#if datagrid.extra.features.sorting.enableSorting && datagrid.extra.features.sorting.displayInControlCenter === true}
 						<Sorting {datagrid} />
 					{/if}
 
@@ -61,11 +56,8 @@
 						<DataExporting {datagrid} />
 					{/if}
 
-					{#if showColumnGroupingSeparator}
-						<DropdownMenu.Separator />
-					{/if}
-
 					{#if datagrid.extra.features.groupHeadersVisibility.enableColumnGroupsCreation}
+						<DropdownMenu.Separator />
 						<DropdownMenu.Sub>
 							<DropdownMenu.SubTrigger>
 								<AdGroupOutlineSharp class="mr-2 size-4" />
@@ -80,9 +72,9 @@
 					{#if datagrid.extra.features.groupHeadersVisibility.enableGroupHeadersHiding}
 						<ColumnGroupsVisibility {datagrid} />
 					{/if}
-					<DropdownMenu.Separator />
 					{#if datagrid.extra.features.grouping.enabled}
-						<DropdownMenu.GroupHeading>Data grouping</DropdownMenu.GroupHeading>
+						<DropdownMenu.Separator />
+						<DropdownMenu.GroupHeading>Group data by column</DropdownMenu.GroupHeading>
 						<GroupingDropdown {datagrid} />
 					{/if}
 				</DropdownMenu.Group>

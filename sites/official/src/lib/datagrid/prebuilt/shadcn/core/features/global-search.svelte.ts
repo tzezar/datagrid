@@ -14,7 +14,6 @@ export class GlobalSearchEnchancedFeature implements EnchancedFeature {
     datagrid: TzezarsDatagrid
 
     private inputVisible: boolean = $state(false);
-
     enabled: boolean = $state(true);
     onEnableGlobalSearchChange: (value: boolean) => void = () => { };
 
@@ -42,7 +41,7 @@ export class GlobalSearchEnchancedFeature implements EnchancedFeature {
     }
 
     shouldDisplayInput() {
-        return this.inputVisible;
+        return this.inputVisible && this.enabled;
     }
 
 }

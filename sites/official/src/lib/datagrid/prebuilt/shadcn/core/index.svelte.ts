@@ -220,21 +220,21 @@ const createAdditionalColumns = (datagrid: TzezarsDatagrid): {
     const { rowSelection, rowExpanding } = datagrid.extra.features;
 
     if (rowSelection?.displayBuiltInComponents === true) {
-        if (rowSelection?.displayBuiltInCheckboxPosition === 'left') {
+        if (rowSelection?.position === 'left') {
             leftCols.push(createColumn('left', 'selection', RowSelectionCell, RowSelectionColumnHeaderCell));
         }
 
-        if (rowSelection?.displayBuiltInCheckboxPosition === 'right') {
+        if (rowSelection?.position === 'right') {
             rightCols.push(createColumn('right', 'selection', RowSelectionCell, RowSelectionColumnHeaderCell));
         }
 
     }
 
     if (rowExpanding?.displayBuiltInComponents === true) {
-        if (rowExpanding?.displayBuiltInButtonPosition === 'right') {
+        if (rowExpanding?.position === 'right') {
             rightCols.push(createColumn('right', 'expand', RowExpandingCell, RowExpandingColumnHeaderCell));
         }
-        if (rowExpanding?.displayBuiltInButtonPosition === 'left') {
+        if (rowExpanding?.position === 'left') {
             leftCols.push(createColumn('left', 'expand', RowExpandingCell, RowExpandingColumnHeaderCell));
         }
     }
