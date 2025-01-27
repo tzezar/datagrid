@@ -13,13 +13,14 @@
 		class?: string;
 	};
 	let { datagrid, row, column, children, class: _class }: Props = $props();
+
 	
 </script>
 
 {#if column.isVisible()}
 	<div
 		class={cn(
-			'grid-body-cell',
+			'cell',
 			shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
 			column._meta.styles?.bodyCell,
 			_class

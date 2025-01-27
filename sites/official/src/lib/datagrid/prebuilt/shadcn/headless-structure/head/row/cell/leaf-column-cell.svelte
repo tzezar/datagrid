@@ -13,7 +13,7 @@
 
 {#if column.state.visible === true}
 	<div
-		class={cn('grid-header-cell', _class)}
+		class={cn('header-cell', _class)}
 		data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 		style:--pin-left-offset={column.state.pinning.offset + 'px'}
 		style:--pin-right-offset={column.state.pinning.offset + 'px'}

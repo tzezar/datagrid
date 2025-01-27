@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { shouldShowColumnFilter } from '$lib/datagrid/prebuilt/shadcn/utils';
 	import '$lib/datagrid/prebuilt/shadcn/styles.css';
 	import Datagrid from '$lib/datagrid/prebuilt/shadcn/datagrid.svelte';
@@ -130,4 +130,4 @@
 			</div>
 		{/if}
 	</LeafColumnCell>
-{/snippet}
+{/snippet} -->
