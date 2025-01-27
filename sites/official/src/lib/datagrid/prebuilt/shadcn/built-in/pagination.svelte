@@ -110,7 +110,7 @@
 
 <div
 	class={cn(
-		'container flex flex-row items-center justify-between gap-2 border-x p-3 md:flex-row',
+		'container flex flex-row items-center justify-between gap-2 border-x p-3 md:flex-row  min-w-full',
 		_class?.container,
 	)}
 >

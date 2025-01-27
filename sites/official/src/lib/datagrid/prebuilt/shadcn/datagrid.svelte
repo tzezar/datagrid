@@ -68,7 +68,10 @@
 </script>
 
 <Portal disabled={!datagrid.isFullscreenEnabled()}>
-	<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-wrapper relative h-full">
+	<div
+		data-fullscreen={datagrid.isFullscreenEnabled()}
+		class="grid-wrapper relative h-full max-h-fit "
+	>
 		{#if datagrid.extra.features.overlay.shouldShowWrapperOverlay()}
 			<div
 				class="pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full bg-black opacity-50"
@@ -222,7 +225,7 @@
 									{/each}
 								</div>
 							{:else}
-								<div class="grid-body-row flex">
+								<div class="grid-body-row flex last:border-b-0">
 									{#if datagrid.extra.features.rowSelection.position === 'left' && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
 										<RowSelectionCell
 											{datagrid}
@@ -264,7 +267,7 @@
 												{:else}
 													<div
 														class={cn(
-															'grid-body-cell group items-center transition-all duration-300',
+															'grid-body-cell group items-center transition-all duration-300 ',
 															shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
 															column._meta.styles?.bodyCell({ datagrid, column, row })
 														)}
@@ -370,7 +373,7 @@
 </Portal>
 
 {#snippet HeaderGroupCellSnippet(column: GroupColumn<any>)}
-	<div class={`grid-header-group`}>
+	<div class="grid-header-group">
 		<div class="grid-header-group-header">
 			{column.header}
 			<HeaderCellDropdown {datagrid} {column} />
