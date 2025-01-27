@@ -51,17 +51,19 @@
 		footer?: Snippet;
 		footerContent?: Snippet;
 		pagination?: Snippet;
+		statusIndicator?: Snippet;
 	};
 
 	let {
 		datagrid,
 
 		toolbar,
-		header,
+		header: head,
 		body,
 		footer,
 		footerContent,
-		pagination
+		pagination,
+		statusIndicator
 	}: Props = $props();
 
 	let headerColumns = $derived.by(() => {
@@ -97,187 +99,135 @@
 	const shouldAnimateHeaders = $derived(datagrid.extra.features.animations.shouldAnimateHeaders());
 </script>
 
-<Portal disabled={!isFullscreenEnabled}>
-	<div use:identifier={'wrapper'} data-fullscreen={isFullscreenEnabled} class={cn('grid-wrapper')}>
-		{#if showWrapperOverlay}
-			<div
-				use:identifier={'wrapper-overlay'}
-				class="pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full bg-black opacity-50"
-			></div>
-		{/if}
-		{#if toolbar}
-			{@render toolbar()}
-		{:else}
-			<Toolbar {datagrid} />
-		{/if}
-		<!-- <div class="grid-toolbar-container">
-			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
-			</div> -->
-		{#if shouldDisplayPagination}
-			{#if ['both', 'top'].includes(datagrid.extra.features.pagination.paginationPosition)}
-				{#if pagination}
-					{@render pagination()}
-				{:else}
-					<Pagination {datagrid} class={{ container: 'border-t' }} />
-				{/if}
+{#snippet HeadSnippet()}
+	<div use:identifier={'head'} class="grid-head">
+		<div use:identifier={'head-row'} class="grid-head-row">
+			{@render AdditionalHeaderCells('left')}
+			{#each headerColumnsWithoutAdditional as column (column.columnId)}
+				<div
+					class:contents={!shouldAnimateHeaders}
+					animate:flip={{
+						duration: (len) => datagrid.extra.features.animations.getHeadersFlipDuration(len)
+					}}
+				>
+					<RenderColumn {datagrid} {column} />
+				</div>
+			{/each}
+			{@render AdditionalHeaderCells('right')}
+		</div>
+	</div>
+{/snippet}
+
+{#snippet BodySnippet()}
+	{#if body}
+		{@render body()}
+	{:else}
+		<div use:identifier={'body'} class="grid-body">
+			{#if datagrid.extra.features.overlay.shouldShowBodyOverlay()}
+				<div class="body-overlay"></div>
 			{/if}
-		{/if}
-		<StatusIndicator {datagrid} position="top" />
-		<div data-fullscreen={isFullscreenEnabled} class="grid-container-wrapper">
-			<div class="grid-container min-w-full">
-				{#if header}
-					{@render header()}
+
+			{#each datagrid.rows.getVisibleRows() as row, rowIndex (row.identifier)}
+				{#if row.isGroupRow()}
+					<div class="group-row" data-depth={row.depth} data-expanded={row.isExpanded()}>
+						{#each leafColumns as column, columnIndex (column.columnId)}
+							<RenderGroupCell {datagrid} {row} {column} />
+						{/each}
+					</div>
 				{:else}
-					<div use:identifier={'header'} class="grid-header">
-						<div use:identifier={'header-row'} class="grid-header-row w-full">
-							{@render AdditionalHeaderCells('left')}
-							{#each headerColumnsWithoutAdditional as column (column.columnId)}
-								<div
-									class:contents={!shouldAnimateHeaders}
-									animate:flip={{
-										duration: (len) =>
-											datagrid.extra.features.animations.getHeadersFlipDuration(len)
-									}}
-								>
-									<RenderColumn {datagrid} {column} />
-								</div>
-							{/each}
-							{@render AdditionalHeaderCells('right')}
+					<div class="row">
+						{@render AdditionalBodyCells('left', row)}
+						{#each leafColumnsToDisplay as column (column.columnId)}
+							<div
+								class:contents={!datagrid.extra.features.animations.shouldAnimateRows()}
+								class={cn()}
+								animate:flip={{
+									duration: (len) => datagrid.extra.features.animations.getRowsFlipDuration(len)
+								}}
+							>
+								<RenderCell {datagrid} {row} {column} />
+							</div>
+						{/each}
+						{@render AdditionalBodyCells('right', row)}
+					</div>
+				{/if}
+				{#if row.isExpanded()}
+					<div class="row">
+						<div class="cell sticky left-0">
+							Content for row with ID {row.identifier}
 						</div>
 					</div>
 				{/if}
-				{#if body}
-					{@render body()}
-				{:else}
-					<div use:identifier={'body'} class="grid-body">
-						{#if datagrid.extra.features.overlay.shouldShowBodyOverlay()}
-							<div class="body-overlay"></div>
-						{/if}
+			{/each}
+		</div>
+	{/if}
+{/snippet}
 
-						{#each datagrid.rows.getVisibleRows() as row, rowIndex (row.identifier)}
-							{#if row.isGroupRow()}
-								<div class="group-row" data-depth={row.depth} data-expanded={row.isExpanded()}>
-									{#each leafColumns as column, columnIndex (column.columnId)}
-										<RenderGroupCell {datagrid} {row} {column} />
-									{/each}
-								</div>
-							{:else}
-								<div class="grid-body-row">
-									{@render AdditionalBodyCells('left', row)}
-									{#each leafColumnsToDisplay as column (column.columnId)}
-										<div
-											class:contents={!datagrid.extra.features.animations.shouldAnimateRows()}
-											class={cn()}
-											animate:flip={{
-												duration: (len) =>
-													datagrid.extra.features.animations.getRowsFlipDuration(len)
-											}}
-										>
-											<RenderCell {datagrid} {row} {column} />
-										</div>
-									{/each}
-									{@render AdditionalBodyCells('right', row)}
-								</div>
-							{/if}
-							{#if row.isExpanded()}
-								<div class="grid-body-row">
-									<div class="cell sticky left-0">
-										Content for row with ID {row.identifier}
-									</div>
-								</div>
-							{/if}
-						{/each}
-					</div>
-				{/if}
+<Portal disabled={!isFullscreenEnabled}>
+	<div use:identifier={'wrapper'} data-fullscreen={isFullscreenEnabled} class={cn('grid-wrapper')}>
+		{@render WrapperOverlaySnippet()}
+		{@render ToolbarSnippet()}
+		<!-- <div class="grid-toolbar-container">
+			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
+			</div> -->
+		{@render PaginationSnippet(['both', 'top'])}
+		{@render StatusIndicatorSnippet('top')}
+		<div data-fullscreen={isFullscreenEnabled} class="grid-container-wrapper">
+			<div class="grid-container">
+				{@render HeadSnippet()}
+				{@render BodySnippet()}
 			</div>
 		</div>
-		{#if footer}
-			{@render footer()}
-		{:else}
-			<div class={cn('grid-footer-container', footerContent && 'p-2')}>
-				{@render footerContent?.()}
-			</div>
-		{/if}
-		<StatusIndicator {datagrid} position="bottom" />
-		{#if shouldDisplayPagination}
-			{#if ['bottom', 'both'].includes(datagrid.extra.features.pagination.paginationPosition)}
-				{#if pagination}
-					{@render pagination()}
-				{:else}
-					<Pagination {datagrid} class={{ container: 'border-b' }} />
-				{/if}
-			{/if}
-		{/if}
+
+		{@render FooterSnippet()}
+		{@render StatusIndicatorSnippet('bottom')}
+		{@render PaginationSnippet(['bottom', 'both'])}
 		{#if datagrid.extra.features.credentials.enabled}
 			<MadeWithLoveByTzezar />
 		{/if}
 	</div>
 </Portal>
 
-{#snippet ColumnGroupHeaderSnippet(column: GroupColumn<any>)}
-	<GroupColumnCell {column}>
-		<div class="group-column-cell-header">
-			{column.header}
-			<HeaderCellDropdown {datagrid} {column} />
-		</div>
-		<div class="flex grow flex-row">
-			{#each column.columns ?? [] as subColumn (subColumn.columnId)}
-				<div animate:flip>
-					{#if isGroupColumn(subColumn)}
-						{@render ColumnGroupHeaderSnippet(subColumn)}
-					{:else if subColumn.state.visible === true}
-						{@render ColumnHeaderSnippet(subColumn)}
-					{/if}
-				</div>
-			{/each}
-		</div>
-	</GroupColumnCell>
+{#snippet ToolbarSnippet()}
+	{#if toolbar}
+		{@render toolbar()}
+	{:else}
+		<Toolbar {datagrid} />
+	{/if}
 {/snippet}
 
-{#snippet ColumnHeaderSnippet(column: LeafColumn<any>)}
-	{#if column.headerCell}
-		{@const cellContent = column.headerCell({ datagrid, column })}
-		{#if typeof cellContent === 'string'}
-			{@html cellContent}
-		{:else if isCellComponent(cellContent)}
-			<cellContent.component {datagrid} {column} />
-		{/if}
-	{:else}
-		<LeafColumnCell {column}>
-			<!-- svelte-ignore a11y_no_static_element_interactions -->
-			<!-- svelte-ignore a11y_click_events_have_key_events -->
-			<div
-				class:sortable={column.options.sortable &&
-					datagrid.extra.features.sorting.enableSorting === true}
-				class="grid-header-cell-content"
-				onclick={(e) => {
-					if (datagrid.extra.features.sorting.enableSorting === false) return;
-					let multisort = false;
-					if (datagrid.extra.features.sorting.enableMultiSort) {
-						multisort = e.shiftKey;
-					}
-					datagrid.handlers.sorting.toggleColumnSorting(column, multisort);
-				}}
-			>
-				<span class="group-column-header">{column.header}</span>
+{#snippet WrapperOverlaySnippet()}
+	{#if showWrapperOverlay}
+		<div
+			use:identifier={'wrapper-overlay'}
+			class="pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full bg-black opacity-50"
+		></div>
+	{/if}
+{/snippet}
 
-				<div class="flex gap-1">
-					{#if datagrid.extra.features.sorting.enableSorting && datagrid.extra.features.sorting.enableSorting === true}
-						{#if column.isSortable()}
-							<ColumnSortingIndicator {datagrid} {column} />
-						{/if}
-					{/if}
-					{#if column._meta.showColumnManagerDropdownMenu === true}
-						<HeaderCellDropdown {datagrid} {column} />
-					{/if}
-				</div>
-			</div>
-			{#if datagrid.extra.features.columnFiltering.isEnabled()}
-				<div class="column-filter">
-					<HeaderCellColumnFilter {datagrid} {column} />
-				</div>
+{#snippet StatusIndicatorSnippet(position: 'top' | 'bottom' | 'both')}
+	<StatusIndicator {datagrid} {position} />
+{/snippet}
+
+{#snippet PaginationSnippet(directions: ('top' | 'bottom' | 'both')[])}
+	{#if shouldDisplayPagination}
+		{#if directions.includes(datagrid.extra.features.pagination.paginationPosition)}
+			{#if pagination}
+				{@render pagination()}
+			{:else}
+				<Pagination {datagrid} class={{ container: 'border-t' }} />
 			{/if}
-		</LeafColumnCell>
+		{/if}
+	{/if}
+{/snippet}
+
+{#snippet FooterSnippet()}
+	{#if footer}
+		{@render footer()}
+	{:else}
+		<div class={cn('grid-footer-container', footerContent && 'p-2')}>
+			{@render footerContent?.()}
+		</div>
 	{/if}
 {/snippet}
 

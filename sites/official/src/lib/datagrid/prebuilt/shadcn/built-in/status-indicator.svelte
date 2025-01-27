@@ -4,7 +4,7 @@
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
-		position: 'top' | 'bottom'
+		position: 'top' | 'bottom' | 'both'
 	};
 
 	let { datagrid, position }: Props = $props();

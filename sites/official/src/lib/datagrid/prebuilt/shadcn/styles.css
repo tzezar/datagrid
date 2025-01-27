@@ -43,22 +43,24 @@
 		/* overflow: auto; */
 		/* fix for coloring width not taking whole width */
 		display: inline-block;
+		min-width: 100%;
 	}
 
 	/* Header */
-	.grid-header {
+	.grid-head {
 		display: flex;
 		flex-direction: row;
 		position: sticky;
 		top: 0px;
 		z-index: 10;
-		/* background-color: hsl(var(--grid-header)); */
+		/* background-color: hsl(var(--grid-head)); */
 	}
 
-	.grid-header-row {
+	.grid-head-row {
+		width: 100%;
 		display: flex;
 		flex-direction: row;
-		/* background-color: hsl(var(--grid-header)); */
+		/* background-color: hsl(var(--grid-head)); */
 		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
 	}
 
@@ -69,7 +71,7 @@
 		width: var(--width);
 		min-width: var(--min-width);
 		max-width: var(--max-width);
-		/* background-color: hsl(var(--grid-header-cell)); */
+		/* background-color: hsl(var(--grid-head-cell)); */
 		border-right: var(--grid-border-width) solid hsl(var(--grid-border));
 		/* border-top: var(--grid-border-width) solid hsl(var(--grid-border)); */
 		height: 100%;
@@ -97,7 +99,7 @@
 	}
 
 	.group-column-cell{
-		/* background-color: hsl(var(--grid-header-group)); */
+		/* background-color: hsl(var(--grid-head-group)); */
 		display: flex;
 		flex-direction: column;
 		height: 100%;
@@ -106,7 +108,7 @@
 		font-weight: 500;
 	}
 
-	.grid-header-group-header {
+	.grid-head-group-header {
 		padding: 8px;
 		border-right: var(--grid-border-width) solid hsl(var(--grid-border));
 		border-left: var(--grid-border-width) solid hsl(var(--grid-border));
@@ -121,12 +123,12 @@
 		text-align: center;
 	}
 
-	.grid-header-group-header:first-child {
+	.grid-head-group-header:first-child {
 		border-right: var(--grid-border-width) solid hsl(var(--grid-border));
 		border-left: 0px;
 	}
 
-	.grid-header-group-cell {
+	.grid-head-group-cell {
 		font-weight: bold;
 		width: 100%;
 		padding: 8px;
@@ -147,14 +149,14 @@
 		/* height: 100%; */
 	}
 
-	.grid-body-row {
+	.row {
 		display: flex;
 		height: 100%;
 		flex-direction: row;
 		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
 	}
 
-	.grid-body-row:last-child {
+	.row:last-child {
 		border-bottom: none;
 	}
 
@@ -179,13 +181,13 @@
 	}
 
 	/* Odd rows */
-	/* .grid-body-row:nth-child(odd) {
-    background-color: hsl(var(--grid-body-row-odd)); 
+	/* .row:nth-child(odd) {
+    background-color: hsl(var(--row-odd)); 
 } */
 
 	/* Even rows */
-	/* .grid-body-row:nth-child(even) {
-    background-color: hsl(var(--grid-body-row-even)); 
+	/* .row:nth-child(even) {
+    background-color: hsl(var(--row-even)); 
 } */
 
 	.group-row {
