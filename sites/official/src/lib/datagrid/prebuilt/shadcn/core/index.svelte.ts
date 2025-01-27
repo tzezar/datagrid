@@ -58,6 +58,7 @@ import RowSelectionCell from "../built-in/row-selection-cell.svelte";
 import RowExpandingCell from "../built-in/row-expanding-cell.svelte";
 import RowSelectionColumnHeaderCell from "../built-in/row-selection-column-header-cell.svelte";
 import RowExpandingColumnHeaderCell from "../built-in/row-expanding-column-header-cell.svelte";
+import { OverlayFeature, type OverlayFeatureConfig } from "./features/overlay.svelte";
 
 
 
@@ -89,6 +90,7 @@ export type TrzezarsDatagridFeatures = {
     columnOrdering: ColumnOrderingEnchancedFeature,
     controlCenter: ControlCenterFeature,
     animations: AnimationsFeature,
+    overlay: OverlayFeature
 }
 
 
@@ -116,7 +118,8 @@ export type TzezarsDatagridExtraStateConfig = {
         sorting?: SortingEnchancedFeatureConfig & SortingFeatureConfig
         columnOrdering?: ColumnOrderingEnchancedFeatureConfig & ColumnOrderingFeatureConfig
         controlCenter?: ControlCenterFeatureConfig,
-        animations?: AnimationsFeatureConfig
+        animations?: AnimationsFeatureConfig,
+        overlay?: OverlayFeatureConfig
     }
 
     title?: string
@@ -332,6 +335,7 @@ export class Extra {
         this.features.controlCenter = new ControlCenterFeature(this.datagrid, config?.features?.controlCenter);
         this.features.animations = new AnimationsFeature(this.datagrid, config?.features?.animations);
         this.features.rowSelection = new RowSelectionEnchancedFeature(this.datagrid, config?.features?.rowSelection);
+        this.features.overlay = new OverlayFeature(this.datagrid, config?.features?.overlay);
     }
 
     getTitle(): string | undefined {

@@ -68,7 +68,12 @@
 </script>
 
 <Portal disabled={!datagrid.isFullscreenEnabled()}>
-	<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-wrapper">
+	<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-wrapper relative h-fit">
+		{#if datagrid.extra.features.overlay.shouldShowWrapperOverlay()}
+			<div
+				class="pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full bg-black opacity-50"
+			></div>
+		{/if}
 		{#if toolbar}
 			{@render toolbar()}
 		{:else}
@@ -86,6 +91,7 @@
 				{/if}
 			{/if}
 		{/if}
+		<StatusIndicator {datagrid} position="top" />
 		<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-container-wrapper">
 			<div class="grid-container">
 				{#if header}
@@ -144,11 +150,16 @@
 						</div>
 					</div>
 				{/if}
-				<StatusIndicator {datagrid} position="top" />
 				{#if body}
 					{@render body()}
 				{:else}
-					<div class="grid-body">
+					<div class="grid-body relative">
+						{#if datagrid.extra.features.overlay.shouldShowBodyOverlay()}
+							<div
+								class="pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[5] h-full w-full bg-black opacity-50"
+							></div>
+						{/if}
+
 						{#each datagrid.rows.getVisibleRows() as row, rowIndex (row.identifier)}
 							{#if row.isGroupRow()}
 								<div
@@ -334,7 +345,6 @@
 					</div>
 				{/if}
 			</div>
-			<StatusIndicator {datagrid} position="bottom" />
 		</div>
 		{#if footer}
 			{@render footer()}
@@ -343,6 +353,7 @@
 				{@render footerContent?.()}
 			</div>
 		{/if}
+		<StatusIndicator {datagrid} position="bottom" />
 		{#if datagrid.extra.features.pagination.shouldDisplayPagination()}
 			{#if ['bottom', 'both'].includes(datagrid.extra.features.pagination.paginationPosition)}
 				{#if pagination}

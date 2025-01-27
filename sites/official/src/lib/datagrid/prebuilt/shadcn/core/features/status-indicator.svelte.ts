@@ -14,8 +14,8 @@ export class StatusIndicatorFeature implements Feature {
     datagrid: TzezarsDatagrid;
 
     enableStatusIndicator: boolean = $state(true);
-    position: 'top' | 'bottom' | 'both' = $state('both');
-    isLoading: boolean = $state(true);
+    position: 'top' | 'bottom' | 'both' = $state('top');
+    isLoading: boolean = $state(false);
     isSaving: boolean = $state(false);
     isError: boolean = $state(false);
     onLoadingIndicatorChange: (isLoading: boolean, isSaving: boolean, isError: boolean) => void = () => { };
