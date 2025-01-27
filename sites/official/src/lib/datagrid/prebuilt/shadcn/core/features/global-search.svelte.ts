@@ -1,5 +1,4 @@
 import { GlobalSearchFeature } from "$lib/datagrid/core/features";
-import type { GlobalSearchFeatureConfig } from "$lib/datagrid/core/features/global-search.svelte";
 import type { TzezarsDatagrid } from "../index.svelte";
 import type { EnchancedFeature } from "./types";
 
@@ -7,7 +6,7 @@ import type { EnchancedFeature } from "./types";
 export type GlobalSearchEnchancedFeatureConfig = {
     enabled?: boolean;
     onEnableGlobalSearchChange?(value: boolean): void;
-} & GlobalSearchFeatureConfig
+}
 
 
 export class GlobalSearchEnchancedFeature implements EnchancedFeature {

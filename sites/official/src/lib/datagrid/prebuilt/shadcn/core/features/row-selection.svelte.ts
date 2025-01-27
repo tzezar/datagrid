@@ -1,5 +1,4 @@
 import { RowSelectionFeature } from "$lib/datagrid/core/features";
-import type { RowSelectionFeatureConfig } from "$lib/datagrid/core/features/row-selection.svelte";
 import type { GridRowIdentifier } from "$lib/datagrid/core/types";
 import type { TzezarsDatagrid } from "../index.svelte";
 import type { EnchancedFeature } from "./types";
@@ -12,7 +11,7 @@ export type RowSelectionEnchancedFeatureConfig = {
     enableSelectAll?: boolean;
     highlightSelectedRow?: boolean;
     position?: 'left' | "right" | 'none'
-} & RowSelectionFeatureConfig
+}
 
 export class RowSelectionEnchancedFeature implements EnchancedFeature {
     datagrid: TzezarsDatagrid

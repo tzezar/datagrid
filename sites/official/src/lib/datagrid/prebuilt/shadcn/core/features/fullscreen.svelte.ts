@@ -43,4 +43,8 @@ export class FullscreenFeature implements Feature {
         return this.enabled;
     }
 
+    isFullscreenEnabled() {
+        return this.enabled && this.isFullscreen;
+    }
+
 }

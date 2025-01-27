@@ -13,7 +13,7 @@ export type RowExpandingEnchancedFeatureConfig = {
     expandingPosition?: 'left' | 'right';
     maxExpandedRows?: number;
     position: 'left' | "right" | 'none'
-} & RowExpandingFeatureConfig
+}
 
 
 export class RowExpandingEnchancedFeature implements EnchancedFeature {

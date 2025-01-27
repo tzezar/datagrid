@@ -1,12 +1,11 @@
 import { ColumnSizingFeature } from "$lib/datagrid/core/features";
-import type { ColumnSizingFeatureConfig } from "$lib/datagrid/core/features/column-sizing.svelte";
 import type { TzezarsDatagrid } from "../index.svelte";
 import type { EnchancedFeature } from "./types";
 
 export type ColumnSizingEnchancedFeatureConfig = {
     displayControls?: boolean;
     columnResizeMode?: 'standard' | 'fluid';
-} & ColumnSizingFeatureConfig
+} 
 
 export class ColumnSizingEnchancedFeature implements EnchancedFeature {
     datagrid: TzezarsDatagrid

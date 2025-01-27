@@ -4,9 +4,9 @@ import type { TzezarsDatagrid } from "../index.svelte";
 import type { EnchancedFeature } from "./types";
 
 export type ColumnFilteringEnchancedFeatureConfig = {
-    enabled?: boolean;
-    visible?: boolean;
-} & ColumnFilteringFeatureConfig
+    columnFiltersVisible?: boolean;
+    isToggleButtonVisible?: boolean;
+} 
 
 export class ColumnFilteringEnchancedFeature implements EnchancedFeature {
     datagrid: TzezarsDatagrid
@@ -22,8 +22,8 @@ export class ColumnFilteringEnchancedFeature implements EnchancedFeature {
     get base(): ColumnFilteringFeature { return this.datagrid.features.filtering }
 
     initialize(config?: ColumnFilteringEnchancedFeatureConfig) {
-        this.columnFiltersVisible = config?.enabled ?? this.columnFiltersVisible;
-        this.isToggleButtonVisible = config?.visible ?? this.isToggleButtonVisible;
+        this.columnFiltersVisible = config?.columnFiltersVisible ?? this.columnFiltersVisible;
+        this.isToggleButtonVisible = config?.isToggleButtonVisible ?? this.isToggleButtonVisible;
     }
 
     disable() {

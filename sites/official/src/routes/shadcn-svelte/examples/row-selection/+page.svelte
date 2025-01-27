@@ -37,9 +37,6 @@
 					maxMultiSortColCount: 2,
 					isMultiSortEvent: () => true
 				},
-				rowSelection: {
-					maxSelectedRows: 2
-				}
 			}
 		}
 	});

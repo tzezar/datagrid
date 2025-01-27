@@ -67,7 +67,6 @@ export type TzezarsDatagridConfig<TOriginalRow = any> = GridConfig<TOriginalRow>
     extra?: TzezarsDatagridExtraStateConfig;
 }
 
-
 export type TrzezarsDatagridFeatures = {
     clickToCopy: ClickToCopyFeature,
     columnFiltering: ColumnFilteringEnchancedFeature,
@@ -292,10 +291,7 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
         transformedColumns = updateColumnPinningOffsets(transformedColumns);
         return this.processors.column.createColumnHierarchy(transformedColumns);
     }
-
-    isFullscreenEnabled(): boolean {
-        return this.extra.features.fullscreen.isFullscreen;
-    }
+   
 }
 
 

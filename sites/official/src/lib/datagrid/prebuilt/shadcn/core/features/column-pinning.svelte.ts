@@ -1,11 +1,10 @@
 import { ColumnPinningFeature } from "$lib/datagrid/core/features";
-import type { ColumnPinningFeatureConfig } from "$lib/datagrid/core/features/column-pinning.svelte";
 import type { TzezarsDatagrid } from "../index.svelte";
 import type { EnchancedFeature } from "./types";
 
 export type ColumnPinningEnchancedFeatureConfig = {
     displayControls?: boolean;
-} & ColumnPinningFeatureConfig
+} 
 
 export class ColumnPinningEnchancedFeature implements EnchancedFeature {
     datagrid: TzezarsDatagrid

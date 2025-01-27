@@ -46,13 +46,13 @@
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
 </script>
 
-<Portal disabled={!datagrid.isFullscreenEnabled()}>
-	<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-wrapper">
+<Portal disabled={!datagrid.extra.features.fullscreen.isFullscreenEnabled()}>
+	<div data-fullscreen={datagrid.extra.features.fullscreen.isFullscreenEnabled()} class="grid-wrapper">
 		<Toolbar {datagrid} />
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
 		</div> -->
-		<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-container-wrapper">
+		<div data-fullscreen={datagrid.extra.features.fullscreen.isFullscreenEnabled()} class="grid-container-wrapper">
 			<div class="grid-container">
 				<div class="grid-header">
 					<div class="grid-header-row">

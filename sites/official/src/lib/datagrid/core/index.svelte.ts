@@ -26,7 +26,7 @@ export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColu
         filtering?: ColumnFilteringFeatureConfig
         globalSearch?: GlobalSearchFeatureConfig
         grouping?: GroupingFeatureConfig
-        pagination: PaginationFeatureConfig
+        pagination?: PaginationFeatureConfig
         rowExpanding?: RowExpandingFeatureConfig
         rowPinning?: RowPinningFeatureConfig
         rowSelection?: RowSelectionFeatureConfig

@@ -41,14 +41,14 @@
 
 
 
-<Portal disabled={!datagrid.isFullscreenEnabled()} >
-	<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-wrapper">
+<Portal disabled={!datagrid.extra.features.fullscreen.isFullscreenEnabled()} >
+	<div data-fullscreen={datagrid.extra.features.fullscreen.isFullscreenEnabled()} class="grid-wrapper">
 		<Toolbar {datagrid} />
 
 		<!-- <div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-container-wrapper"> -->
 		<div
-			data-fullscreen={datagrid.isFullscreenEnabled()}
-			class={cn('inline-block w-full', datagrid.isFullscreenEnabled() && '')}
+			data-fullscreen={datagrid.extra.features.fullscreen.isFullscreenEnabled()}
+			class={cn('inline-block w-full', datagrid.extra.features.fullscreen.isFullscreenEnabled() && '')}
 		>
 			<!-- <div class="grid-container"> -->
 			<VirtualList items={datagrid.rows.getVisibleRows()} style="height: 600px">

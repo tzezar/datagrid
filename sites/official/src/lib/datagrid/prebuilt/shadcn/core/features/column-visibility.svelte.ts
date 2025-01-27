@@ -1,11 +1,11 @@
-import type { ColumnVisibilityFeature, ColumnVisibilityFeatureConfig } from "$lib/datagrid/core/features/column-visibility.svelte";
+import type { ColumnVisibilityFeature } from "$lib/datagrid/core/features/column-visibility.svelte";
 import type { TzezarsDatagrid } from "../index.svelte";
 import type { EnchancedFeature } from "./types";
 
 export type ColumnVisibilityEnchancedFeatureConfig = {
     displayControlCenterControls?: boolean;
     displayInColumnDropdown?: boolean;
-} & ColumnVisibilityFeatureConfig
+} 
 
 export class ColumnVisibilityEnchancedFeature implements EnchancedFeature {
     datagrid: TzezarsDatagrid

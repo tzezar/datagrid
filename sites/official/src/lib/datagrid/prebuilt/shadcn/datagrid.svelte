@@ -19,18 +19,12 @@
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
 	import type { Snippet } from 'svelte';
 	import RowSelectionCell from './built-in/row-selection-cell.svelte';
-	import RowSelectionHeaderCell from './built-in/row-selection-header-cell.svelte';
 	import RowExpandingCell from './built-in/row-expanding-cell.svelte';
 	import StatusIndicator from './built-in/status-indicator.svelte';
 	import ContentCopyOutline from '$lib/datagrid/icons/material-symbols/content-copy-outline.svelte';
 	import Toolbar from './built-in/toolbar.svelte';
 	import { shouldHighlightSelectedRow } from './utils';
-	import { blur, fade, fly, scale } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
-	import BodyRowActionsCell from './built-in/body-row-actions-cell.svelte';
-	import { quartIn } from 'svelte/easing';
-	import { fa } from '@faker-js/faker';
-	import RowSelectionBodyRowCell from './built-in/row-selection-body-row-cell.svelte';
 	import RowSelectionColumnHeaderCell from './built-in/row-selection-column-header-cell.svelte';
 	import RowExpandingColumnHeaderCell from './built-in/row-expanding-column-header-cell.svelte';
 
@@ -67,9 +61,9 @@
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
 </script>
 
-<Portal disabled={!datagrid.isFullscreenEnabled()}>
+<Portal disabled={!datagrid.extra.features.fullscreen.isFullscreenEnabled()}>
 	<div
-		data-fullscreen={datagrid.isFullscreenEnabled()}
+		data-fullscreen={datagrid.extra.features.fullscreen.isFullscreenEnabled()}
 		class="grid-wrapper relative h-full max-h-fit"
 	>
 		{#if datagrid.extra.features.overlay.shouldShowWrapperOverlay()}
@@ -95,7 +89,7 @@
 			{/if}
 		{/if}
 		<StatusIndicator {datagrid} position="top" />
-		<div data-fullscreen={datagrid.isFullscreenEnabled()} class="grid-container-wrapper">
+		<div data-fullscreen={datagrid.extra.features.fullscreen.isFullscreenEnabled()} class="grid-container-wrapper">
 			<div class="grid-container min-w-full">
 				{#if header}
 					{@render header()}
