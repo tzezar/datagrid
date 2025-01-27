@@ -81,12 +81,6 @@
 		--sidebar-border: 240 3.7% 15.9%;
 		--sidebar-ring: 217.2 91.2% 59.8%;
 
-	
-
-
-
-
-
 		/* --grid-border-width: 1px;
 		--grid-border: 0 0% 16%;
 		--grid-header: 0, 0%, 9%;
@@ -115,5 +109,189 @@
 	}
 	body {
 		@apply bg-background text-foreground;
+	}
+}
+
+@layer components {
+	/* Core Layout Classes */
+	.grid-wrapper {
+		@apply relative flex min-h-0 w-full flex-col border bg-background transition-colors duration-200;
+
+		/* Variants */
+		&.grid-wrapper-bordered {
+			@apply rounded-lg border-2 shadow-sm;
+		}
+		&.grid-wrapper-elevated {
+			@apply border-0 shadow-lg;
+		}
+		&.grid-wrapper-flat {
+			@apply border-0 shadow-none;
+		}
+	}
+
+	/* Header Variations */
+	.grid-head {
+		@apply sticky top-0 z-20 border-b bg-background transition-all duration-200;
+
+		/* Header Variants */
+		&.head-minimal {
+			@apply border-b border-border/50;
+		}
+		&.head-prominent {
+			@apply border-primary-foreground bg-primary;
+			.header-cell {
+				@apply font-semibold text-primary-foreground;
+			}
+		}
+		&.head-subtle {
+			@apply bg-muted;
+		}
+	}
+
+	/* Cell Styling Options */
+	.cell {
+		@apply relative flex items-center gap-2 border-r px-3 py-2 text-sm transition-colors duration-200;
+
+		/* Cell Variants */
+		&.cell-bordered {
+			@apply border border-border/50;
+		}
+		&.cell-highlight {
+			@apply hover:bg-accent/20;
+		}
+		&.cell-interactive {
+			@apply cursor-pointer hover:bg-accent active:bg-accent/70;
+		}
+	}
+
+	/* Row Variations */
+	.row {
+		@apply grid auto-rows-auto items-center border-b transition-colors duration-200;
+
+		/* Row Variants */
+		&.row-hoverable {
+			@apply hover:bg-accent/10;
+		}
+		&.row-selectable {
+			@apply cursor-pointer;
+			&:hover {
+				@apply bg-accent/20;
+			}
+			&.selected {
+				@apply bg-accent/40;
+			}
+		}
+		&.row-clickable {
+			@apply cursor-pointer;
+			&:active {
+				@apply bg-accent/50;
+			}
+		}
+	}
+
+	/* Size Variants */
+	.grid-size-compact {
+		.cell,
+		.header-cell {
+			@apply h-8 px-2 py-1 text-xs;
+		}
+		.grid-toolbar {
+			@apply p-1;
+		}
+	}
+
+	.grid-size-default {
+		.cell,
+		.header-cell {
+			@apply h-10 px-3 py-2 text-sm;
+		}
+		.grid-toolbar {
+			@apply p-2;
+		}
+	}
+
+	.grid-size-relaxed {
+		.cell,
+		.header-cell {
+			@apply h-12 px-4 py-3 text-base;
+		}
+		.grid-toolbar {
+			@apply p-3;
+		}
+	}
+
+	/* Status Styles */
+	.status-cell {
+		@apply flex items-center gap-2;
+
+		&.status-success {
+			@apply text-green-600 dark:text-green-400;
+		}
+		&.status-warning {
+			@apply text-yellow-600 dark:text-yellow-400;
+		}
+		&.status-error {
+			@apply text-red-600 dark:text-red-400;
+		}
+		&.status-info {
+			@apply text-blue-600 dark:text-blue-400;
+		}
+	}
+
+	/* Animation Variants */
+	.grid-animate-rows {
+		.row {
+			@apply transition-all duration-200;
+		}
+	}
+
+	.grid-animate-cells {
+		.cell {
+			@apply transition-all duration-200;
+		}
+	}
+
+	/* Loading States */
+	.grid-loading {
+		.body-overlay {
+			@apply absolute inset-0 z-50 bg-background/50 backdrop-blur-sm;
+			&::after {
+				content: '';
+				@apply absolute inset-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 animate-spin rounded-full border-4 border-primary border-r-transparent;
+			}
+		}
+	}
+
+	/* Scrollbar Styling */
+	.grid-custom-scrollbar {
+		@apply scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent hover:scrollbar-thumb-accent/70;
+	}
+
+	/* Responsive Patterns */
+	@screen sm {
+		.grid-responsive {
+			.cell,
+			.header-cell {
+				@apply px-2 py-1;
+			}
+		}
+	}
+
+	@screen md {
+		.grid-responsive {
+			.cell,
+			.header-cell {
+				@apply px-3 py-2;
+			}
+		}
+	}
+
+	@screen lg {
+		.grid-responsive {
+			.cell,
+			.header-cell {
+				@apply px-4 py-3;
+			}
+		}
 	}
 }

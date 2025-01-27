@@ -37,8 +37,6 @@
 		statusIndicator?: Snippet;
 		expandedRow?: Snippet<[row: GridBasicRow<any>]>;
 		expandedRowContent?: Snippet;
-
-		
 	};
 
 	let {
@@ -51,8 +49,7 @@
 		pagination,
 		expandedRow,
 		expandedRowContent,
-		statusIndicator,
-
+		statusIndicator
 	}: Props = $props();
 
 	let headerColumns = $derived.by(() => {
@@ -92,7 +89,7 @@
 		{@render PaginationSnippet(['both', 'top'])}
 		{@render StatusIndicatorSnippet('top')}
 		<div data-fullscreen={isFullscreenEnabled} class="grid-container-wrapper">
-			<div class={cn('grid-container', 'bg-grid-container', )}>
+			<div class={cn('grid-container', 'bg-grid-container')}>
 				{@render HeadSnippet()}
 				{@render BodySnippet()}
 			</div>
@@ -105,30 +102,34 @@
 </Portal>
 
 {#snippet HeadSnippet()}
-	<div use:identifier={{ datagrid, value: 'head' }} class="grid-head">
-		<div use:identifier={{ datagrid, value: 'head-row' }} class="grid-head-row">
-			{@render AdditionalHeaderCells('left')}
+	{#if head}
+		{@render head()}
+	{:else}
+		<div use:identifier={{ datagrid, value: 'head' }} class="grid-head">
+			<div use:identifier={{ datagrid, value: 'head-row' }} class="grid-head-row">
+				{@render AdditionalHeaderCells('left')}
 
-			{#if shouldAnimateHeaders}
-				{#each headerColumnsWithoutAdditional as column (column.columnId)}
-					<div
-						class:contents={!shouldAnimateHeaders}
-						animate:flip={{
-							duration: (len) => datagrid.extra.features.animations.getHeadersFlipDuration(len)
-						}}
-					>
+				{#if shouldAnimateHeaders}
+					{#each headerColumnsWithoutAdditional as column (column.columnId)}
+						<div
+							class:contents={!shouldAnimateHeaders}
+							animate:flip={{
+								duration: (len) => datagrid.extra.features.animations.getHeadersFlipDuration(len)
+							}}
+						>
+							<RenderColumnCell {datagrid} {column} />
+						</div>
+					{/each}
+				{:else}
+					{#each headerColumnsWithoutAdditional as column (column.columnId)}
 						<RenderColumnCell {datagrid} {column} />
-					</div>
-				{/each}
-			{:else}
-				{#each headerColumnsWithoutAdditional as column (column.columnId)}
-					<RenderColumnCell {datagrid} {column} />
-				{/each}
-			{/if}
+					{/each}
+				{/if}
 
-			{@render AdditionalHeaderCells('right')}
+				{@render AdditionalHeaderCells('right')}
+			</div>
 		</div>
-	</div>
+	{/if}
 {/snippet}
 
 {#snippet BodySnippet()}
@@ -202,7 +203,7 @@
 	{#if toolbar}
 		{@render toolbar()}
 	{:else}
-		<Toolbar {datagrid}  />
+		<Toolbar {datagrid} />
 	{/if}
 {/snippet}
 
@@ -211,7 +212,7 @@
 		<div
 			use:identifier={{ datagrid, value: 'wrapper-overlay' }}
 			class={cn(
-				'bg-grid-wrapper-overlay pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full opacity-50',
+				'bg-grid-wrapper-overlay pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full opacity-50'
 			)}
 		></div>
 	{/if}
@@ -233,7 +234,7 @@
 				{#if pagination}
 					{@render pagination()}
 				{:else}
-					<Pagination {datagrid} class={{ container: 'border-t', }} />
+					<Pagination {datagrid} class={{ container: 'border-t' }} />
 				{/if}
 			{/if}
 		{/if}
@@ -243,10 +244,7 @@
 				{#if pagination}
 					{@render pagination()}
 				{:else}
-					<Pagination
-						{datagrid}
-						class={{ container: 'border-b border-t-0',  }}
-					/>
+					<Pagination {datagrid} class={{ container: 'border-b border-t-0' }} />
 				{/if}
 			{/if}
 		{/if}
