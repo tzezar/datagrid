@@ -305,7 +305,7 @@
 	}
 
 	.grid-pagination-container-page-input {
-		@apply !h-6 w-full max-w-[60px] p-2 text-xs;
+		@apply !h-5 w-full max-w-[60px] p-2 !text-xs;
 		border-color: hsl(var(--grid-border));
 	}
 }

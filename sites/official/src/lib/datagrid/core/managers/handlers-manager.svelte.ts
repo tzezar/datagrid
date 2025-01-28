@@ -63,7 +63,6 @@ export class HandlersManager {
             datagrid.processors.data.executeFullDataTransformation();
 
             datagrid.features.sorting.onSortingChange(datagrid.features.sorting);
-
         },
 
 

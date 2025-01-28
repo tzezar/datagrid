@@ -30,7 +30,7 @@
 	// or single selection depending on the configuration
 </script>
 
-<Cell {datagrid} {row} {column} class=" m-0 items-center justify-center p-0">
+<Cell {datagrid} {row} {column} class=" m-0 items-center justify-center p-0 ">
 	<input
 		class="m-0 mx-auto size-4"
 		type="checkbox"

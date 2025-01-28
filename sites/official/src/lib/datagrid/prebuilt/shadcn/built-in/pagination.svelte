@@ -87,9 +87,9 @@
 	<span class="flex items-center gap-1 text-nowrap text-xs">
 		<span class="md:block"> Page </span>
 		<Input
+			type='number'
 			max={datagrid.features.pagination.pageCount}
 			class={datagrid.extra.features.customization.getPaginationContainerPageInputClasses()}
-			type="text"
 			value={datagrid.features.pagination.page}
 			onfocus={(e) => {
 				e.currentTarget.select();
