@@ -17,7 +17,8 @@
 <div
 	class={cn(
 		datagrid.extra.features.customization.getHeadRowLeafColumnCellClasses(),
-		column._meta.grow === true && 'grow '
+		column._meta.grow === true && 'grow ',
+		'shrink-0'
 	)}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 	style:--pin-left-offset={column.state.pinning.offset + 'px'}

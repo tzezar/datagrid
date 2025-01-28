@@ -4,7 +4,6 @@ import { accessorColumn} from "$lib/datagrid/core/column-creation";
 import type { ShadcnColumnMeta } from "$lib/datagrid/prebuilt/shadcn/core/types";
 import type { InventoryItem } from "$lib/data-generators/generate/inventory";
 import { cn } from "$lib/utils";
-import { shouldHighlightSelectedRow } from "$lib/datagrid/prebuilt/shadcn/utils";
 
 
 // const exampleFn = (value) => {

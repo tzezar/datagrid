@@ -25,7 +25,8 @@
 	class={cn(
 		datagrid.extra.features.customization.getBodyRowCellClasses(datagrid, row, column),
 		'group',
-		_class
+		_class,
+		'shrink-0'
 	)}
 	class:justify-center={column?._meta?.align === 'center'}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
