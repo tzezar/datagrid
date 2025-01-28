@@ -167,8 +167,7 @@
 				{:else}
 					<div
 						class={cn(
-							datagrid.extra.features.customization.getBodyRowClasses(),
-							datagrid.extra.features.stripedRows.applyStripedRows(row, rowIndex)
+							datagrid.extra.features.customization.getBodyRowClasses(row, rowIndex),
 						)}
 						use:identifier={{ datagrid, value: 'row-' + row.identifier }}
 					>
@@ -225,9 +224,7 @@
 	{#if showWrapperOverlay}
 		<div
 			use:identifier={{ datagrid, value: 'wrapper-overlay' }}
-			class={cn(
-				'bg-grid-wrapper-overlay pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full opacity-50'
-			)}
+			class={datagrid.extra.features.customization.getWrapperOverlayClasses()}
 		></div>
 	{/if}
 {/snippet}
@@ -260,7 +257,6 @@
 		{/if}
 	{/if}
 {/snippet}
-
 
 {#snippet CredentialsSnippet()}
 	{#if datagrid.extra.features.credentials.enabled}

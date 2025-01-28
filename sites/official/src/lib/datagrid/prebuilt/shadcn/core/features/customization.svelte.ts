@@ -1,4 +1,4 @@
-import type { LeafColumn } from "$lib/datagrid/core/types";
+import type { GridBasicRow, LeafColumn } from "$lib/datagrid/core/types";
 import { cn } from "$lib/utils";
 import type { TzezarsDatagrid } from "../index.svelte";
 
@@ -6,6 +6,7 @@ import type { TzezarsDatagrid } from "../index.svelte";
 
 interface DataGridCustomization {
   size?: 'compact' | 'default' | 'relaxed';
+  theme: 'default' | 'shadcn';
   variant?: 'bordered' | 'elevated' | 'flat';
   headerStyle?: 'minimal' | 'prominent' | 'subtle';
   enableAnimation?: boolean;
@@ -35,6 +36,7 @@ export class CustomizationFeature {
   constructor(datagrid: TzezarsDatagrid) {
     this.datagrid = datagrid
     this.customization = {
+      theme: 'shadcn',
       customScrollbar: true,
       enableAnimation: true,
       enableRowHover: true,
@@ -55,24 +57,10 @@ export class CustomizationFeature {
       pagination: '',
     }
   }
-
-  // getWrapperClasses = () => {
-  //   return cn(
-  //     'grid-wrapper',
-  //     this.customization?.variant && `grid-wrapper-${this.customization.variant}`,
-  //     this.customization?.size && `grid-size-${this.customization.size}`,
-  //     this.customization?.enableAnimation && 'grid-animate-rows grid-animate-cells',
-  //     this.customization?.customScrollbar && 'grid-custom-scrollbar',
-  //     this.customization?.responsive && 'grid-responsive',
-  //     this.customization?.loading && 'grid-loading',
-  //     this.classes?.wrapper
-  //   );
-  // };
-
-  // getRowClasses = () => {
-  //   return cn('grid-row')
-  // }
-
+ 
+  getWrapperOverlayClasses = () => {
+    return cn('grid-wrapper-overlay')
+  }
 
   getBodyOverlayClasses = () => {
     return cn('grid-body-overlay')
@@ -83,11 +71,15 @@ export class CustomizationFeature {
   }
 
   getContainerClasses = () => {
-    return cn('grid-container')
+    return cn('grid-container',
+      this.customization?.theme === 'shadcn' && 'grid-container-shadcn'
+    )
   }
 
   getHeadClasses = () => {
-    return cn('grid-head')
+    return cn('grid-head',
+      this.customization?.theme === 'shadcn' && 'grid-head-shadcn'
+    )
   }
 
   getHeadRowClasses = () => {
@@ -119,8 +111,10 @@ export class CustomizationFeature {
     return cn('grid-body')
   }
 
-  getBodyRowClasses = () => {
-    return cn('grid-body-row')
+  getBodyRowClasses = (row: GridBasicRow<any>, rowIndex: number) => {
+    return cn('grid-body-row',
+      this.datagrid.extra.features.stripedRows.applyStripedRows(row, rowIndex)
+    )
   }
 
   getBodyRowExpandedClasses = () => {
@@ -162,7 +156,7 @@ export class CustomizationFeature {
   getPaginationContainerClasses = (classes?: string) => {
     return cn('grid-pagination-container', classes)
   }
-  
+
   getPaginationContainerPageInputClasses = () => {
     return cn('grid-pagination-container-page-input')
   }

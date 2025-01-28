@@ -24,10 +24,10 @@ export class StripedRowsFeature {
         let styles = ''
         if (!this.enabled) return styles
         if (rowIndex % 2 === 0) {
-            styles += 'bg-secondary/60'
+            styles += 'bg-secondary/30'
         }
         if (rowIndex % 2 === 1) {
-            styles += 'bg-secondary/80'
+            styles += 'bg-secondary/90'
         }
         return styles
     }
