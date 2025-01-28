@@ -37,6 +37,7 @@ export const inventoryColumns = [
     accessorColumn({
         accessorKey: 'id',
         _meta: {
+            tooltip: false
             // styles: {
             //     bodyCell(props) {
             //         const { row, datagrid } = props

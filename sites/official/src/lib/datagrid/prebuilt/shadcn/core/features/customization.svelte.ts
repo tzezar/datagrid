@@ -10,6 +10,7 @@ interface DataGridCustomization {
   theme: 'default' | 'shadcn';
   variant?: 'bordered' | 'elevated' | 'flat';
   headerStyle?: 'minimal' | 'prominent' | 'subtle';
+  cellTooltips?: boolean;
   enableAnimation?: boolean;
   enableRowHover?: boolean;
   enableSelection?: boolean;
@@ -45,6 +46,9 @@ export class CustomizationFeature<TOriginalRow> {
     // enableAnimation: true,
     // enableRowHover: true,
     // enableSelection: true,
+
+    cellTooltips: true,
+
     headerStyle: 'minimal',
     responsive: true,
     loading: false,
@@ -60,6 +64,7 @@ export class CustomizationFeature<TOriginalRow> {
 
     console.log(config?.getHeadClasses)
 
+    this.customization.cellTooltips = config?.customization?.cellTooltips ?? this.customization.cellTooltips;
     this.customization.theme = config?.customization?.theme ?? this.customization.theme;
     this.customization.customScrollbar = config?.customization?.customScrollbar ?? this.customization.customScrollbar;
     this.customization.enableAnimation = config?.customization?.enableAnimation ?? this.customization.enableAnimation;

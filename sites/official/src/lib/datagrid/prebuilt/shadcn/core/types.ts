@@ -9,6 +9,8 @@ export type ShadcnColumnMeta<TOriginalRow = any> = {
     filterOptions?: { label: string, value: string }[];
     showColumnManagerDropdownMenu?: boolean;
     clickToCopy?: boolean;
+    tooltip?: boolean;
+    
     // TODO add more types and apply them in components
     styles?: {
         bodyCell?: ((props: { datagrid: TzezarsDatagrid, column: AnyColumn<any>, row: GridRow<TOriginalRow> }) => string);

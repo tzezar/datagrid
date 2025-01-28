@@ -144,6 +144,7 @@ function transformColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
             ...col,
             _meta: {
                 ...col._meta,
+                tooltip: col._meta?.tooltip ?? true,
                 showColumnManagerDropdownMenu: col._meta?.showColumnManagerDropdownMenu ?? true
             }
         }

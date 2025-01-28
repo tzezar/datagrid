@@ -6,7 +6,7 @@
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import ContentCopyOutline from '$lib/datagrid/icons/material-symbols/content-copy-outline.svelte';
 	import Cell from './cell.svelte';
-
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	type Props = {
 		datagrid: TzezarsDatagrid;
 		row: GridBasicRow<any>;
@@ -18,9 +18,12 @@
 </script>
 
 {#if column.isVisible()}
-	{#if column.cell}
-		{@const cellContent = column.cell({ datagrid, column, row })}
-		{#if typeof column.cell({ datagrid, column, row }) === 'string'}
+	{@const cellContent = column.cell ? column.cell({ datagrid, column, row }) : null}
+	{@const shouldShowTooltips = datagrid.extra.features.customization.customization.cellTooltips}
+	{@const cellClasses = datagrid.extra.features.customization.getBodyRowCellContentClasses()}
+
+	{#if cellContent}
+		{#if typeof cellContent === 'string'}
 			{@html cellContent}
 		{:else if isCellComponent(cellContent)}
 			<cellContent.component {datagrid} {row} {column} />
@@ -29,10 +32,24 @@
 		{@render children()}
 	{:else}
 		<Cell {datagrid} {row} {column}>
-			<span class={datagrid.extra.features.customization.getBodyRowCellContentClasses()}>
-				{@html getCellContent(column, row.original)}
-			</span>
-
+			{#if shouldShowTooltips && column._meta?.tooltip !== false}
+				<Tooltip.Provider>
+					<Tooltip.Root>
+						<Tooltip.Trigger class="w-full overflow-hidden text-ellipsis text-left">
+							<span class={cellClasses}>
+								{@html getCellContent(column, row.original)}
+							</span>
+						</Tooltip.Trigger>
+						<Tooltip.Content side="top" align="start">
+							{@html getCellContent(column, row.original)}
+						</Tooltip.Content>
+					</Tooltip.Root>
+				</Tooltip.Provider>
+			{:else}
+				<span class={cellClasses}>
+					{@html getCellContent(column, row.original)}
+				</span>
+			{/if}
 			{@render CopyCellButton(column, row)}
 		</Cell>
 	{/if}
@@ -60,6 +77,3 @@
 		{/if}
 	{/if}
 {/snippet}
-
-
-
