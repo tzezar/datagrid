@@ -108,7 +108,7 @@ export class DataProcessor<TOriginalRow> {
 
         const getActiveFilters = () => {
             return this.datagrid.features.filtering.conditions
-                .filter(condition => condition.value !== '');
+                .filter(condition => condition.value !== null);
         }
 
         this.metrics.measure('Column Filtering', () => {

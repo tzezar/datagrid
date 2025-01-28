@@ -1,4 +1,7 @@
+import { isGroupColumn } from "../helpers/column-guards";
+import type { DataGrid } from "../index.svelte";
 import type { FilterCondition, FilterOperator } from "../types";
+import { findColumnById, flattenColumnStructure, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 
 
 export type ColumnFilteringFeatureConfig = {
@@ -13,18 +16,21 @@ export type ColumnFilteringFeatureConfig = {
  * Provides utilities for evaluating filter conditions and toggling the visibility of filters.
  */
 export class ColumnFilteringFeature<TOriginalRow = any> {
+    datagrid: DataGrid
+
     // Stores all filter conditions for the columns
     conditions: FilterCondition<TOriginalRow>[] = $state([]);
     manual: boolean = $state(false);
 
     onColumnFilteringChange: (filteredColumns: string[]) => void = () => { };
 
-    constructor(config?: ColumnFilteringFeatureConfig) {
+    constructor(datagrid: DataGrid, config?: ColumnFilteringFeatureConfig) {
+        this.datagrid = datagrid;
         this.initialize(config);
     }
 
 
-    initialize(config?: ColumnFilteringFeatureConfig) {
+    initialize( config?: ColumnFilteringFeatureConfig) {
         this.conditions = config?.conditions ?? this.conditions;
         this.manual = config?.manual ?? this.manual;
         this.onColumnFilteringChange = config?.onColumnFilteringChange ?? this.onColumnFilteringChange;
@@ -57,8 +63,25 @@ export class ColumnFilteringFeature<TOriginalRow = any> {
      * @param operator - The new filter operator to set.
      */
     changeConditionOperator(columnId: string, operator: FilterOperator) {
-        const condition = this.conditions.find(c => c.columnId === columnId);
-        if (!condition) return; // Exit if no condition exists for the column
+        let condition = this.conditions.find(c => c.columnId === columnId);
+        if (!condition) {
+            // If no condition exists, create a new one
+
+            const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), columnId);
+            if (!column) throw new Error(`Column ${columnId} not found`);
+            if (isGroupColumn(column)) throw new Error(`Cannot filter group column: ${columnId}`);
+            if (column.type === 'display') throw new Error(`Cannot filter display column: ${columnId}`);
+
+            this.conditions.push({
+                columnId,
+                operator,
+                value: null,
+                valueTo: undefined,
+                getValueFn: column.getValueFn 
+            });
+        }
+        condition = this.conditions.find(c => c.columnId === columnId);
+        if (!condition) throw new Error(`Condition for column ${columnId} not found`);
         condition.operator = operator;
     }
 

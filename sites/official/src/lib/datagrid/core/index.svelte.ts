@@ -65,7 +65,7 @@ export class DataGrid<TOriginalRow = any> {
         pagination: new PaginationFeature(this),
         sorting: new SortingFeature(this),
         grouping: new GroupingFeature(),
-        filtering: new ColumnFilteringFeature(),
+        filtering: new ColumnFilteringFeature(this),
         globalSearch: new GlobalSearchFeature(),
         columnSizing: new ColumnSizingFeature(this),
         columnVisibility: new ColumnVisibilityFeature(this),
@@ -127,7 +127,7 @@ export class DataGrid<TOriginalRow = any> {
 
     private initializeFeatures(config: GridConfig<TOriginalRow>) {
         this.features.columnFaceting = new ColumnFacetingFeature(this, config.features?.columnFaceting);
-        this.features.filtering = new ColumnFilteringFeature(config.features?.filtering);
+        this.features.filtering = new ColumnFilteringFeature(this, config.features?.filtering);
         this.features.globalSearch = new GlobalSearchFeature({
             manual: config.features?.globalSearch?.manual,
             delay: config.features?.globalSearch?.delay,

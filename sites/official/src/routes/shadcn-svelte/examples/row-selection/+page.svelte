@@ -46,6 +46,12 @@
 			}
 		}
 	});
+
+	$effect(() => {
+		console.log($state.snapshot(datagrid.features.filtering.conditions))	
+	})
+
+
 </script>
 
 <DatagridShadcnSvelte {datagrid}></DatagridShadcnSvelte>
