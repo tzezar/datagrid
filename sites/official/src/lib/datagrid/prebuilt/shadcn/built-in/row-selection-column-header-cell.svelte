@@ -1,11 +1,11 @@
 <script lang="ts" generics="T">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import { cn } from '$lib/utils';
+	import type { TzezarsDatagrid } from '../core/index.svelte';
 	import LeafColumnCell from '../structure/leaf-column-cell.svelte';
 
-	let { datagrid, column }: { datagrid: DataGrid<any>; column: LeafColumn<any> } = $props();
+	let { datagrid, column }: { datagrid: TzezarsDatagrid<any>; column: LeafColumn<any> } = $props();
 
 	type SelectionAction = 'selectAll' | 'deselectAll' | 'selectPage' | 'deselectPage';
 
@@ -31,7 +31,7 @@
 	};
 </script>
 
-<LeafColumnCell {column} class={cn('flex h-full w-10 items-center justify-center border-r px-2')}>
+<LeafColumnCell {datagrid} {column} class={cn('flex h-full w-10 items-center justify-center border-r px-2')}>
 	<DropdownMenu.Root>
 		<DropdownMenu.Trigger>
 			<button class="bg-primary size-[14px]" aria-label="Toggle row selection"></button>

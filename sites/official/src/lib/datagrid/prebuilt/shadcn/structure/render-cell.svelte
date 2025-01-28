@@ -29,7 +29,7 @@
 		{@render children()}
 	{:else}
 		<Cell {datagrid} {row} {column}>
-			<span class={cn('cell-content')}>
+			<span class={datagrid.extra.features.customization.getBodyRowCellContentClasses()}>
 				{@html getCellContent(column, row.original)}
 			</span>
 

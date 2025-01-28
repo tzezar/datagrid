@@ -1,6 +1,6 @@
 
 import { type AnyColumn } from "$lib/datagrid/core/types";
-import { accessorColumn, } from "$lib/datagrid/core/column-creation";
+import { accessorColumn, columnGroup, } from "$lib/datagrid/core/column-creation";
 import type { ShadcnColumnMeta } from "$lib/datagrid/prebuilt/shadcn/core/types";
 import type { InventoryItem } from "$lib/data-generators/generate/inventory";
 import { cn } from "$lib/utils";
@@ -46,6 +46,29 @@ export const inventoryColumns = [
             }
         } as ShadcnColumnMeta<InventoryItem>
     }),
+
+    columnGroup({
+        header: 'Group 1',
+        columns: [
+            accessorColumn({
+                accessorKey: 'name',
+                columnId: 'name2',
+                _meta: {
+                    grow: true,
+                    clickToCopy: true
+                } as ShadcnColumnMeta
+            }),
+            accessorColumn({
+                accessorKey: 'category',
+                columnId: 'category2',
+                _meta: {
+                    clickToCopy: false
+                } as ShadcnColumnMeta
+            })
+        ]
+    }),
+
+
     accessorColumn({
         accessorKey: 'name',
         _meta: {
@@ -71,7 +94,7 @@ export const inventoryColumns = [
                     const { row } = props
                     if (row.isGroupRow()) return ""
                     return cn(row.original.price < 400 && 'border-r-2 border-red-400', row.original.price > 1000 && 'border-r-2 border-green-400')
-                
+
                 },
 
             }
@@ -94,8 +117,8 @@ export const inventoryColumns = [
     }),
     accessorColumn({
         accessorKey: 'status',
-    
-      
+
+
     }),
 
 ] satisfies AnyColumn<InventoryItem>[]

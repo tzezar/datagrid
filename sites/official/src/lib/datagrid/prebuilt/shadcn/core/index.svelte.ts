@@ -60,6 +60,7 @@ import RowSelectionColumnHeaderCell from "../built-in/row-selection-column-heade
 import RowExpandingColumnHeaderCell from "../built-in/row-expanding-column-header-cell.svelte";
 import { OverlayFeature, type OverlayFeatureConfig } from "./features/overlay.svelte";
 import { StripedRowsFeature, type StripedRowsFeatureConfig } from "./features/striped-rows.svelte";
+import { CustomizationFeature } from "./features/customization.svelte";
 
 
 
@@ -91,7 +92,8 @@ export type TrzezarsDatagridFeatures = {
     controlCenter: ControlCenterFeature,
     animations: AnimationsFeature,
     overlay: OverlayFeature,
-    stripedRows: StripedRowsFeature
+    stripedRows: StripedRowsFeature,
+    customization: CustomizationFeature,
 }
 
 
@@ -121,7 +123,7 @@ export type TzezarsDatagridExtraStateConfig = {
         controlCenter?: ControlCenterFeatureConfig,
         animations?: AnimationsFeatureConfig,
         overlay?: OverlayFeatureConfig,
-        stripedRows?: StripedRowsFeatureConfig
+        stripedRows?: StripedRowsFeatureConfig,
     }
 
     title?: string
@@ -326,6 +328,7 @@ export class Extra {
         this.features.controlCenter = new ControlCenterFeature(this.datagrid, config?.features?.controlCenter);
         this.features.loadingIndicator = new StatusIndicatorFeature(this.datagrid, config?.features?.statusIndicator);
         this.features.densityToggle = new DensityToggleFeature(this.datagrid, config?.features?.densityToggle);
+        this.features.customization = new CustomizationFeature(this.datagrid);
 
         // enhanced
         this.features.columnFiltering = new ColumnFilteringEnchancedFeature(this.datagrid, config?.features?.columnFiltering);

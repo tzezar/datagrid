@@ -32,7 +32,7 @@
 
 <Cell {datagrid} {row} {column} class=" m-0 items-center justify-center p-0">
 	<input
-		class="m-0 mx-auto size-4 p-0"
+		class="m-0 mx-auto size-4"
 		type="checkbox"
 		checked={datagrid.features.rowSelection.isRowSelected(row.identifier)}
 		onchange={handleChange}

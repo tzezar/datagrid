@@ -26,7 +26,7 @@
 
 <div
 	class={cn(
-		'flex items-end justify-end bg-grid-toolbar',
+		datagrid.extra.features.customization.getToolbarContainerClasses(),
 		datagrid.extra.features.columnFiltering.shouldDisplayButton() && 'top-bar ',
 		_class
 	)}

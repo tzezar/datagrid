@@ -1,17 +1,18 @@
 <script lang="ts">
 	import type { GroupColumn } from '$lib/datagrid/core/types';
-	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
+	import type { TzezarsDatagrid } from '../core/index.svelte';
 
 	type Props = {
+		datagrid: TzezarsDatagrid;
 		column: GroupColumn<any>;
 		children: Snippet;
 		class?: string;
 	};
 
-	let { column, children, class: _class }: Props = $props();
+	let { datagrid, column, children, class: _class }: Props = $props();
 </script>
 
-<div class="group-column-cell">
+<div class={datagrid.extra.features.customization.getHeadRowGroupColumnCellClasses()}>
 	{@render children()}
 </div>

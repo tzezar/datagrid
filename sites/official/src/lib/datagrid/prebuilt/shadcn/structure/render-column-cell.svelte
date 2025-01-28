@@ -25,9 +25,11 @@
 {/if}
 
 {#snippet ColumnGroupHeaderSnippet(column: GroupColumn<any>)}
-	<GroupColumnCell {column}>
-		<div class="group-column-cell-content">
-			<span class="group-column-header">{column.header}</span>
+	<GroupColumnCell {column} {datagrid}>
+		<div class={datagrid.extra.features.customization.getHeadRowGroupColumnCellContentClasses()}>
+			<span class={datagrid.extra.features.customization.getHeadRowGroupColumnCellHeaderClasses()}>
+				{column.header}
+			</span>
 			<HeaderCellDropdown {datagrid} {column} />
 		</div>
 		<div class="flex grow flex-row">
@@ -57,13 +59,13 @@
 			<cellContent.component {datagrid} {column} />
 		{/if}
 	{:else}
-		<LeafColumnCell {column}>
+		<LeafColumnCell {datagrid} {column}>
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
 				class:sortable={column.options.sortable &&
 					datagrid.extra.features.sorting.enableSorting === true}
-				class="leaf-column-cell-content"
+				class={datagrid.extra.features.customization.getHeadRowLeafColumnCellContentClasses(column)}
 				onclick={(e) => {
 					if (datagrid.extra.features.sorting.enableSorting === false) return;
 					let multisort = false;
@@ -87,7 +89,9 @@
 				</div>
 			</div>
 			{#if datagrid.extra.features.columnFiltering.isEnabled()}
-				<div class="column-filter">
+				<div
+					class={datagrid.extra.features.customization.getHeadRowLeafColumnFilterInputWrapperClasses()}
+				>
 					<HeaderCellColumnFilter {datagrid} {column} />
 				</div>
 			{/if}

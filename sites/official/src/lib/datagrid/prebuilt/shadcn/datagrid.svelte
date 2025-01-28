@@ -79,7 +79,7 @@
 	<div
 		use:identifier={{ datagrid, value: 'wrapper' }}
 		data-fullscreen={isFullscreenEnabled}
-		class={cn('grid-wrapper', 'bg-grid')}
+		class={cn(datagrid.extra.features.customization.getWrapperClasses())}
 	>
 		{@render WrapperOverlaySnippet()}
 		{@render ToolbarSnippet()}
@@ -89,7 +89,9 @@
 		{@render PaginationSnippet(['both', 'top'])}
 		{@render StatusIndicatorSnippet('top')}
 		<div data-fullscreen={isFullscreenEnabled} class="grid-container-wrapper">
-			<div class={cn('grid-container', 'bg-grid-container')}>
+			<div
+				class={cn(datagrid.extra.features.customization.getContainerClasses(), 'bg-grid-container')}
+			>
 				{@render HeadSnippet()}
 				{@render BodySnippet()}
 			</div>
@@ -105,8 +107,14 @@
 	{#if head}
 		{@render head()}
 	{:else}
-		<div use:identifier={{ datagrid, value: 'head' }} class="grid-head">
-			<div use:identifier={{ datagrid, value: 'head-row' }} class="grid-head-row">
+		<div
+			use:identifier={{ datagrid, value: 'head' }}
+			class={datagrid.extra.features.customization.getHeadClasses()}
+		>
+			<div
+				use:identifier={{ datagrid, value: 'head-row' }}
+				class={datagrid.extra.features.customization.getHeadRowClasses()}
+			>
 				{@render AdditionalHeaderCells('left')}
 
 				{#if shouldAnimateHeaders}
@@ -136,7 +144,10 @@
 	{#if body}
 		{@render body()}
 	{:else}
-		<div use:identifier={{ datagrid, value: 'body' }} class="grid-body">
+		<div
+			use:identifier={{ datagrid, value: 'body' }}
+			class={datagrid.extra.features.customization.getBodyClasses()}
+		>
 			{#if datagrid.extra.features.overlay.shouldShowBodyOverlay()}
 				<div class="body-overlay"></div>
 			{/if}
@@ -145,7 +156,7 @@
 				{#if row.isGroupRow()}
 					<div
 						use:identifier={{ datagrid, value: 'row-' + row.identifier }}
-						class={cn('group-row', 'bg-datagrid-gro')}
+						class={datagrid.extra.features.customization.getBodyGroupRowClasses()}
 						data-depth={row.depth}
 						data-expanded={row.isExpanded()}
 					>
@@ -155,7 +166,10 @@
 					</div>
 				{:else}
 					<div
-						class={cn('row', datagrid.extra.features.stripedRows.applyStripedRows(row, rowIndex))}
+						class={cn(
+							datagrid.extra.features.customization.getBodyRowClasses(),
+							datagrid.extra.features.stripedRows.applyStripedRows(row, rowIndex)
+						)}
 						use:identifier={{ datagrid, value: 'row-' + row.identifier }}
 					>
 						{@render AdditionalBodyCells('left', row)}
@@ -182,7 +196,7 @@
 						{#if expandedRow}
 							{@render expandedRow(row)}
 						{:else}
-							<div class="expanded-row">
+							<div class={datagrid.extra.features.customization.getBodyRowExpandedClasses()}>
 								<div class="cell sticky left-0">
 									{#if expandedRowContent}
 										{@render expandedRowContent()}
@@ -230,7 +244,7 @@
 	<!-- ? rewrite it later -->
 	{#if shouldDisplayPagination}
 		{#if ['both', 'top'].includes(datagrid.extra.features.pagination.paginationPosition)}
-			{#if directions.includes('top' || 'both')}
+			{#if directions.includes('top') || directions.includes('both')}
 				{#if pagination}
 					{@render pagination()}
 				{:else}
@@ -240,7 +254,7 @@
 		{/if}
 
 		{#if ['both', 'bottom'].includes(datagrid.extra.features.pagination.paginationPosition)}
-			{#if directions.includes('bottom' || 'both')}
+			{#if directions.includes('bottom') || directions.includes('both')}
 				{#if pagination}
 					{@render pagination()}
 				{:else}
@@ -261,7 +275,12 @@
 	{#if footer}
 		{@render footer()}
 	{:else}
-		<div class={cn('grid-footer-container', footerContent && 'p-2')}>
+		<div
+			class={cn(
+				datagrid.extra.features.customization.getFooterContainerClasses(),
+				footerContent && 'p-2'
+			)}
+		>
 			{@render footerContent?.()}
 		</div>
 	{/if}

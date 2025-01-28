@@ -2,18 +2,23 @@
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
+	import type { TzezarsDatagrid } from '../core/index.svelte';
 
 	type Props = {
+		datagrid: TzezarsDatagrid;
 		column: LeafColumn<any>;
 		children: Snippet;
 		class?: string;
 	};
 
-	let { column, children, class: _class }: Props = $props();
+	let { datagrid, column, children, class: _class }: Props = $props();
 </script>
 
 <div
-	class={cn('leaf-column-cell', column._meta.grow === true && 'grow ')}
+	class={cn(
+		datagrid.extra.features.customization.getHeadRowLeafColumnCellClasses(),
+		column._meta.grow === true && 'grow '
+	)}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 	style:--pin-left-offset={column.state.pinning.offset + 'px'}
 	style:--pin-right-offset={column.state.pinning.offset + 'px'}
