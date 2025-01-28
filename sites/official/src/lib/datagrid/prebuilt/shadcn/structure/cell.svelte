@@ -21,10 +21,8 @@
 	use:identifier={{ datagrid, value: `${row.identifier}-${column.columnId}` }}
 	class:grow={column?._meta?.grow}
 	class={cn(
-		datagrid.extra.features.customization.getBodyRowCellClasses(),
+		datagrid.extra.features.customization.getBodyRowCellClasses(datagrid, row, column),
 		'group',
-		shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
-		column._meta.styles?.bodyCell({ datagrid, column, row }),
 		_class
 	)}
 	class:justify-center={column?._meta?.align === 'center'}

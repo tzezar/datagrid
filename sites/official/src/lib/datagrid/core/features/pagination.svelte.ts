@@ -125,7 +125,6 @@ export class PaginationFeature<TOriginalRow = any> {
      */
     goToClosestPage(): void {
         const closestPage = Math.min(this.page, this.pageCount); // Ensure the page is within valid bounds
-        console.log(closestPage)
         this.goToPage(closestPage);
     }
 

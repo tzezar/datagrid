@@ -299,10 +299,6 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
 
 }
 
-
-
-
-
 export class Extra {
     datagrid: TzezarsDatagrid<any>;
     title: string | undefined;

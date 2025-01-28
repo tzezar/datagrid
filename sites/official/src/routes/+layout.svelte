@@ -39,7 +39,7 @@
 	{@html atomOneDark}
 </svelte:head> -->
 
-<Toaster />
+<Toaster richColors/>
 <ModeWatcher />
 <div class="flex h-screen w-full">
 	<div class="flex h-full w-full">

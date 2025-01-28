@@ -1,5 +1,6 @@
 import type { GridBasicRow, LeafColumn } from "$lib/datagrid/core/types";
 import { cn } from "$lib/utils";
+import { shouldHighlightSelectedRow } from "../../utils";
 import type { TzezarsDatagrid } from "../index.svelte";
 
 
@@ -57,7 +58,7 @@ export class CustomizationFeature {
       pagination: '',
     }
   }
- 
+
   getWrapperOverlayClasses = () => {
     return cn('grid-wrapper-overlay')
   }
@@ -121,8 +122,11 @@ export class CustomizationFeature {
     return cn('grid-body-row-expanded')
   }
 
-  getBodyRowCellClasses = () => {
-    return cn('grid-body-row-cell')
+  getBodyRowCellClasses = (datagrid: TzezarsDatagrid, row: GridBasicRow<any>, column: LeafColumn<any>) => {
+    return cn('grid-body-row-cell',
+      shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
+      column._meta.styles?.bodyCell({ datagrid, column, row }),
+    )
   }
 
   getBodyRowCellContentClasses = () => {

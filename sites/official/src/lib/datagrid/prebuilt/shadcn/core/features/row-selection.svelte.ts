@@ -11,6 +11,9 @@ export type RowSelectionEnchancedFeatureConfig = {
     enableSelectAll?: boolean;
     highlightSelectedRow?: boolean;
     position?: 'left' | "right" | 'none'
+
+    onSelectMoreThanMaxSelectedRows?(): void;
+    onRowSelectionChange?(): void;
 }
 
 export class RowSelectionEnchancedFeature implements EnchancedFeature {
@@ -22,6 +25,10 @@ export class RowSelectionEnchancedFeature implements EnchancedFeature {
     enableSelectAll: boolean = $state(true);
     highlightSelectedRow: boolean = $state(true);
     position: "left" | "right" | 'none' = $state('right')
+
+    onSelectMoreThanMaxSelectedRows: () => void = () => { }
+    onRowSelectionChange: () => void = () => { }
+
 
     get base(): RowSelectionFeature { return this.datagrid.features.rowSelection }
 
@@ -36,6 +43,8 @@ export class RowSelectionEnchancedFeature implements EnchancedFeature {
         this.enableSelectAll = config?.enableSelectAll ?? this.enableSelectAll;
         this.highlightSelectedRow = config?.highlightSelectedRow ?? this.highlightSelectedRow;
         this.position = config?.position ?? this.position
+        this.onSelectMoreThanMaxSelectedRows = config?.onSelectMoreThanMaxSelectedRows ?? this.onSelectMoreThanMaxSelectedRows
+        this.onRowSelectionChange = config?.onRowSelectionChange ?? this.onRowSelectionChange
     }
 
     toggleRowSelection(identifier: GridRowIdentifier) {
@@ -50,27 +59,32 @@ export class RowSelectionEnchancedFeature implements EnchancedFeature {
             console.log('selecting more than allowed')
             return
         }
-
     }
 
     selectRow(identifier: GridRowIdentifier) {
         if (this.rowSelectionMode === 'single') {
             this.base.clearSelection()
             this.base.selectRow(identifier);
+
+            this.onRowSelectionChange()
             return
         }
 
         const isMaxSelectedRowsReached = this.base.maxSelectedRows !== undefined && this.base.selectedBasicRowIdentifiers.size >= this.base.maxSelectedRows;
         if (isMaxSelectedRowsReached) {
+            this.onSelectMoreThanMaxSelectedRows();
             return
         }
 
         this.base.selectRow(identifier);
+        this.onRowSelectionChange()
     }
 
     unselectRow(identifier: GridRowIdentifier) {
         if (this.rowSelectionMode === 'single') {
             this.base.clearSelection()
+
+
             return
         }
 
