@@ -1,7 +1,7 @@
 import { isGroupColumn } from "../helpers/column-guards";
 import type { DataGrid } from "../index.svelte";
 import type { FilterCondition, FilterOperator } from "../types";
-import { findColumnById, flattenColumnStructure, flattenColumnStructureAndClearGroups } from "../utils.svelte";
+import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 
 
 export type ColumnFilteringFeatureConfig = {

@@ -166,9 +166,7 @@
 					</div>
 				{:else}
 					<div
-						class={cn(
-							datagrid.extra.features.customization.getBodyRowClasses(row, rowIndex),
-						)}
+						class={cn(datagrid.extra.features.customization.getBodyRowClasses(row, rowIndex))}
 						use:identifier={{ datagrid, value: 'row-' + row.identifier }}
 					>
 						{@render AdditionalBodyCells('left', row)}
@@ -252,7 +250,7 @@
 			{#if pagination}
 				{@render pagination()}
 			{:else}
-				<Pagination {datagrid} class={{ container: 'border-b ' }} />
+				<Pagination {datagrid} class={{ container: 'border-b border-t-0' }} />
 			{/if}
 		{/if}
 	{/if}
@@ -267,13 +265,8 @@
 {#snippet FooterSnippet()}
 	{#if footer}
 		{@render footer()}
-	{:else}
-		<div
-			class={cn(
-				datagrid.extra.features.customization.getFooterContainerClasses(),
-				footerContent && 'p-2'
-			)}
-		>
+	{:else if footerContent}
+		<div class={cn(datagrid.extra.features.customization.getFooterContainerClasses())}>
 			{@render footerContent?.()}
 		</div>
 	{/if}

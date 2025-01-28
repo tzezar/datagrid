@@ -16,48 +16,63 @@ interface DataGridCustomization {
   customScrollbar?: boolean;
   responsive?: boolean;
   loading?: boolean;
+  stickyHeader?: boolean;
 }
 
 interface DataGridClasses {
-  wrapper?: string;
-  header?: string;
-  row?: string;
-  cell?: string;
-  toolbar?: string;
-  footer?: string;
-  pagination?: string;
+  wrapper?: string | null;
 }
+
+
+
+export type CustomizationFeatureConfig = {
+  customization: DataGridCustomization;
+  classes?: DataGridClasses;
+}
+
 
 
 export class CustomizationFeature {
   datagrid: TzezarsDatagrid
-  customization: DataGridCustomization;
-  classes: DataGridClasses;
+  customization: DataGridCustomization = {
+    theme: 'shadcn',
+    customScrollbar: true,
+    // enableAnimation: true,
+    // enableRowHover: true,
+    // enableSelection: true,
+    headerStyle: 'minimal',
+    responsive: true,
+    loading: false,
+    size: 'default',
+    variant: 'flat',
 
-  constructor(datagrid: TzezarsDatagrid) {
-    this.datagrid = datagrid
-    this.customization = {
-      theme: 'shadcn',
-      customScrollbar: true,
-      enableAnimation: true,
-      enableRowHover: true,
-      enableSelection: true,
-      headerStyle: 'minimal',
-      responsive: true,
-      loading: false,
-      size: 'default',
-      variant: 'flat',
-    };
-    this.classes = {
-      wrapper: '',
-      header: '',
-      row: '',
-      cell: '',
-      toolbar: '',
-      footer: '',
-      pagination: '',
-    }
+    stickyHeader: true,
   }
+  classes: DataGridClasses = {
+    wrapper: '',
+
+  }
+
+  constructor(datagrid: TzezarsDatagrid, config?: CustomizationFeatureConfig) {
+    this.datagrid = datagrid
+
+    this.customization.theme = config?.customization?.theme ?? this.customization.theme;
+    this.customization.customScrollbar = config?.customization?.customScrollbar ?? this.customization.customScrollbar;
+    this.customization.enableAnimation = config?.customization?.enableAnimation ?? this.customization.enableAnimation;
+    this.customization.enableRowHover = config?.customization?.enableRowHover ?? this.customization.enableRowHover;
+    this.customization.enableSelection = config?.customization?.enableSelection ?? this.customization.enableSelection;
+    this.customization.headerStyle = config?.customization?.headerStyle ?? this.customization.headerStyle;
+    this.customization.responsive = config?.customization?.responsive ?? this.customization.responsive;
+    this.customization.loading = config?.customization?.loading ?? this.customization.loading;
+    this.customization.size = config?.customization?.size ?? this.customization.size;
+    this.customization.variant = config?.customization?.variant ?? this.customization.variant;
+
+    this.classes.wrapper = config?.classes?.wrapper ?? this.classes.wrapper;
+
+  }
+
+
+
 
   getWrapperOverlayClasses = () => {
     return cn('grid-wrapper-overlay')
@@ -68,7 +83,9 @@ export class CustomizationFeature {
   }
 
   getWrapperClasses = () => {
-    return cn('grid-wrapper')
+    return cn('grid-wrapper',
+      this.customization?.customScrollbar && 'grid-custom-scrollbar',
+    )
   }
 
   getContainerClasses = () => {
@@ -79,7 +96,8 @@ export class CustomizationFeature {
 
   getHeadClasses = () => {
     return cn('grid-head',
-      this.customization?.theme === 'shadcn' && 'grid-head-shadcn'
+      this.customization?.theme === 'shadcn' && 'grid-head-shadcn',
+      this.customization.stickyHeader && 'grid-head-sticky'
     )
   }
 
