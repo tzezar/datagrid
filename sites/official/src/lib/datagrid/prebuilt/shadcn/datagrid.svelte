@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
-	import type { LeafColumn, GridBasicRow } from '$lib/datagrid/core/types';
+	import type { LeafColumn, GridBasicRow, GridRow } from '$lib/datagrid/core/types';
 
 	import { Portal } from 'bits-ui';
-
-	// Icones
+	import { VirtualList } from 'svelte-virtuallists';
 
 	// Blocks
 	import Pagination from '$lib/datagrid/prebuilt/shadcn/built-in/pagination.svelte';
@@ -22,7 +21,6 @@
 	import RenderGroupCell from './structure/render-group-cell.svelte';
 	import RenderColumnCell from './structure/render-column-cell.svelte';
 	import { identifier } from './actions.svelte';
-	import type { PaginationClasses } from './built-in/types';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
@@ -94,8 +92,82 @@
 			<div
 				class={cn(datagrid.extra.features.customization.getContainerClasses(), 'bg-grid-container')}
 			>
-				{@render HeadSnippet()}
-				{@render BodySnippet()}
+				{#if datagrid.extra.features.virtualization.enabled}
+					<VirtualList
+						items={datagrid.rows.getVisibleRows()}
+						style="height:600px"
+					>
+						{#snippet header()}
+							{@render HeadSnippet()}
+						{/snippet}
+						{#snippet vl_slot({
+							item: row,
+							index: rowIndex
+						}: {
+							item: GridRow<any>;
+							index: string | number;
+						})}
+							{#if row.isGroupRow()}
+								<div
+									use:identifier={{ datagrid, value: 'row-' + row.identifier }}
+									class={datagrid.extra.features.customization.getBodyGroupRowClasses()}
+									data-depth={row.depth}
+									data-expanded={row.isExpanded()}
+								>
+									{#each leafColumns as column, columnIndex (column.columnId)}
+										<RenderGroupCell {datagrid} {row} {column} />
+									{/each}
+								</div>
+							{:else}
+								<div
+									class={cn(
+										datagrid.extra.features.customization.getBodyRowClasses(row, Number(rowIndex))
+									)}
+									use:identifier={{ datagrid, value: 'row-' + row.identifier }}
+								>
+									{@render AdditionalBodyCells('left', row)}
+									{#if datagrid.extra.features.animations.shouldAnimateRows()}
+										{#each leafColumnsToDisplay as column (column.columnId)}
+											<div
+												class:contents={!datagrid.extra.features.animations.shouldAnimateRows()}
+												class={cn()}
+												animate:flip={{
+													duration: (len) =>
+														datagrid.extra.features.animations.getRowsFlipDuration(len)
+												}}
+											>
+												<RenderCell {datagrid} {row} {column} />
+											</div>
+										{/each}
+									{:else}
+										{#each leafColumnsToDisplay as column (column.columnId)}
+											<RenderCell {datagrid} {row} {column} />
+										{/each}
+									{/if}
+									{@render AdditionalBodyCells('right', row)}
+								</div>
+								{#if row.isExpanded()}
+									{#if expandedRow}
+										{@render expandedRow(row)}
+									{:else}
+										<div class={datagrid.extra.features.customization.getBodyRowExpandedClasses()}>
+											<div class="cell sticky left-0">
+												{#if expandedRowContent}
+													{@render expandedRowContent()}
+												{:else}
+													Place your content in the `expandedRowContent` snippet
+												{/if}
+											</div>
+										</div>
+									{/if}
+								{/if}
+							{/if}
+						{/snippet}
+					</VirtualList>
+				{:else}
+					{@render HeadSnippet()}
+					{@render BodySnippet()}
+				{/if}
 			</div>
 		</div>
 		{@render FooterSnippet()}

@@ -61,6 +61,7 @@ import RowExpandingColumnHeaderCell from "../built-in/row-expanding-column-heade
 import { OverlayFeature, type OverlayFeatureConfig } from "./features/overlay.svelte";
 import { StripedRowsFeature, type StripedRowsFeatureConfig } from "./features/striped-rows.svelte";
 import { CustomizationFeature, type CustomizationFeatureConfig } from "./features/customization.svelte";
+import { VirtualizationFeature, type VirtualizationFeatureConfig } from "./features/virtualization.svelte";
 
 
 
@@ -93,7 +94,8 @@ export type TrzezarsDatagridFeatures<TOriginalRow> = {
     animations: AnimationsFeature,
     overlay: OverlayFeature,
     stripedRows: StripedRowsFeature,
-    customization: CustomizationFeature<TOriginalRow>
+    customization: CustomizationFeature<TOriginalRow>,
+    virtualization: VirtualizationFeature
 
 }
 
@@ -125,7 +127,8 @@ export type TzezarsDatagridExtraStateConfig<TOriginalRow> = {
         animations?: AnimationsFeatureConfig,
         overlay?: OverlayFeatureConfig,
         stripedRows?: StripedRowsFeatureConfig,
-        customization?: CustomizationFeatureConfig<TOriginalRow>
+        customization?: CustomizationFeatureConfig<TOriginalRow>,
+        virtualization?: VirtualizationFeatureConfig
     }
 
     title?: string
@@ -328,6 +331,7 @@ export class Extra<TOriginalRow> {
         this.features.loadingIndicator = new StatusIndicatorFeature(this.datagrid, config?.features?.statusIndicator);
         this.features.densityToggle = new DensityToggleFeature(this.datagrid, config?.features?.densityToggle);
         this.features.customization = new CustomizationFeature(this.datagrid, config?.features?.customization);
+        this.features.virtualization = new VirtualizationFeature(this.datagrid, config?.features?.virtualization);
 
         // enhanced
         this.features.columnFiltering = new ColumnFilteringEnchancedFeature(this.datagrid, config?.features?.columnFiltering);
