@@ -8,11 +8,9 @@
 	import { cn } from '$lib/utils';
 	import type { PaginationClasses } from './types';
 
-
-
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
-		class?: PaginationClasses
+		class?: PaginationClasses;
 	};
 
 	let { datagrid, class: _class }: Props = $props();
@@ -28,7 +26,7 @@
 {#snippet prevButton()}
 	<Button
 		variant="secondary"
-		class={cn('size-6 bg-grid-pagination-prevButton', _class?.prevButton)}
+		class={cn('bg-grid-pagination-prevButton size-6', _class?.prevButton)}
 		size="sm"
 		disabled={datagrid.features.pagination.canGoToPrevPage()}
 		onclick={() => datagrid.handlers.pagination.goToPrevPage()}
@@ -40,7 +38,7 @@
 {#snippet nextButton()}
 	<Button
 		variant="secondary"
-		class={cn('size-6 bg-grid-pagination-nextButton', _class?.nextButton)}
+		class={cn('bg-grid-pagination-nextButton size-6', _class?.nextButton)}
 		size="sm"
 		disabled={datagrid.features.pagination.canGoToNextPage()}
 		onclick={() => datagrid.handlers.pagination.goToNextPage()}
@@ -57,7 +55,12 @@
 		value={String(datagrid.features.pagination.pageSize)}
 		onValueChange={(value: string) => datagrid.handlers.pagination.changePageSize(Number(value))}
 	>
-		<Select.Trigger class={cn("h-6 w-max max-w-[180px] p-2 text-xs bg-grid-pagination-perPageSelect", _class?.perPageSelect)}>
+		<Select.Trigger
+			class={cn(
+				'bg-grid-pagination-perPageSelect h-6 w-max max-w-[180px] p-2 text-xs',
+				_class?.perPageSelect
+			)}
+		>
 			<span class="pr-2">{datagrid.features.pagination.pageSize} per page</span>
 		</Select.Trigger>
 		<Select.Content>
@@ -82,10 +85,10 @@
 
 {#snippet currentPage()}
 	<span class="flex items-center gap-1 text-nowrap text-xs">
-		<span class=" md:block"> Page </span>
+		<span class="md:block"> Page </span>
 		<Input
 			max={datagrid.features.pagination.pageCount}
-			class="pagination-page-input h-6 w-full max-w-[60px] p-2 text-xs"
+			class={datagrid.extra.features.customization.getPaginationContainerPageInputClasses()}
 			type="text"
 			value={datagrid.features.pagination.page}
 			onfocus={(e) => {
@@ -108,8 +111,7 @@
 
 <div
 	class={cn(
-		'bg-grid-pagination-container container flex min-w-full flex-row items-center justify-between gap-2 border-x p-3   md:flex-row',
-		_class?.container
+		datagrid.extra.features.customization.getPaginationContainerClasses(_class?.container),
 	)}
 >
 	{@render status()}

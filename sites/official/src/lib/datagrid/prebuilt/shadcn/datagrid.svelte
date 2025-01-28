@@ -241,29 +241,26 @@
 {/snippet}
 
 {#snippet PaginationSnippet(directions: ('top' | 'bottom' | 'both')[])}
-	<!-- ? rewrite it later -->
+	<!-- Simplified logic, preserving original intent -->
 	{#if shouldDisplayPagination}
-		{#if ['both', 'top'].includes(datagrid.extra.features.pagination.paginationPosition)}
-			{#if directions.includes('top') || directions.includes('both')}
-				{#if pagination}
-					{@render pagination()}
-				{:else}
-					<Pagination {datagrid} class={{ container: 'border-t' }} />
-				{/if}
+		{#if ['both', 'top'].includes(datagrid.extra.features.pagination.paginationPosition) && directions.includes('top')}
+			{#if pagination}
+				{@render pagination()}
+			{:else}
+				<Pagination {datagrid} class={{ container: 'border-t ' }} />
 			{/if}
 		{/if}
 
-		{#if ['both', 'bottom'].includes(datagrid.extra.features.pagination.paginationPosition)}
-			{#if directions.includes('bottom') || directions.includes('both')}
-				{#if pagination}
-					{@render pagination()}
-				{:else}
-					<Pagination {datagrid} class={{ container: 'border-b border-t-0' }} />
-				{/if}
+		{#if ['both', 'bottom'].includes(datagrid.extra.features.pagination.paginationPosition) && directions.includes('bottom')}
+			{#if pagination}
+				{@render pagination()}
+			{:else}
+				<Pagination {datagrid} class={{ container: 'border-b ' }} />
 			{/if}
 		{/if}
 	{/if}
 {/snippet}
+
 
 {#snippet CredentialsSnippet()}
 	{#if datagrid.extra.features.credentials.enabled}

@@ -127,8 +127,7 @@
 	}
 
 	.grid-container-wrapper {
-		@apply inline-block max-h-[600px] w-full overflow-auto;
-		border: var(--grid-border-width) solid hsl(var(--grid-border));
+		@apply inline-block max-h-[600px] w-full overflow-auto border;
 
 		&[data-fullscreen='true'] {
 			@apply h-full max-h-full overflow-auto;
@@ -145,17 +144,15 @@
 	}
 
 	.grid-head-row {
-		@apply flex w-full flex-row;
-		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
+		@apply flex w-full flex-row border-b;
 	}
 
 	.grid-head-row-leaf-column-cell {
-		@apply flex h-full flex-col justify-end self-end p-2 text-sm font-medium leading-4;
+		@apply flex h-full flex-col justify-end self-end border-r p-2 text-sm font-medium leading-4;
 
 		width: var(--width);
 		min-width: var(--min-width);
 		max-width: var(--max-width);
-		border-right: var(--grid-border-width) solid hsl(var(--grid-border));
 	}
 
 	.grid-head-row-leaf-column-cell-content {
@@ -168,21 +165,20 @@
 		&.sortable:hover {
 			background-color: rgba(0, 0, 0, 0.05);
 		}
-	
+
 		.sort-indicator {
 			display: flex;
 			align-items: center;
 			opacity: 0.5;
 		}
-	
+
 		&.sortable:hover .sort-indicator {
 			opacity: 1;
 		}
-
 	}
 
 	.grid-head-row-group-column-cell-content {
-		@apply flex flex-row items-center px-2 py-2 border-b;
+		@apply flex flex-row items-center border-b px-2 py-2;
 		/* text-overflow: ellipsis;
 		text-wrap: nowrap;
 		overflow: hidden; */
@@ -190,12 +186,7 @@
 
 	/* TODO FIX */
 	.grid-head-row-group-column-cell {
-		@apply flex h-full flex-col text-sm font-medium leading-4 border-r border-b;
-			/* border-right: var(--grid-border-width) solid hsl(var(--grid-border));
-		border-left: var(--grid-border-width) solid hsl(var(--grid-border));
-		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border)); */
-
-	
+		@apply flex h-full flex-col border-b border-r text-sm font-medium leading-4;
 	}
 
 	.grid-head-row-group-column-cell-header {
@@ -208,8 +199,7 @@
 	}
 
 	.grid-body-row {
-		@apply flex h-full flex-row;
-		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
+		@apply flex h-full flex-row border-b;
 
 		&:last-child {
 			border-bottom: none;
@@ -217,8 +207,7 @@
 	}
 
 	.grid-body-row-expanded {
-		@apply flex h-full flex-row;
-		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
+		@apply flex h-full flex-row border-b;
 
 		&:last-child {
 			border-bottom: none;
@@ -226,19 +215,18 @@
 	}
 
 	.grid-body-row-cell {
-		@apply transition-all duration-300 flex px-1 py-2 items-center;
+		@apply flex items-center px-1 py-2 transition-all duration-300;
 		width: var(--width);
 		min-width: var(--min-width);
 		max-width: var(--max-width);
 	}
 
 	.grid-body-row-cell-content {
-		@apply overflow-hidden text-ellipsis whitespace-nowrap w-full;
+		@apply w-full overflow-hidden text-ellipsis whitespace-nowrap;
 	}
 
 	.grid-body-group-row {
-		@apply flex flex-row w-full;
-		border-bottom: var(--grid-border-width) solid hsl(var(--grid-border));
+		@apply flex w-full flex-row border-b;
 	}
 
 	/* Pinned columns base positioning */
@@ -270,12 +258,10 @@
 		/* background-color: hsl(var(--grid-pinned-cell)); */
 	}
 
-
-
 	/* Footer */
 
 	.grid-footer-container {
-		@apply sticky bottom-0 left-0 border-b-[1px];
+		@apply sticky bottom-0 left-0 border-b;
 	}
 
 	/* Toolbar */
@@ -284,25 +270,14 @@
 		@apply flex items-end justify-end;
 	}
 
-	/* Pagination */
-
-	.pagination-container {
-		border: var(--grid-border-width) solid var(--border-color);
-	}
-
-	.pagination-page-input {
-		border-color: hsl(var(--grid-border));
-	}
-
 	/* Column Filtering */
-	
+
 	.grid-head-row-leaf-column-filter-input-wrapper {
 		@apply h-9 w-full pt-1;
 	}
 
 	.grid-head-row-leaf-column-filter-input {
-		@apply px-0 py-1 h-5 text-xs rounded-sm;
-		border: 1px solid hsl(var(--grid-border));
+		@apply h-5 rounded-sm border px-0 py-1 text-xs;
 		color: hsl(var(--muted-foreground));
 	}
 
@@ -311,7 +286,7 @@
 	.copy-feedback {
 		animation: copyFeedback 1s ease;
 	}
-	
+
 	@keyframes copyFeedback {
 		0% {
 			background-color: rgb(59 130 246 / 0.2); /* bg-blue-500/20 */
@@ -319,5 +294,16 @@
 		100% {
 			background-color: transparent;
 		}
+	}
+
+	/* Pagination */
+
+	.grid-pagination-container {
+		@apply flex min-w-full flex-row items-center justify-between gap-2 border-x p-3 md:flex-row;
+	}
+
+	.grid-pagination-container-page-input {
+		@apply h-6 w-full max-w-[60px] p-2 text-xs;
+		border-color: hsl(var(--grid-border));
 	}
 }

@@ -159,4 +159,12 @@ export class CustomizationFeature {
     return cn('grid-toolbar-container')
   }
 
+  getPaginationContainerClasses = (classes?: string) => {
+    return cn('grid-pagination-container', classes)
+  }
+  
+  getPaginationContainerPageInputClasses = () => {
+    return cn('grid-pagination-container-page-input')
+  }
+
 }
