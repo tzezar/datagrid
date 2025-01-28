@@ -46,7 +46,7 @@
 				onclick={(e) => {
 					datagrid.extra.features.clickToCopy.handleClickToCopy(row.original, column);
 
-					const cellElement = (e.target as HTMLElement).closest('.cell');
+					const cellElement = (e.target as HTMLElement).closest('.grid-body-row-cell');
 					if (cellElement) {
 						datagrid.extra.features.clickToCopy.addCopyFeedback(cellElement as HTMLElement);
 					}
@@ -60,3 +60,6 @@
 		{/if}
 	{/if}
 {/snippet}
+
+
+

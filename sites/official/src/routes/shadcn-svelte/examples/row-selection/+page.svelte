@@ -19,6 +19,11 @@
 
 		extra: {
 			features: {
+				clickToCopy: {
+					onClickToCopy(value) {
+						toast.info(`Copied ${value} to clipboard`);
+					},
+				},
 				animations: {
 					animateRows: true,
 					animateHeaders: true

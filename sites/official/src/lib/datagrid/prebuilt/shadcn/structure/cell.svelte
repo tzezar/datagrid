@@ -23,7 +23,6 @@
 	class={cn(
 		datagrid.extra.features.customization.getBodyRowCellClasses(datagrid, row, column),
 		'group',
-		_class
 	)}
 	class:justify-center={column?._meta?.align === 'center'}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
@@ -35,3 +34,19 @@
 >
 	{@render children()}
 </div>
+<style>
+	/* Copy Feedback */
+
+	.copy-feedback {
+		animation: copyFeedback 1s ease;
+	}
+
+	@keyframes copyFeedback {
+		0% {
+			background-color: rgb(59 130 246 / 0.2) ; /* bg-blue-500/20 */
+		}
+		100% {
+			background-color: transparent;
+		}
+	}
+</style>
