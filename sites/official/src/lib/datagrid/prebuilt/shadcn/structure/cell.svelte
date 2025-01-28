@@ -44,7 +44,7 @@
 
 	@keyframes copyFeedback {
 		0% {
-			background-color: rgb(59 130 246 / 0.2) ; /* bg-blue-500/20 */
+			background-color: hsl(var(--grid-accent) / 0.2);
 		}
 		100% {
 			background-color: transparent;

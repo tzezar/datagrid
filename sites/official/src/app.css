@@ -38,6 +38,7 @@
 		--grid-foreground: 0 0% 3.9%;
 		--grid-primary: 0 0% 100%;
 		--grid-secondary: 0 0% 98%;
+		--grid-accent: 40 50% 50%;
 		--grid-border: 0 0% 89.8%;
 	}
 
@@ -75,6 +76,7 @@
 		--grid-foreground: 0 0% 98%;
 		--grid-primary: 0 0% 4%;
 		--grid-secondary: 0 0% 10%;
+		--grid-accent: 40 50% 50%;
 		--grid-border: 0 0% 14.9%;
 	}
 }
@@ -227,23 +229,47 @@
 	}
 
 	.grid-body-row-cell {
-		@apply flex items-center px-1 py-2 transition-all duration-300;
+		@apply flex items-center px-1 py-2 transition-all duration-300 relative;
 		width: var(--width);
 		min-width: var(--min-width);
 		max-width: var(--max-width);
-
+		
 		&[data-pinned] {
 			@apply bg-grid-primary border-grid-border;
 		}
-
+		
 		&[data-pinned='right'] {
 			right: var(--pin-right-offset, 0);
 			@apply border-l;
 		}
-
+		
 		&[data-pinned='left'] {
 			left: var(--pin-left-offset, 0);
 			@apply border-r;
+		}
+	}
+	
+	.grid-body-row-cell-highlighted {
+		/* Remove position: relative since it's now in the parent */
+		z-index: 1;
+		
+		&::before {  /* Changed from ::after to ::before */
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: hsl(var(--grid-accent) / 0.2);
+			pointer-events: none;
+		}
+	}
+	
+	/* Add specific styling for cells with copy button */
+	.grid-body-row-cell:has(button) {
+		.grid-body-row-cell-highlighted::before {
+			/* Ensure highlight doesn't interfere with button visibility */
+			z-index: -1;
 		}
 	}
 
@@ -320,4 +346,8 @@
 			background: hsl(var(--muted-foreground) / 50);
 		}
 	}
+
+	
+	
+
 }

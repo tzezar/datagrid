@@ -148,7 +148,7 @@ export class CustomizationFeature<TOriginalRow> {
 
   getBodyRowCellClasses = (datagrid: TzezarsDatagrid<TOriginalRow>, row: GridBasicRow<TOriginalRow>, column: LeafColumn<TOriginalRow>) => {
     return cn('grid-body-row-cell',
-      shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
+      shouldHighlightSelectedRow(datagrid, row) && 'grid-body-row-cell-highlighted',
       column._meta.styles?.bodyCell({ datagrid, column, row }),
     )
   }
@@ -161,9 +161,6 @@ export class CustomizationFeature<TOriginalRow> {
     return cn('grid-body-group-row')
   }
 
-  getCopyFeedbackClasses = () => {
-    return cn('copy-feedback')
-  }
 
   getHeadRowLeafColumnFilterInputWrapperClasses = () => {
     return cn('grid-head-row-leaf-column-filter-input-wrapper')

@@ -23,6 +23,7 @@ const config: Config = {
 					overlay: "hsl(var(--grid-overlay) / <alpha-value>)",
 					primary: "hsl(var(--grid-primary) / <alpha-value>)",
 					secondary: "hsl(var(--grid-secondary) / <alpha-value>)",
+					accent: "hsl(var(--grid-accent) / <alpha-value>)",
 				},
 
 				border: "hsl(var(--border) / <alpha-value>)",

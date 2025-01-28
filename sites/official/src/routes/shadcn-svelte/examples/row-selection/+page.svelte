@@ -22,27 +22,27 @@
 		extra: {
 			features: {
 				customization: {
-					getHeadClasses(): string {
-						return cn(
-							'grid-head',
-							this.customization?.theme === 'shadcn' && 'grid-head-shadcn',
-							this.customization?.stickyHeader && 'grid-head-sticky'
-						);
-					},
-					getBodyRowClasses(row, rowIndex): string {
-						return cn(
-							'grid-body-row',
-							row.original.id === 3 && '!bg-green-400',
-							this?.datagrid?.extra?.features?.stripedRows?.applyStripedRows(row, rowIndex)
-						);
-					},
-					getBodyRowCellClasses(datagrid, row, column) {
-						return cn(
-							'grid-body-row-cell',
-							shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
-							column._meta.styles?.bodyCell({ datagrid, column, row })
-						);
-					}
+					// getHeadClasses(): string {
+					// 	return cn(
+					// 		'grid-head',
+					// 		this.customization?.theme === 'shadcn' && 'grid-head-shadcn',
+					// 		this.customization?.stickyHeader && 'grid-head-sticky'
+					// 	);
+					// },
+					// getBodyRowClasses(row, rowIndex): string {
+					// 	return cn(
+					// 		'grid-body-row',
+					// 		row.original.id === 3 && '!bg-green-400',
+					// 		this?.datagrid?.extra?.features?.stripedRows?.applyStripedRows(row, rowIndex)
+					// 	);
+					// },
+					// getBodyRowCellClasses(datagrid, row, column) {
+					// 	return cn(
+					// 		'grid-body-row-cell',
+					// 		shouldHighlightSelectedRow(datagrid, row) && 'bg-grid-accent/10',
+					// 		column._meta.styles?.bodyCell({ datagrid, column, row })
+					// 	);
+					// }
 				},
 
 				clickToCopy: {

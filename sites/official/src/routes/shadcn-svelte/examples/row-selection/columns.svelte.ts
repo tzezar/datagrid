@@ -37,13 +37,13 @@ export const inventoryColumns = [
     accessorColumn({
         accessorKey: 'id',
         _meta: {
-            styles: {
-                bodyCell(props) {
-                    const { row, datagrid } = props
-                    if (row.isGroupRow()) return ""
-                    return cn(row.original.id === 1 && 'bg-green-400', shouldHighlightSelectedRow(datagrid, row) && 'bg-red-400')
-                },
-            }
+            // styles: {
+            //     bodyCell(props) {
+            //         const { row, datagrid } = props
+            //         if (row.isGroupRow()) return ""
+            //         return cn(row.original.id === 1 && 'bg-green-400', shouldHighlightSelectedRow(datagrid, row) && 'bg-red-400')
+            //     },
+            // }
         } as ShadcnColumnMeta<InventoryItem>
     }),
 
