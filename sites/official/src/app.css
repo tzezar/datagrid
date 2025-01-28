@@ -33,23 +33,12 @@
 		--sidebar-border: 220 13% 91%;
 		--sidebar-ring: 217.2 91.2% 59.8%;
 
-		--grid-border-width: 1px;
-		--grid-border: 0, 0%, 85%;
-		--grid-header: 0, 0%, 98%;
-		--grid-header-cell: 0 0% 96%;
-		--grid-header-group: 0, 0%, 96%;
-		--grid-header-group-cell: 0, 0%, 98%;
-		--grid-body: 0 0% 40%;
-		--grid-body-row-even: 0 0% 99%;
-		--grid-body-row-odd: 0 0% 97%;
-		--grid-body-cell: 0, 0%, 99%;
-		--grid-footer: 0, 0%, 98%;
-		--grid-toolbar: 0, 0%, 98%;
-		--grid-pinned-cell: 0, 0%, 90%;
-		--grid-pinned-header-cell: 0, 0%, 85%;
-		--grid-background: 0, 0%, 99.5%;
-
-		--grid-pagination: 0, 0%, 98%;
+		--grid-overlay: 0 0% 100%;
+		--grid-background: 0 0% 100%;
+		--grid-foreground: 0 0% 3.9%;
+		--grid-primary: 0 0% 100%;
+		--grid-secondary: 0 0% 98%;
+		--grid-border: 0 0% 89.8%;
 	}
 
 	.dark {
@@ -81,23 +70,12 @@
 		--sidebar-border: 240 3.7% 15.9%;
 		--sidebar-ring: 217.2 91.2% 59.8%;
 
-		/* --grid-border-width: 1px;
-		--grid-border: 0 0% 16%;
-		--grid-header: 0, 0%, 9%;
-		--grid-header-cell: 0 0% 9%;
-		--grid-header-group: 0 0% 9%;
-		--grid-header-group-cell: 0 0% 9%;
-		--grid-body: 0 0% 40%;
-		--grid-body-row-even: 0 0% 10%;
-		--grid-body-row-odd: 0 0% 8%;
-		--grid-body-cell: 0 0% 14%;
-		--grid-footer: 0 0% 9%;
-		--grid-toolbar: 0 0% 9%;
-		--grid-pinned-cell: 0 0% 13%;
-		--grid-pinned-header-cell: 0 0% 13%;
-		--grid-background: 0 0% 10%;
-
-		--grid-pagination: 0 0% 9%; */
+		--grid-overlay: 0 0% 3.9%;
+		--grid-background: 0 0% 4%;
+		--grid-foreground: 0 0% 98%;
+		--grid-primary: 0 0% 4%;
+		--grid-secondary: 0 0% 10%;
+		--grid-border: 0 0% 14.9%;
 	}
 }
 
@@ -114,15 +92,15 @@
 
 @layer components {
 	.grid-body-overlay {
-		@apply pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[5] h-full w-full bg-black opacity-50;
+		@apply pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[5] h-full w-full bg-grid-overlay opacity-50;
 	}
 
 	.grid-wrapper-overlay {
-		@apply pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full opacity-50;
+		@apply pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full bg-grid-overlay opacity-50;
 	}
 
 	.grid-wrapper {
-		@apply relative flex h-full max-h-fit flex-col;
+		@apply relative flex h-full max-h-fit flex-col bg-grid-background;
 
 		&[data-fullscreen='true'] {
 			@apply absolute inset-0 z-20 bg-background p-4;
@@ -130,7 +108,7 @@
 	}
 
 	.grid-container-wrapper {
-		@apply inline-block max-h-[600px] w-full overflow-auto border;
+		@apply inline-block max-h-[600px] w-full overflow-auto border border-grid-border;
 
 		&[data-fullscreen='true'] {
 			@apply h-full max-h-full overflow-auto;
@@ -154,7 +132,7 @@
 		}
 
 		&.grid-head-shadcn {
-			@apply bg-background;
+			@apply bg-grid-background;
 		}
 	}
 
@@ -163,21 +141,29 @@
 	}
 
 	.grid-head-row-leaf-column-cell {
-		@apply flex h-full flex-col justify-end self-end border-b border-r p-2 text-sm font-medium leading-4;
+		@apply flex h-full flex-col justify-end self-end border-b border-r border-grid-border p-2 text-sm font-medium leading-4;
 
 		width: var(--width);
 		min-width: var(--min-width);
 		max-width: var(--max-width);
 
+
+		/* ! does not work for some reason */
+		/* &:not([data-pinned]):last-of-type {
+			@apply !bg-red-400;
+		} */
+
 		&[data-pinned] {
-			@apply bg-sidebar;
+			@apply bg-grid-primary border-grid-border;
 		}
 
 		&[data-pinned='right'] {
+			@apply border-l border-r-0;
 			right: var(--pin-right-offset, 0);
 		}
 
 		&[data-pinned='left'] {
+			@apply border-l-0 border-r;
 			left: var(--pin-left-offset, 0);
 		}
 	}
@@ -205,7 +191,7 @@
 	}
 
 	.grid-head-row-group-column-cell-content {
-		@apply flex flex-row items-center border-b border-r px-2 py-2;
+		@apply flex flex-row items-center border-b border-r border-grid-border px-2 py-2;
 		/* text-overflow: ellipsis;
 		text-wrap: nowrap;
 		overflow: hidden; */
@@ -225,7 +211,7 @@
 	}
 
 	.grid-body-row {
-		@apply flex h-full flex-row border-b;
+		@apply flex h-full flex-row border-b border-grid-border;
 
 		&:last-child {
 			border-bottom: none;
@@ -233,7 +219,7 @@
 	}
 
 	.grid-body-row-expanded {
-		@apply flex h-full flex-row border-b;
+		@apply flex h-full flex-row border-b border-grid-border;
 
 		&:last-child {
 			border-bottom: none;
@@ -247,15 +233,17 @@
 		max-width: var(--max-width);
 
 		&[data-pinned] {
+			@apply bg-grid-primary border-grid-border;
 		}
 
 		&[data-pinned='right'] {
 			right: var(--pin-right-offset, 0);
-			@apply border-l bg-primary-foreground;
+			@apply border-l;
 		}
 
 		&[data-pinned='left'] {
 			left: var(--pin-left-offset, 0);
+			@apply border-r;
 		}
 	}
 
@@ -264,7 +252,7 @@
 	}
 
 	.grid-body-group-row {
-		@apply flex w-full flex-row border-b;
+		@apply flex w-full flex-row border-b border-grid-border;
 	}
 
 	/* Pinned columns base positioning */
@@ -278,7 +266,7 @@
 	/* Footer */
 
 	.grid-footer-container {
-		@apply sticky bottom-0 left-0 border-b p-2;
+		@apply sticky bottom-0 left-0 border-b border-grid-border p-2;
 	}
 
 	/* Toolbar */
@@ -294,19 +282,18 @@
 	}
 
 	.grid-head-row-leaf-column-filter-input {
-		@apply h-5 rounded-sm border px-0 py-1 text-xs;
+		@apply h-5 rounded-sm border border-grid-border px-0 py-1 text-xs;
 		color: hsl(var(--muted-foreground));
 	}
 
 	/* Pagination */
 
 	.grid-pagination-container {
-		@apply flex min-w-full flex-row items-center justify-between gap-2 border-x p-3 md:flex-row;
+		@apply flex min-w-full flex-row items-center justify-between gap-2 border-x border-grid-border p-3 md:flex-row;
 	}
 
 	.grid-pagination-container-page-input {
-		@apply !h-5 w-full max-w-[60px] p-2 !text-xs;
-		border-color: hsl(var(--grid-border));
+		@apply !h-5 w-full max-w-[60px] border-grid-border p-2 !text-xs;
 	}
 
 	.grid-custom-scrollbar {
@@ -318,9 +305,9 @@
 
 		/* Track */
 		::-webkit-scrollbar-track {
-			border-left: solid 1px hsl(var(--border));
-			border-top: solid 1px hsl(var(--border));
-			background: hsl(var(--background));
+			border-left: solid 1px hsl(var(--grid-border));
+			border-top: solid 1px hsl(var(--grid-border));
+			background: hsl(var(--grid-background));
 		}
 
 		/* Handle */

@@ -60,16 +60,16 @@ import RowSelectionColumnHeaderCell from "../built-in/row-selection-column-heade
 import RowExpandingColumnHeaderCell from "../built-in/row-expanding-column-header-cell.svelte";
 import { OverlayFeature, type OverlayFeatureConfig } from "./features/overlay.svelte";
 import { StripedRowsFeature, type StripedRowsFeatureConfig } from "./features/striped-rows.svelte";
-import { CustomizationFeature } from "./features/customization.svelte";
+import { CustomizationFeature, type CustomizationFeatureConfig } from "./features/customization.svelte";
 
 
 
 export type TzezarsDatagridConfig<TOriginalRow = any> = GridConfig<TOriginalRow> & {
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;
-    extra?: TzezarsDatagridExtraStateConfig;
+    extra?: TzezarsDatagridExtraStateConfig<TOriginalRow>
 }
 
-export type TrzezarsDatagridFeatures = {
+export type TrzezarsDatagridFeatures<TOriginalRow> = {
     clickToCopy: ClickToCopyFeature,
     columnFiltering: ColumnFilteringEnchancedFeature,
     columnPinning: ColumnPinningEnchancedFeature,
@@ -93,13 +93,14 @@ export type TrzezarsDatagridFeatures = {
     animations: AnimationsFeature,
     overlay: OverlayFeature,
     stripedRows: StripedRowsFeature,
-    customization: CustomizationFeature,
+    customization: CustomizationFeature<TOriginalRow>
+
 }
 
 
 
 
-export type TzezarsDatagridExtraStateConfig = {
+export type TzezarsDatagridExtraStateConfig<TOriginalRow> = {
     features?: {
         clickToCopy?: ClickToCopyFeatureConfig,
         columnFiltering?: ColumnFilteringEnchancedFeatureConfig,
@@ -124,6 +125,7 @@ export type TzezarsDatagridExtraStateConfig = {
         animations?: AnimationsFeatureConfig,
         overlay?: OverlayFeatureConfig,
         stripedRows?: StripedRowsFeatureConfig,
+        customization?: CustomizationFeatureConfig<TOriginalRow>
     }
 
     title?: string
@@ -252,7 +254,7 @@ const createAdditionalColumns = (datagrid: TzezarsDatagrid): {
 
 
 export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> {
-    extra: Extra;
+    extra: Extra<TOriginalRow>
 
     constructor(config: TzezarsDatagridConfig<TOriginalRow>) {
         super(config, true);
@@ -299,18 +301,18 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
 
 }
 
-export class Extra {
-    datagrid: TzezarsDatagrid<any>;
+export class Extra<TOriginalRow> {
+    datagrid: TzezarsDatagrid<TOriginalRow>;
     title: string | undefined;
-    features = {} as TrzezarsDatagridFeatures;
+    features = {} as TrzezarsDatagridFeatures<TOriginalRow>
 
-    constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig) {
+    constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig<TOriginalRow>) {
         this.datagrid = datagrid;
         this.initializeFeatures(config);
         this.title = config?.title || "Your data, Tzezar's Datagrid"
     }
 
-    initializeFeatures(config?: TzezarsDatagridExtraStateConfig) {
+    initializeFeatures(config?: TzezarsDatagridExtraStateConfig<TOriginalRow>) {
         // extra
         this.features.clickToCopy = new ClickToCopyFeature(this.datagrid, config?.features?.clickToCopy);
         this.features.credentials = new CredentialsFeature(this.datagrid, config?.features?.credentials);
@@ -324,7 +326,7 @@ export class Extra {
         this.features.controlCenter = new ControlCenterFeature(this.datagrid, config?.features?.controlCenter);
         this.features.loadingIndicator = new StatusIndicatorFeature(this.datagrid, config?.features?.statusIndicator);
         this.features.densityToggle = new DensityToggleFeature(this.datagrid, config?.features?.densityToggle);
-        this.features.customization = new CustomizationFeature(this.datagrid);
+        this.features.customization = new CustomizationFeature(this.datagrid, config?.features?.customization);
 
         // enhanced
         this.features.columnFiltering = new ColumnFilteringEnchancedFeature(this.datagrid, config?.features?.columnFiltering);

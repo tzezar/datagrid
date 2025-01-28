@@ -16,6 +16,15 @@ const config: Config = {
 		},
 		extend: {
 			colors: {
+				grid: {
+					background: "hsl(var(--grid-background) / <alpha-value>)",
+					foreground: "hsl(var(--grid-foreground) / <alpha-value>)",
+					border: "hsl(var(--grid-border) / <alpha-value>)",
+					overlay: "hsl(var(--grid-overlay) / <alpha-value>)",
+					primary: "hsl(var(--grid-primary) / <alpha-value>)",
+					secondary: "hsl(var(--grid-secondary) / <alpha-value>)",
+				},
+
 				border: "hsl(var(--border) / <alpha-value>)",
 				input: "hsl(var(--input) / <alpha-value>)",
 				ring: "hsl(var(--ring) / <alpha-value>)",

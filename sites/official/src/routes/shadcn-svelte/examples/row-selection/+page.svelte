@@ -4,6 +4,8 @@
 	import { inventoryColumns } from './columns.svelte';
 	import DatagridShadcnSvelte from '$lib/datagrid/prebuilt/shadcn/datagrid.svelte';
 	import { toast } from 'svelte-sonner';
+	import { cn } from '$lib/utils';
+	import { shouldHighlightSelectedRow } from '$lib/datagrid/prebuilt/shadcn/utils';
 
 	let { data } = $props();
 
@@ -13,16 +15,40 @@
 
 		features: {
 			rowSelection: {
-				maxSelectedRows: 2,
+				maxSelectedRows: 2
 			}
 		},
 
 		extra: {
 			features: {
+				customization: {
+					getHeadClasses(): string {
+						return cn(
+							'grid-head',
+							this.customization?.theme === 'shadcn' && 'grid-head-shadcn',
+							this.customization?.stickyHeader && 'grid-head-sticky'
+						);
+					},
+					getBodyRowClasses(row, rowIndex): string {
+						return cn(
+							'grid-body-row',
+							row.original.id === 3 && '!bg-green-400',
+							this?.datagrid?.extra?.features?.stripedRows?.applyStripedRows(row, rowIndex)
+						);
+					},
+					getBodyRowCellClasses(datagrid, row, column) {
+						return cn(
+							'grid-body-row-cell',
+							shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
+							column._meta.styles?.bodyCell({ datagrid, column, row })
+						);
+					}
+				},
+
 				clickToCopy: {
 					onClickToCopy(value) {
 						toast.info(`Copied ${value} to clipboard`);
-					},
+					}
 				},
 				animations: {
 					animateRows: true,
@@ -48,10 +74,8 @@
 	});
 
 	$effect(() => {
-		console.log($state.snapshot(datagrid.features.filtering.conditions))	
-	})
-
-
+		console.log($state.snapshot(datagrid.features.filtering.conditions));
+	});
 </script>
 
 <DatagridShadcnSvelte {datagrid}></DatagridShadcnSvelte>

@@ -27,7 +27,7 @@
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
 
-		// Blocks
+		// Snippets
 		toolbar?: Snippet;
 		head?: Snippet;
 		body?: Snippet;
@@ -41,6 +41,8 @@
 
 	let {
 		datagrid,
+
+		// Snippets
 		toolbar,
 		head,
 		body,

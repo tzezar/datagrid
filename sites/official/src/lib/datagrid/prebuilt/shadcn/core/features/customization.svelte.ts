@@ -20,20 +20,25 @@ interface DataGridCustomization {
 }
 
 interface DataGridClasses {
-  wrapper?: string | null;
+  head?: () => string
 }
 
 
 
-export type CustomizationFeatureConfig = {
-  customization: DataGridCustomization;
+export type CustomizationFeatureConfig<TOriginalRow> = {
+  datagrid?: TzezarsDatagrid<TOriginalRow>
+  customization?: DataGridCustomization;
   classes?: DataGridClasses;
+
+  getHeadClasses?: () => string
+  getBodyRowClasses?: (row: GridBasicRow<TOriginalRow>, rowIndex: number) => string
+  getBodyRowCellClasses?: (datagrid: TzezarsDatagrid, row: GridBasicRow<any>, column: LeafColumn<any>) => string
 }
 
 
 
-export class CustomizationFeature {
-  datagrid: TzezarsDatagrid
+export class CustomizationFeature<TOriginalRow> {
+  datagrid: TzezarsDatagrid<TOriginalRow>
   customization: DataGridCustomization = {
     theme: 'shadcn',
     customScrollbar: true,
@@ -48,13 +53,12 @@ export class CustomizationFeature {
 
     stickyHeader: true,
   }
-  classes: DataGridClasses = {
-    wrapper: '',
 
-  }
 
-  constructor(datagrid: TzezarsDatagrid, config?: CustomizationFeatureConfig) {
+  constructor(datagrid: TzezarsDatagrid<TOriginalRow>, config?: CustomizationFeatureConfig<TOriginalRow>) {
     this.datagrid = datagrid
+
+    console.log(config?.getHeadClasses)
 
     this.customization.theme = config?.customization?.theme ?? this.customization.theme;
     this.customization.customScrollbar = config?.customization?.customScrollbar ?? this.customization.customScrollbar;
@@ -67,8 +71,10 @@ export class CustomizationFeature {
     this.customization.size = config?.customization?.size ?? this.customization.size;
     this.customization.variant = config?.customization?.variant ?? this.customization.variant;
 
-    this.classes.wrapper = config?.classes?.wrapper ?? this.classes.wrapper;
 
+    this.getHeadClasses = config?.getHeadClasses ?? this.getHeadClasses;
+    this.getBodyRowClasses = config?.getBodyRowClasses ?? this.getBodyRowClasses;
+    this.getBodyRowCellClasses = config?.getBodyRowCellClasses ?? this.getBodyRowCellClasses;
   }
 
 
@@ -109,7 +115,7 @@ export class CustomizationFeature {
     return cn('grid-head-row-leaf-column-cell')
   }
 
-  getHeadRowLeafColumnCellContentClasses = (column: LeafColumn<any>) => {
+  getHeadRowLeafColumnCellContentClasses = (column: LeafColumn<TOriginalRow>) => {
     return cn('grid-head-row-leaf-column-cell-content', column.options.sortable &&
       this.datagrid.extra.features.sorting.enableSorting === true && 'sortable')
   }
@@ -130,7 +136,7 @@ export class CustomizationFeature {
     return cn('grid-body')
   }
 
-  getBodyRowClasses = (row: GridBasicRow<any>, rowIndex: number) => {
+  getBodyRowClasses = (row: GridBasicRow<TOriginalRow>, rowIndex: number) => {
     return cn('grid-body-row',
       this.datagrid.extra.features.stripedRows.applyStripedRows(row, rowIndex)
     )
@@ -140,7 +146,7 @@ export class CustomizationFeature {
     return cn('grid-body-row-expanded')
   }
 
-  getBodyRowCellClasses = (datagrid: TzezarsDatagrid, row: GridBasicRow<any>, column: LeafColumn<any>) => {
+  getBodyRowCellClasses = (datagrid: TzezarsDatagrid<TOriginalRow>, row: GridBasicRow<TOriginalRow>, column: LeafColumn<TOriginalRow>) => {
     return cn('grid-body-row-cell',
       shouldHighlightSelectedRow(datagrid, row) && 'bg-blue-400/10',
       column._meta.styles?.bodyCell({ datagrid, column, row }),
