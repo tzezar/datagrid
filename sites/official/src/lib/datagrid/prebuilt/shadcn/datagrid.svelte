@@ -79,7 +79,7 @@
 	<div
 		use:identifier={{ datagrid, value: 'wrapper' }}
 		data-fullscreen={isFullscreenEnabled}
-		class={cn(datagrid.extra.features.customization.getWrapperClasses())}
+		class={cn(datagrid.customization.styling.getWrapperClasses())}
 	>
 		{@render WrapperOverlaySnippet()}
 		{@render ToolbarSnippet()}
@@ -125,7 +125,7 @@
 
 {#snippet NotVirtualizedContainerSnippet()}
 	<div data-fullscreen={isFullscreenEnabled} class="grid-container-wrapper">
-		<div class={cn(datagrid.extra.features.customization.getContainerClasses())}>
+		<div class={cn(datagrid.customization.styling.getContainerClasses())}>
 			{@render HeadSnippet()}
 			{@render BodySnippet()}
 		</div>
@@ -136,7 +136,7 @@
 	{#if row.isGroupRow()}
 	<div
 		use:identifier={{ datagrid, value: 'row-' + row.identifier }}
-		class={datagrid.extra.features.customization.getBodyGroupRowClasses()}
+		class={datagrid.customization.styling.getBodyGroupRowClasses()}
 		data-depth={row.depth}
 		data-expanded={row.isExpanded()}
 	>
@@ -147,7 +147,7 @@
 {:else}
 	<div
 		class={cn(
-			datagrid.extra.features.customization.getBodyRowClasses(row, Number(rowIndex))
+			datagrid.customization.styling.getBodyRowClasses(row, Number(rowIndex))
 		)}
 		use:identifier={{ datagrid, value: 'row-' + row.identifier }}
 	>
@@ -175,7 +175,7 @@
 		{#if expandedRow}
 			{@render expandedRow(row)}
 		{:else}
-			<div class={datagrid.extra.features.customization.getBodyRowExpandedClasses()}>
+			<div class={datagrid.customization.styling.getBodyRowExpandedClasses()}>
 				<div class="cell sticky left-0">
 					{#if expandedRowContent}
 						{@render expandedRowContent()}
@@ -196,11 +196,11 @@
 	{:else}
 		<div
 			use:identifier={{ datagrid, value: 'head' }}
-			class={datagrid.extra.features.customization.getHeadClasses()}
+			class={datagrid.customization.styling.getHeadClasses()}
 		>
 			<div
 				use:identifier={{ datagrid, value: 'head-row' }}
-				class={datagrid.extra.features.customization.getHeadRowClasses()}
+				class={datagrid.customization.styling.getHeadRowClasses()}
 			>
 				{@render AdditionalHeaderCells('left')}
 
@@ -233,7 +233,7 @@
 	{:else}
 		<div
 			use:identifier={{ datagrid, value: 'body' }}
-			class={datagrid.extra.features.customization.getBodyClasses()}
+			class={datagrid.customization.styling.getBodyClasses()}
 		>
 			{#if datagrid.extra.features.overlay.shouldShowBodyOverlay()}
 				<div class="body-overlay"></div>
@@ -243,7 +243,7 @@
 				{#if row.isGroupRow()}
 					<div
 						use:identifier={{ datagrid, value: 'row-' + row.identifier }}
-						class={datagrid.extra.features.customization.getBodyGroupRowClasses()}
+						class={datagrid.customization.styling.getBodyGroupRowClasses()}
 						data-depth={row.depth}
 						data-expanded={row.isExpanded()}
 					>
@@ -253,7 +253,7 @@
 					</div>
 				{:else}
 					<div
-						class={cn(datagrid.extra.features.customization.getBodyRowClasses(row, rowIndex))}
+						class={cn(datagrid.customization.styling.getBodyRowClasses(row, rowIndex))}
 						use:identifier={{ datagrid, value: 'row-' + row.identifier }}
 					>
 						{@render AdditionalBodyCells('left', row)}
@@ -280,7 +280,7 @@
 						{#if expandedRow}
 							{@render expandedRow(row)}
 						{:else}
-							<div class={datagrid.extra.features.customization.getBodyRowExpandedClasses()}>
+							<div class={datagrid.customization.styling.getBodyRowExpandedClasses()}>
 								<div class="cell sticky left-0">
 									{#if expandedRowContent}
 										{@render expandedRowContent()}
@@ -309,7 +309,7 @@
 	{#if showWrapperOverlay}
 		<div
 			use:identifier={{ datagrid, value: 'wrapper-overlay' }}
-			class={datagrid.extra.features.customization.getWrapperOverlayClasses()}
+			class={datagrid.customization.styling.getWrapperOverlayClasses()}
 		></div>
 	{/if}
 {/snippet}
@@ -353,7 +353,7 @@
 	{#if footer}
 		{@render footer()}
 	{:else if footerContent}
-		<div class={cn(datagrid.extra.features.customization.getFooterContainerClasses())}>
+		<div class={cn(datagrid.customization.styling.getFooterContainerClasses())}>
 			{@render footerContent?.()}
 		</div>
 	{/if}

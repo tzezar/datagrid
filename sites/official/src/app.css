@@ -229,7 +229,7 @@
 	}
 
 	.grid-body-row-cell {
-		@apply flex items-center px-1 py-2 transition-all duration-300 relative;
+		@apply flex items-center px-1 py-2 transition-all duration-300 relative shrink-0;
 		width: var(--width);
 		min-width: var(--min-width);
 		max-width: var(--max-width);

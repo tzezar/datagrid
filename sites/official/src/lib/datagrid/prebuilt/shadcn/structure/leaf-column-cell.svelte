@@ -16,7 +16,7 @@
 
 <div
 	class={cn(
-		datagrid.extra.features.customization.getHeadRowLeafColumnCellClasses(),
+		datagrid.customization.styling.getHeadRowLeafColumnCellClasses(),
 		column._meta.grow === true && 'grow ',
 		'shrink-0'
 	)}

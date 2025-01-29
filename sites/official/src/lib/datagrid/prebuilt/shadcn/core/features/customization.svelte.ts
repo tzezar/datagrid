@@ -5,31 +5,37 @@ import type { TzezarsDatagrid } from "../index.svelte";
 
 
 
+
+
+
+
+
+
+
+
 interface DataGridCustomization {
-  size?: 'compact' | 'default' | 'relaxed';
+  // size?: 'compact' | 'default' | 'relaxed';
   theme: 'default' | 'shadcn';
-  variant?: 'bordered' | 'elevated' | 'flat';
-  headerStyle?: 'minimal' | 'prominent' | 'subtle';
+  // variant?: 'bordered' | 'elevated' | 'flat';
+  // headerStyle?: 'minimal' | 'prominent' | 'subtle';
   cellTooltips?: boolean;
-  enableAnimation?: boolean;
-  enableRowHover?: boolean;
-  enableSelection?: boolean;
   customScrollbar?: boolean;
-  responsive?: boolean;
-  loading?: boolean;
   stickyHeader?: boolean;
+
+
+  // enableAnimation?: boolean;
+  // enableRowHover?: boolean;
+  // enableSelection?: boolean;
+  // responsive?: boolean;
+  // loading?: boolean;
 }
 
-interface DataGridClasses {
-  head?: () => string
-}
 
 
 
 export type CustomizationFeatureConfig<TOriginalRow> = {
   datagrid?: TzezarsDatagrid<TOriginalRow>
   customization?: DataGridCustomization;
-  classes?: DataGridClasses;
 
   getHeadClasses?: () => string
   getBodyRowClasses?: (row: GridBasicRow<TOriginalRow>, rowIndex: number) => string
@@ -37,51 +43,12 @@ export type CustomizationFeatureConfig<TOriginalRow> = {
 }
 
 
+export class StylesFeature<TOriginalRow> {
+  customization: CustomizationFeature<TOriginalRow>
 
-export class CustomizationFeature<TOriginalRow> {
-  datagrid: TzezarsDatagrid<TOriginalRow>
-  customization: DataGridCustomization = {
-    theme: 'shadcn',
-    customScrollbar: true,
-    // enableAnimation: true,
-    // enableRowHover: true,
-    // enableSelection: true,
-
-    cellTooltips: true,
-
-    headerStyle: 'minimal',
-    responsive: true,
-    loading: false,
-    size: 'default',
-    variant: 'flat',
-
-    stickyHeader: true,
+  constructor(customization: CustomizationFeature<TOriginalRow>) {
+    this.customization = customization
   }
-
-
-  constructor(datagrid: TzezarsDatagrid<TOriginalRow>, config?: CustomizationFeatureConfig<TOriginalRow>) {
-    this.datagrid = datagrid
-
-    this.customization.cellTooltips = config?.customization?.cellTooltips ?? this.customization.cellTooltips;
-    this.customization.theme = config?.customization?.theme ?? this.customization.theme;
-    this.customization.customScrollbar = config?.customization?.customScrollbar ?? this.customization.customScrollbar;
-    this.customization.enableAnimation = config?.customization?.enableAnimation ?? this.customization.enableAnimation;
-    this.customization.enableRowHover = config?.customization?.enableRowHover ?? this.customization.enableRowHover;
-    this.customization.enableSelection = config?.customization?.enableSelection ?? this.customization.enableSelection;
-    this.customization.headerStyle = config?.customization?.headerStyle ?? this.customization.headerStyle;
-    this.customization.responsive = config?.customization?.responsive ?? this.customization.responsive;
-    this.customization.loading = config?.customization?.loading ?? this.customization.loading;
-    this.customization.size = config?.customization?.size ?? this.customization.size;
-    this.customization.variant = config?.customization?.variant ?? this.customization.variant;
-
-
-    this.getHeadClasses = config?.getHeadClasses ?? this.getHeadClasses;
-    this.getBodyRowClasses = config?.getBodyRowClasses ?? this.getBodyRowClasses;
-    this.getBodyRowCellClasses = config?.getBodyRowCellClasses ?? this.getBodyRowCellClasses;
-  }
-
-
-
 
   getWrapperOverlayClasses = () => {
     return cn('grid-wrapper-overlay')
@@ -120,7 +87,7 @@ export class CustomizationFeature<TOriginalRow> {
 
   getHeadRowLeafColumnCellContentClasses = (column: LeafColumn<TOriginalRow>) => {
     return cn('grid-head-row-leaf-column-cell-content', column.options.sortable &&
-      this.datagrid.extra.features.sorting.enableSorting === true && 'sortable')
+      this.customization.datagrid.extra.features.sorting.enableSorting === true && 'sortable')
   }
 
   getHeadRowGroupColumnCellContentClasses = () => {
@@ -141,7 +108,7 @@ export class CustomizationFeature<TOriginalRow> {
 
   getBodyRowClasses = (row: GridBasicRow<TOriginalRow>, rowIndex: number) => {
     return cn('grid-body-row',
-      this.datagrid.extra.features.stripedRows.applyStripedRows(row, rowIndex)
+      this.customization.datagrid.extra.features.stripedRows.applyStripedRows(row, rowIndex)
     )
   }
 
@@ -188,5 +155,39 @@ export class CustomizationFeature<TOriginalRow> {
   getPaginationContainerPageInputClasses = () => {
     return cn('grid-pagination-container-page-input')
   }
+}
+
+
+export class CustomizationFeature<TOriginalRow> {
+  datagrid: TzezarsDatagrid<TOriginalRow>
+
+  stickyHeader = $state(true)
+  cellTooltips = $state(true)
+  customScrollbar = $state(true)
+  theme = $state('shadcn')
+
+  styling = new StylesFeature(this)
+
+
+  constructor(datagrid: TzezarsDatagrid<TOriginalRow>, config?: CustomizationFeatureConfig<TOriginalRow>) {
+    this.datagrid = datagrid
+
+    this.cellTooltips = config?.customization?.cellTooltips ?? this.cellTooltips;
+    this.theme = config?.customization?.theme ?? this.theme;
+    this.customScrollbar = config?.customization?.customScrollbar ?? this.customScrollbar;
+    // this.customization.enableAnimation = config?.customization?.enableAnimation ?? this.customization.enableAnimation;
+    // this.customization.enableRowHover = config?.customization?.enableRowHover ?? this.customization.enableRowHover;
+    // this.customization.enableSelection = config?.customization?.enableSelection ?? this.customization.enableSelection;
+    // this.customization.headerStyle = config?.customization?.headerStyle ?? this.customization.headerStyle;
+    // this.customization.responsive = config?.customization?.responsive ?? this.customization.responsive;
+    // this.customization.loading = config?.customization?.loading ?? this.customization.loading;
+    // this.customization.size = config?.customization?.size ?? this.customization.size;
+    // this.customization.variant = config?.customization?.variant ?? this.customization.variant;
+  }
+
+
+
+
+
 
 }

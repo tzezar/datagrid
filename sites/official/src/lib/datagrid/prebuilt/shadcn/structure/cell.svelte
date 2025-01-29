@@ -2,7 +2,7 @@
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
-	import type { TzezarsDatagrid } from '../core/index.svelte';;
+	import type { TzezarsDatagrid } from '../core/index.svelte';
 	import { identifier } from '../actions.svelte';
 
 	type Props = {
@@ -14,20 +14,12 @@
 	};
 
 	let { datagrid, row, column, children, class: _class }: Props = $props();
-
-
 </script>
-
 
 <div
 	use:identifier={{ datagrid, value: `${row.identifier}-${column.columnId}` }}
 	class:grow={column?._meta?.grow}
-	class={cn(
-		datagrid.extra.features.customization.getBodyRowCellClasses(datagrid, row, column),
-		'group',
-		_class,
-		'shrink-0'
-	)}
+	class={cn(datagrid.customization.styling.getBodyRowCellClasses(datagrid, row, column), 'group', _class)}
 	class:justify-center={column?._meta?.align === 'center'}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 	style:--width={column.state.size.width + 'px'}

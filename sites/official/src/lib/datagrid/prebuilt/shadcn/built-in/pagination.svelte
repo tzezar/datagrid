@@ -89,7 +89,7 @@
 		<Input
 			type='number'
 			max={datagrid.features.pagination.pageCount}
-			class={datagrid.extra.features.customization.getPaginationContainerPageInputClasses()}
+			class={datagrid.customization.styling.getPaginationContainerPageInputClasses()}
 			value={datagrid.features.pagination.page}
 			onfocus={(e) => {
 				e.currentTarget.select();
@@ -111,7 +111,7 @@
 
 <div
 	class={cn(
-		datagrid.extra.features.customization.getPaginationContainerClasses(_class?.container),
+		datagrid.customization.styling.getPaginationContainerClasses(_class?.container),
 	)}
 >
 	{@render status()}

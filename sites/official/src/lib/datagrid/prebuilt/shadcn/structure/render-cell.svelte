@@ -19,8 +19,8 @@
 
 {#if column.isVisible()}
 	{@const cellContent = column.cell ? column.cell({ datagrid, column, row }) : null}
-	{@const shouldShowTooltips = datagrid.extra.features.customization.customization.cellTooltips}
-	{@const cellClasses = datagrid.extra.features.customization.getBodyRowCellContentClasses()}
+	{@const shouldShowTooltips = datagrid.customization.cellTooltips}
+	{@const cellClasses = datagrid.customization.styling.getBodyRowCellContentClasses()}
 
 	{#if cellContent}
 		{#if typeof cellContent === 'string'}

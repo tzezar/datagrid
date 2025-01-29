@@ -26,8 +26,8 @@
 
 {#snippet ColumnGroupHeaderSnippet(column: GroupColumn<any>)}
 	<GroupColumnCell {column} {datagrid}>
-		<div class={datagrid.extra.features.customization.getHeadRowGroupColumnCellContentClasses()}>
-			<span class={datagrid.extra.features.customization.getHeadRowGroupColumnCellHeaderClasses()}>
+		<div class={datagrid.customization.styling.getHeadRowGroupColumnCellContentClasses()}>
+			<span class={datagrid.customization.styling.getHeadRowGroupColumnCellHeaderClasses()}>
 				{column.header}
 			</span>
 			<HeaderCellDropdown {datagrid} {column} />
@@ -65,7 +65,7 @@
 			<div
 				class:sortable={column.options.sortable &&
 					datagrid.extra.features.sorting.enableSorting === true}
-				class={datagrid.extra.features.customization.getHeadRowLeafColumnCellContentClasses(column)}
+				class={datagrid.customization.styling.getHeadRowLeafColumnCellContentClasses(column)}
 				onclick={(e) => {
 					if (datagrid.extra.features.sorting.enableSorting === false) return;
 					let multisort = false;
@@ -90,7 +90,7 @@
 			</div>
 			{#if datagrid.extra.features.columnFiltering.isEnabled()}
 				<div
-					class={datagrid.extra.features.customization.getHeadRowLeafColumnFilterInputWrapperClasses()}
+					class={datagrid.customization.styling.getHeadRowLeafColumnFilterInputWrapperClasses()}
 				>
 					<HeaderCellColumnFilter {datagrid} {column} />
 				</div>

@@ -26,7 +26,7 @@
 
 <div
 	class={cn(
-		datagrid.extra.features.customization.getToolbarContainerClasses(),
+		datagrid.customization.styling.getToolbarContainerClasses(),
 		datagrid.extra.features.columnFiltering.shouldDisplayButton() && 'top-bar ',
 		_class
 	)}

@@ -14,6 +14,6 @@
 	let { datagrid, column, children, class: _class }: Props = $props();
 </script>
 
-<div class={cn(datagrid.extra.features.customization.getHeadRowGroupColumnCellClasses(), 'shrink-0')}>
+<div class={cn(datagrid.customization.styling.getHeadRowGroupColumnCellClasses(), 'shrink-0')}>
 	{@render children()}
 </div>

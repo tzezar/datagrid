@@ -37,7 +37,7 @@
 			type="number"
 			class={cn(
 				'w-full',
-				datagrid.extra.features.customization.getHeadRowLeafColumnFilterInputClasses()
+				datagrid.customization.styling.getHeadRowLeafColumnFilterInputClasses()
 			)}
 			value={datagrid.features.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {
@@ -52,7 +52,7 @@
 			type="text"
 			class={cn(
 				'w-full',
-				datagrid.extra.features.customization.getHeadRowLeafColumnFilterInputClasses()
+				datagrid.customization.styling.getHeadRowLeafColumnFilterInputClasses()
 			)}
 			value={datagrid.features.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {
@@ -65,7 +65,7 @@
 		<select
 			class={cn(
 				'w-full',
-				datagrid.extra.features.customization.getHeadRowLeafColumnFilterInputClasses()
+				datagrid.customization.styling.getHeadRowLeafColumnFilterInputClasses()
 			)}
 			value={datagrid.features.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {

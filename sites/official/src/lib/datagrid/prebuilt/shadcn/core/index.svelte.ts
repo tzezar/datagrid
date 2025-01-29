@@ -68,6 +68,7 @@ import { VirtualizationFeature, type VirtualizationFeatureConfig } from "./featu
 export type TzezarsDatagridConfig<TOriginalRow = any> = GridConfig<TOriginalRow> & {
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;
     extra?: TzezarsDatagridExtraStateConfig<TOriginalRow>
+    customization?: CustomizationFeatureConfig<TOriginalRow>
 }
 
 export type TrzezarsDatagridFeatures<TOriginalRow> = {
@@ -94,7 +95,6 @@ export type TrzezarsDatagridFeatures<TOriginalRow> = {
     animations: AnimationsFeature,
     overlay: OverlayFeature,
     stripedRows: StripedRowsFeature,
-    customization: CustomizationFeature<TOriginalRow>,
     virtualization: VirtualizationFeature
 
 }
@@ -127,7 +127,6 @@ export type TzezarsDatagridExtraStateConfig<TOriginalRow> = {
         animations?: AnimationsFeatureConfig,
         overlay?: OverlayFeatureConfig,
         stripedRows?: StripedRowsFeatureConfig,
-        customization?: CustomizationFeatureConfig<TOriginalRow>,
         virtualization?: VirtualizationFeatureConfig
     }
 
@@ -259,17 +258,22 @@ const createAdditionalColumns = (datagrid: TzezarsDatagrid): {
 
 export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> {
     extra: Extra<TOriginalRow>
+    customization = {} as CustomizationFeature<TOriginalRow>
 
     constructor(config: TzezarsDatagridConfig<TOriginalRow>) {
         super(config, true);
         this.extra = new Extra(this, config.extra);
 
+        this.customization = new CustomizationFeature(this, config.customization);
+
         this.registerLifecycleHooks();
         this.initializeState(config);
-        
+
         // const fuseInstance = this.features.globalSearch.initializeFuseInstance(this.initial.data, flattenColumnStructureAndClearGroups(this.columns).map(col => col.columnId as string));
         // this.features.globalSearch.setFuseInstance(fuseInstance)
     }
+
+   
 
     private registerLifecycleHooks() {
         // * It might be better to place this logic into datagrid component itselt, it might allow easier styling
@@ -313,8 +317,10 @@ export class Extra<TOriginalRow> {
     title: string | undefined;
     features = {} as TrzezarsDatagridFeatures<TOriginalRow>
 
+
     constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig<TOriginalRow>) {
         this.datagrid = datagrid;
+
         this.initializeFeatures(config);
         this.title = config?.title || "Your data, Tzezar's Datagrid"
     }
@@ -333,7 +339,7 @@ export class Extra<TOriginalRow> {
         this.features.controlCenter = new ControlCenterFeature(this.datagrid, config?.features?.controlCenter);
         this.features.loadingIndicator = new StatusIndicatorFeature(this.datagrid, config?.features?.statusIndicator);
         this.features.densityToggle = new DensityToggleFeature(this.datagrid, config?.features?.densityToggle);
-        this.features.customization = new CustomizationFeature(this.datagrid, config?.features?.customization);
+        // this.features.customization = new CustomizationFeature(this.datagrid, config?.features?.customization);
         this.features.virtualization = new VirtualizationFeature(this.datagrid, config?.features?.virtualization);
 
         // enhanced
