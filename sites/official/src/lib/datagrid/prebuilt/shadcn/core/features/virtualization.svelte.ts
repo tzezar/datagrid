@@ -1,11 +1,9 @@
 import type { TzezarsDatagrid } from "../index.svelte";
 
 
-
 export type VirtualizationFeatureConfig = {
-    enableVirtualization?: boolean;
+    enabled?: boolean;
 }
-
 
 export class VirtualizationFeature {
     datagrid: TzezarsDatagrid
@@ -17,9 +15,23 @@ export class VirtualizationFeature {
     }
 
     initialize(config?: VirtualizationFeatureConfig) {
-        this.enabled = config?.enableVirtualization ?? this.enabled;
+        this.enabled = config?.enabled ?? this.enabled;
     }
 
-    
+    enableVirtualization() {
+        this.enabled = true;
+    }
+
+    disableVirtualization() {
+        this.enabled = false;
+    }
+
+    toggleVirtualization() {
+        this.enabled = !this.enabled;
+    }
+
+    isEnabled() {
+        return this.enabled;
+    }
 
 }

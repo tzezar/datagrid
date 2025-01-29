@@ -68,7 +68,7 @@ import { VirtualizationFeature, type VirtualizationFeatureConfig } from "./featu
 export type TzezarsDatagridConfig<TOriginalRow = any> = GridConfig<TOriginalRow> & {
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;
     extra?: TzezarsDatagridExtraStateConfig<TOriginalRow>
-    customization?: CustomizationFeatureConfig<TOriginalRow>
+    customization?: Omit<CustomizationFeatureConfig<TOriginalRow>, 'datagrid'>
 }
 
 export type TrzezarsDatagridFeatures<TOriginalRow> = {
