@@ -38,7 +38,7 @@
 		--grid-foreground: 0 0% 3.9%;
 		--grid-primary: 0 0% 100%;
 		--grid-secondary: 0 0% 98%;
-		--grid-accent: 40 50% 50%;
+		--grid-accent: 200 50% 65%;
 		--grid-border: 0 0% 89.8%;
 	}
 
@@ -76,7 +76,7 @@
 		--grid-foreground: 0 0% 98%;
 		--grid-primary: 0 0% 4%;
 		--grid-secondary: 0 0% 10%;
-		--grid-accent: 40 50% 50%;
+		--grid-accent: 200 50% 50%;
 		--grid-border: 0 0% 14.9%;
 	}
 }
