@@ -96,14 +96,15 @@ export class DataGrid<TOriginalRow = any> {
         // * it might be worked around by processing data after extra features are initialized
         // * but it involves extra processing which is not needed, maybe some refactoring is needed
 
-        this.initializeFeatures(config);
 
         this.initializeOriginalColumns(config.columns);
         this.initializeOriginalData(config.data)
 
         this.columns = this.processors.column.initializeColumns(this.initial.columns)
         this.processors.data.executeFullDataTransformation();
-        // here pagination is valid
+
+        // * Has to run after column processing
+        this.initializeFeatures(config);
 
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
@@ -128,6 +129,8 @@ export class DataGrid<TOriginalRow = any> {
     private initializeFeatures(config: GridConfig<TOriginalRow>) {
         this.features.columnFaceting = new ColumnFacetingFeature(this, config.features?.columnFaceting);
         this.features.filtering = new ColumnFilteringFeature(this, config.features?.filtering);
+
+
         this.features.globalSearch = new GlobalSearchFeature({
             manual: config.features?.globalSearch?.manual,
             delay: config.features?.globalSearch?.delay,

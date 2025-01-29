@@ -62,6 +62,7 @@ export class DataProcessor<TOriginalRow> {
             const fuseInstance = this.datagrid.features.globalSearch.fuseInstance;
             if (!fuseInstance) throw new Error('Fuse instance is not initialized');
             return fuseInstance.search(searchValue).map(result => result.item);
+
         }
         const applySimpleSearch = (data: TOriginalRow[]) => {
             const searchableColumns = flattenColumnStructureAndClearGroups(this.datagrid.columns).filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>)[];
@@ -84,7 +85,7 @@ export class DataProcessor<TOriginalRow> {
             }
         });
 
-        return  this.datagrid.lifecycleHooks.executePostGlobalSearch(data);
+        return this.datagrid.lifecycleHooks.executePostGlobalSearch(data);
     }
 
     applyColumnFilters(data: TOriginalRow[]): TOriginalRow[] {

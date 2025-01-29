@@ -266,6 +266,9 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
 
         this.registerLifecycleHooks();
         this.initializeState(config);
+        
+        // const fuseInstance = this.features.globalSearch.initializeFuseInstance(this.initial.data, flattenColumnStructureAndClearGroups(this.columns).map(col => col.columnId as string));
+        // this.features.globalSearch.setFuseInstance(fuseInstance)
     }
 
     private registerLifecycleHooks() {

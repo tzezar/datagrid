@@ -62,8 +62,6 @@ export class CustomizationFeature<TOriginalRow> {
   constructor(datagrid: TzezarsDatagrid<TOriginalRow>, config?: CustomizationFeatureConfig<TOriginalRow>) {
     this.datagrid = datagrid
 
-    console.log(config?.getHeadClasses)
-
     this.customization.cellTooltips = config?.customization?.cellTooltips ?? this.customization.cellTooltips;
     this.customization.theme = config?.customization?.theme ?? this.customization.theme;
     this.customization.customScrollbar = config?.customization?.customScrollbar ?? this.customization.customScrollbar;

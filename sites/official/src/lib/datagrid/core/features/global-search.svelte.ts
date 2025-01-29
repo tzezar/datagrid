@@ -28,7 +28,7 @@ export class GlobalSearchFeature {
     fuzzy = $state(true);
 
     // The instance of Fuse.js for performing the search
-    fuseInstance: Fuse<any> | null = null;
+    fuseInstance: Fuse<any> | null = $state(null)
 
     onGlobalSearchChange: (value: string) => void = () => { };
 

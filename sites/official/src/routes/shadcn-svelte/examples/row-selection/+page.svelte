@@ -74,7 +74,7 @@
 	});
 
 	$effect(() => {
-		console.log($state.snapshot(datagrid.features.filtering.conditions));
+		// console.log($state.snapshot(datagrid.features.globalSearch.value));
 	});
 </script>
 
