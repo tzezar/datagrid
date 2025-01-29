@@ -90,7 +90,7 @@
 		{@render StatusIndicatorSnippet('top')}
 
 		{#if datagrid.extra.features.virtualization.enabled}
-			<VirtualList items={datagrid.rows.getVisibleRows()} class="h-[600px]">
+			<VirtualList items={datagrid.rows.getVisibleRows()} >
 				{#snippet header()}
 					{@render HeadSnippet()}
 				{/snippet}
@@ -158,7 +158,7 @@
 				{/snippet}
 			</VirtualList>
 		{:else}
-			<div data-fullscreen={isFullscreenEnabled} class="grid-container-wrapper">
+			<div data-fullscreen={isFullscreenEnabled} class="grid-container-wrapper ">
 				<div class={cn(datagrid.extra.features.customization.getContainerClasses())}>
 					{@render HeadSnippet()}
 					{@render BodySnippet()}
