@@ -25,8 +25,30 @@
 </script>
 
 <script lang="ts" generics="ItemType">
-	import { onDestroy, onMount, tick } from 'svelte';
-	import { ALIGNMENT, SCROLL_BEHAVIOR } from '.';
+	// @ts-nocheck
+
+	type Props = {
+		items: ItemType[];
+        isDisabled?: boolean;
+        isHorizontal?: boolean;
+        isTable?: boolean;
+        scrollToIndex?: number | undefined;
+        scrollToOffset?: number | undefined;
+        scrollToAlignment?: ALIGNMENT;
+        scrollToBehaviour?: SCROLL_BEHAVIOR;
+        preRenderCount?: number;
+        header?: Snippet;
+        vl_slot: Snippet<[VLSlotSignature<ItemType>]>;
+        footer?: Snippet;
+        onVisibleRangeUpdate?: ((range: VLRangeEvent) => void) | undefined;
+        onAfterScroll?: ((event: VLScrollEvent) => void) | undefined;
+        class?: string;
+        style?: string;
+        sizingCalculator?: SizingCalculatorFn;
+	}
+
+	import { onDestroy, onMount, tick, type Snippet } from 'svelte';
+	import { ALIGNMENT, SCROLL_BEHAVIOR, type SizingCalculatorFn, type VLRangeEvent, type VLScrollEvent, type VLSlotSignature } from '.';
 	import clsx from 'clsx';
 	// ====== INTERNAL TYPES ============
 	var SCROLL_CHANGE_REASON;
@@ -61,7 +83,7 @@
 		style = '',
 		// calculates the size of a given index
 		sizingCalculator
-	} = $props();
+	}: Props =  $props();
 	// ======== VARIABLES ========
 	// number of elements to pad above & below the visible range to prevent visual glitching
 	const WINDOW_OVERSIZE_COUNT = 3;
@@ -480,16 +502,9 @@
 >
 	<div bind:this={listInner} class="grid-container !w-full min-w-max" style={listInnerStyle}>
 		{@render header?.()}
-		{#if isDisabled}
-			{#each items as item, index}
-				{@render vl_slot({ index, item })}
-			{/each}
-		{:else}
-			{#each visibleItemsInfo as item}
-				{@render vl_slot(item)}
-			{/each}
-		{/if}
+		{#each visibleItemsInfo as item}
+			{@render vl_slot(item)}
+		{/each}
 		{@render footer?.()}
 	</div>
 </div>
-

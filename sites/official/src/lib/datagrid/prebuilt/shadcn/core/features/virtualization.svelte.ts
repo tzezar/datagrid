@@ -9,7 +9,7 @@ export type VirtualizationFeatureConfig = {
 
 export class VirtualizationFeature {
     datagrid: TzezarsDatagrid
-    enabled: boolean = $state(false);
+    enabled: boolean = $state(true);
 
     constructor(datagrid: TzezarsDatagrid, config?: VirtualizationFeatureConfig) {
         this.datagrid = datagrid

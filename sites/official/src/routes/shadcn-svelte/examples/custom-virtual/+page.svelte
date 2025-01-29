@@ -1,4 +1,5 @@
 <script>
+	// @ts-nocheck
 	import { onMount } from 'svelte';
     
 	let items = $state(Array.from({ length: 10000 }, (_, i) => `Item ${i}`));

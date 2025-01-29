@@ -20,7 +20,7 @@
 	import RenderGroupCell from './structure/render-group-cell.svelte';
 	import RenderColumnCell from './structure/render-column-cell.svelte';
 	import { identifier } from './actions.svelte';
-	import { VirtualList } from '../../../../routes/shadcn-svelte/examples/row-selection/virtual';
+	import { VirtualList } from './virtualization';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
@@ -89,82 +89,7 @@
 		{@render PaginationSnippet(['both', 'top'])}
 		{@render StatusIndicatorSnippet('top')}
 
-		{#if datagrid.extra.features.virtualization.enabled}
-			<VirtualList items={datagrid.rows.getVisibleRows()} >
-				{#snippet header()}
-					{@render HeadSnippet()}
-				{/snippet}
-				{#snippet vl_slot({
-					item: row,
-					index: rowIndex
-				}: {
-					item: GridRow<any>;
-					index: string | number;
-				})}
-					{#if row.isGroupRow()}
-						<div
-							use:identifier={{ datagrid, value: 'row-' + row.identifier }}
-							class={datagrid.extra.features.customization.getBodyGroupRowClasses()}
-							data-depth={row.depth}
-							data-expanded={row.isExpanded()}
-						>
-							{#each leafColumns as column, columnIndex (column.columnId)}
-								<RenderGroupCell {datagrid} {row} {column} />
-							{/each}
-						</div>
-					{:else}
-						<div
-							class={cn(
-								datagrid.extra.features.customization.getBodyRowClasses(row, Number(rowIndex))
-							)}
-							use:identifier={{ datagrid, value: 'row-' + row.identifier }}
-						>
-							{@render AdditionalBodyCells('left', row)}
-							{#if datagrid.extra.features.animations.shouldAnimateRows()}
-								{#each leafColumnsToDisplay as column (column.columnId)}
-									<div
-										class:contents={!datagrid.extra.features.animations.shouldAnimateRows()}
-										class={cn()}
-										animate:flip={{
-											duration: (len) => datagrid.extra.features.animations.getRowsFlipDuration(len)
-										}}
-									>
-										<RenderCell {datagrid} {row} {column} />
-									</div>
-								{/each}
-							{:else}
-								{#each leafColumnsToDisplay as column (column.columnId)}
-									<RenderCell {datagrid} {row} {column} />
-								{/each}
-							{/if}
-							{@render AdditionalBodyCells('right', row)}
-						</div>
-						{#if row.isExpanded()}
-							{#if expandedRow}
-								{@render expandedRow(row)}
-							{:else}
-								<div class={datagrid.extra.features.customization.getBodyRowExpandedClasses()}>
-									<div class="cell sticky left-0">
-										{#if expandedRowContent}
-											{@render expandedRowContent()}
-										{:else}
-											Place your content in the `expandedRowContent` snippet
-										{/if}
-									</div>
-								</div>
-							{/if}
-						{/if}
-					{/if}
-				{/snippet}
-			</VirtualList>
-		{:else}
-			<div data-fullscreen={isFullscreenEnabled} class="grid-container-wrapper ">
-				<div class={cn(datagrid.extra.features.customization.getContainerClasses())}>
-					{@render HeadSnippet()}
-					{@render BodySnippet()}
-				</div>
-			</div>
-		{/if}
+		{@render ContainerSnippet(datagrid.extra.features.virtualization.enabled)}
 
 		{@render FooterSnippet()}
 		{@render StatusIndicatorSnippet('bottom')}
@@ -172,6 +97,98 @@
 		{@render CredentialsSnippet()}
 	</div>
 </Portal>
+
+{#snippet ContainerSnippet(virtualized: boolean = false)}
+	{#if virtualized}
+		{@render VirtualizedContainerSnippet()}
+	{:else}
+		{@render NotVirtualizedContainerSnippet()}
+	{/if}
+{/snippet}
+
+{#snippet VirtualizedContainerSnippet()}
+	<VirtualList items={datagrid.rows.getVisibleRows()}>
+		{#snippet header()}
+			{@render HeadSnippet()}
+		{/snippet}
+		{#snippet vl_slot({
+			item: row,
+			index: rowIndex
+		}: {
+			item: GridRow<any>;
+			index: string | number;
+		})}
+			{@render BodyRowSnippet(row, Number(rowIndex))}
+		{/snippet}
+	</VirtualList>
+{/snippet}
+
+{#snippet NotVirtualizedContainerSnippet()}
+	<div data-fullscreen={isFullscreenEnabled} class="grid-container-wrapper">
+		<div class={cn(datagrid.extra.features.customization.getContainerClasses())}>
+			{@render HeadSnippet()}
+			{@render BodySnippet()}
+		</div>
+	</div>
+{/snippet}
+
+{#snippet BodyRowSnippet(row: GridRow<any>, rowIndex: number)}
+	{#if row.isGroupRow()}
+	<div
+		use:identifier={{ datagrid, value: 'row-' + row.identifier }}
+		class={datagrid.extra.features.customization.getBodyGroupRowClasses()}
+		data-depth={row.depth}
+		data-expanded={row.isExpanded()}
+	>
+		{#each leafColumns as column, columnIndex (column.columnId)}
+			<RenderGroupCell {datagrid} {row} {column} />
+		{/each}
+	</div>
+{:else}
+	<div
+		class={cn(
+			datagrid.extra.features.customization.getBodyRowClasses(row, Number(rowIndex))
+		)}
+		use:identifier={{ datagrid, value: 'row-' + row.identifier }}
+	>
+		{@render AdditionalBodyCells('left', row)}
+		{#if datagrid.extra.features.animations.shouldAnimateRows()}
+			{#each leafColumnsToDisplay as column (column.columnId)}
+				<div
+					class:contents={!datagrid.extra.features.animations.shouldAnimateRows()}
+					class={cn()}
+					animate:flip={{
+						duration: (len) => datagrid.extra.features.animations.getRowsFlipDuration(len)
+					}}
+				>
+					<RenderCell {datagrid} {row} {column} />
+				</div>
+			{/each}
+		{:else}
+			{#each leafColumnsToDisplay as column (column.columnId)}
+				<RenderCell {datagrid} {row} {column} />
+			{/each}
+		{/if}
+		{@render AdditionalBodyCells('right', row)}
+	</div>
+	{#if row.isExpanded()}
+		{#if expandedRow}
+			{@render expandedRow(row)}
+		{:else}
+			<div class={datagrid.extra.features.customization.getBodyRowExpandedClasses()}>
+				<div class="cell sticky left-0">
+					{#if expandedRowContent}
+						{@render expandedRowContent()}
+					{:else}
+						Place your content in the `expandedRowContent` snippet
+					{/if}
+				</div>
+			</div>
+		{/if}
+	{/if}
+{/if}
+{/snippet}
+
 
 {#snippet HeadSnippet()}
 	{#if head}
