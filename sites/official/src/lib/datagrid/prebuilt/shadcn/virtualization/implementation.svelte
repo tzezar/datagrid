@@ -29,26 +29,33 @@
 
 	type Props = {
 		items: ItemType[];
-        isDisabled?: boolean;
-        isHorizontal?: boolean;
-        isTable?: boolean;
-        scrollToIndex?: number | undefined;
-        scrollToOffset?: number | undefined;
-        scrollToAlignment?: ALIGNMENT;
-        scrollToBehaviour?: SCROLL_BEHAVIOR;
-        preRenderCount?: number;
-        header?: Snippet;
-        vl_slot: Snippet<[VLSlotSignature<ItemType>]>;
-        footer?: Snippet;
-        onVisibleRangeUpdate?: ((range: VLRangeEvent) => void) | undefined;
-        onAfterScroll?: ((event: VLScrollEvent) => void) | undefined;
-        class?: string;
-        style?: string;
-        sizingCalculator?: SizingCalculatorFn;
-	}
+		isDisabled?: boolean;
+		isHorizontal?: boolean;
+		isTable?: boolean;
+		scrollToIndex?: number | undefined;
+		scrollToOffset?: number | undefined;
+		scrollToAlignment?: ALIGNMENT;
+		scrollToBehaviour?: SCROLL_BEHAVIOR;
+		preRenderCount?: number;
+		header?: Snippet;
+		vl_slot: Snippet<[VLSlotSignature<ItemType>]>;
+		footer?: Snippet;
+		onVisibleRangeUpdate?: ((range: VLRangeEvent) => void) | undefined;
+		onAfterScroll?: ((event: VLScrollEvent) => void) | undefined;
+		class?: string;
+		style?: string;
+		sizingCalculator?: SizingCalculatorFn;
+	};
 
 	import { onDestroy, onMount, tick, type Snippet } from 'svelte';
-	import { ALIGNMENT, SCROLL_BEHAVIOR, type SizingCalculatorFn, type VLRangeEvent, type VLScrollEvent, type VLSlotSignature } from '.';
+	import {
+		ALIGNMENT,
+		SCROLL_BEHAVIOR,
+		type SizingCalculatorFn,
+		type VLRangeEvent,
+		type VLScrollEvent,
+		type VLSlotSignature
+	} from '.';
 	import clsx from 'clsx';
 	// ====== INTERNAL TYPES ============
 	var SCROLL_CHANGE_REASON;
@@ -83,7 +90,7 @@
 		style = '',
 		// calculates the size of a given index
 		sizingCalculator
-	}: Props =  $props();
+	}: Props = $props();
 	// ======== VARIABLES ========
 	// number of elements to pad above & below the visible range to prevent visual glitching
 	const WINDOW_OVERSIZE_COUNT = 3;
