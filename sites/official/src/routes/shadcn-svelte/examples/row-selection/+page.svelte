@@ -5,7 +5,6 @@
 	import DatagridShadcnSvelte from '$lib/datagrid/prebuilt/shadcn/datagrid.svelte';
 	import { toast } from 'svelte-sonner';
 
-
 	let { data } = $props();
 
 	let datagrid = new TzezarsDatagrid({
@@ -19,10 +18,7 @@
 		},
 
 		extra: {
-
 			features: {
-				
-
 				clickToCopy: {
 					onClickToCopy(value) {
 						toast.info(`Copied ${value} to clipboard`);
