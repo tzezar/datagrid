@@ -47,6 +47,8 @@
 		}
 	});
 
+	const col = datagrid.columns[0]
+
 </script>
 
 <DatagridShadcnSvelte {datagrid}></DatagridShadcnSvelte>
