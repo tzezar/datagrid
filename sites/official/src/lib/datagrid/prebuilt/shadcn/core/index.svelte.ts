@@ -99,9 +99,6 @@ export type TrzezarsDatagridFeatures<TOriginalRow> = {
 
 }
 
-
-
-
 export type TzezarsDatagridExtraStateConfig<TOriginalRow> = {
     features?: {
         clickToCopy?: ClickToCopyFeatureConfig,
@@ -277,7 +274,6 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
         // it will use changed lifecycle hooks to handle the initialization process
         this.initializeState(config);
     }
-
    
 
     private registerLifecycleHooks() {
