@@ -3,11 +3,11 @@
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
-	import type { ShadcnColumnMeta } from '../core/types';
+	import type { EnhancedColumnMeta } from '../core/types';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;
-		column: LeafColumn<any, ShadcnColumnMeta>;
+		column: LeafColumn<any, EnhancedColumnMeta>;
 		children: Snippet;
 		class?: string;
 	};

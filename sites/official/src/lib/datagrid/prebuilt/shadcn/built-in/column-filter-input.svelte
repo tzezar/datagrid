@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { AnyColumn } from '$lib/datagrid/core/types';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
-	import type { ShadcnColumnMeta } from '../core/types';
+	import type { EnhancedColumnMeta } from '../core/types';
 
 	type Props = {
 		datagrid: TzezarsDatagrid<any>;
-		column: AnyColumn<any, ShadcnColumnMeta>;
+		column: AnyColumn<any, EnhancedColumnMeta>;
 	};
 	let { datagrid, column }: Props = $props();
 

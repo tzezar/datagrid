@@ -9,11 +9,11 @@
 	import GroupColumnCell from './group-column-cell.svelte';
 	import HeaderCellDropdown from '../built-in/header-cell-dropdown.svelte';
 	import ColumnFilterInput from '../built-in/column-filter-input.svelte';
-	import type { ShadcnColumnMeta } from '../core/types';
+	import type { EnhancedColumnMeta } from '../core/types';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;
-		column: GroupColumn<any, ShadcnColumnMeta> | LeafColumn<any, ShadcnColumnMeta>;
+		column: GroupColumn<any, EnhancedColumnMeta> | LeafColumn<any, EnhancedColumnMeta>;
 	};
 
 	let { datagrid, column }: Props = $props();

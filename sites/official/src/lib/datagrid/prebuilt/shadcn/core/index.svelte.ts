@@ -62,7 +62,7 @@ import { OverlayFeature, type OverlayFeatureConfig } from "./features/overlay.sv
 import { StripedRowsFeature, type StripedRowsFeatureConfig } from "./features/striped-rows.svelte";
 import { CustomizationFeature, type CustomizationFeatureConfig } from "./features/customization.svelte";
 import { VirtualizationFeature, type VirtualizationFeatureConfig } from "./features/virtualization.svelte";
-import type { ShadcnColumnMeta } from "./types";
+import type { EnhancedColumnMeta } from "./types";
 
 
 
@@ -138,7 +138,7 @@ export type TzezarsDatagridExtraStateConfig = {
 
 
 
-function transformColumns(columns: AnyColumn<any, ShadcnColumnMeta>[]): AnyColumn<any, ShadcnColumnMeta>[] {
+function transformColumns(columns: AnyColumn<any, EnhancedColumnMeta>[]): AnyColumn<any, EnhancedColumnMeta>[] {
     const newCols = columns.map(col => {
         return {
             ...col,

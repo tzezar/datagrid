@@ -7,11 +7,11 @@
 	import ContentCopyOutline from '$lib/datagrid/icons/material-symbols/content-copy-outline.svelte';
 	import Cell from './cell.svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
-	import type { ShadcnColumnMeta } from '../core/types';
+	import type { EnhancedColumnMeta } from '../core/types';
 	type Props = {
 		datagrid: TzezarsDatagrid;
 		row: GridBasicRow<any>;
-		column: LeafColumn<any, ShadcnColumnMeta>;
+		column: LeafColumn<any, EnhancedColumnMeta>;
 		children?: Snippet;
 	};
 
@@ -56,7 +56,7 @@
 	{/if}
 {/if}
 
-{#snippet CopyCellButton(column: LeafColumn<any, ShadcnColumnMeta>, row: GridBasicRow<any>)}
+{#snippet CopyCellButton(column: LeafColumn<any, EnhancedColumnMeta>, row: GridBasicRow<any>)}
 	{#if datagrid.extra.features.clickToCopy.isValidColumn(column)}
 		{#if datagrid.extra.features.clickToCopy.shouldDisplayCopyButton(column)}
 			<button

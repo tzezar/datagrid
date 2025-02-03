@@ -1,7 +1,7 @@
 
 import { type AnyColumn } from "$lib/datagrid/core/types";
 import { accessorColumn} from "$lib/datagrid/core/column-creation";
-import type { ShadcnColumnMeta } from "$lib/datagrid/prebuilt/shadcn/core/types";
+import type { EnhancedColumnMeta } from "$lib/datagrid/prebuilt/shadcn/core/types";
 import type { InventoryItem } from "$lib/data-generators/generate/inventory";
 import { cn } from "$lib/utils";
 
@@ -102,4 +102,4 @@ export const inventoryColumns = [
 
     }),
 
-] satisfies AnyColumn<InventoryItem, ShadcnColumnMeta<InventoryItem>>[]
+] satisfies AnyColumn<InventoryItem, EnhancedColumnMeta<InventoryItem>>[]

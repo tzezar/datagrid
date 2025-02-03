@@ -2,7 +2,7 @@ import type { GridBasicRow, LeafColumn } from "$lib/datagrid/core/types"
 import { cn } from "$lib/utils"
 import { shouldHighlightSelectedRow } from "../../utils";
 import type { TzezarsDatagrid } from "../index.svelte"
-import type { ShadcnColumnMeta } from "../types";
+import type { EnhancedColumnMeta } from "../types";
 import type { CustomizationFeature } from "./customization.svelte"
 
 export type StylingFeatureConfig<TOriginalRow> = {
@@ -105,7 +105,7 @@ export class StylingFeature<TOriginalRow> {
         return cn('grid-body-row-expanded')
     }
 
-    getBodyRowCellClasses = (datagrid: TzezarsDatagrid<TOriginalRow>, row: GridBasicRow<TOriginalRow>, column: LeafColumn<TOriginalRow, ShadcnColumnMeta>) => {
+    getBodyRowCellClasses = (datagrid: TzezarsDatagrid<TOriginalRow>, row: GridBasicRow<TOriginalRow>, column: LeafColumn<TOriginalRow, EnhancedColumnMeta>) => {
         return cn('grid-body-row-cell',
             shouldHighlightSelectedRow(datagrid, row) && 'grid-body-row-cell-highlighted',
             column._meta.styles?.bodyCell?.({ datagrid, column, row }),

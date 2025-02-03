@@ -1,7 +1,7 @@
 import type { AnyColumn, GridRow } from "$lib/datagrid/core/types";
 import type { TzezarsDatagrid } from "./index.svelte";
 
-export type ShadcnColumnMeta<TOriginalRow = any> = {
+export type EnhancedColumnMeta<TOriginalRow = any> = {
     align?: 'start' | 'center' | 'end';
     grow?: boolean;
     // filterType?: 'text' | 'number' | 'select' | 'date' | 'dateRange' | 'range';
