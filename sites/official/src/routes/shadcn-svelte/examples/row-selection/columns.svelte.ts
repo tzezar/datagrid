@@ -36,7 +36,7 @@ export const inventoryColumns = [
     accessorColumn({
         accessorKey: 'id',
         _meta: {
-            tooltip: false,
+            tooltip: false
             // styles: {
             //     bodyCell(props) {
             //         const { row, datagrid } = props
@@ -44,7 +44,7 @@ export const inventoryColumns = [
             //         return cn(row.original.id === 1 && 'bg-green-400', shouldHighlightSelectedRow(datagrid, row) && 'bg-red-400')
             //     },
             // }
-        }
+        } as ShadcnColumnMeta<InventoryItem>
     }),
 
 
@@ -54,14 +54,14 @@ export const inventoryColumns = [
         accessorKey: 'name',
         _meta: {
             grow: true,
-            clickToCopy: true,
-        } 
+            clickToCopy: true
+        } as ShadcnColumnMeta
     }),
     accessorColumn({
         accessorKey: 'category',
         _meta: {
             clickToCopy: false
-        } 
+        } as ShadcnColumnMeta
     }),
     accessorColumn({
         header: 'Price',
@@ -69,7 +69,6 @@ export const inventoryColumns = [
         getValueFn: (row) => row.price,
         options: { sortable: true },
         _meta: {
-
             filterType: 'number',
             styles: {
                 bodyCell(props) {
@@ -80,7 +79,7 @@ export const inventoryColumns = [
                 },
 
             }
-        } 
+        } as ShadcnColumnMeta<InventoryItem>
     }),
     accessorColumn({
         accessorKey: 'quantity'
@@ -103,4 +102,4 @@ export const inventoryColumns = [
 
     }),
 
-] satisfies AnyColumn<InventoryItem, ShadcnColumnMeta>[]
+] satisfies AnyColumn<InventoryItem>[]

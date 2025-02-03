@@ -9,9 +9,9 @@ const createDisplayColumnColumnId = ({ columnId, header }: { columnId?: string, 
   throw new Error("A valid columnId, header must be provided to create a group column.");
 }
 
-export function createDisplayColumn<TOriginalRow extends Record<string, any>, TMeta>(
-  { header, cell, columnId, _meta, options, state, align, ...rest }: CreateDisplayColumnProps<TOriginalRow, TMeta>
-): DisplayColumn<TOriginalRow, TMeta> {
+export function createDisplayColumn<TOriginalRow extends Record<string, any>>(
+  { header, cell, columnId, _meta, options, state, align, ...rest }: CreateDisplayColumnProps<TOriginalRow>
+): DisplayColumn<TOriginalRow> {
 
   const computedColumnId = createDisplayColumnColumnId({ header, columnId });
 
@@ -39,7 +39,7 @@ export function createDisplayColumn<TOriginalRow extends Record<string, any>, TM
       }
     },
     align: align ?? 'left',
-    _meta: _meta as TMeta ?? {} as TMeta,
+    _meta: _meta ?? {},
     ...rest,
     isVisible(): boolean {
       return isColumnVisible(this)
