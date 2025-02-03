@@ -5,7 +5,7 @@ export type ShadcnColumnMeta<TOriginalRow = any> = {
     align?: 'start' | 'center' | 'end';
     grow?: boolean;
     // filterType?: 'text' | 'number' | 'select' | 'date' | 'dateRange' | 'range';
-    filterType?: 'text' | 'number' | 'select'
+    filterType?: 'text' | 'number' | 'select' | 'date',
     filterOptions?: { label: string, value: string }[];
     showColumnManagerDropdownMenu?: boolean;
     clickToCopy?: boolean;
