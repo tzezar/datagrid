@@ -100,10 +100,10 @@ export class DataGrid<TOriginalRow = any> {
         this.initializeOriginalData(config.data)
 
         this.columns = this.processors.column.initializeColumns(this.initial.columns)
-        this.processors.data.executeFullDataTransformation();
-
-        // * Has to run after column processing
+        // * Features has to be initialized after columns are initialized, they might depend on columns
         this.initializeFeatures(config);
+        // * Processing data has to be done after features are initialized, they might depend on features
+        this.processors.data.executeFullDataTransformation();
 
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation

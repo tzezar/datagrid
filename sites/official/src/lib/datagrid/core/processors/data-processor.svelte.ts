@@ -187,6 +187,7 @@ export class DataProcessor<TOriginalRow> {
     }
 
     private processRegularData(data: TOriginalRow[]): void {
+
         // Transform into basic rows
         let basicRows: GridRow<TOriginalRow>[];
 

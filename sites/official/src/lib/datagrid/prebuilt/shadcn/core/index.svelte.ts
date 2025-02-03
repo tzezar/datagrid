@@ -261,12 +261,20 @@ export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> 
     customization = {} as CustomizationFeature<TOriginalRow>
 
     constructor(config: TzezarsDatagridConfig<TOriginalRow>) {
-        super(config, true);
+        // Call the parent class constructor with an empty config and a flag (true) for lazy initialization
+        super({} as GridConfig<TOriginalRow>, true);
+    
+        // Initialize the 'extra' property with an instance of the Extra class, passing the current instance and extra config
         this.extra = new Extra(this, config.extra);
-
+    
+        // Initialize the 'customization' property with an instance of the CustomizationFeature class, passing the current instance and customization config
         this.customization = new CustomizationFeature(this, config.customization);
-
+    
+        // Register lifecycle hooks to handle various internal events and behaviors
         this.registerLifecycleHooks();
+    
+        // Initialize the state of the core datagrid using the provided configuration
+        // it will use changed lifecycle hooks to handle the initialization process
         this.initializeState(config);
     }
 
