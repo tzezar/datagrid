@@ -318,17 +318,17 @@ export class TzezarsDatagrid<TOriginalRow = any, TMeta = any> extends Datagrid<T
 export class Extra<TOriginalRow> {
     datagrid: TzezarsDatagrid<TOriginalRow>;
     title: string | undefined;
-    features = {} as TrzezarsDatagridFeatures<TOriginalRow>
+    features = {} as TrzezarsDatagridFeatures
 
 
-    constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig<TOriginalRow>) {
+    constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig) {
         this.datagrid = datagrid;
 
         this.initializeFeatures(config);
         this.title = config?.title || "Your data, Tzezar's Datagrid"
     }
 
-    initializeFeatures(config?: TzezarsDatagridExtraStateConfig<TOriginalRow>) {
+    initializeFeatures(config?: TzezarsDatagridExtraStateConfig) {
         // extra
         this.features.clickToCopy = new ClickToCopyFeature(this.datagrid, config?.features?.clickToCopy);
         this.features.credentials = new CredentialsFeature(this.datagrid, config?.features?.credentials);
