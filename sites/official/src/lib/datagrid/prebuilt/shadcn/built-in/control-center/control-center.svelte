@@ -13,9 +13,10 @@
 	import DataExporting from './data-exporting.svelte';
 	import GroupingDropdown from './grouping-dropdown.svelte';
 	import Sorting from './sorting.svelte';
+	import type { ShadcnColumnMeta } from '../../core/types';
 
 	type Props = {
-		datagrid: TzezarsDatagrid<any>;
+		datagrid: TzezarsDatagrid<any, ShadcnColumnMeta<any>>;
 	};
 
 	const { datagrid }: Props = $props();

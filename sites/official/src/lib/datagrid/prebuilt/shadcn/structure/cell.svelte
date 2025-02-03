@@ -4,11 +4,12 @@
 	import type { Snippet } from 'svelte';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
 	import { identifier } from '../actions.svelte';
+	import type { ShadcnColumnMeta } from '../core/types';
 
 	type Props = {
 		datagrid: TzezarsDatagrid;
 		row: GridBasicRow<any>;
-		column: LeafColumn<any>;
+		column: LeafColumn<any, ShadcnColumnMeta>;
 		children: Snippet;
 		class?: string;
 	};

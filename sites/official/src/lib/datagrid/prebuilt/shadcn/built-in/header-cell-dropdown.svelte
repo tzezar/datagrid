@@ -33,6 +33,7 @@
 	import EndsWith from '$lib/datagrid/icons/filter-operators/ends-with.svelte';
 	import StartsWith from '$lib/datagrid/icons/filter-operators/starts-with.svelte';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { ShadcnColumnMeta } from '../core/types';
 
 	type NumberFilterOperator = {
 		label: string;
@@ -151,7 +152,7 @@
 		}
 	];
 
-	let { datagrid, column }: { datagrid: TzezarsDatagrid<any>; column: AnyColumn<any> } = $props();
+	let { datagrid, column }: { datagrid: TzezarsDatagrid<any>; column: AnyColumn<any, ShadcnColumnMeta> } = $props();
 </script>
 
 {#snippet FilterOperator(

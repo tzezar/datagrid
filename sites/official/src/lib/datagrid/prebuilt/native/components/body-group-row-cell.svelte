@@ -3,12 +3,13 @@
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
+	import type { ShadcnColumnMeta } from '../../shadcn/core/types';
 
 	type Props = {
 		datagrid: Datagrid<any>;
-		column: LeafColumn<any>;
+		column: LeafColumn<any, ShadcnColumnMeta>;
 		row: GridGroupRow<any>;
-		children: Snippet<[Datagrid<any>, LeafColumn<any>, GridGroupRow<any>]>;
+		children: Snippet<[Datagrid<any>, LeafColumn<any, ShadcnColumnMeta>, GridGroupRow<any>]>;
 	};
 
 	let { datagrid, column, row, children }: Props = $props();

@@ -1,6 +1,7 @@
 import type { AccessorColumn, AnyColumn, CellValue, ComputedColumn } from "$lib/datagrid/core/types";
 import { getCellContent } from "$lib/datagrid/core/utils.svelte";
 import type { TzezarsDatagrid } from "../index.svelte";
+import type { ShadcnColumnMeta } from "../types";
 import type { Feature } from "./types";
 
 export type ClickToCopyFeatureConfig = {
@@ -28,7 +29,7 @@ export class ClickToCopyFeature implements Feature {
         this.onClickToCopy = config?.onClickToCopy ?? this.onClickToCopy;
     }
 
-    shouldDisplayCopyButton(column: AccessorColumn<any> | ComputedColumn<any>) {
+    shouldDisplayCopyButton(column: AccessorColumn<any, ShadcnColumnMeta> | ComputedColumn<any, ShadcnColumnMeta>) {
         return (this.display === true && column._meta.clickToCopy !== false) ||
             column._meta.clickToCopy === true;
     }

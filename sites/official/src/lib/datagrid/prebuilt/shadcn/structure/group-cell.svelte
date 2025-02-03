@@ -2,9 +2,10 @@
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
+	import type { ShadcnColumnMeta } from '../core/types';
 
 	type Props = {
-		column: LeafColumn<any>;
+		column: LeafColumn<any, ShadcnColumnMeta>;
 		children: Snippet;
 		class?: string;
 	};
