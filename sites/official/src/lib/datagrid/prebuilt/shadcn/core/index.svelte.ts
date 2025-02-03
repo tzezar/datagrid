@@ -67,11 +67,11 @@ import { VirtualizationFeature, type VirtualizationFeatureConfig } from "./featu
 
 export type TzezarsDatagridConfig<TOriginalRow = any> = DatagridConfig<TOriginalRow> & {
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;
-    extra?: TzezarsDatagridExtraStateConfig<TOriginalRow>
+    extra?: TzezarsDatagridExtraStateConfig
     customization?: Omit<CustomizationFeatureConfig<TOriginalRow>, 'datagrid'>
 }
 
-export type TrzezarsDatagridFeatures<TOriginalRow> = {
+export type TrzezarsDatagridFeatures = {
     clickToCopy: ClickToCopyFeature,
     columnFiltering: ColumnFilteringEnchancedFeature,
     columnPinning: ColumnPinningEnchancedFeature,
@@ -99,7 +99,7 @@ export type TrzezarsDatagridFeatures<TOriginalRow> = {
 
 }
 
-export type TzezarsDatagridExtraStateConfig<TOriginalRow> = {
+export type TzezarsDatagridExtraStateConfig = {
     features?: {
         clickToCopy?: ClickToCopyFeatureConfig,
         columnFiltering?: ColumnFilteringEnchancedFeatureConfig,
