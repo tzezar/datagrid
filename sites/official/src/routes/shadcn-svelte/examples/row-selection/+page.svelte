@@ -3,10 +3,12 @@
 	import { inventoryColumns } from './columns.svelte';
 	import DatagridShadcnSvelte from '$lib/datagrid/prebuilt/shadcn/datagrid.svelte';
 	import { toast } from 'svelte-sonner';
+	import type { InventoryItem } from '$lib/data-generators/generate/inventory';
+	import type { ShadcnColumnMeta } from '$lib/datagrid/prebuilt/shadcn/core/types';
 
 	let { data } = $props();
 
-	let datagrid = new TzezarsDatagrid({
+	let datagrid = new TzezarsDatagrid<InventoryItem, ShadcnColumnMeta<InventoryItem>>({
 		columns: inventoryColumns,
 		data: data.users,
 
@@ -48,6 +50,7 @@
 	});
 
 	const col = datagrid.columns[0]
+	if (col.type === 'accessor' && col._meta.tooltip){}
 
 </script>
 
