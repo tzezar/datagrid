@@ -1,4 +1,4 @@
-import type { DataGrid } from "../index.svelte";
+import type { Datagrid } from "../index.svelte";
 import type { ColumnId } from "../types";
 import { findColumnById } from "../utils.svelte";
 
@@ -12,7 +12,7 @@ export type ColumnVisibilityFeatureConfig = {
  */
 export class ColumnVisibilityFeature<TOriginalRow = any> {
     // Reference to the DataGrid instance
-    datagrid: DataGrid<TOriginalRow>;
+    datagrid: Datagrid<TOriginalRow>;
 
     onColumnVisibilityChange: (hiddenColumns: string[]) => void = () => { };
 
@@ -20,7 +20,7 @@ export class ColumnVisibilityFeature<TOriginalRow = any> {
      * Initializes the ColumnVisibilityFeature with a reference to the DataGrid.
      * @param datagrid - The DataGrid instance used to manage column visibility.
      */
-    constructor(datagrid: DataGrid<TOriginalRow>, config?: ColumnVisibilityFeatureConfig) {
+    constructor(datagrid: Datagrid<TOriginalRow>, config?: ColumnVisibilityFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }

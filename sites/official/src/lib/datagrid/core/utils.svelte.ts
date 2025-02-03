@@ -1,6 +1,8 @@
 import type { AnyColumn, GroupColumn } from "./types";
 import type { CellValue, ColumnId, CustomCellComponentWithProps, SortableColumn } from "./types";
-import type { DataGrid } from "./index.svelte";
+import type { Datagrid } from "./index.svelte";
+import Fuse, { type IFuseOptions } from "fuse.js";
+import { DEFAULT_FUSE_OPTIONS } from "./defaults";
 
 
 export function generateRandomColumnId(): string {
@@ -85,7 +87,7 @@ export function isInGroupTree(possibleDescendant: GroupColumn<any>, ancestor: Gr
 }
 
 // Get sort index for display
-export const getSortIndex = (datagrid: DataGrid<any>, column: AnyColumn<any>): number | null => {
+export const getSortIndex = (datagrid: Datagrid<any>, column: AnyColumn<any>): number | null => {
     column = column as SortableColumn<any>;
     if (!column.options.sortable) return null;
     const columnId = column.columnId || column.header;
@@ -94,7 +96,7 @@ export const getSortIndex = (datagrid: DataGrid<any>, column: AnyColumn<any>): n
 };
 
 
-export const getSortDirection = (datagrid: DataGrid<any>, column: AnyColumn<any>): 'desc' | 'asc' | 'intermediate' | null => {
+export const getSortDirection = (datagrid: Datagrid<any>, column: AnyColumn<any>): 'desc' | 'asc' | 'intermediate' | null => {
     column = column as SortableColumn<any>;
     if (!column.options.sortable) return null;
     const columnId = column.columnId || column.header;
@@ -114,4 +116,20 @@ export function debounce<T extends (...args: any[]) => void>(func: T, delay: num
         clearTimeout(timer);
         timer = setTimeout(() => func(...args), delay);
     }) as T;
+}
+
+
+/**
+ * Initializes a new Fuse.js instance with the provided items and search keys.
+ * This is used to set up the search functionality for the given data.
+ * @param items - The array of items to search through.
+ * @param keys - The keys within each item to search on.
+ * @returns The initialized Fuse.js instance configured with search options.
+ */
+export function initializeFuseInstance<T>(items: T[], keys: string[], config: IFuseOptions<T> = DEFAULT_FUSE_OPTIONS): Fuse<T> {
+    // Configure Fuse.js options to perform fuzzy search
+    return new Fuse(items, {
+        keys,               // Specify which fields to search on
+        ...config,          // Merge default options with provided options
+    });
 }

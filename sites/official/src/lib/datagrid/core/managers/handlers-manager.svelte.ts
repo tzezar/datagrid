@@ -1,5 +1,5 @@
 import type { AnyColumn, GroupColumn } from "../types";
-import type { DataGrid } from "../index.svelte";
+import type { Datagrid } from "../index.svelte";
 import type { ColumnId, FilterableColumn, FilterOperator, GridBasicRow, GridGroupRow, GridRowIdentifier, LeafColumn, PinningPosition } from "../types";
 import { findColumnById, flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups } from "../utils.svelte";
 import type { CreateGroupParams } from "../features/column-grouping.svelte";
@@ -7,9 +7,9 @@ import type { CreateGroupParams } from "../features/column-grouping.svelte";
 
 
 export class HandlersManager {
-    datagrid: DataGrid<any>;
+    datagrid: Datagrid<any>;
 
-    constructor(datagrid: DataGrid<any>) {
+    constructor(datagrid: Datagrid<any>) {
         this.datagrid = datagrid;
     }
 

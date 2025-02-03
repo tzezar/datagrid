@@ -1,5 +1,5 @@
 import { type AnyColumn, type GroupColumn } from "../types";
-import type { DataGrid } from "../index.svelte";
+import type { Datagrid } from "../index.svelte";
 import type { ColumnId } from "../types";
 import { flattenColumnStructurePreservingGroups, findColumnById } from "../utils.svelte";
 
@@ -19,9 +19,9 @@ export type ColumnOrderingFeatureConfig = object
  * Manages column ordering functionality for a DataGrid.
  */
 export class ColumnOrderingFeature<TOriginalRow = any> {
-    private readonly datagrid: DataGrid<TOriginalRow>;
+    private readonly datagrid: Datagrid<TOriginalRow>;
 
-    constructor(datagrid: DataGrid<TOriginalRow>) {
+    constructor(datagrid: Datagrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 

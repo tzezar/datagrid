@@ -1,4 +1,4 @@
-import type { DataGrid } from "../index.svelte";
+import type { Datagrid } from "../index.svelte";
 import type { GridRow } from "../types";
 
 
@@ -9,7 +9,7 @@ import type { GridRow } from "../types";
  * @template TOriginalRow The type of the original row data.
  */
 export class DatagridCacheManager<TOriginalRow> {
-    datagrid: DataGrid<TOriginalRow>;
+    datagrid: Datagrid<TOriginalRow>;
 
     sortedData: TOriginalRow[] | null = $state.raw(null);
     filteredData: TOriginalRow[] | null = $state.raw(null);
@@ -66,7 +66,7 @@ export class DatagridCacheManager<TOriginalRow> {
         this.paginatedRows = null;
     }
 
-    constructor(datagrid: DataGrid<TOriginalRow>) {
+    constructor(datagrid: Datagrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 

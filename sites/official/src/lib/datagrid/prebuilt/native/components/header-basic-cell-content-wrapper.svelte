@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import type { Snippet } from 'svelte';
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 
 	type Props = {
-		datagrid: DataGrid<any>
+		datagrid: Datagrid<any>
 		column: LeafColumn<any>;
 		onclick?: (e: any) => void;
 		children: Snippet;

@@ -1,5 +1,5 @@
 <script lang="ts" generics="T">
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
 	import LeafColumnCell from '../structure/leaf-column-cell.svelte';

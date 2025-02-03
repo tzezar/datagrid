@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
 
 	type Props = {
-		datagrid: DataGrid<any>;
+		datagrid: Datagrid<any>;
 		column: LeafColumn<any>;
 		row: GridBasicRow<any>;
 	};

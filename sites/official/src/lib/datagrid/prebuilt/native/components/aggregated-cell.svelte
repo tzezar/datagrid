@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+    import type { Datagrid } from '$lib/datagrid/core/index.svelte';
     import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
 
     type Props = {
-        datagrid: DataGrid<any>;
+        datagrid: Datagrid<any>;
         column: LeafColumn<any>;
         row: GridGroupRow<any>;
     };

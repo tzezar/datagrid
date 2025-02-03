@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { AnyColumn } from '$lib/datagrid/core/types';
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import { cn } from '$lib/utils';
 	import type { TzezarsDatagrid } from '../core/index.svelte';
 

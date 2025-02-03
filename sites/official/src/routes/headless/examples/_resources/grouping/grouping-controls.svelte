@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { columnsWithGetters } from '$lib/datagrid/core/constants';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 
-	let { datagrid }: { datagrid: DataGrid<any> } = $props();
+	let { datagrid }: { datagrid: Datagrid<any> } = $props();
 
 	let columns = $derived(
 		datagrid.columnManager

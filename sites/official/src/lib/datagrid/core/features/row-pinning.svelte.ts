@@ -1,5 +1,5 @@
 import { SvelteSet } from "svelte/reactivity";
-import type { DataGrid } from "../index.svelte";
+import type { Datagrid } from "../index.svelte";
 import type { GridGroupRow, GridRow, GridRowIdentifier, RowPinningPosition } from "../types";
 
 
@@ -10,7 +10,7 @@ export type RowPinningFeatureConfig = {
 
 
 export class RowPinningFeature<TOriginalRow = any> {
-    datagrid: DataGrid<TOriginalRow>;
+    datagrid: Datagrid<TOriginalRow>;
     rowIdsPinnedTop: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
     rowIdsPinnedBottom: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
 
@@ -19,7 +19,7 @@ export class RowPinningFeature<TOriginalRow = any> {
     private bottomRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
 
 
-    constructor(datagrid: DataGrid<TOriginalRow>, config?: RowPinningFeatureConfig) {
+    constructor(datagrid: Datagrid<TOriginalRow>, config?: RowPinningFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }

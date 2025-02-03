@@ -1,6 +1,6 @@
 
 import { type GroupColumn } from "../types";
-import type { DataGrid } from "../index.svelte";
+import type { Datagrid } from "../index.svelte";
 import { findColumnById, flattenColumnStructurePreservingGroups, generateRandomColumnId } from "../utils.svelte";
 import { createColumnGroup } from "../column-creation/group-column-creator";
 import type { MoveOperation } from "./column-ordering.svelte";
@@ -16,13 +16,13 @@ export interface CreateGroupParams {
  */
 export class ColumnGroupingFeature<TOriginalRow = any> {
     // Reference to the parent DataGrid instance
-    private datagrid: DataGrid<TOriginalRow>;
+    private datagrid: Datagrid<TOriginalRow>;
 
     /**
      * Initializes the column grouping feature for the given data grid.
      * @param datagrid - The DataGrid instance this feature is associated with.
      */
-    constructor(datagrid: DataGrid<TOriginalRow>) {
+    constructor(datagrid: Datagrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 

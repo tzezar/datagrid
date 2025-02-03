@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/types';
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import { isInGroupTree } from '$lib/datagrid/core/utils.svelte';
 	import DeleteOutline from '$lib/datagrid/icons/material-symbols/delete-outline.svelte';
 	import MoveDown from '$lib/datagrid/icons/material-symbols/move-down.svelte';
 	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
 
 	type Props = {
-		datagrid: DataGrid<any>;
+		datagrid: Datagrid<any>;
 	};
 	let { datagrid }: Props = $props();
 </script>

@@ -1,5 +1,5 @@
 import type { AccessorColumn, AnyColumn, ComputedColumn } from "../types";
-import type { DataGrid } from "../index.svelte";
+import type { Datagrid } from "../index.svelte";
 import type { ColumnId } from "../types";
 
 
@@ -14,7 +14,7 @@ export type ColumnFacetingFeatureConfig = {
  */
 export class ColumnFacetingFeature<TOriginalRow = any> {
     // Reference to the parent DataGrid
-    private datagrid: DataGrid<TOriginalRow>;
+    private datagrid: Datagrid<TOriginalRow>;
 
     // Stores numeric facets (min and max values) for each column
     private numericFacets: Record<ColumnId, { min: number; max: number }> = $state({});
@@ -22,7 +22,7 @@ export class ColumnFacetingFeature<TOriginalRow = any> {
     // Stores categorical facets (unique values and their count) for each column
     private categoricalFacets: Record<ColumnId, { uniqueValuesCount: number; uniqueValues: unknown[] }> = $state({});
 
-    constructor(datagrid: DataGrid<TOriginalRow>, config?: ColumnFacetingFeatureConfig) {
+    constructor(datagrid: Datagrid<TOriginalRow>, config?: ColumnFacetingFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }

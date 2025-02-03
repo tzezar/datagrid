@@ -1,14 +1,14 @@
 <script lang="ts">
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 
 	type Props = {
-		datagrid: DataGrid<any>;
+		datagrid: Datagrid<any>;
 		column: LeafColumn<any>;
 		row: GridGroupRow<any>;
-		children: Snippet<[DataGrid<any>, LeafColumn<any>, GridGroupRow<any>]>;
+		children: Snippet<[Datagrid<any>, LeafColumn<any>, GridGroupRow<any>]>;
 	};
 
 	let { datagrid, column, row, children }: Props = $props();

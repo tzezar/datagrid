@@ -1,5 +1,5 @@
 import type { AnyColumn, ColumnId } from "$lib/datagrid/core/types";
-import { DataGrid, type GridConfig } from "$lib/datagrid/core/index.svelte";
+import { Datagrid, type DatagridConfig } from "$lib/datagrid/core/index.svelte";
 import { LifecycleHooks } from "$lib/datagrid/core/managers/lifecycle-hooks-manager.svelte";
 import { flattenColumnStructureAndClearGroups } from "$lib/datagrid/core/utils.svelte";
 
@@ -65,7 +65,7 @@ import { VirtualizationFeature, type VirtualizationFeatureConfig } from "./featu
 
 
 
-export type TzezarsDatagridConfig<TOriginalRow = any> = GridConfig<TOriginalRow> & {
+export type TzezarsDatagridConfig<TOriginalRow = any> = DatagridConfig<TOriginalRow> & {
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;
     extra?: TzezarsDatagridExtraStateConfig<TOriginalRow>
     customization?: Omit<CustomizationFeatureConfig<TOriginalRow>, 'datagrid'>
@@ -253,13 +253,13 @@ const createAdditionalColumns = (datagrid: TzezarsDatagrid): {
 };
 
 
-export class TzezarsDatagrid<TOriginalRow = any> extends DataGrid<TOriginalRow> {
+export class TzezarsDatagrid<TOriginalRow = any> extends Datagrid<TOriginalRow> {
     extra: Extra<TOriginalRow>
     customization = {} as CustomizationFeature<TOriginalRow>
 
     constructor(config: TzezarsDatagridConfig<TOriginalRow>) {
         // Call the parent class constructor with an empty config and a flag (true) for lazy initialization
-        super({} as GridConfig<TOriginalRow>, true);
+        super({} as DatagridConfig<TOriginalRow>, true);
     
         // Initialize the 'extra' property with an instance of the Extra class, passing the current instance and extra config
         this.extra = new Extra(this, config.extra);

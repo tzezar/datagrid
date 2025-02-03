@@ -1,14 +1,14 @@
 import { SvelteSet } from "svelte/reactivity";
-import type { DataGrid } from "../index.svelte";
+import type { Datagrid } from "../index.svelte";
 import type { GridRowIdentifier } from "../types";
 
 
 export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFeature<TOriginalRow> {
-    datagrid: DataGrid<TOriginalRow>;
+    datagrid: Datagrid<TOriginalRow>;
     selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier> = $state(new SvelteSet())
     maxSelectedRows: number = $state(DEFAULT_MAX_SELECTED_ROWS);
 
-    constructor(datagrid: DataGrid<TOriginalRow>, config?: RowSelectionFeatureConfig) {
+    constructor(datagrid: Datagrid<TOriginalRow>, config?: RowSelectionFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
@@ -63,7 +63,7 @@ export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFea
 
 
 interface IRowSelectionFeature<TOriginalRow> {
-    datagrid: DataGrid,
+    datagrid: Datagrid,
     selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier>;
     maxSelectedRows: number;
 

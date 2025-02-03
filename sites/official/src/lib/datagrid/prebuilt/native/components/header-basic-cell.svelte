@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 
 	type Props = {
-		datagrid: DataGrid<any>;
+		datagrid: Datagrid<any>;
 		column: LeafColumn<any>;
 		children: Snippet;
 	};

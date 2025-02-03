@@ -1,5 +1,5 @@
 import type { Component } from "svelte";
-import type { DataGrid } from "./index.svelte";
+import type { Datagrid } from "./index.svelte";
 
 // Specific interfaces for different column types
 
@@ -126,7 +126,7 @@ export type CustomCellComponentWithProps = {
 
 // Cell
 export type CustomCellProps<TOriginalRow> = {
-    datagrid: DataGrid<any>;
+    datagrid: Datagrid<any>;
     column: LeafColumn<any>;
     row: GridBasicRow<TOriginalRow>;
 };
@@ -137,7 +137,7 @@ export type CustomCell<TOriginalRow> = (
 
 // Aggregated Cell
 export type AggregateCellProps<TOriginalRow> = {
-    datagrid: DataGrid<any>;
+    datagrid: Datagrid<any>;
     column: LeafColumn<any>;
     row: GridGroupRow<TOriginalRow>;
 };
@@ -147,7 +147,7 @@ export type AggregatedCell<TOriginalRow> = (
 
 // Grouped Cell
 export type GroupedCellProps<TOriginalRow> = {
-    datagrid: DataGrid<any>;
+    datagrid: Datagrid<any>;
     column: LeafColumn<any>;
     row: GridGroupRow<TOriginalRow>;
 };
@@ -159,7 +159,7 @@ export type GroupedCell<TOriginalRow> = (
 // Header Cell
 export type HeaderCellProps = {
     column: AnyColumn<any>;
-    datagrid: DataGrid<any>;
+    datagrid: Datagrid<any>;
 };
 
 export type HeaderCell = (

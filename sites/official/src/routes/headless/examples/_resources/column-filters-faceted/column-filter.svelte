@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { AnyColumn } from '$lib/datagrid/core/types';
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 
 	type Props = {
-		datagrid: DataGrid<any>;
+		datagrid: Datagrid<any>;
 		column: AnyColumn<any>;
 	};
 	let { datagrid, column }: Props = $props();

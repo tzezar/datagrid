@@ -1,5 +1,5 @@
 import { isGroupColumn } from "../helpers/column-guards";
-import type { DataGrid } from "../index.svelte";
+import type { Datagrid } from "../index.svelte";
 import type { FilterCondition, FilterOperator } from "../types";
 import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 
@@ -16,7 +16,7 @@ export type ColumnFilteringFeatureConfig = {
  * Provides utilities for evaluating filter conditions and toggling the visibility of filters.
  */
 export class ColumnFilteringFeature<TOriginalRow = any> {
-    datagrid: DataGrid
+    datagrid: Datagrid
 
     // Stores all filter conditions for the columns
     conditions: FilterCondition<TOriginalRow>[] = $state([]);
@@ -24,7 +24,7 @@ export class ColumnFilteringFeature<TOriginalRow = any> {
 
     onColumnFilteringChange: (filteredColumns: string[]) => void = () => { };
 
-    constructor(datagrid: DataGrid, config?: ColumnFilteringFeatureConfig) {
+    constructor(datagrid: Datagrid, config?: ColumnFilteringFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }

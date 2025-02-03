@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { DataGrid } from '$lib/datagrid/core/index.svelte';
+	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import LayoutNavbarExpandFilled from '$lib/datagrid/icons/tabler/layout-navbar-expand-filled.svelte';
 	let {
 		row,
 		column,
 		datagrid
-	}: { row: GridBasicRow<any>; column: LeafColumn<any>; datagrid: DataGrid<any> } = $props();
+	}: { row: GridBasicRow<any>; column: LeafColumn<any>; datagrid: Datagrid<any> } = $props();
 
 	const handleClick = () => {
 		datagrid.handlers.rowExpanding.toggleRowExpansion(row.identifier);

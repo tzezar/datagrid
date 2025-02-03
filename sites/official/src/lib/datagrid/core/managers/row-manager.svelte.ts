@@ -1,12 +1,12 @@
-import type { DataGrid } from "../index.svelte";
+import type { Datagrid } from "../index.svelte";
 import type { GridBasicRow, GridGroupRow, GridRow, GridRowIdentifier } from "../types";
 
 
 
 
 export class RowManager<TOriginalRow> {
-    datagrid: DataGrid<TOriginalRow>;
-    constructor(datagrid: DataGrid<TOriginalRow>) {
+    datagrid: Datagrid<TOriginalRow>;
+    constructor(datagrid: Datagrid<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 

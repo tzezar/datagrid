@@ -14,8 +14,9 @@ import type { RowExpandingFeatureConfig } from "./features/row-expanding.svelte"
 import type { RowPinningFeatureConfig } from "./features/row-pinning.svelte";
 import type { RowSelectionFeatureConfig } from "./features/row-selection.svelte";
 import type { SortingFeatureConfig } from "./features/sorting.svelte";
+import { FeatureManager } from "./managers/feature-manager.svelte";
 
-export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
+export type DatagridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
     columns: C[];
     data: TOriginalRow[];
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;  // Add this
@@ -33,7 +34,7 @@ export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColu
     }
 }
 
-export class DataGrid<TOriginalRow = any> {
+export class Datagrid<TOriginalRow = any> {
     identifier = $state('tzezars-datagrid')
 
     readonly metrics = new PerformanceMetrics();
@@ -60,26 +61,10 @@ export class DataGrid<TOriginalRow = any> {
             parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
     }
 
-    features = {
-        pagination: new PaginationFeature(this),
-        sorting: new SortingFeature(this),
-        grouping: new GroupingFeature(),
-        filtering: new ColumnFilteringFeature(this),
-        globalSearch: new GlobalSearchFeature(),
-        columnSizing: new ColumnSizingFeature(this),
-        columnVisibility: new ColumnVisibilityFeature(this),
-        columnPinning: new ColumnPinningFeature(this),
-        columnFaceting: new ColumnFacetingFeature(this),
-        columnOrdering: new ColumnOrderingFeature(this),
-        columnGrouping: new ColumnGroupingFeature(this),
-        rowExpanding: new RowExpandingFeature(this),
-        rowSelection: new RowSelectionFeature(this),
-        rowPinning: new RowPinningFeature(this),
-    }
-
+    features: FeatureManager<TOriginalRow> = new FeatureManager(this);
     lifecycleHooks = new LifecycleHooks<TOriginalRow>();
 
-    constructor(config: GridConfig<TOriginalRow>, lazy: boolean = true) {
+    constructor(config: DatagridConfig<TOriginalRow>, lazy: boolean = true) {
         if (config.lifecycleHooks) this.lifecycleHooks = config.lifecycleHooks;
         if (lazy) return;
         this.initializeState(config);
@@ -87,7 +72,7 @@ export class DataGrid<TOriginalRow = any> {
 
 
 
-    initializeState(config: GridConfig<TOriginalRow>) {
+    initializeState(config: DatagridConfig<TOriginalRow>) {
         this.validateConfigInputs(config);
 
         // * Features has to be initialized first to prevent some bugs eg. not updating pagination
@@ -101,7 +86,7 @@ export class DataGrid<TOriginalRow = any> {
 
         this.columns = this.processors.column.initializeColumns(this.initial.columns)
         // * Features has to be initialized after columns are initialized, they might depend on columns
-        this.initializeFeatures(config);
+        this.features = new FeatureManager(this, config);
         // * Processing data has to be done after features are initialized, they might depend on features
         this.processors.data.executeFullDataTransformation();
 
@@ -123,28 +108,6 @@ export class DataGrid<TOriginalRow = any> {
         this.initial.data = data;
         this.initial.data = this.lifecycleHooks.executePostProcessData(this.initial.data);
     }
-
-
-    private initializeFeatures(config: GridConfig<TOriginalRow>) {
-        this.features.columnFaceting = new ColumnFacetingFeature(this, config.features?.columnFaceting);
-        this.features.filtering = new ColumnFilteringFeature(this, config.features?.filtering);
-
-
-        this.features.globalSearch = new GlobalSearchFeature({
-            manual: config.features?.globalSearch?.manual,
-            delay: config.features?.globalSearch?.delay,
-            fuzzy: config.features?.globalSearch?.fuzzy,
-            fuseInstance: config.features?.globalSearch?.fuseInstance || this.features.globalSearch.initializeFuseInstance(this.initial.data, flattenColumnStructureAndClearGroups(this.columns).map(col => col.columnId as string)),
-            value: config.features?.globalSearch?.value
-        });
-        this.features.grouping = new GroupingFeature(config.features?.grouping);
-        this.features.pagination = new PaginationFeature(this, config.features?.pagination);
-        this.features.rowExpanding = new RowExpandingFeature(this, config.features?.rowExpanding);
-        this.features.rowPinning = new RowPinningFeature(this, config.features?.rowPinning);
-        this.features.rowSelection = new RowSelectionFeature(this, config.features?.rowSelection);
-        this.features.sorting = new SortingFeature(this, config.features?.sorting);
-    }
-
 
     /**
        * Performs a refresh with different levels of data recalculation
@@ -175,7 +138,7 @@ export class DataGrid<TOriginalRow = any> {
         if (this.config.measurePerformance) console.log(`Operation took ${performance.now() - timeStart}ms`);
     }
 
-    private validateConfigInputs({ columns, data }: GridConfig<TOriginalRow>) {
+    private validateConfigInputs({ columns, data }: DatagridConfig<TOriginalRow>) {
         if (!columns) throw new Error('Columns are required');
         if (!data) throw new Error('Data is required');
         if (!Array.isArray(data)) throw new Error('Data must be an array');

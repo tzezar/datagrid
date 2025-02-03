@@ -1,6 +1,6 @@
 import { sort } from "fast-sort";
 import { isGroupColumn } from "../helpers/column-guards";
-import type { DataGrid } from "../index.svelte";
+import type { Datagrid } from "../index.svelte";
 import type { Aggregation, AggregationFn, FilterCondition, GridGroupRow, GridRow } from "../types";
 import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 import type { PerformanceMetrics } from "../helpers/performance-metrics.svelte";
@@ -11,7 +11,7 @@ export class DataProcessor<TOriginalRow> {
     private readonly metrics: PerformanceMetrics;
     private customAggregationFns: Map<string, AggregationFn>;
 
-    constructor(private readonly datagrid: DataGrid<TOriginalRow>) {
+    constructor(private readonly datagrid: Datagrid<TOriginalRow>) {
         this.metrics = datagrid.metrics;
         this.customAggregationFns = new Map();
     }
