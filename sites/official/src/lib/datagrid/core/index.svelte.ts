@@ -1,11 +1,9 @@
 import type { AnyColumn } from "./types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
-import { ColumnFacetingFeature, ColumnFilteringFeature, ColumnGroupingFeature, ColumnOrderingFeature, ColumnPinningFeature, ColumnSizingFeature, ColumnVisibilityFeature, GlobalSearchFeature, GroupingFeature, PaginationFeature, RowExpandingFeature, RowPinningFeature, RowSelectionFeature, SortingFeature } from "./features";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
 import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
 import type { PaginationFeatureConfig } from "./features/pagination.svelte";
-import { flattenColumnStructureAndClearGroups } from "./utils.svelte";
 import type { ColumnFilteringFeatureConfig } from "./features/column-filtering.svelte";
 import type { ColumnFacetingFeatureConfig } from "./features/column-faceting.svelte";
 import type { GlobalSearchFeatureConfig } from "./features/global-search.svelte";
