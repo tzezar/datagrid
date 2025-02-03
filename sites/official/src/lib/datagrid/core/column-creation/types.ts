@@ -7,7 +7,7 @@ export type DotNestedKeys<T> = (T extends object ? {
 
 
 // Column creation props
-export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOriginalRow>> = {
+export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<TOriginalRow>, TMeta> = {
   accessorKey: TKey;
   header?: string;
   getValueFn?: (row: TOriginalRow) => CellValue;
@@ -29,11 +29,11 @@ export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<T
   };
   align?: ColumnAlign
   state?: ColumnCreationStateProps
-} & CommonColumnCreationProps;
+} & CommonColumnCreationProps<TMeta>
 
 
 
-export type CreateComputeColumnProps<TOriginalRow> = {
+export type CreateComputeColumnProps<TOriginalRow, TMeta> = {
   // accessorFn: (row: TOriginalRow) => CellValue;
   getValueFn: (row: TOriginalRow) => CellValue;
   aggregate?: AggregationConfig;
@@ -55,9 +55,9 @@ export type CreateComputeColumnProps<TOriginalRow> = {
   align?: ColumnAlign
   header: string;
   state?: ColumnCreationStateProps
-} & CommonColumnCreationProps;
+} & CommonColumnCreationProps<TMeta>
 
-export type CreateDisplayColumnProps<TOriginalRow> = {
+export type CreateDisplayColumnProps<TOriginalRow, TMeta> = {
   cell: CustomCell<TOriginalRow>;
   headerCell?: HeaderCell;
   aggregatedCell?: AggregatedCell<TOriginalRow>;
@@ -74,13 +74,13 @@ export type CreateDisplayColumnProps<TOriginalRow> = {
   header: string;
   align?: ColumnAlign
   state?: ColumnCreationStateProps
-} & CommonColumnCreationProps;
+} & CommonColumnCreationProps<TMeta>
 
-export type CreateGroupColumnProps<TOriginalRow> = {
+export type CreateGroupColumnProps<TOriginalRow, TMeta> = {
   header: string;
   headerCell?: HeaderCell;
   columns: AnyColumn<TOriginalRow>[];
-} & CommonColumnCreationProps;
+} & CommonColumnCreationProps<TMeta>
 
 
 type ColumnCreationStateProps = {
@@ -89,8 +89,8 @@ type ColumnCreationStateProps = {
   pinning?: Partial<ColumnPinningState>;
 }
 
-type CommonColumnCreationProps = {
-  _meta?: any;
+type CommonColumnCreationProps<TMeta> = {
+  _meta?: TMeta;
   parentColumnId?: ParentColumnId
   columnId?: ColumnId;
 }

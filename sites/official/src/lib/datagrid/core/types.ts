@@ -398,18 +398,18 @@ export interface GroupColumn<TOriginalRow, TMeta = any> {
     visible: null;
     pinning: ColumnPinningState;
   };
-  _meta: TMeta;
+  _meta: TMeta
   isVisible(): boolean;
   isSortable(): boolean;
   isFilterable(): boolean;
 }
 // Union type for all column types
 
-export type AnyColumn<TOriginalRow> =
-  AccessorColumn<TOriginalRow> |
-  ComputedColumn<TOriginalRow> |
-  DisplayColumn<TOriginalRow> |
-  GroupColumn<TOriginalRow>;
+export type AnyColumn<TOriginalRow, TMeta = any> =
+  AccessorColumn<TOriginalRow, TMeta> |
+  ComputedColumn<TOriginalRow, TMeta> |
+  DisplayColumn<TOriginalRow, TMeta> |
+  GroupColumn<TOriginalRow, TMeta>;
 
 
 export type ParentColumnId = string | null;

@@ -58,10 +58,11 @@ function createAccessorColumnColumnId({
 
 export function createAccessorColumn<
   TOriginalRow extends Record<string, any>,
-  TKey extends DotNestedKeys<TOriginalRow>
+  TKey extends DotNestedKeys<TOriginalRow>,
+  TMeta,
 >(
-  { header, accessorKey, columnId, getValueFn: getValue, align, options, _meta = {}, state, ...rest }: CreateAccessorColumnProps<TOriginalRow, TKey>
-): AccessorColumn<TOriginalRow> {
+  { header, accessorKey, columnId, getValueFn: getValue, align, options, _meta, state, ...rest }: CreateAccessorColumnProps<TOriginalRow, TKey, TMeta>
+): AccessorColumn<TOriginalRow, TMeta> {
 
   if (!accessorKey) throw new Error(`accessorKey must be defined`);
   if (!header && !accessorKey && !columnId) throw new Error(`Either header, accessorKey or columnId must be defined`);
@@ -103,7 +104,7 @@ export function createAccessorColumn<
       },
     },
     align: align ?? 'left',
-    _meta: _meta ?? {},
+    _meta: _meta as TMeta ?? {} as TMeta,
     ...rest,
     isVisible(): boolean {
       return isColumnVisible(this)

@@ -9,8 +9,8 @@ const createGroupColumnColumnId = ({ columnId, header }: { columnId?: string, he
   throw new Error("A valid columnId, header must be provided to create a group column.");
 }
 
-export function createColumnGroup<TOriginalRow>(
-  { header, columns, columnId, _meta, ...rest }: CreateGroupColumnProps<TOriginalRow>
+export function createColumnGroup<TOriginalRow, TMeta>(
+  { header, columns, columnId, _meta, ...rest }: CreateGroupColumnProps<TOriginalRow, TMeta>
 ): GroupColumn<TOriginalRow> {
 
 
@@ -22,7 +22,7 @@ export function createColumnGroup<TOriginalRow>(
     columnId: computedColumnId,
     parentColumnId: rest.parentColumnId || null,
     header,
-    _meta: _meta ?? {},
+    _meta: _meta as TMeta ?? {} as TMeta,
     columns,
     options: {
       searchable: null,
