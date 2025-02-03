@@ -1,5 +1,4 @@
 <script lang="ts">
-	import '$lib/datagrid/prebuilt/shadcn/styles.css';
 	import { TzezarsDatagrid } from '$lib/datagrid/prebuilt/shadcn/core/index.svelte';
 	import { inventoryColumns } from './columns.svelte';
 	import DatagridShadcnSvelte from '$lib/datagrid/prebuilt/shadcn/datagrid.svelte';
@@ -13,10 +12,11 @@
 
 		features: {
 			rowSelection: {
-				maxSelectedRows: 2
+				onRowSelectionChange() {
+					console.log('Row selected ');
+				}
 			}
 		},
-
 
 
 		extra: {
@@ -34,9 +34,7 @@
 					onSelectMoreThanMaxSelectedRows() {
 						toast.error('You reached the maximum number of selected rows');
 					},
-					onRowSelectionChange() {
-						// toast.info('Row selected ');
-					}
+				
 				},
 				sorting: {
 					enableMultiSort: true,
@@ -49,9 +47,6 @@
 		}
 	});
 
-	$effect(() => {
-		// console.log($state.snapshot(datagrid.features.globalSearch.value));
-	});
 </script>
 
 <DatagridShadcnSvelte {datagrid}></DatagridShadcnSvelte>

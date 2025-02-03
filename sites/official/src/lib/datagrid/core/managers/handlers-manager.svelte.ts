@@ -234,6 +234,7 @@ export class HandlersManager {
         },
         toggleRowSelection: (rowIdentifier: GridRowIdentifier) => {
             this.datagrid.features.rowSelection.toggleRowSelection(rowIdentifier);
+            this.datagrid.features.rowSelection.onRowSelectionChange?.();
         }
     }
     rowPinning = {

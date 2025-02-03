@@ -19,7 +19,6 @@ export type GridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColu
     columns: C[];
     data: TOriginalRow[];
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;  // Add this
-    event?: object
 
     features?: {
         columnFaceting?: ColumnFacetingFeatureConfig

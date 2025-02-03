@@ -13,7 +13,6 @@ export type RowSelectionEnchancedFeatureConfig = {
     position?: 'left' | "right" | 'none'
 
     onSelectMoreThanMaxSelectedRows?(): void;
-    onRowSelectionChange?(): void;
 }
 
 export class RowSelectionEnchancedFeature implements EnchancedFeature {
@@ -27,7 +26,6 @@ export class RowSelectionEnchancedFeature implements EnchancedFeature {
     position: "left" | "right" | 'none' = $state('right')
 
     onSelectMoreThanMaxSelectedRows: () => void = () => { }
-    onRowSelectionChange: () => void = () => { }
 
 
     get base(): RowSelectionFeature { return this.datagrid.features.rowSelection }
@@ -44,29 +42,13 @@ export class RowSelectionEnchancedFeature implements EnchancedFeature {
         this.highlightSelectedRow = config?.highlightSelectedRow ?? this.highlightSelectedRow;
         this.position = config?.position ?? this.position
         this.onSelectMoreThanMaxSelectedRows = config?.onSelectMoreThanMaxSelectedRows ?? this.onSelectMoreThanMaxSelectedRows
-        this.onRowSelectionChange = config?.onRowSelectionChange ?? this.onRowSelectionChange
-    }
-
-    toggleRowSelection(identifier: GridRowIdentifier) {
-        const isRowSelected = this.base.isRowSelected(identifier);
-        if (isRowSelected) {
-            this.unselectRow(identifier);
-            return
-        }
-
-        const isSelectingMoreThanAllowed = this.base.maxSelectedRows !== undefined && this.base.selectedBasicRowIdentifiers.size >= this.base.maxSelectedRows;
-        if (isSelectingMoreThanAllowed) {
-            console.log('selecting more than allowed')
-            return
-        }
     }
 
     selectRow(identifier: GridRowIdentifier) {
         if (this.rowSelectionMode === 'single') {
             this.base.clearSelection()
             this.base.selectRow(identifier);
-
-            this.onRowSelectionChange()
+            this.base.onRowSelectionChange()
             return
         }
 
@@ -77,7 +59,7 @@ export class RowSelectionEnchancedFeature implements EnchancedFeature {
         }
 
         this.base.selectRow(identifier);
-        this.onRowSelectionChange()
+        this.base.onRowSelectionChange()
     }
 
     unselectRow(identifier: GridRowIdentifier) {

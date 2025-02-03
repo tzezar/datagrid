@@ -3,17 +3,7 @@ import type { DataGrid } from "../index.svelte";
 import type { GridRowIdentifier } from "../types";
 
 
-export type RowSelectionFeatureConfig = {
-    maxSelectedRows?: number;
-    selectedRowIds?: SvelteSet<GridRowIdentifier>;
-    onRowSelectionChange?(config: RowSelectionFeature<any>): void;
-}
-
-
-const DEFAULT_MAX_SELECTED_ROWS = 99999999;
-
-
-export class RowSelectionFeature<TOriginalRow = any> {
+export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFeature<TOriginalRow> {
     datagrid: DataGrid<TOriginalRow>;
     selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier> = $state(new SvelteSet())
     maxSelectedRows: number = $state(DEFAULT_MAX_SELECTED_ROWS);
@@ -24,9 +14,10 @@ export class RowSelectionFeature<TOriginalRow = any> {
     }
 
     initialize(config?: RowSelectionFeatureConfig) {
-        this.maxSelectedRows = config?.maxSelectedRows ?? this.maxSelectedRows;
-        this.selectedBasicRowIdentifiers = config?.selectedRowIds ?? this.selectedBasicRowIdentifiers;
+        Object.assign(this, config);
     }
+
+    onRowSelectionChange() { }
 
     getSelectedIdentifiers() {
         return Array.from(this.selectedBasicRowIdentifiers)
@@ -67,6 +58,33 @@ export class RowSelectionFeature<TOriginalRow = any> {
         this.selectedBasicRowIdentifiers.clear();
     }
 
-
-    
 }
+
+
+
+interface IRowSelectionFeature<TOriginalRow> {
+    datagrid: DataGrid,
+    selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier>;
+    maxSelectedRows: number;
+
+    onRowSelectionChange(config: RowSelectionFeature<any>): void;
+    getSelectedIdentifiers(): GridRowIdentifier[];
+    selectRow(identifier: GridRowIdentifier): void;
+    unselectRow(identifier: GridRowIdentifier): void;
+    toggleRowSelection(identifier: GridRowIdentifier): void;
+    isRowSelected(identifier: GridRowIdentifier): boolean;
+    getSelectedOriginalRows(): TOriginalRow[];
+    selectRows(identifiers: GridRowIdentifier[]): void;
+    unselectRows(identifiers: GridRowIdentifier[]): void;
+    clearSelection(): void;
+}
+
+
+export type RowSelectionFeatureConfig = {
+    maxSelectedRows?: number;
+    selectedRowIds?: SvelteSet<GridRowIdentifier>;
+    onRowSelectionChange?(config: RowSelectionFeature<any>): void;
+}
+
+
+const DEFAULT_MAX_SELECTED_ROWS = 99999999;
