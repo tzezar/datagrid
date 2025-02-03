@@ -274,8 +274,8 @@ export class TzezarsDatagrid<TOriginalRow = any, TMeta = any> extends Datagrid<T
         this.registerLifecycleHooks();
 
         // Initialize the state of the core datagrid using the provided configuration
-        // it will use changed lifecycle hooks to handle the initialization process
         this.initializeState(config);
+        // it will use changed lifecycle hooks to handle the initialization process
     }
 
 
