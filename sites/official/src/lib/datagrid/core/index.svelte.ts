@@ -43,15 +43,15 @@ export type DatagridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = Any
 }
 
 
-export class Datagrid<TOriginalRow = any> {
+export class Datagrid<TOriginalRow = any, TMeta = any> {
     identifier = $state('tzezars-datagrid')
 
     readonly metrics = new PerformanceMetrics();
     initial = $state.raw({
-        columns: [] as AnyColumn<TOriginalRow>[],
+        columns: [] as AnyColumn<TOriginalRow, TMeta>[],
         data: [] as TOriginalRow[]
     });
-    columns: AnyColumn<TOriginalRow>[] = $state([]);
+    columns: AnyColumn<TOriginalRow, TMeta>[] = $state([]);
 
     handlers = new HandlersManager(this);
     processors = {

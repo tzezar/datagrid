@@ -256,7 +256,7 @@ const createAdditionalColumns = (datagrid: TzezarsDatagrid): {
 };
 
 
-export class TzezarsDatagrid<TOriginalRow = any> extends Datagrid<TOriginalRow> {
+export class TzezarsDatagrid<TOriginalRow = any, TMeta = any> extends Datagrid<TOriginalRow, TMeta> {
     extra: Extra<TOriginalRow>
     customization = {} as CustomizationFeature<TOriginalRow>
 
