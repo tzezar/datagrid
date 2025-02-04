@@ -62,17 +62,16 @@ import { OverlayFeature, type OverlayFeatureConfig } from "./features/overlay.sv
 import { StripedRowsFeature, type StripedRowsFeatureConfig } from "./features/striped-rows.svelte";
 import { CustomizationFeature, type CustomizationFeatureConfig } from "./features/customization.svelte";
 import { VirtualizationFeature, type VirtualizationFeatureConfig } from "./features/virtualization.svelte";
-import type { EnhancedColumnMeta } from "./types";
 
 
 
 export type TzezarsDatagridConfig<TOriginalRow = any> = DatagridConfig<TOriginalRow> & {
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;
-    extra?: TzezarsDatagridExtraStateConfig
+    extra?: TzezarsDatagridExtraStateConfig<TOriginalRow>
     customization?: Omit<CustomizationFeatureConfig<TOriginalRow>, 'datagrid'>
 }
 
-export type TrzezarsDatagridFeatures = {
+export type TrzezarsDatagridFeatures<TOriginalRow> = {
     clickToCopy: ClickToCopyFeature,
     columnFiltering: ColumnFilteringEnchancedFeature,
     columnPinning: ColumnPinningEnchancedFeature,
@@ -100,7 +99,10 @@ export type TrzezarsDatagridFeatures = {
 
 }
 
-export type TzezarsDatagridExtraStateConfig = {
+
+
+
+export type TzezarsDatagridExtraStateConfig<TOriginalRow> = {
     features?: {
         clickToCopy?: ClickToCopyFeatureConfig,
         columnFiltering?: ColumnFilteringEnchancedFeatureConfig,
@@ -138,7 +140,7 @@ export type TzezarsDatagridExtraStateConfig = {
 
 
 
-function transformColumns(columns: AnyColumn<any, EnhancedColumnMeta>[]): AnyColumn<any, EnhancedColumnMeta>[] {
+function transformColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
     const newCols = columns.map(col => {
         return {
             ...col,
@@ -254,30 +256,21 @@ const createAdditionalColumns = (datagrid: TzezarsDatagrid): {
 };
 
 
-export class TzezarsDatagrid<TOriginalRow = any, TMeta = any> extends Datagrid<TOriginalRow> {
+export class TzezarsDatagrid<TOriginalRow = any> extends Datagrid<TOriginalRow> {
     extra: Extra<TOriginalRow>
     customization = {} as CustomizationFeature<TOriginalRow>
 
-    columns: AnyColumn<TOriginalRow, TMeta>[] = [];
-
     constructor(config: TzezarsDatagridConfig<TOriginalRow>) {
-        // Call the parent class constructor with an empty config and a flag (true) for lazy initialization
-        super({} as DatagridConfig<TOriginalRow>, true);
-
-        // Initialize the 'extra' property with an instance of the Extra class, passing the current instance and extra config
+        super(config, true);
         this.extra = new Extra(this, config.extra);
 
-        // Initialize the 'customization' property with an instance of the CustomizationFeature class, passing the current instance and customization config
         this.customization = new CustomizationFeature(this, config.customization);
 
-        // Register lifecycle hooks to handle various internal events and behaviors
         this.registerLifecycleHooks();
-
-        // Initialize the state of the core datagrid using the provided configuration
         this.initializeState(config);
-        // it will use changed lifecycle hooks to handle the initialization process
     }
 
+   
 
     private registerLifecycleHooks() {
         // * It might be better to place this logic into datagrid component itselt, it might allow easier styling
@@ -319,17 +312,17 @@ export class TzezarsDatagrid<TOriginalRow = any, TMeta = any> extends Datagrid<T
 export class Extra<TOriginalRow> {
     datagrid: TzezarsDatagrid<TOriginalRow>;
     title: string | undefined;
-    features = {} as TrzezarsDatagridFeatures
+    features = {} as TrzezarsDatagridFeatures<TOriginalRow>
 
 
-    constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig) {
+    constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig<TOriginalRow>) {
         this.datagrid = datagrid;
 
         this.initializeFeatures(config);
         this.title = config?.title || "Your data, Tzezar's Datagrid"
     }
 
-    initializeFeatures(config?: TzezarsDatagridExtraStateConfig) {
+    initializeFeatures(config?: TzezarsDatagridExtraStateConfig<TOriginalRow>) {
         // extra
         this.features.clickToCopy = new ClickToCopyFeature(this.datagrid, config?.features?.clickToCopy);
         this.features.credentials = new CredentialsFeature(this.datagrid, config?.features?.credentials);
