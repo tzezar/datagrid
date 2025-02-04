@@ -21,8 +21,9 @@ export type ColumnOrderingFeatureConfig = object
 export class ColumnOrderingFeature<TOriginalRow = any> {
     private readonly datagrid: Datagrid<TOriginalRow>;
 
-    constructor(datagrid: Datagrid<TOriginalRow>) {
+    constructor(datagrid: Datagrid<TOriginalRow>, config?: ColumnOrderingFeatureConfig) {
         this.datagrid = datagrid;
+        this.initialize(config);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

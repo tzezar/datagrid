@@ -10,6 +10,9 @@ export interface CreateGroupParams {
     selectedColumns: Record<string, boolean>;
 }
 
+export type ColumnGroupingFeatureConfig = object
+
+
 /**
  * Manages column grouping functionality for a data grid, including finding,
  * renaming, and deleting group columns, as well as handling column nesting.
@@ -22,9 +25,13 @@ export class ColumnGroupingFeature<TOriginalRow = any> {
      * Initializes the column grouping feature for the given data grid.
      * @param datagrid - The DataGrid instance this feature is associated with.
      */
-    constructor(datagrid: Datagrid<TOriginalRow>) {
+    constructor(datagrid: Datagrid<TOriginalRow>, config?: ColumnGroupingFeatureConfig) {
         this.datagrid = datagrid;
+        this.initialize(config);
     }
+
+    initialize(config?: ColumnGroupingFeatureConfig) {
+    }   
 
     /**
         * Deletes a group column and reassigns its children to the appropriate level.

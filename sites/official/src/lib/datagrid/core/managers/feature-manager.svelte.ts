@@ -30,7 +30,11 @@ export class FeatureManager<TOriginalRow = any> {
 
         this.columnFaceting = new ColumnFacetingFeature(this.datagrid, config?.features?.columnFaceting);
         this.filtering = new ColumnFilteringFeature(this.datagrid, config?.features?.filtering);
-
+        this.columnOrdering = new ColumnOrderingFeature(this.datagrid, config?.features?.columnOrdering);
+        this.columnSizing = new ColumnSizingFeature(this.datagrid, config?.features?.columnSizing);
+        this.columnVisibility = new ColumnVisibilityFeature(this.datagrid, config?.features?.columnVisibility);
+        this.columnPinning = new ColumnPinningFeature(this.datagrid, config?.features?.columnPinning);
+        this.columnGrouping = new ColumnGroupingFeature(this.datagrid, config?.features?.columnGrouping);
 
 
         this.globalSearch = new GlobalSearchFeature({

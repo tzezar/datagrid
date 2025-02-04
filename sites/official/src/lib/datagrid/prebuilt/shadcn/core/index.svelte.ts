@@ -67,11 +67,11 @@ import { VirtualizationFeature, type VirtualizationFeatureConfig } from "./featu
 
 export type TzezarsDatagridConfig<TOriginalRow = any> = DatagridConfig<TOriginalRow> & {
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;
-    extra?: TzezarsDatagridExtraStateConfig<TOriginalRow>
+    extra?: TzezarsDatagridExtraStateConfig
     customization?: Omit<CustomizationFeatureConfig<TOriginalRow>, 'datagrid'>
 }
 
-export type TrzezarsDatagridFeatures<TOriginalRow> = {
+export type TrzezarsDatagridFeatures= {
     clickToCopy: ClickToCopyFeature,
     columnFiltering: ColumnFilteringEnchancedFeature,
     columnPinning: ColumnPinningEnchancedFeature,
@@ -102,7 +102,7 @@ export type TrzezarsDatagridFeatures<TOriginalRow> = {
 
 
 
-export type TzezarsDatagridExtraStateConfig<TOriginalRow> = {
+export type TzezarsDatagridExtraStateConfig = {
     features?: {
         clickToCopy?: ClickToCopyFeatureConfig,
         columnFiltering?: ColumnFilteringEnchancedFeatureConfig,
@@ -312,17 +312,17 @@ export class TzezarsDatagrid<TOriginalRow = any> extends Datagrid<TOriginalRow> 
 export class Extra<TOriginalRow> {
     datagrid: TzezarsDatagrid<TOriginalRow>;
     title: string | undefined;
-    features = {} as TrzezarsDatagridFeatures<TOriginalRow>
+    features = {} as TrzezarsDatagridFeatures
 
 
-    constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig<TOriginalRow>) {
+    constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig) {
         this.datagrid = datagrid;
 
         this.initializeFeatures(config);
         this.title = config?.title || "Your data, Tzezar's Datagrid"
     }
 
-    initializeFeatures(config?: TzezarsDatagridExtraStateConfig<TOriginalRow>) {
+    initializeFeatures(config?: TzezarsDatagridExtraStateConfig) {
         // extra
         this.features.clickToCopy = new ClickToCopyFeature(this.datagrid, config?.features?.clickToCopy);
         this.features.credentials = new CredentialsFeature(this.datagrid, config?.features?.credentials);
