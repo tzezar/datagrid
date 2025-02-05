@@ -100,10 +100,9 @@
 		<Group>
 			<GroupTitle title="Examples" />
 			<GroupItem title="Basic" href={hrefs.enhanced.examples.basic} />
-			<GroupItem disabled title="Column alignment" href={hrefs.enhanced.examples.columnAlignment} />
-			<GroupItem disabled title="Column filters" href={hrefs.enhanced.examples.columnFilters} />
+			<GroupItem title="Column alignment" href={hrefs.enhanced.examples.columnAlignment} />
+			<GroupItem title="Column filters" href={hrefs.enhanced.examples.columnFilters} />
 			<GroupItem
-				disabled
 				title="Column filters faceted"
 				href={hrefs.enhanced.examples.columnFiltersFaceted}
 			/>
@@ -120,9 +119,9 @@
 			<GroupItem title="Grouping" href={hrefs.enhanced.examples.grouping} />
 			<GroupItem title="Pagination" href={hrefs.enhanced.examples.pagination} />
 			<GroupItem
-			disabled
-			title="Pagination controlled"
-			href={hrefs.enhanced.examples.paginationControlled}
+				disabled
+				title="Pagination controlled"
+				href={hrefs.enhanced.examples.paginationControlled}
 			/>
 			<GroupItem title="Row expanding" href={hrefs.enhanced.examples.expanding} />
 			<GroupItem title="Row selection" href={hrefs.enhanced.examples.rowSelection} />
