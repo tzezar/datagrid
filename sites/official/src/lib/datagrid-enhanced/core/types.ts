@@ -2,7 +2,6 @@ import type { AnyColumn, GridRow } from "$lib/datagrid/core/types";
 import type { EnhancedDatagrid } from "./index.svelte";
 
 export type ColumnMetaEnhanced<TOriginalRow = any> = {
-    align?: 'start' | 'center' | 'end';
     grow?: boolean;
     // filterType?: 'text' | 'number' | 'select' | 'date' | 'dateRange' | 'range';
     filterType?: 'text' | 'number' | 'select' | 'date'
