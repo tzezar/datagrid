@@ -21,7 +21,7 @@ export type CustomizationFeatureConfig<TOriginalRow> = {
 export class CustomizationFeature<TOriginalRow> {
   datagrid: EnhancedDatagrid<TOriginalRow>
   stickyHeader = $state(true)
-  cellTooltips = $state(true)
+  cellTooltips = $state(false)
   customScrollbar = $state(true)
   theme = $state('shadcn')
 
