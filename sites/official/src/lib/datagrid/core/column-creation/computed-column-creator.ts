@@ -23,6 +23,7 @@ export function createComputedColumn<TOriginalRow extends Record<string, any>, T
     // accessorFn,
     getValueFn: getValue,
     options: {
+      calculateFacets: options?.calculateFacets ?? false,
       searchable: options?.searchable ?? true,
       groupable: options?.groupable ?? true,
       sortable: options?.sortable ?? true,

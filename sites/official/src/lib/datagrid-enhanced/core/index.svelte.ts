@@ -71,7 +71,7 @@ export type EnhancedDatagridConfig<TOriginalRow = any> = DatagridConfig<TOrigina
     customization?: Omit<CustomizationFeatureConfig<TOriginalRow>, 'datagrid'>
 }
 
-export type TrzezarsDatagridFeatures= {
+export type TrzezarsDatagridFeatures = {
     clickToCopy: ClickToCopyFeature,
     columnFiltering: ColumnFilteringEnhancedFeature,
     columnPinning: ColumnPinningEnhancedFeature,
@@ -270,7 +270,7 @@ export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends Datagrid<
         this.initializeState(config);
     }
 
-   
+
 
     private registerLifecycleHooks() {
         // * It might be better to place this logic into datagrid component itselt, it might allow easier styling

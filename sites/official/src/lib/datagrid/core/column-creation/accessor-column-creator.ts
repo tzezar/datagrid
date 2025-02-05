@@ -86,6 +86,7 @@ export function createAccessorColumn<
     accessorKey,
     getValueFn,
     options: {
+      calculateFacets: options?.calculateFacets ?? false,
       searchable: options?.searchable ?? true,
       groupable: options?.groupable ?? true,
       sortable: options?.sortable ?? true,

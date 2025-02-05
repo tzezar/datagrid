@@ -13,6 +13,27 @@
 		/>
 		<Group>
 			<GroupTitle title="Quick start" />
+			<GroupItem disabled title="Installation" href={''} />
+			<GroupItem disabled title="Getting started" href={''} />
+		</Group>
+
+		<GroupTitle
+			title="Enhanced"
+			class="border-b-2 border-orange-400 pb-1 text-lg text-orange-400"
+		/>
+		<GroupItem title="Interactive demo" href={hrefs.enhanced.interactiveDemo} />
+		<Group>
+			<GroupTitle title="Quick start" />
+			<GroupItem disabled title="Installation" href={''} />
+			<GroupItem disabled title="Getting started" href={''} />
+		</Group>
+
+		<!-- <GroupTitle
+			title="Headless"
+			class="border-b-2 border-orange-400 pb-1 text-lg text-orange-400"
+		/>
+		<Group>
+			<GroupTitle title="Quick start" />
 			<GroupItem disabled title="Installation" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Getting started" href={hrefs.headless.quickStart.gettingStarted} />
 		</Group>
@@ -80,7 +101,7 @@
 			<GroupItem title="Sorting manager" href={hrefs.headless.featureApis.sortingManager} />
 			<GroupItem title="Grid instance" href={hrefs.headless.featureApis.gridInstance} />
 		</Group> -->
-		<GroupTitle
+		<!-- <GroupTitle
 			title="Enhanced"
 			class="border-b-2 border-orange-400 pb-1 text-lg text-orange-400"
 		/>
@@ -132,63 +153,6 @@
 			<GroupItem title="Sub components" href={hrefs.enhanced.examples.subComponents} />
 			<GroupItem title="Text sizing" href={hrefs.enhanced.examples.textSizing} />
 			<GroupItem title="Virtualization" href={hrefs.enhanced.examples.virtualization} />
-		</Group>
-		<!-- 
-		<Group>
-			<GroupTitle title="quick start" />
-			<GroupItem title="installation" href={hrefs.quickStart.installation} />
-			<GroupItem title="getting started" href={hrefs.quickStart.gettingStarted} />
-		</Group>
-		<Group>
-			<GroupTitle title="examples" />
-			<GroupItem title="mobile" href={hrefs.examples.mobile} />
-			<GroupItem title="minimal" href={hrefs.examples.minimal} />
-			<GroupItem title="basic" href={hrefs.examples.basic} />
-			<GroupItem title="advanced" href={hrefs.examples.advanced} />
-		</Group>
-		<Group>
-			<GroupTitle title="fundamentals" />
-			<GroupItem title="typescript" href={hrefs.fundamentals.typescript} />
-			<GroupItem title="customization" href={hrefs.fundamentals.customization} />
-		</Group>
-		<Group>
-			<GroupTitle title="feature guides" />
-			<GroupItem title="column freezing" href={hrefs.guides.featureGuides.columnFreezing} />
-			<GroupItem title="column hiding" href={hrefs.guides.featureGuides.columnHiding} />
-			<GroupItem title="column ordering" href={hrefs.guides.featureGuides.columnOrdering} />
-			<GroupItem title="column resizing" href={hrefs.guides.featureGuides.columnResizing} />
-			<GroupItem title="column aligment" href={hrefs.guides.featureGuides.columnAlignment} />
-			<GroupItem title="row expanding" href={hrefs.guides.featureGuides.rowExpanding} />
-			<GroupItem title="row selection" href={hrefs.guides.featureGuides.rowSelection} />
-			<GroupItem title="pagination" href={hrefs.guides.featureGuides.pagination} />
-			<GroupItem title="sorting" href={hrefs.guides.featureGuides.sorting} />
-			<GroupItem title="filtering" href={hrefs.guides.featureGuides.filtering} />
-
-			<GroupItem title="data copying" href={hrefs.guides.featureGuides.dataCopying} />
-			<GroupItem title="data exporting" href={hrefs.guides.featureGuides.dataExporting} />
-			<GroupItem title="context menu" href={hrefs.guides.featureGuides.contextMenu} />
-			<GroupItem title="fullscreen mode" href={hrefs.guides.featureGuides.fullscreenToggle} />
-			<GroupItem title="status indicator" href={hrefs.guides.featureGuides.statusIndicator} />
-			<GroupItem title="scroll to top" href={hrefs.guides.featureGuides.scrollToTop} />
-			<GroupItem title="sticky rows" href={hrefs.guides.featureGuides.stickyRows} />
-			<GroupItem title="footer" href={hrefs.guides.featureGuides.footer} />
-			<GroupItem
-				disabled
-				title="adjusting spacing"
-				href={hrefs.guides.featureGuides.adjustingSpacing}
-			/>
-			<GroupItem
-				disabled
-				title="adjusting text size"
-				href={hrefs.guides.featureGuides.adjustingTextSize}
-			/>
-			<GroupItem disabled title="sticky header" href={hrefs.guides.featureGuides.stickyHeader} />
-
-	
-		</Group>
-		<Group>
-			<GroupTitle title="experimental" />
-			<GroupItem title="grouping & aggregating" href="/experimental/grouping-aggregating-preview" />
 		</Group> -->
 	</div>
 </div>

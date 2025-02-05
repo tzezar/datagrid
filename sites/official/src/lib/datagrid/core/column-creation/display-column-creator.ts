@@ -22,6 +22,7 @@ export function createDisplayColumn<TOriginalRow extends Record<string, any>, TM
     parentColumnId: rest.parentColumnId || null,
     cell,
     options: {
+      calculateFacets: null,
       searchable: null,
       groupable: null,
       sortable: null,

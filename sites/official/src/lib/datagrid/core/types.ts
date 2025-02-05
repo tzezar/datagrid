@@ -292,6 +292,7 @@ export interface AccessorColumn<TOriginalRow, TMeta = any> {
   groupedCell?: GroupedCell<TOriginalRow>;
   headerCell?: HeaderCell;
   options: {
+    calculateFacets: boolean;
     searchable: boolean;
     groupable: boolean;
     sortable: boolean;
@@ -327,6 +328,7 @@ export interface ComputedColumn<TOriginalRow, TMeta = any> {
   formatterFn?: FormatterFn<TOriginalRow>;
   aggregate?: AggregationConfig;
   options: {
+    calculateFacets: boolean;
     searchable: boolean;
     groupable: boolean;
     sortable: boolean;
@@ -357,6 +359,7 @@ export interface DisplayColumn<TOriginalRow, TMeta = any> {
   groupedCell?: GroupedCell<TOriginalRow>;
   headerCell?: HeaderCell;
   options: {
+    calculateFacets: null;
     searchable: null;
     groupable: null;
     sortable: null;

@@ -10,20 +10,20 @@ import { flattenColumnStructureAndClearGroups, initializeFuseInstance } from "..
 export class FeatureManager<TOriginalRow = any> {
     datagrid: Datagrid<any>;
 
-    pagination!: PaginationFeature
-    sorting!: SortingFeature;
-    grouping!: GroupingFeature;
-    filtering!: ColumnFilteringFeature;
-    globalSearch!: GlobalSearchFeature;
-    columnSizing!: ColumnSizingFeature;
-    columnVisibility!: ColumnVisibilityFeature;
-    columnPinning!: ColumnPinningFeature;
-    columnFaceting!: ColumnFacetingFeature;
-    columnOrdering!: ColumnOrderingFeature;
-    columnGrouping!: ColumnGroupingFeature;
-    rowExpanding!: RowExpandingFeature;
-    rowSelection!: RowSelectionFeature;
-    rowPinning!: RowPinningFeature;
+    pagination: PaginationFeature
+    sorting: SortingFeature;
+    grouping: GroupingFeature;
+    filtering: ColumnFilteringFeature;
+    globalSearch: GlobalSearchFeature;
+    columnSizing: ColumnSizingFeature;
+    columnVisibility: ColumnVisibilityFeature;
+    columnPinning: ColumnPinningFeature;
+    columnFaceting: ColumnFacetingFeature;
+    columnOrdering: ColumnOrderingFeature;
+    columnGrouping: ColumnGroupingFeature;
+    rowExpanding: RowExpandingFeature;
+    rowSelection: RowSelectionFeature;
+    rowPinning: RowPinningFeature;
 
     constructor(datagrid: Datagrid<any>, config?: DatagridConfig<TOriginalRow>) {
         this.datagrid = datagrid;

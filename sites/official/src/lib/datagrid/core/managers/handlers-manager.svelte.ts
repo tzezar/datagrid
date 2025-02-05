@@ -196,7 +196,6 @@ export class HandlersManager {
     }
     columnOrdering = {
         moveLeft: (columnId: ColumnId) => {
-            console.log(this.datagrid.features.columnOrdering)
             this.datagrid.features.columnOrdering.moveLeft(columnId);
         },
         moveRight: (columnId: ColumnId) => {

@@ -19,6 +19,7 @@ export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<T
   headerCell?: HeaderCell;
   formatterFn?: FormatterFn<TOriginalRow>;
   options?: {
+    calculateFacets?: boolean;
     searchable?: boolean;
     groupable?: boolean;
     sortable?: boolean;
@@ -44,6 +45,7 @@ export type CreateComputeColumnProps<TOriginalRow, TMeta> = {
   groupedCell?: GroupedCell<TOriginalRow>;
   headerCell?: HeaderCell;
   options?: {
+    calculateFacets?: boolean;
     searchable?: boolean;
     groupable?: boolean;
     sortable?: boolean;

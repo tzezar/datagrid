@@ -15,7 +15,6 @@
 
 <div
 	class={cn('cell bg-datagrid-bodyGroupCell !p-0 shrink-0')}
-	class:justify-center={column?._meta?.align === 'center'}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 	style:--width={column.state.size.width + 'px'}
 	style:--min-width={column.state.size.minWidth + 'px'}
