@@ -32,7 +32,11 @@ const config = {
 	preprocess: [vitePreprocess(), mdsvex(mdsvexOptions)],
 
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		alias: {
+			// "$datagrid/*": "./src/lib/datagrid/*",
+			// "$datagrid-enhanced/*": "./src/lib/datagrid-enhanced/*",
+		  },
 	}
 };
 

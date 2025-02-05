@@ -99,7 +99,7 @@
 		</Group>
 		<Group>
 			<GroupTitle title="Examples" />
-			<GroupItem  title="Basic" href={hrefs.shadcnSvelte.examples.basic} />
+			<GroupItem  title="Basic" href={hrefs.enhanced.examples.basic} />
 			<GroupItem disabled title="Column alignment" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Column filters" href={hrefs.headless.quickStart.installation} />
 			<GroupItem
@@ -125,14 +125,14 @@
 				title="Pagination controlled"
 				href={hrefs.headless.quickStart.installation}
 			/>
-			<GroupItem  title="Row selection" href={hrefs.shadcnSvelte.examples.rowSelection} />
+			<GroupItem  title="Row selection" href={hrefs.enhanced.examples.rowSelection} />
 			<GroupItem disabled title="Scroll to top" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Sorting" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Spacing" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Status indicator" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Sub components" href={hrefs.headless.quickStart.installation} />
 			<GroupItem disabled title="Text sizing" href={hrefs.headless.quickStart.installation} />
-			<GroupItem title="Virtualization" href={hrefs.shadcnSvelte.examples.virtualization} />
+			<GroupItem title="Virtualization" href={hrefs.enhanced.examples.virtualization} />
 		</Group>
 		<!-- 
 		<Group>
@@ -193,3 +193,4 @@
 		</Group> -->
 	</div>
 </div>
+enhancedenhancedenhanced
