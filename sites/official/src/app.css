@@ -102,23 +102,26 @@
 	}
 
 	.grid-wrapper {
-		@apply relative flex h-full max-h-fit flex-col bg-grid-background;
+		/* Whole content inside */
+		/* max-h is required for virtualized container */
+		@apply relative flex  flex-col bg-grid-background max-h-[600px];
 
 		&[data-fullscreen='true'] {
-			@apply absolute inset-0 z-20 bg-background p-4;
+			@apply absolute inset-0 z-20  max-h-screen ;
 		}
 	}
 
 	.grid-container-wrapper {
-		@apply inline-block max-h-[600px] w-full overflow-auto border border-grid-border;
+		/* If virtualized this is inner container */
+		@apply inline-block  w-full overflow-auto border border-grid-border;
 
 		&[data-fullscreen='true'] {
-			@apply h-full max-h-full overflow-auto;
+			@apply  overflow-auto;
 		}
 	}
 
 	.grid-container {
-		@apply inline-block min-w-full grow-0;
+		@apply inline-block min-w-full grow-0 h-full;
 
 		&.grid-container-shadcn {
 			@apply bg-background;

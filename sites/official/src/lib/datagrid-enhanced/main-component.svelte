@@ -147,7 +147,7 @@
 {:else}
 	<div
 		class={cn(
-			datagrid.customization.styling.getBodyRowClasses(row, Number(rowIndex))
+			datagrid.customization.styling.getBodyRowClasses(row, Number(rowIndex)), ''
 		)}
 		use:identifier={{ datagrid, value: 'row-' + row.identifier }}
 	>
@@ -156,7 +156,7 @@
 			{#each leafColumnsToDisplay as column (column.columnId)}
 				<div
 					class:contents={!datagrid.extra.features.animations.shouldAnimateRows()}
-					class={cn()}
+					class={cn(column._meta.grow && 'grow flex')}
 					animate:flip={{
 						duration: (len) => datagrid.extra.features.animations.getRowsFlipDuration(len)
 					}}
@@ -208,6 +208,7 @@
 					{#each headerColumnsWithoutAdditional as column (column.columnId)}
 						<div
 							class:contents={!shouldAnimateHeaders}
+							class={cn(column._meta.grow && 'grow flex')}
 							animate:flip={{
 								duration: (len) => datagrid.extra.features.animations.getHeadersFlipDuration(len)
 							}}
@@ -233,7 +234,7 @@
 	{:else}
 		<div
 			use:identifier={{ datagrid, value: 'body' }}
-			class={datagrid.customization.styling.getBodyClasses()}
+			class={cn(datagrid.customization.styling.getBodyClasses())}
 		>
 			{#if datagrid.extra.features.overlay.shouldShowBodyOverlay()}
 				<div class="body-overlay"></div>
@@ -253,7 +254,7 @@
 					</div>
 				{:else}
 					<div
-						class={cn(datagrid.customization.styling.getBodyRowClasses(row, rowIndex))}
+						class={cn(datagrid.customization.styling.getBodyRowClasses(row, rowIndex),)}
 						use:identifier={{ datagrid, value: 'row-' + row.identifier }}
 					>
 						{@render AdditionalBodyCells('left', row)}
@@ -344,7 +345,7 @@
 {/snippet}
 
 {#snippet CredentialsSnippet()}
-	{#if datagrid.extra.features.credentials.enabled}
+	{#if datagrid.extra.features.credentials.enabled && datagrid.extra.features.fullscreen.isFullscreen === false}
 		<MadeWithLoveByTzezar />
 	{/if}
 {/snippet}
