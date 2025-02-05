@@ -5,7 +5,6 @@
 	import { Portal } from 'bits-ui';
 
 	// Blocks
-	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
 	import type { Snippet } from 'svelte';
 	import RowSelectionCell from './built-in/row-selection-cell.svelte';
 	import RowExpandingCell from './built-in/row-expanding-cell.svelte';
@@ -21,6 +20,7 @@
 	import { VirtualList } from './virtualization';
 	import type { EnhancedDatagrid } from './core/index.svelte';
 	import Pagination from './built-in/pagination.svelte';
+	import MadeWithLoveByTzezar from './built-in/made-with-love-by-tzezar.svelte';
 
 	type Props = {
 		datagrid: EnhancedDatagrid<any>;
