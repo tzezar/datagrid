@@ -44,7 +44,7 @@ export class ColumnFilteringEnhancedFeature implements EnhancedFeature {
     }
 
     shouldDisplayHeaderCellFilter() {
-        return this.datagrid.columns.some(col => col.options.filterable === true && col._meta.filterType && col.isVisible());
+        return this.columnFiltersVisible && this.datagrid.columns.some(col => col.options.filterable === true && col._meta.filterType && col.isVisible());
     }
 
 

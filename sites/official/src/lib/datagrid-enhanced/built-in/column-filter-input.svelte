@@ -36,7 +36,7 @@
 	{#if column?._meta?.filterType === 'number'}
 		<input
 			type="number"
-			class="column-filter-input w-full"
+			class="grid-head-row-leaf-column-filter-input"
 			min={datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.min}
 			max={datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max}
 			value={datagrid.features.filtering.getConditionValue(column.columnId)}
@@ -57,12 +57,12 @@
 				handleColumnFilterChange(column, value);
 			}}
 		/>
-		Min: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.min}
-		Max: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max}
+		<span class='text-xs text-muted-foreground'>Min: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.min}
+			Max: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max}</span>
 	{/if}
 	{#if column?._meta?.filterType === 'text'}
 		<select
-			class="column-filter-input w-full"
+			class="grid-head-row-leaf-column-filter-input"
 			value={datagrid.features.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {
 				handleColumnFilterChange(column, e.currentTarget.value);
@@ -76,7 +76,7 @@
 	{/if}
 	{#if column?._meta?.filterType === 'select'}
 		<select
-			class="column-filter-input w-full"
+			class="grid-head-row-leaf-column-filter-input"
 			value={datagrid.features.filtering.getConditionValue(column.columnId)}
 			oninput={(e) => {
 				handleColumnFilterChange(column, e.currentTarget.value);

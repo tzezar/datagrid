@@ -28,14 +28,15 @@
 	class={cn(
 		datagrid.customization.styling.getToolbarContainerClasses(),
 		datagrid.extra.features.columnFiltering.shouldDisplayButton() && 'top-bar ',
-		_class
+		_class,
+		"flex grow flex-row items-center  h-full"
 	)}
 >
 	{#if datagrid.extra.features.globalSearch.shouldDisplayInput()}
 		<GlobalSearchInput {datagrid} />
 	{:else}
-		<div class="flex h-full grow items-center border-l border-t pl-2 border-grid-border">
-			<span class="text-md w-full">
+		<div class="flex grow  pl-2 border-grid-border h-full">
+			<span class="text-md w-full flex items-center justify-start h-full">
 				{#if title}
 					{title}
 				{:else}
@@ -58,7 +59,7 @@
 
 {#snippet columnFilteringToggleButton()}
 	<Button
-		class="rounded-none border-b-0 border-r-0 border-grid-border"
+		class="border-grid-border rounded-none border-b-0 border-t-0 border-r-0"
 		variant="outline"
 		onclick={toggleColumnFiltersVisibility}
 	>
@@ -72,7 +73,7 @@
 
 {#snippet fullscreenToggleButton()}
 	<Button
-		class="rounded-none border-b-0 border-r-0 border-grid-border"
+		class="border-grid-border rounded-none border-b-0 border-r-0 border-t-0 "
 		variant="outline"
 		onclick={() => datagrid.extra.features.fullscreen.toggleFullscreen()}
 	>
@@ -85,5 +86,4 @@
 {/snippet}
 
 <style>
-
 </style>
