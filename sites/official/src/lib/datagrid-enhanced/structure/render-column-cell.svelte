@@ -76,7 +76,7 @@
 					datagrid.handlers.sorting.toggleColumnSorting(column, multisort);
 				}}
 			>
-				<span class="group-column-header">{column.header}</span>
+				<span class="">{column.header}</span>
 
 				<div class="flex gap-1">
 					{#if datagrid.extra.features.sorting.enableSorting && datagrid.extra.features.sorting.enableSorting === true}

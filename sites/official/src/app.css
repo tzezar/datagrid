@@ -181,7 +181,6 @@
 			user-select: none;
 		}
 		&.sortable:hover {
-			background-color: rgba(0, 0, 0, 0.05);
 		}
 
 		.sort-indicator {
