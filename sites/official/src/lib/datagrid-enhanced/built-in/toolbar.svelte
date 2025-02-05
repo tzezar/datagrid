@@ -29,14 +29,14 @@
 		datagrid.customization.styling.getToolbarContainerClasses(),
 		datagrid.extra.features.columnFiltering.shouldDisplayButton() && 'top-bar ',
 		_class,
-		"flex  flex-row items-center  "
+		'flex  flex-row items-center  '
 	)}
 >
 	{#if datagrid.extra.features.globalSearch.shouldDisplayInput()}
 		<GlobalSearchInput {datagrid} />
 	{:else}
-		<div class="flex grow  pl-2 border-grid-border ">
-			<span class="text-md w-full flex items-center justify-start ">
+		<div class="border-grid-border flex grow pl-2">
+			<span class="text-md flex w-full items-center justify-start">
 				{#if title}
 					{title}
 				{:else}
@@ -59,7 +59,7 @@
 
 {#snippet columnFilteringToggleButton()}
 	<Button
-		class="border-grid-border rounded-none border-b-0 border-t-0 border-r-0"
+		class="border-grid-border rounded-none border-b-0 border-r-0 border-t-0"
 		variant="outline"
 		onclick={toggleColumnFiltersVisibility}
 	>
