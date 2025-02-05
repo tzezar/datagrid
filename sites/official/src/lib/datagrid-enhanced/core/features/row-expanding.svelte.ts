@@ -18,7 +18,7 @@ export type RowExpandingEnhancedFeatureConfig = {
 
 export class RowExpandingEnhancedFeature implements EnhancedFeature {
     datagrid: EnhancedDatagrid
-    displayBuiltInComponents: boolean = $state(true);
+    displayBuiltInComponents: boolean = $state(false);
     expandingMode: 'single' | 'multiple' = $state('single');
     expandingPosition: 'left' | 'right' = $state('left');
     maxExpandedRows: number = $state(DEFAULT_MAX_EXPANDED_ROWS);

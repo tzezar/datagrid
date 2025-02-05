@@ -34,7 +34,7 @@
 	{#if datagrid.extra.features.globalSearch.shouldDisplayInput()}
 		<GlobalSearchInput {datagrid} />
 	{:else}
-		<div class="flex h-full grow items-center border-l border-t pl-2">
+		<div class="flex h-full grow items-center border-l border-t pl-2 border-grid-border">
 			<span class="text-md w-full">
 				{#if title}
 					{title}
@@ -58,7 +58,7 @@
 
 {#snippet columnFilteringToggleButton()}
 	<Button
-		class="rounded-none border-b-0 border-r-0"
+		class="rounded-none border-b-0 border-r-0 border-grid-border"
 		variant="outline"
 		onclick={toggleColumnFiltersVisibility}
 	>
@@ -72,7 +72,7 @@
 
 {#snippet fullscreenToggleButton()}
 	<Button
-		class="rounded-none border-b-0 border-r-0"
+		class="rounded-none border-b-0 border-r-0 border-grid-border"
 		variant="outline"
 		onclick={() => datagrid.extra.features.fullscreen.toggleFullscreen()}
 	>

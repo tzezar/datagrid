@@ -25,7 +25,7 @@
 {#if datagrid.extra.features.controlCenter.displayControlCenter}
 	<DropdownMenu.Root>
 		<DropdownMenu.Trigger
-			class={`${buttonVariants({ variant: 'outline' })} rounded-none border-b-0`}
+			class={`${buttonVariants({ variant: 'outline' })} rounded-none border-b-0 !border-grid-border`}
 		>
 			<Settings />
 		</DropdownMenu.Trigger>

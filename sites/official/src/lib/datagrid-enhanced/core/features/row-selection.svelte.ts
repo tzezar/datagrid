@@ -18,7 +18,7 @@ export type RowSelectionEnhancedFeatureConfig = {
 export class RowSelectionEnhancedFeature implements EnhancedFeature {
     datagrid: EnhancedDatagrid
 
-    displayBuiltInComponents: boolean = $state(true);
+    displayBuiltInComponents: boolean = $state(false);
     
     rowSelectionMode: 'single' | 'multiple' = $state('multiple');
     enableSelectAll: boolean = $state(true);
