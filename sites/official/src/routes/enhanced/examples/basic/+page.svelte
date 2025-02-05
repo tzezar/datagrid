@@ -10,4 +10,4 @@
 	});
 </script>
 
-<Grid.Component {datagrid}></Grid.Component>
+<Grid.Component {datagrid} />

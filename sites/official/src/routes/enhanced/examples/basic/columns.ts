@@ -13,5 +13,4 @@ export const columns = [
     accessorColumn({ accessorKey: 'supplier.name' }),
     accessorColumn({ accessorKey: 'restockDate', }),
     accessorColumn({ accessorKey: 'status', }),
-
 ] satisfies AnyColumn<InventoryItem, ColumnMetaEnhanced<InventoryItem>>[]
