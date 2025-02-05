@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DatagridCore } from '$lib/datagrid/core/index.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import type { AnyColumn } from '$lib/datagrid/core/types';
 	import type { PinningPosition } from '$lib/datagrid/core/types';
@@ -8,7 +8,7 @@
 		datagrid.handlers.columnPinning.changeColumnPinningPosition(column.columnId, position);
 	}
 
-	let { datagrid }: { datagrid: Datagrid<any> } = $props();
+	let { datagrid }: { datagrid: DatagridCore<any> } = $props();
 </script>
 
 {#each datagrid.columnManager.getLeafColumnsInOrder() as column}

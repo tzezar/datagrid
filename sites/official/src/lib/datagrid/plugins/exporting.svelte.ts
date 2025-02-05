@@ -2,20 +2,20 @@ import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { XMLBuilder } from 'fast-xml-parser';
 import type { LeafColumn } from '$lib/datagrid/core/types';
-import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+import type { DatagridCore } from '$lib/datagrid/core/index.svelte';
 
 
 export type ExportMethods = 'toExcel' | 'toCSV' | 'toJSON' | 'toXML';
 
-export type ExportingFeatureConfig = {
+export type ExportingPluginConfig = {
     fileName?: string;
     
     enableExporting?: boolean;
     exportMethods?: ExportMethods[];
 }
 
-export class ExportingFeature<T = any> {
-    datagrid: Datagrid<T>;
+export class ExportingPlugin<T = any> {
+    datagrid: DatagridCore<T>;
 
     exportMethods: ExportMethods[] = ['toExcel', 'toCSV', 'toJSON', 'toXML'];
 
@@ -23,7 +23,7 @@ export class ExportingFeature<T = any> {
 
     fileName: string = $state('table');
 
-    constructor(datagrid: Datagrid<T>, config?: ExportingFeatureConfig) {
+    constructor(datagrid: DatagridCore<T>, config?: ExportingPluginConfig) {
         this.datagrid = datagrid;
 
         this.enableExporting = config?.enableExporting ?? this.enableExporting;

@@ -1,5 +1,5 @@
 import type { EnhancedDatagrid } from "../index.svelte";
-import { StylingFeature, type StylingFeatureConfig } from "./styling.svelte";
+import { StylingFeature, type StylingPluginConfig } from "./styling.svelte";
 
 
 type PaginationPosition = 'top' | 'bottom' | 'both'
@@ -33,9 +33,9 @@ interface CustomizationOptions {
   pagination?: boolean;
 }
 
-export type CustomizationFeatureConfig<TOriginalRow> = {
+export type CustomizationPluginConfig<TOriginalRow> = {
   datagrid?: EnhancedDatagrid<TOriginalRow>
-  styling?: StylingFeatureConfig<TOriginalRow>
+  styling?: StylingPluginConfig<TOriginalRow>
 } & CustomizationOptions
 
 
@@ -65,7 +65,7 @@ export class CustomizationFeature<TOriginalRow> implements IPagination, IAnimati
 
   styling: StylingFeature<TOriginalRow>
 
-  constructor(datagrid: EnhancedDatagrid<TOriginalRow>, config?: CustomizationFeatureConfig<TOriginalRow>) {
+  constructor(datagrid: EnhancedDatagrid<TOriginalRow>, config?: CustomizationPluginConfig<TOriginalRow>) {
     this.datagrid = datagrid
     this.cellTooltips = config?.cellTooltips ?? this.cellTooltips;
     this.theme = config?.theme ?? this.theme;

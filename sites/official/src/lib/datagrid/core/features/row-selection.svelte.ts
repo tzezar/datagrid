@@ -1,5 +1,5 @@
 import { SvelteSet } from "svelte/reactivity";
-import type { Datagrid } from "../index.svelte";
+import type { DatagridCore } from "../index.svelte";
 import type { GridRowIdentifier } from "../types";
 
 
@@ -7,7 +7,7 @@ export type RowSelectionMode = 'single' | 'multiple' | 'none'
 
 
 interface IRowSelectionFeature<TOriginalRow> {
-    datagrid: Datagrid,
+    datagrid: DatagridCore,
     selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier>;
     maxSelectedRows: number;
 
@@ -23,7 +23,7 @@ interface IRowSelectionFeature<TOriginalRow> {
     clearSelection(): void;
 }
 
-export type RowSelectionFeatureConfig = {
+export type RowSelectionPluginConfig = {
     rowSelectionMode?: RowSelectionMode;
     maxSelectedRows?: number;
     selectedRowIds?: SvelteSet<GridRowIdentifier>;
@@ -35,18 +35,18 @@ export type RowSelectionFeatureConfig = {
 const DEFAULT_MAX_SELECTED_ROWS = 99999999;
 
 export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFeature<TOriginalRow> {
-    datagrid: Datagrid<TOriginalRow>;
+    datagrid: DatagridCore<TOriginalRow>;
     selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier> = $state(new SvelteSet())
     maxSelectedRows: number = $state(DEFAULT_MAX_SELECTED_ROWS);
     onSelectMoreThanMaxSelectedRows: () => void = () => { }
     rowSelectionMode: RowSelectionMode = $state('multiple');
 
-    constructor(datagrid: Datagrid<TOriginalRow>, config?: RowSelectionFeatureConfig) {
+    constructor(datagrid: DatagridCore<TOriginalRow>, config?: RowSelectionPluginConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
-    initialize(config?: RowSelectionFeatureConfig) {
+    initialize(config?: RowSelectionPluginConfig) {
         Object.assign(this, config);
     }
 

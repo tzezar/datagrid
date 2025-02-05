@@ -1,6 +1,6 @@
 
 import { type GroupColumn } from "../types";
-import type { Datagrid } from "../index.svelte";
+import type { DatagridCore } from "../index.svelte";
 import { findColumnById, flattenColumnStructurePreservingGroups, generateRandomColumnId } from "../utils.svelte";
 import { createColumnGroup } from "../column-creation/group-column-creator";
 import type { MoveOperation } from "./column-ordering.svelte";
@@ -10,7 +10,7 @@ export interface CreateGroupParams {
     selectedColumns: Record<string, boolean>;
 }
 
-export type ColumnGroupingFeatureConfig = object
+export type ColumnGroupingPluginConfig = object
 
 
 /**
@@ -19,18 +19,18 @@ export type ColumnGroupingFeatureConfig = object
  */
 export class ColumnGroupingFeature<TOriginalRow = any> {
     // Reference to the parent DataGrid instance
-    private datagrid: Datagrid<TOriginalRow>;
+    private datagrid: DatagridCore<TOriginalRow>;
 
     /**
      * Initializes the column grouping feature for the given data grid.
      * @param datagrid - The DataGrid instance this feature is associated with.
      */
-    constructor(datagrid: Datagrid<TOriginalRow>, config?: ColumnGroupingFeatureConfig) {
+    constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnGroupingPluginConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
-    initialize(config?: ColumnGroupingFeatureConfig) {
+    initialize(config?: ColumnGroupingPluginConfig) {
     }   
 
     /**

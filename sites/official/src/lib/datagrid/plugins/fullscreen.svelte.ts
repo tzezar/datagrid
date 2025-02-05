@@ -1,17 +1,17 @@
 
-export type FullscreenFeatureConfig = {
+export type FullscreenPluginConfig = {
     isFullscreen?: boolean;
     displayFullscreenToggleButton?: boolean;
 };
 
-export class FullscreenFeature {
+export class FullscreenPlugin {
 
     fullscreenModeEnabled: boolean = $state(false);
     displayFullscreenToggleButton: boolean = $state(true);
 
-    onFullscreenChange: (config: FullscreenFeatureConfig) => void = () => { };
+    onFullscreenChange: (config: FullscreenPluginConfig) => void = () => { };
 
-    constructor(config?: FullscreenFeatureConfig) {
+    constructor(config?: FullscreenPluginConfig) {
         this.fullscreenModeEnabled = config?.isFullscreen ?? this.fullscreenModeEnabled;
         this.displayFullscreenToggleButton = config?.displayFullscreenToggleButton ?? this.displayFullscreenToggleButton;
     }

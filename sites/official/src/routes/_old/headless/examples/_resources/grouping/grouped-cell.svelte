@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DatagridCore } from '$lib/datagrid/core/index.svelte';
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
 	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
 
 	type Props = {
-		datagrid: Datagrid<any>;
+		datagrid: DatagridCore<any>;
 		column: LeafColumn<any>;
 		row: GridGroupRow<any>;
 	};

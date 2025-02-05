@@ -1,5 +1,5 @@
 
-export type ControlCenterFeatureConfig = {
+export type ControlCenterPluginConfig = {
     displayControlCenter?: boolean;
 }
 
@@ -8,7 +8,7 @@ export class ControlCenterFeature  {
 
     displayControlCenter: boolean = $state(true);
 
-    constructor(config?: ControlCenterFeatureConfig) {
+    constructor(config?: ControlCenterPluginConfig) {
         this.displayControlCenter = config?.displayControlCenter ?? this.displayControlCenter;
     }
 

@@ -1,13 +1,13 @@
 import type { AccessorColumn, AnyColumn, CellValue, ComputedColumn } from "$lib/datagrid/core/types";
 import { getCellContent } from "$lib/datagrid/core/utils.svelte";
-import type { ColumnMetaEnhanced } from "../types";
+import type { ColumnMetaEnhanced } from "../../datagrid-enhanced/core/types";
 
-export type ClickToCopyFeatureConfig = {
+export type ClickToCopyPluginConfig = {
     enableClickToCopy?: boolean;
     onClickToCopy?(value: string | number): void;
 };
 
-export class ClickToCopyFeature {
+export class ClickToCopyPlugin {
 
     /**
      * Displays the copy button, but only in valid cells
@@ -16,7 +16,7 @@ export class ClickToCopyFeature {
     
     onClickToCopy: (value: string | number) => void = () => { };
 
-    constructor(config?: ClickToCopyFeatureConfig) {
+    constructor(config?: ClickToCopyPluginConfig) {
         this.display = config?.enableClickToCopy ?? this.display;
         this.onClickToCopy = config?.onClickToCopy ?? this.onClickToCopy;
     }

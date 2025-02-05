@@ -1,5 +1,5 @@
 import { type AnyColumn, type GroupColumn } from "../types";
-import type { Datagrid } from "../index.svelte";
+import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 import { flattenColumnStructurePreservingGroups, findColumnById } from "../utils.svelte";
 
@@ -13,21 +13,21 @@ export interface MoveOperation {
     };
 }
 
-export type ColumnOrderingFeatureConfig = object
+export type ColumnOrderingPluginConfig = object
 
 /**
  * Manages column ordering functionality for a DataGrid.
  */
 export class ColumnOrderingFeature<TOriginalRow = any> {
-    private readonly datagrid: Datagrid<TOriginalRow>;
+    private readonly datagrid: DatagridCore<TOriginalRow>;
 
-    constructor(datagrid: Datagrid<TOriginalRow>, config?: ColumnOrderingFeatureConfig) {
+    constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnOrderingPluginConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    initialize(config?: ColumnOrderingFeatureConfig) {
+    initialize(config?: ColumnOrderingPluginConfig) {
     }
 
     /**

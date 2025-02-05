@@ -1,5 +1,5 @@
 
-export type GlobalSearchEnhancedFeatureConfig = {
+export type GlobalSearchEnhancedPluginConfig = {
     isVisible?: boolean;
     onEnableGlobalSearchChange?(value: boolean): void;
 }
@@ -10,7 +10,7 @@ export class GlobalSearchEnhancedFeature  {
     isVisible: boolean = $state(false);
     onEnableGlobalSearchChange: (value: boolean) => void = () => { };
 
-    constructor(config?: GlobalSearchEnhancedFeatureConfig) {
+    constructor(config?: GlobalSearchEnhancedPluginConfig) {
         this.isVisible = config?.isVisible ?? this.isVisible;
 
     }

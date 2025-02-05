@@ -1,13 +1,13 @@
 
 
-export type VirtualizationFeatureConfig = {
+export type VirtualizationPluginConfig = {
     enabled?: boolean;
 }
 
-export class VirtualizationFeature {
+export class VirtualizationPlugin {
     enabled: boolean = $state(true);
 
-    constructor(config?: VirtualizationFeatureConfig) {
+    constructor(config?: VirtualizationPluginConfig) {
         this.enabled = config?.enabled ?? this.enabled;
     }
 

@@ -1,17 +1,17 @@
-export type ColumnGroupsFeatureConfig = {
+export type ColumnGroupsPluginConfig = {
     showGroupHeaders?: boolean;
     enableGroupHeadersToggling?: boolean;
     enableColumnGroupsCreation?: boolean;
 }
 
-export class ColumnGroupsFeature {
+export class ColumnGroupsPlugin {
 
     enableGroupHeadersToggling: boolean = $state(true);
     enableColumnGroupsCreation: boolean = $state(true);
 
     showColumnGroups: boolean = $state(true);
 
-    constructor(config?: ColumnGroupsFeatureConfig) {
+    constructor(config?: ColumnGroupsPluginConfig) {
         this.enableGroupHeadersToggling = config?.showGroupHeaders ?? this.enableGroupHeadersToggling;
         this.enableColumnGroupsCreation = config?.showGroupHeaders ?? this.enableColumnGroupsCreation;
         this.showColumnGroups = config?.showGroupHeaders ?? this.showColumnGroups;

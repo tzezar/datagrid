@@ -1,89 +1,88 @@
-import { ClickToCopyFeature } from "./click-to-copy.svelte";
+import { ClickToCopyPlugin } from "../../../datagrid/plugins/click-to-copy.svelte";
 import { ColumnFilteringEnhancedFeature } from "./column-filtering.svelte";
 import { ColumnPinningEnhancedFeature } from "./column-pinning.svelte";
 import { ColumnSizingEnhancedFeature } from "./column-resizing.svelte";
 import { ColumnVisibilityEnhancedFeature } from "./column-visibility.svelte";
-import { CredentialsFeature } from "./credentials.svelte";
-import { DensityToggleFeature } from "./density-toggle.svelte";
-import { ExportingFeature } from "../../../datagrid/core/features/optional/exporting.svelte";
-import { FullscreenFeature } from "./fullscreen.svelte";
+import { CredentialsPlugin } from "../../../datagrid/plugins/credentials.svelte";
+import { FullscreenPlugin } from "../../../datagrid/plugins/fullscreen.svelte";
 import { GlobalSearchEnhancedFeature } from "./global-search.svelte";
-import { ColumnGroupsFeature } from "./column-groups";
+import { ColumnGroupsPlugin } from "../../../datagrid/plugins/column-groups";
 import { GroupingEnhancedFeature } from "./grouping.svelte";
-import { StatusIndicatorFeature } from "./status-indicator.svelte";
-import { PaginationEnhancedFeature } from "./pagination.svelte";
+import { StatusIndicatorPlugin } from "../../../datagrid/plugins/status-indicator.svelte";
+import { PaginationPlugin } from "../../../datagrid/plugins/pagination.svelte";
 import { RowExpandingEnhancedFeature } from "./row-expanding.svelte";
 import { RowSelectionEnhancedFeature } from "./row-selection.svelte";
 import { SortingEnhancedFeature } from "./sorting.svelte";
 import { ColumnOrderingEnhancedFeature } from "./column-ordering.svelte";
 import { ControlCenterFeature } from "./control-center.svelte";
-import { AnimationsFeature } from "./animations.svelte";
+import { AnimationsPlugin } from "../../../datagrid/plugins/animations.svelte";
 
 
 
-import type { ClickToCopyFeatureConfig } from "./click-to-copy.svelte";
-import type { ColumnFilteringEnhancedFeatureConfig } from "./column-filtering.svelte";
-import type { ColumnPinningEnhancedFeatureConfig } from "./column-pinning.svelte";
-import type { ColumnSizingEnhancedFeatureConfig } from "./column-resizing.svelte";
-import type { ColumnVisibilityEnhancedFeatureConfig } from "./column-visibility.svelte";
-import type { CredentialsFeatureConfig } from "./credentials.svelte";
-import type { ExportingFeatureConfig } from "../../../datagrid/core/features/optional/exporting.svelte";
-import type { FullscreenFeatureConfig } from "./fullscreen.svelte";
-import type { GlobalSearchEnhancedFeatureConfig } from "./global-search.svelte";
-import type { ColumnGroupsFeatureConfig } from "./column-groups";
-import type { GroupingEnhancedFeatureConfig } from "./grouping.svelte";
-import type { StatusIndicatorFeatureConfig } from "./status-indicator.svelte";
-import type { PaginationEnhancedFeatureConfig } from "./pagination.svelte";
-import type { RowExpandingEnhancedFeatureConfig } from "./row-expanding.svelte";
-import type { RowSelectionEnhancedFeatureConfig } from "./row-selection.svelte";
-import type { SortingEnhancedFeatureConfig } from "./sorting.svelte";
-import type { ColumnOrderingEnhancedFeatureConfig } from "./column-ordering.svelte";
-import type { ControlCenterFeatureConfig } from "./control-center.svelte";
-import type { AnimationsFeatureConfig } from "./animations.svelte";
+import type { ClickToCopyPluginConfig } from "../../../datagrid/plugins/click-to-copy.svelte";
+import type { ColumnFilteringEnhancedPluginConfig } from "./column-filtering.svelte";
+import type { ColumnPinningEnhancedPluginConfig } from "./column-pinning.svelte";
+import type { ColumnSizingEnhancedPluginConfig } from "./column-resizing.svelte";
+import type { ColumnVisibilityEnhancedPluginConfig } from "./column-visibility.svelte";
+import type { CredentialsPluginConfig } from "../../../datagrid/plugins/credentials.svelte";
+import type { FullscreenPluginConfig } from "../../../datagrid/plugins/fullscreen.svelte";
+import type { GlobalSearchEnhancedPluginConfig } from "./global-search.svelte";
+import type { ColumnGroupsPluginConfig } from "../../../datagrid/plugins/column-groups";
+import type { GroupingEnhancedPluginConfig } from "./grouping.svelte";
+import type { StatusIndicatorPluginConfig } from "../../../datagrid/plugins/status-indicator.svelte";
+import type { PaginationPluginConfig } from "../../../datagrid/plugins/pagination.svelte";
+import type { RowExpandingEnhancedPluginConfig } from "./row-expanding.svelte";
+import type { RowSelectionEnhancedPluginConfig } from "./row-selection.svelte";
+import type { SortingEnhancedPluginConfig } from "./sorting.svelte";
+import type { ColumnOrderingEnhancedPluginConfig } from "./column-ordering.svelte";
+import type { ControlCenterPluginConfig } from "./control-center.svelte";
+import type { AnimationsPluginConfig } from "../../../datagrid/plugins/animations.svelte";
 
+// Plugins
 export {
-    ClickToCopyFeature,
-    ColumnFilteringEnhancedFeature as ColumnFilteringEnhancedFeature,
-    ColumnPinningEnhancedFeature as ColumnPinningEnhancedFeature,
-    ColumnSizingEnhancedFeature,
-    ColumnVisibilityEnhancedFeature,
-    CredentialsFeature,
-    ExportingFeature,
-    FullscreenFeature,
-    GlobalSearchEnhancedFeature as GlobalSearchEnhancedFeature,
-    ColumnGroupsFeature as ColumnGroupsFeature,
-    GroupingEnhancedFeature,
-    StatusIndicatorFeature,
-    PaginationEnhancedFeature,
-    RowExpandingEnhancedFeature,
-    RowSelectionEnhancedFeature,
-    SortingEnhancedFeature as SortingEnhancedFeature,
-    ColumnOrderingEnhancedFeature as ColumnOrderingEnhancedFeature,
-    ControlCenterFeature,
-    AnimationsFeature,
+    ClickToCopyPlugin,
+    CredentialsPlugin,
+    FullscreenPlugin,
+    ColumnGroupsPlugin,
+    StatusIndicatorPlugin,
+    PaginationPlugin,
+    AnimationsPlugin,
 }
 
+// Features
+export {
+    ColumnFilteringEnhancedFeature,
+    ColumnPinningEnhancedFeature,
+    ColumnSizingEnhancedFeature,
+    ColumnVisibilityEnhancedFeature,
+    GlobalSearchEnhancedFeature,
+    GroupingEnhancedFeature,
+    RowExpandingEnhancedFeature,
+    RowSelectionEnhancedFeature,
+    SortingEnhancedFeature,
+    ColumnOrderingEnhancedFeature,
+    ControlCenterFeature,
+}
 
 export type {
-    ClickToCopyFeatureConfig,
-    ColumnFilteringEnhancedFeatureConfig,
-    ColumnPinningEnhancedFeatureConfig,
-    ColumnSizingEnhancedFeatureConfig,
-    ColumnVisibilityEnhancedFeatureConfig,
-    CredentialsFeatureConfig,
-    ExportingFeatureConfig,
-    FullscreenFeatureConfig,
-    GlobalSearchEnhancedFeatureConfig,
-    ColumnGroupsFeatureConfig,
-    GroupingEnhancedFeatureConfig,
-    StatusIndicatorFeatureConfig,
-    PaginationEnhancedFeatureConfig,
-    RowExpandingEnhancedFeatureConfig,
-    RowSelectionEnhancedFeatureConfig,
-    SortingEnhancedFeatureConfig,
-    ColumnOrderingEnhancedFeatureConfig,
-    ControlCenterFeatureConfig,
-    AnimationsFeatureConfig,
+    ClickToCopyPluginConfig,
+    CredentialsPluginConfig,
+    FullscreenPluginConfig,
+    ColumnGroupsPluginConfig,
+    StatusIndicatorPluginConfig,
+    PaginationPluginConfig,
+    AnimationsPluginConfig,
+    ColumnFilteringEnhancedPluginConfig,
+    ColumnPinningEnhancedPluginConfig,
+    ColumnSizingEnhancedPluginConfig,
+    ColumnVisibilityEnhancedPluginConfig,
+    GlobalSearchEnhancedPluginConfig,
+    GroupingEnhancedPluginConfig,
+    RowExpandingEnhancedPluginConfig,
+    RowSelectionEnhancedPluginConfig,
+    SortingEnhancedPluginConfig,
+    ColumnOrderingEnhancedPluginConfig,
+    ControlCenterPluginConfig,
 }
 
 

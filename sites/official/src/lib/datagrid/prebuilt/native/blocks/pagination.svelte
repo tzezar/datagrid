@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DatagridCore } from '$lib/datagrid/core/index.svelte';
 
-	let { datagrid }: { datagrid: Datagrid<any> } = $props();
+	let { datagrid }: { datagrid: DatagridCore<any> } = $props();
 </script>
 
 <div class="flex flex-row items-center gap-4 border border-t-0 p-2">

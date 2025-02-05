@@ -1,16 +1,16 @@
 import { SvelteSet } from "svelte/reactivity";
-import type { Datagrid } from "../index.svelte";
+import type { DatagridCore } from "../index.svelte";
 import type { GridGroupRow, GridRow, GridRowIdentifier, RowPinningPosition } from "../types";
 
 
-export type RowPinningFeatureConfig = {
+export type RowPinningPluginConfig = {
     rowIdsPinnedTop?: SvelteSet<GridRowIdentifier>;
     rowIdsPinnedBottom?: SvelteSet<GridRowIdentifier>;
 }
 
 
 export class RowPinningFeature<TOriginalRow = any> {
-    datagrid: Datagrid<TOriginalRow>;
+    datagrid: DatagridCore<TOriginalRow>;
     rowIdsPinnedTop: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
     rowIdsPinnedBottom: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
 
@@ -19,12 +19,12 @@ export class RowPinningFeature<TOriginalRow = any> {
     private bottomRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
 
 
-    constructor(datagrid: Datagrid<TOriginalRow>, config?: RowPinningFeatureConfig) {
+    constructor(datagrid: DatagridCore<TOriginalRow>, config?: RowPinningPluginConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
-    initialize(config?: RowPinningFeatureConfig) {
+    initialize(config?: RowPinningPluginConfig) {
         this.rowIdsPinnedTop = config?.rowIdsPinnedTop ?? this.rowIdsPinnedTop;
         this.rowIdsPinnedBottom = config?.rowIdsPinnedBottom ?? this.rowIdsPinnedBottom;
     }

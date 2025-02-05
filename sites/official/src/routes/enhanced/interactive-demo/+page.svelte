@@ -13,13 +13,6 @@
 
 		extra: {
 			features: {
-				pagination: {
-					manual: true,
-				},
-				columnFiltering: {
-
-				},
-
 				clickToCopy: {
 					onClickToCopy(value) {
 						toast.info(`Copied ${value} to clipboard`);

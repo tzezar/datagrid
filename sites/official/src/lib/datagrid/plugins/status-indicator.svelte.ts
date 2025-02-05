@@ -7,7 +7,7 @@ type IStatusIntdicator = {
     updateState(state: StatusIndicatorState): void;
 }
 
-export type StatusIndicatorFeatureConfig = {
+export type StatusIndicatorPluginConfig = {
     enabled?: boolean;
     state?: 'loading' | 'saving' | 'error';
     position?: StatusIndicatorPosition;
@@ -17,7 +17,7 @@ export type StatusIndicatorFeatureConfig = {
 export type StatusIndicatorState = 'loading' | 'saving' | 'error' | 'none';
 export type StatusIndicatorPosition = 'top' | 'bottom' | 'both';
 
-export class StatusIndicatorFeature implements IStatusIntdicator {
+export class StatusIndicatorPlugin implements IStatusIntdicator {
 
     enabled: boolean = $state(true);
     position: StatusIndicatorPosition = $state('top');
@@ -25,7 +25,7 @@ export class StatusIndicatorFeature implements IStatusIntdicator {
 
     onLoadingIndicatorChange: (state: StatusIndicatorState) => void = () => { };
 
-    constructor(config?: StatusIndicatorFeatureConfig) {
+    constructor(config?: StatusIndicatorPluginConfig) {
         this.enabled = config?.enabled ?? this.enabled;
         this.position = config?.position ?? this.position;
         this.state = config?.state ?? this.state;

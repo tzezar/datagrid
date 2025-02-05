@@ -1,13 +1,13 @@
-export type OverlayFeatureConfig = {
+export type OverlayPluginConfig = {
     entireDatagridOverlayEnabled?: boolean
     bodyOverlayEnabled?: boolean
 }
 
-export class OverlayFeature {
+export class OverlayPlugin {
     entireDatagridOverlayEnabled: boolean = $state(false)
     bodyOverlayEnabled: boolean = $state(false)
 
-    constructor(config?: OverlayFeatureConfig) {
+    constructor(config?: OverlayPluginConfig) {
         this.entireDatagridOverlayEnabled = config?.entireDatagridOverlayEnabled ?? this.entireDatagridOverlayEnabled
         this.bodyOverlayEnabled = config?.bodyOverlayEnabled ?? this.bodyOverlayEnabled
     }

@@ -1,10 +1,10 @@
 import { isGroupColumn } from "../helpers/column-guards";
-import type { Datagrid } from "../index.svelte";
+import type { DatagridCore } from "../index.svelte";
 import type { FilterCondition, FilterOperator } from "../types";
 import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 
 
-export type ColumnFilteringFeatureConfig = {
+export type ColumnFilteringPluginConfig = {
     conditions?: FilterCondition<any>[];
     manual?: boolean;
     onColumnFilteringChange?(filteredColumns: string[]): void;
@@ -16,7 +16,7 @@ export type ColumnFilteringFeatureConfig = {
  * Provides utilities for evaluating filter conditions and toggling the visibility of filters.
  */
 export class ColumnFilteringFeature<TOriginalRow = any> {
-    datagrid: Datagrid
+    datagrid: DatagridCore
 
     // Stores all filter conditions for the columns
     conditions: FilterCondition<TOriginalRow>[] = $state([]);
@@ -24,13 +24,13 @@ export class ColumnFilteringFeature<TOriginalRow = any> {
 
     onColumnFilteringChange: (filteredColumns: string[]) => void = () => { };
 
-    constructor(datagrid: Datagrid, config?: ColumnFilteringFeatureConfig) {
+    constructor(datagrid: DatagridCore, config?: ColumnFilteringPluginConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
 
-    initialize( config?: ColumnFilteringFeatureConfig) {
+    initialize( config?: ColumnFilteringPluginConfig) {
         this.conditions = config?.conditions ?? this.conditions;
         this.manual = config?.manual ?? this.manual;
         this.onColumnFilteringChange = config?.onColumnFilteringChange ?? this.onColumnFilteringChange;

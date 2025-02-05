@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { basicColumns } from './columns.svelte';
-	import { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import { DatagridCore } from '$lib/datagrid/core/index.svelte';
 	import MadeWithLoveByTzezar from '$lib/blocks/made-with-love-by-tzezar.svelte';
 	import RenderBasicHeaderCellContent from '$lib/datagrid/prebuilt/core/render-basic-header-cell-content.svelte';
 	import RenderBasicRowCellContent from '$lib/datagrid/prebuilt/core/render-basic-row-cell-content.svelte';
@@ -9,7 +9,7 @@
 	import { generateData } from '$lib/data-generators/generate-data';
 	const data = generateData(generateUser, 100);
 
-	let datagrid = new Datagrid({
+	let datagrid = new DatagridCore({
 		columns: basicColumns,
 		data: data
 	});

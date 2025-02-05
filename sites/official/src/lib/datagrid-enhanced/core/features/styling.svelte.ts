@@ -5,7 +5,7 @@ import type { EnhancedDatagrid } from "../index.svelte"
 import type { ColumnMetaEnhanced } from "../types";
 import type { CustomizationFeature } from "./customization.svelte"
 
-export type StylingFeatureConfig<TOriginalRow> = {
+export type StylingPluginConfig<TOriginalRow> = {
     getHeadClasses?: () => string;
     getBodyRowClasses?: (row: GridBasicRow<TOriginalRow>, rowIndex: number) => string;
     getBodyRowCellClasses?: (datagrid: EnhancedDatagrid<TOriginalRow>, row: GridBasicRow<TOriginalRow>, column: LeafColumn<TOriginalRow>) => string;
@@ -34,7 +34,7 @@ export type StylingFeatureConfig<TOriginalRow> = {
 export class StylingFeature<TOriginalRow> {
     customization: CustomizationFeature<TOriginalRow>
 
-    constructor(customizationFeature: CustomizationFeature<TOriginalRow>, config?: StylingFeatureConfig<TOriginalRow>) {
+    constructor(customizationFeature: CustomizationFeature<TOriginalRow>, config?: StylingPluginConfig<TOriginalRow>) {
         this.customization = customizationFeature
         Object.assign(this, config);
     }

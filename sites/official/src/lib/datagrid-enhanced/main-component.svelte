@@ -326,7 +326,7 @@
 {#snippet PaginationSnippet(directions: ('top' | 'bottom' | 'both')[])}
 	<!-- Simplified logic, preserving original intent -->
 	{#if shouldDisplayPagination}
-		{#if ['both', 'top'].includes(datagrid.extra.features.pagination.paginationPosition) && directions.includes('top')}
+		{#if ['both', 'top'].includes(datagrid.extra.features.pagination.position) && directions.includes('top')}
 			{#if pagination}
 				{@render pagination()}
 			{:else}
@@ -334,7 +334,7 @@
 			{/if}
 		{/if}
 
-		{#if ['both', 'bottom'].includes(datagrid.extra.features.pagination.paginationPosition) && directions.includes('bottom')}
+		{#if ['both', 'bottom'].includes(datagrid.extra.features.pagination.position) && directions.includes('bottom')}
 			{#if pagination}
 				{@render pagination()}
 			{:else}

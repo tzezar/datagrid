@@ -1,4 +1,4 @@
-export type ColumnOrderingEnhancedFeatureConfig = {
+export type ColumnOrderingEnhancedPluginConfig = {
     enableInControlCenter?: boolean;
     enableInHeaderCellDropdownMenu?: boolean;
 }
@@ -9,7 +9,7 @@ export class ColumnOrderingEnhancedFeature {
     enableInHeaderCell: boolean = $state(false);
 
 
-    constructor(config?: ColumnOrderingEnhancedFeatureConfig) {
+    constructor(config?: ColumnOrderingEnhancedPluginConfig) {
         this.enableInControlCenter = config?.enableInControlCenter ?? this.enableInControlCenter;
         this.enableInHeaderCell = config?.enableInHeaderCellDropdownMenu ?? this.enableInHeaderCell;
     }

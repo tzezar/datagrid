@@ -3,47 +3,47 @@ import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
 import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
-import { type PaginationFeatureConfig } from "./features/pagination.svelte";
-import { type ColumnFilteringFeatureConfig } from "./features/column-filtering.svelte";
-import { type ColumnFacetingFeatureConfig } from "./features/column-faceting.svelte";
-import { type GlobalSearchFeatureConfig } from "./features/global-search.svelte";
-import { type GroupingFeatureConfig } from "./features/grouping.svelte";
-import { type RowExpandingFeatureConfig } from "./features/row-expanding.svelte";
-import { type RowSelectionFeatureConfig, } from "./features/row-selection.svelte";
-import { type SortingFeatureConfig, } from "./features/sorting.svelte";
+import { type PaginationPluginConfig } from "./features/pagination.svelte";
+import { type ColumnFilteringPluginConfig } from "./features/column-filtering.svelte";
+import { type ColumnFacetingPluginConfig } from "./features/column-faceting.svelte";
+import { type GlobalSearchPluginConfig } from "./features/global-search.svelte";
+import { type GroupingPluginConfig } from "./features/grouping.svelte";
+import { type RowExpandingPluginConfig } from "./features/row-expanding.svelte";
+import { type RowSelectionPluginConfig, } from "./features/row-selection.svelte";
+import { type SortingPluginConfig, } from "./features/sorting.svelte";
 import { FeatureManager } from "./managers/feature-manager.svelte";
-import type { ColumnOrderingFeatureConfig } from "./features/column-ordering.svelte";
-import type { ColumnGroupingFeatureConfig } from "./features/column-grouping.svelte";
-import type { ColumnPinningFeatureConfig } from "./features/column-pinning.svelte";
-import type { ColumnSizingFeatureConfig } from "./features/column-sizing.svelte";
-import type { ColumnVisibilityFeatureConfig } from "./features/column-visibility.svelte";
-import type { RowPinningFeatureConfig } from "./features/row-pinning.svelte";
+import type { ColumnOrderingPluginConfig } from "./features/column-ordering.svelte";
+import type { ColumnGroupingPluginConfig } from "./features/column-grouping.svelte";
+import type { ColumnPinningPluginConfig } from "./features/column-pinning.svelte";
+import type { ColumnSizingPluginConfig } from "./features/column-sizing.svelte";
+import type { ColumnVisibilityPluginConfig } from "./features/column-visibility.svelte";
+import type { RowPinningPluginConfig } from "./features/row-pinning.svelte";
 
-export type DatagridConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
+export type DatagridCoreConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
     columns: C[];
     data: TOriginalRow[];
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;  // Add this
 
     features?: {
-        columnFaceting?: ColumnFacetingFeatureConfig
-        filtering?: ColumnFilteringFeatureConfig
-        globalSearch?: GlobalSearchFeatureConfig
-        grouping?: GroupingFeatureConfig
-        pagination?: PaginationFeatureConfig
-        rowExpanding?: RowExpandingFeatureConfig
-        rowPinning?: RowPinningFeatureConfig
-        rowSelection?: RowSelectionFeatureConfig
-        sorting?: SortingFeatureConfig
-        columnSizing?: ColumnSizingFeatureConfig
-        columnVisibility?: ColumnVisibilityFeatureConfig
-        columnPinning?: ColumnPinningFeatureConfig
-        columnGrouping?: ColumnGroupingFeatureConfig
-        columnOrdering?: ColumnOrderingFeatureConfig
+        columnFaceting?: ColumnFacetingPluginConfig
+        filtering?: ColumnFilteringPluginConfig
+        globalSearch?: GlobalSearchPluginConfig
+        grouping?: GroupingPluginConfig
+        pagination?: PaginationPluginConfig
+        rowExpanding?: RowExpandingPluginConfig
+        rowPinning?: RowPinningPluginConfig
+        rowSelection?: RowSelectionPluginConfig
+        sorting?: SortingPluginConfig
+        columnSizing?: ColumnSizingPluginConfig
+        columnVisibility?: ColumnVisibilityPluginConfig
+        columnPinning?: ColumnPinningPluginConfig
+        columnGrouping?: ColumnGroupingPluginConfig
+        columnOrdering?: ColumnOrderingPluginConfig
     }
 }
 
 
-export class Datagrid<TOriginalRow = any, TMeta = any> {
+export class DatagridCore<TOriginalRow = any, TMeta = any> {
     identifier = $state('tzezars-datagrid')
 
     readonly metrics = new PerformanceMetrics();
@@ -74,7 +74,7 @@ export class Datagrid<TOriginalRow = any, TMeta = any> {
 
     lifecycleHooks = new LifecycleHooks<TOriginalRow>();
 
-    constructor(config: DatagridConfig<TOriginalRow>, lazy: boolean = true) {
+    constructor(config: DatagridCoreConfig<TOriginalRow>, lazy: boolean = true) {
         this.features = new FeatureManager(this, config);
 
         if (config.lifecycleHooks) this.lifecycleHooks = config.lifecycleHooks;
@@ -84,7 +84,7 @@ export class Datagrid<TOriginalRow = any, TMeta = any> {
 
 
 
-    initializeState(config: DatagridConfig<TOriginalRow>) {
+    initializeState(config: DatagridCoreConfig<TOriginalRow>) {
         this.validateConfigInputs(config);
 
         // !!! IMPORTANT !!!
@@ -152,7 +152,7 @@ export class Datagrid<TOriginalRow = any, TMeta = any> {
         if (this.config.measurePerformance) console.log(`Operation took ${performance.now() - timeStart}ms`);
     }
 
-    private validateConfigInputs({ columns, data }: DatagridConfig<TOriginalRow>) {
+    private validateConfigInputs({ columns, data }: DatagridCoreConfig<TOriginalRow>) {
         if (!columns) throw new Error('Columns are required');
         if (!data) throw new Error('Data is required');
         if (!Array.isArray(data)) throw new Error('Data must be an array');

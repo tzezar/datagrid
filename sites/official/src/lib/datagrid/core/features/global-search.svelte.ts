@@ -1,7 +1,7 @@
 import Fuse from "fuse.js";
 
 
-export type GlobalSearchFeatureConfig = {
+export type GlobalSearchPluginConfig = {
     manual?: boolean;
     value?: string;
     delay?: number;
@@ -31,11 +31,11 @@ export class GlobalSearchFeature {
 
     onGlobalSearchChange: (value: string) => void = () => { };
 
-    constructor(config?: GlobalSearchFeatureConfig) {
+    constructor(config?: GlobalSearchPluginConfig) {
         this.initialize(config);
     }
 
-    initialize(config?: GlobalSearchFeatureConfig) {
+    initialize(config?: GlobalSearchPluginConfig) {
         this.manual = config?.manual ?? this.manual;
         this.value = config?.value ?? this.value;
         this.delay = config?.delay ?? this.delay;

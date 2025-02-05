@@ -1,23 +1,23 @@
-import type { Datagrid } from "$lib/datagrid/core/index.svelte";
+import type { DatagridCore } from "$lib/datagrid/core/index.svelte";
 
-export type AnimationsFeatureConfig = {
+export type AnimationsPluginConfig = {
     animateHeaders?: boolean;
     animateRows?: boolean;
     animationMultiplier?: number;
 };
 
-export class AnimationsFeature {
-    datagrid: Datagrid;
+export class AnimationsPlugin {
+    datagrid: DatagridCore;
     animateHeaders: boolean = $state(true);
     animateRows: boolean = $state(true);
     animationDuration: number = $state(60);
 
-    constructor(datagrid: Datagrid, config?: AnimationsFeatureConfig) {
+    constructor(datagrid: DatagridCore, config?: AnimationsPluginConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
-    initialize(config?: AnimationsFeatureConfig) {
+    initialize(config?: AnimationsPluginConfig) {
         const { animateHeaders = this.animateHeaders, animateRows = this.animateRows, animationMultiplier = this.animationDuration } = config ?? {};
         this.animateHeaders = animateHeaders;
         this.animateRows = animateRows;

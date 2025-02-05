@@ -1,19 +1,19 @@
 import type { EnhancedMeta } from "$lib/datagrid-enhanced";
-import type { ColumnFilteringFeatureConfig } from "$lib/datagrid/core/features/column-filtering.svelte";
-import type { EnhancedDatagrid } from "../index.svelte";
+import type { ColumnFilteringPluginConfig } from "$lib/datagrid/core/features/column-filtering.svelte";
+import type { DatagridCore } from "$lib/datagrid/core/index.svelte";
 
-export type ColumnFilteringEnhancedFeatureConfig = {
+export type ColumnFilteringEnhancedPluginConfig = {
     columnFiltersVisible?: boolean;
     isToggleButtonVisible?: boolean;
 }
 
 export class ColumnFilteringEnhancedFeature  {
-    datagrid: EnhancedDatagrid<any, EnhancedMeta>
+    datagrid: DatagridCore<any, EnhancedMeta>
 
     columnFiltersVisible: boolean = $state(false);
     isToggleButtonVisible: boolean = $state(true);
 
-    constructor(datagrid: EnhancedDatagrid, config?: ColumnFilteringEnhancedFeatureConfig & ColumnFilteringFeatureConfig) {
+    constructor(datagrid: DatagridCore, config?: ColumnFilteringEnhancedPluginConfig & ColumnFilteringPluginConfig) {
         this.datagrid = datagrid;
         this.columnFiltersVisible = config?.columnFiltersVisible ?? this.columnFiltersVisible;
         this.isToggleButtonVisible = config?.isToggleButtonVisible ?? this.isToggleButtonVisible;

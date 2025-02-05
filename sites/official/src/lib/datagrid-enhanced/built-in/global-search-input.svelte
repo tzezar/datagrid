@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Input from '$lib/components/ui/input/input.svelte';
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DatagridCore } from '$lib/datagrid/core/index.svelte';
 	import { debounce } from '$lib/datagrid/core/utils.svelte';
 
-	let { datagrid }: { datagrid: Datagrid<any> } = $props();
+	let { datagrid }: { datagrid: DatagridCore<any> } = $props();
 
 	const debouncedUpdateValue = debounce((value: string) => {
 		datagrid.features.globalSearch.updateSearchValue(value);

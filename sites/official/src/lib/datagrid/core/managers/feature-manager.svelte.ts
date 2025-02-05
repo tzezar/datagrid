@@ -4,11 +4,11 @@ import {
     GroupingFeature, RowExpandingFeature, RowPinningFeature, RowSelectionFeature, SortingFeature,
     PaginationFeature
 } from "../features";
-import type { Datagrid, DatagridConfig } from "../index.svelte";
+import type { DatagridCore, DatagridCoreConfig } from "../index.svelte";
 import { flattenColumnStructureAndClearGroups, initializeFuseInstance } from "../utils.svelte";
 
 export class FeatureManager<TOriginalRow = any> {
-    datagrid: Datagrid<any>;
+    datagrid: DatagridCore<any>;
 
     pagination: PaginationFeature
     sorting: SortingFeature;
@@ -25,7 +25,7 @@ export class FeatureManager<TOriginalRow = any> {
     rowSelection: RowSelectionFeature;
     rowPinning: RowPinningFeature;
 
-    constructor(datagrid: Datagrid<any>, config?: DatagridConfig<TOriginalRow>) {
+    constructor(datagrid: DatagridCore<any>, config?: DatagridCoreConfig<TOriginalRow>) {
         this.datagrid = datagrid;
 
         this.columnFaceting = new ColumnFacetingFeature(this.datagrid, config?.features?.columnFaceting);

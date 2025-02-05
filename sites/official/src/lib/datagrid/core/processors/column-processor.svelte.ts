@@ -1,13 +1,13 @@
 import { isGroupColumn } from "../helpers/column-guards";
 import type { AnyColumn, GroupColumn } from "../types";
-import type { Datagrid } from "../index.svelte";
+import type { DatagridCore } from "../index.svelte";
 import { flattenColumnStructureAndClearGroups } from "../utils.svelte";
 import type { ColumnId } from "../types";
 
 
 export class ColumnProcessor<TOriginalRow> {
-    datagrid: Datagrid<TOriginalRow>;
-    constructor(datagrid: Datagrid<TOriginalRow>) {
+    datagrid: DatagridCore<TOriginalRow>;
+    constructor(datagrid: DatagridCore<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 

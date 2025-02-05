@@ -1,5 +1,5 @@
 
-export type ColumnSizingEnhancedFeatureConfig = {
+export type ColumnSizingEnhancedPluginConfig = {
     enableInControlCenter?: boolean;
     columnResizeMode?: 'standard' | 'fluid';
 }
@@ -11,7 +11,7 @@ export class ColumnSizingEnhancedFeature {
 
     onColumnResize: (columnId: string, width: number) => void = () => { };
 
-    constructor(config?: ColumnSizingEnhancedFeatureConfig) {
+    constructor(config?: ColumnSizingEnhancedPluginConfig) {
         this.enableInControlCenter = config?.enableInControlCenter ?? this.enableInControlCenter;
     }
 

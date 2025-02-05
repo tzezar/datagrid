@@ -1,6 +1,6 @@
-import type { Datagrid } from "../index.svelte";
+import type { DatagridCore } from "../index.svelte";
 
-export type PaginationFeatureConfig = {
+export type PaginationPluginConfig = {
     manual?: boolean;
     page?: number;
     pageSize?: number;
@@ -17,7 +17,7 @@ export type PaginationFeatureConfig = {
  */
 export class PaginationFeature<TOriginalRow = any> {
     // The instance of the data grid associated with this feature
-    datagrid: Datagrid<TOriginalRow>;
+    datagrid: DatagridCore<TOriginalRow>;
 
 
     autoResetPage: boolean = $state(false);
@@ -44,12 +44,12 @@ export class PaginationFeature<TOriginalRow = any> {
      * Constructor for setting up the data grid and initializing states.
      * @param datagrid - The data grid instance to associate with this pagination feature.
      */
-    constructor(datagrid: Datagrid<TOriginalRow>, config?: PaginationFeatureConfig) {
+    constructor(datagrid: DatagridCore<TOriginalRow>, config?: PaginationPluginConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
-    initialize(config?: PaginationFeatureConfig) {
+    initialize(config?: PaginationPluginConfig) {
         this.manual = config?.manual ?? this.manual;
         this.pageSizes = config?.pageSizes ?? this.pageSizes;
         this.pageCount = config?.pageCount ?? this.pageCount;

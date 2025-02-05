@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { GroupColumn } from '$lib/datagrid/core/types';
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DatagridCore } from '$lib/datagrid/core/index.svelte';
 	import type { Snippet } from 'svelte';
 
 	type Props = {
-		datagrid: Datagrid<any>;
+		datagrid: DatagridCore<any>;
 		column: GroupColumn<any>;
 		children: Snippet;
 	};

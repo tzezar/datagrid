@@ -6,19 +6,19 @@ type IStripedRows = {
     getClasses(row: GridBasicRow<any>, rowIndex: number): string;
 }
 
-export type StripedRowsFeatureConfig = {
+export type StripedRowsPluginConfig = {
     enabled?: boolean;
 }
 
 
-export class StripedRowsFeature implements IStripedRows {
+export class StripedRowsPlugin implements IStripedRows {
     enabled: boolean = $state(true);
 
-    constructor(config?: StripedRowsFeatureConfig) {
+    constructor(config?: StripedRowsPluginConfig) {
         this.enabled = config?.enabled ?? this.enabled;
     }
 
-    initialize(config?: StripedRowsFeatureConfig) {
+    initialize(config?: StripedRowsPluginConfig) {
         this.enabled = config?.enabled ?? this.enabled;
     }
 

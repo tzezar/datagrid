@@ -1,9 +1,9 @@
 import type { AccessorColumn, AnyColumn, ComputedColumn } from "../types";
-import type { Datagrid } from "../index.svelte";
+import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 
 
-export type ColumnFacetingFeatureConfig = {
+export type ColumnFacetingPluginConfig = {
     numericFacets?: Record<ColumnId, { min: number; max: number }>;
     categoricalFacets?: Record<ColumnId, { uniqueValuesCount: number; uniqueValues: unknown[] }>;
 }
@@ -14,7 +14,7 @@ export type ColumnFacetingFeatureConfig = {
  */
 export class ColumnFacetingFeature<TOriginalRow = any> {
     // Reference to the parent DataGrid
-    private datagrid: Datagrid<TOriginalRow>;
+    private datagrid: DatagridCore<TOriginalRow>;
 
     // Stores numeric facets (min and max values) for each column
     private numericFacets: Record<ColumnId, { min: number; max: number }> = $state({});
@@ -22,12 +22,12 @@ export class ColumnFacetingFeature<TOriginalRow = any> {
     // Stores categorical facets (unique values and their count) for each column
     private categoricalFacets: Record<ColumnId, { uniqueValuesCount: number; uniqueValues: unknown[] }> = $state({});
 
-    constructor(datagrid: Datagrid<TOriginalRow>, config?: ColumnFacetingFeatureConfig) {
+    constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnFacetingPluginConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
-    initialize(config?: ColumnFacetingFeatureConfig) {
+    initialize(config?: ColumnFacetingPluginConfig) {
         this.numericFacets = config?.numericFacets ?? this.numericFacets;
         this.categoricalFacets = config?.categoricalFacets ?? this.categoricalFacets;
     }

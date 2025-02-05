@@ -2,7 +2,7 @@
 	import '$lib/datagrid/styles.css';
 
 	import { userColumns } from './columns.svelte';
-	import { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import { DatagridCore } from '$lib/datagrid/core/index.svelte';
 
 	import { generateUser } from '$lib/data-generators/generate/user';
 	import { generateData } from '$lib/data-generators/generate-data';
@@ -23,7 +23,7 @@
 
 	const data = generateData(generateUser, 100);
 
-	let datagrid = new Datagrid({
+	let datagrid = new DatagridCore({
 		columns: userColumns,
 		data: data
 	});

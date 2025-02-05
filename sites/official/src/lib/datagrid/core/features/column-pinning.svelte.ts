@@ -1,24 +1,24 @@
 import type { AnyColumn } from "../types";
-import type { Datagrid } from "../index.svelte";
+import type { DatagridCore } from "../index.svelte";
 import type { ColumnId, PinningPosition } from "../types";
 
-export type ColumnPinningFeatureConfig = {
+export type ColumnPinningPluginConfig = {
     onColumnPinningChange?(pinnedColumns: string[]): void;
 }
 
 export class ColumnPinningFeature {
     // Reference to the DataGrid instance
-    datagrid: Datagrid<any>;
+    datagrid: DatagridCore<any>;
 
     onColumnPinningChange: (pinnedColumns: string[]) => void = () => { };
 
     // Initialize the ColumnPinningFeature with a reference to the DataGrid
-    constructor(datagrid: Datagrid<any>, config?: ColumnPinningFeatureConfig) {
+    constructor(datagrid: DatagridCore<any>, config?: ColumnPinningPluginConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
-    initialize(config?: ColumnPinningFeatureConfig) {
+    initialize(config?: ColumnPinningPluginConfig) {
         this.onColumnPinningChange = config?.onColumnPinningChange ?? this.onColumnPinningChange;
     }
 

@@ -1,8 +1,8 @@
-import type { Datagrid } from "../index.svelte";
+import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 
 
-export type ColumnSizingFeatureConfig = {
+export type ColumnSizingPluginConfig = {
     onColumnResize?(columnId: string, width: number): void;
 }
 
@@ -11,7 +11,7 @@ export type ColumnSizingFeatureConfig = {
  */
 export class ColumnSizingFeature<TOriginalRow = any> {
     // Reference to the DataGrid instance
-    datagrid: Datagrid<TOriginalRow>;
+    datagrid: DatagridCore<TOriginalRow>;
 
     onColumnResize: (columnId: string, width: number) => void = () => { };
 
@@ -19,12 +19,12 @@ export class ColumnSizingFeature<TOriginalRow = any> {
      * Initializes the ColumnSizingFeature with a reference to the DataGrid.
      * @param datagrid - The DataGrid instance to manage column sizes.
      */
-    constructor(datagrid: Datagrid<TOriginalRow>, config?: ColumnSizingFeatureConfig) {
+    constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnSizingPluginConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
-    initialize(config?: ColumnSizingFeatureConfig) {
+    initialize(config?: ColumnSizingPluginConfig) {
         this.onColumnResize = config?.onColumnResize ?? this.onColumnResize;
     }
 

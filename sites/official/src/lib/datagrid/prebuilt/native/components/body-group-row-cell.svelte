@@ -1,15 +1,15 @@
 <script lang="ts">
 	import type { ColumnMetaEnhanced } from '$lib/datagrid-enhanced/core/types';
-	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
+	import type { DatagridCore } from '$lib/datagrid/core/index.svelte';
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 
 	type Props = {
-		datagrid: Datagrid<any>;
+		datagrid: DatagridCore<any>;
 		column: LeafColumn<any, ColumnMetaEnhanced>;
 		row: GridGroupRow<any>;
-		children: Snippet<[Datagrid<any>, LeafColumn<any, ColumnMetaEnhanced>, GridGroupRow<any>]>;
+		children: Snippet<[DatagridCore<any>, LeafColumn<any, ColumnMetaEnhanced>, GridGroupRow<any>]>;
 	};
 
 	let { datagrid, column, row, children }: Props = $props();

@@ -1,12 +1,12 @@
 import { SvelteSet } from "svelte/reactivity";
-import type { Datagrid } from "../index.svelte";
+import type { DatagridCore } from "../index.svelte";
 import type { GridRowIdentifier } from "../types";
 
 const DEFAULT_MAX_EXPANDED_ROWS = 999999999;
 
 export type RowExpandingMode = 'single' | 'multiple';
 
-export type RowExpandingFeatureConfig = {
+export type RowExpandingPluginConfig = {
     expandedRowIds?: SvelteSet<GridRowIdentifier>;
     onExpandingChange?: (config: RowExpandingFeature<any>) => void;
     expandingMode?: RowExpandingMode
@@ -20,7 +20,7 @@ export type RowExpandingFeatureConfig = {
  */
 export class RowExpandingFeature<TOriginalRow = any> {
     // The instance of the data grid associated with this feature
-    datagrid: Datagrid<TOriginalRow>;
+    datagrid: DatagridCore<TOriginalRow>;
 
     // Set of expanded row identifiers, used to track which rows are expanded
     expandedRowIds: SvelteSet<GridRowIdentifier> = new SvelteSet()
@@ -35,12 +35,12 @@ export class RowExpandingFeature<TOriginalRow = any> {
      * Constructor to initialize the row expansion feature with a reference to the data grid.
      * @param datagrid - The data grid instance to associate with this row expansion feature.
      */
-    constructor(datagrid: Datagrid<TOriginalRow>, config?: RowExpandingFeatureConfig) {
+    constructor(datagrid: DatagridCore<TOriginalRow>, config?: RowExpandingPluginConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
-    initialize(config?: RowExpandingFeatureConfig) {
+    initialize(config?: RowExpandingPluginConfig) {
         this.expandingMode = config?.expandingMode ?? this.expandingMode;
         this.maxExpandedRows = config?.maxExpandedRows ?? this.maxExpandedRows;
         this.onExpandingChange = config?.onExpandingChange ?? this.onExpandingChange;

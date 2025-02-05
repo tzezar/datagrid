@@ -1,95 +1,93 @@
 import type { AnyColumn, ColumnId } from "$lib/datagrid/core/types";
-import { Datagrid, type DatagridConfig } from "$lib/datagrid/core/index.svelte";
+import { DatagridCore, type DatagridCoreConfig } from "$lib/datagrid/core/index.svelte";
 import { LifecycleHooks } from "$lib/datagrid/core/managers/lifecycle-hooks-manager.svelte";
 import { flattenColumnStructureAndClearGroups } from "$lib/datagrid/core/utils.svelte";
 
 import {
-    CredentialsFeature,
-    ExportingFeature,
+    CredentialsPlugin,
     ColumnPinningEnhancedFeature,
     ColumnSizingEnhancedFeature,
     ColumnVisibilityEnhancedFeature,
     GroupingEnhancedFeature,
-    StatusIndicatorFeature,
+    StatusIndicatorPlugin,
     RowExpandingEnhancedFeature,
     RowSelectionEnhancedFeature,
     SortingEnhancedFeature,
-    FullscreenFeature,
-    ColumnGroupsFeature,
-    PaginationEnhancedFeature,
+    FullscreenPlugin,
+    ColumnGroupsPlugin,
+   PaginationPlugin,
     GlobalSearchEnhancedFeature,
-    ClickToCopyFeature,
+    ClickToCopyPlugin,
     ColumnFilteringEnhancedFeature,
-    type ClickToCopyFeatureConfig,
-    type ColumnFilteringEnhancedFeatureConfig,
-    type ColumnPinningEnhancedFeatureConfig,
-    type ColumnSizingEnhancedFeatureConfig,
-    type ColumnVisibilityEnhancedFeatureConfig,
-    type CredentialsFeatureConfig,
-    type ExportingFeatureConfig,
-    type FullscreenFeatureConfig,
-    type GlobalSearchEnhancedFeatureConfig,
-    type ColumnGroupsFeatureConfig,
-    type GroupingEnhancedFeatureConfig,
-    type StatusIndicatorFeatureConfig,
-    type PaginationEnhancedFeatureConfig,
-    type RowExpandingEnhancedFeatureConfig,
-    type RowSelectionEnhancedFeatureConfig,
-    type SortingEnhancedFeatureConfig,
+    type ClickToCopyPluginConfig,
+    type ColumnFilteringEnhancedPluginConfig,
+    type ColumnPinningEnhancedPluginConfig,
+    type ColumnSizingEnhancedPluginConfig,
+    type ColumnVisibilityEnhancedPluginConfig,
+    type CredentialsPluginConfig,
+    type FullscreenPluginConfig,
+    type GlobalSearchEnhancedPluginConfig,
+    type ColumnGroupsPluginConfig,
+    type GroupingEnhancedPluginConfig,
+    type StatusIndicatorPluginConfig,
+    type RowExpandingEnhancedPluginConfig,
+    type RowSelectionEnhancedPluginConfig,
+    type SortingEnhancedPluginConfig,
     ColumnOrderingEnhancedFeature,
-    type ColumnOrderingEnhancedFeatureConfig,
+    type ColumnOrderingEnhancedPluginConfig,
     ControlCenterFeature,
-    type ControlCenterFeatureConfig,
-    AnimationsFeature,
-    type AnimationsFeatureConfig,
+    type ControlCenterPluginConfig,
+     AnimationsPlugin,
+    type AnimationsPluginConfig,
 } from "./features";
 
 
-import type { SortingFeatureConfig } from "$lib/datagrid/core/features/sorting.svelte";
-import type { PaginationFeatureConfig } from "$lib/datagrid/core/features/pagination.svelte";
-import type { GroupingFeatureConfig } from "$lib/datagrid/core/features/grouping.svelte";
-import type { ColumnOrderingFeatureConfig } from "$lib/datagrid/core/features/column-ordering.svelte";
+import type { SortingPluginConfig } from "$lib/datagrid/core/features/sorting.svelte";
+import type { PaginationPluginConfig } from "$lib/datagrid/core/features/pagination.svelte";
+import type { GroupingPluginConfig } from "$lib/datagrid/core/features/grouping.svelte";
+import type { ColumnOrderingPluginConfig } from "$lib/datagrid/core/features/column-ordering.svelte";
 import { createDisplayColumn } from "$lib/datagrid/core/column-creation/display-column-creator";
 import RowSelectionCell from "../built-in/row-selection-cell.svelte";
 import RowExpandingCell from "../built-in/row-expanding-cell.svelte";
 import RowSelectionColumnHeaderCell from "../built-in/row-selection-column-header-cell.svelte";
 import RowExpandingColumnHeaderCell from "../built-in/row-expanding-column-header-cell.svelte";
-import { OverlayFeature, type OverlayFeatureConfig } from "./features/overlay.svelte";
-import { StripedRowsFeature, type StripedRowsFeatureConfig } from "./features/striped-rows.svelte";
-import { CustomizationFeature, type CustomizationFeatureConfig } from "./features/customization.svelte";
-import { VirtualizationFeature, type VirtualizationFeatureConfig } from "./features/virtualization.svelte";
+import { OverlayPlugin, type OverlayPluginConfig } from "../../datagrid/plugins/overlay.svelte";
+import { StripedRowsPlugin, type StripedRowsPluginConfig } from "../../datagrid/plugins/striped-rows.svelte";
+import { CustomizationFeature, type CustomizationPluginConfig } from "./features/customization.svelte";
+import { VirtualizationPlugin, type VirtualizationPluginConfig } from "../../datagrid/plugins/virtualization.svelte";
+import { ExportingPlugin, type ExportingPluginConfig } from "$lib/datagrid/plugins/exporting.svelte";
 
 
 
-export type EnhancedDatagridConfig<TOriginalRow = any> = DatagridConfig<TOriginalRow> & {
+export type EnhancedDatagridConfig<TOriginalRow = any> = DatagridCoreConfig<TOriginalRow> & {
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;
     extra?: EnhancedDatagridExtraStateConfig
-    customization?: Omit<CustomizationFeatureConfig<TOriginalRow>, 'datagrid'>
+    customization?: Omit<CustomizationPluginConfig<TOriginalRow>, 'datagrid'>
 }
 
 export type TrzezarsDatagridFeatures = {
-    clickToCopy: ClickToCopyFeature,
+    clickToCopy: ClickToCopyPlugin,
     columnFiltering: ColumnFilteringEnhancedFeature,
     columnPinning: ColumnPinningEnhancedFeature,
     columnSizing: ColumnSizingEnhancedFeature,
     columnVisibility: ColumnVisibilityEnhancedFeature,
-    credentials: CredentialsFeature,
-    exporting: ExportingFeature,
-    fullscreen: FullscreenFeature,
+    credentials: CredentialsPlugin,
+    exporting: ExportingPlugin,
+    fullscreen: FullscreenPlugin,
     globalSearch: GlobalSearchEnhancedFeature,
-    columnGroups: ColumnGroupsFeature,
+    columnGroups: ColumnGroupsPlugin,
     grouping: GroupingEnhancedFeature,
-    statusIndicator: StatusIndicatorFeature,
-    pagination: PaginationEnhancedFeature,
+    statusIndicator: StatusIndicatorPlugin,
+    pagination: PaginationPlugin,
     rowExpanding: RowExpandingEnhancedFeature,
     rowSelection: RowSelectionEnhancedFeature,
     sorting: SortingEnhancedFeature,
     columnOrdering: ColumnOrderingEnhancedFeature,
     controlCenter: ControlCenterFeature,
-    animations: AnimationsFeature,
-    overlay: OverlayFeature,
-    stripedRows: StripedRowsFeature,
-    virtualization: VirtualizationFeature
+    animations: AnimationsPlugin,
+    overlay: OverlayPlugin,
+    stripedRows: StripedRowsPlugin,
+    virtualization: VirtualizationPlugin
 
 }
 
@@ -98,28 +96,28 @@ export type TrzezarsDatagridFeatures = {
 
 export type EnhancedDatagridExtraStateConfig = {
     features?: {
-        clickToCopy?: ClickToCopyFeatureConfig,
-        columnFiltering?: ColumnFilteringEnhancedFeatureConfig,
-        columnPinning?: ColumnPinningEnhancedFeatureConfig,
-        columnSizing?: ColumnSizingEnhancedFeatureConfig,
-        columnVisibility?: ColumnVisibilityEnhancedFeatureConfig,
-        credentials?: CredentialsFeatureConfig,
-        exporting?: ExportingFeatureConfig,
-        fullscreen?: FullscreenFeatureConfig,
-        globalSearch?: GlobalSearchEnhancedFeatureConfig,
-        groupHeadersVisibility?: ColumnGroupsFeatureConfig,
-        grouping?: GroupingEnhancedFeatureConfig & GroupingFeatureConfig,
-        statusIndicator?: StatusIndicatorFeatureConfig,
-        pagination?: PaginationEnhancedFeatureConfig & PaginationFeatureConfig;
-        rowExpanding?: RowExpandingEnhancedFeatureConfig,
-        rowSelection?: RowSelectionEnhancedFeatureConfig,
-        sorting?: SortingEnhancedFeatureConfig & SortingFeatureConfig
-        columnOrdering?: ColumnOrderingEnhancedFeatureConfig & ColumnOrderingFeatureConfig
-        controlCenter?: ControlCenterFeatureConfig,
-        animations?: AnimationsFeatureConfig,
-        overlay?: OverlayFeatureConfig,
-        stripedRows?: StripedRowsFeatureConfig,
-        virtualization?: VirtualizationFeatureConfig
+        clickToCopy?: ClickToCopyPluginConfig,
+        columnFiltering?: ColumnFilteringEnhancedPluginConfig,
+        columnPinning?: ColumnPinningEnhancedPluginConfig,
+        columnSizing?: ColumnSizingEnhancedPluginConfig,
+        columnVisibility?: ColumnVisibilityEnhancedPluginConfig,
+        credentials?: CredentialsPluginConfig,
+        exporting?: ExportingPluginConfig,
+        fullscreen?: FullscreenPluginConfig,
+        globalSearch?: GlobalSearchEnhancedPluginConfig,
+        groupHeadersVisibility?: ColumnGroupsPluginConfig,
+        grouping?: GroupingEnhancedPluginConfig & GroupingPluginConfig,
+        statusIndicator?: StatusIndicatorPluginConfig,
+        pagination?: PaginationPlugin & PaginationPluginConfig;
+        rowExpanding?: RowExpandingEnhancedPluginConfig,
+        rowSelection?: RowSelectionEnhancedPluginConfig,
+        sorting?: SortingEnhancedPluginConfig & SortingPluginConfig
+        columnOrdering?: ColumnOrderingEnhancedPluginConfig & ColumnOrderingPluginConfig
+        controlCenter?: ControlCenterPluginConfig,
+        animations?: AnimationsPluginConfig,
+        overlay?: OverlayPluginConfig,
+        stripedRows?: StripedRowsPluginConfig,
+        virtualization?: VirtualizationPluginConfig
     }
 
     title?: string
@@ -223,6 +221,7 @@ const createAdditionalColumns = (datagrid: EnhancedDatagrid): {
     const rightCols: AnyColumn<any>[] = [];
     const { rowSelection, rowExpanding } = datagrid.extra.features;
 
+
     if (rowSelection?.createColumnManually === false) {
         if (rowSelection?.position === 'left') {
             leftCols.push(createColumn('left', '_selection', RowSelectionCell, RowSelectionColumnHeaderCell));
@@ -248,7 +247,7 @@ const createAdditionalColumns = (datagrid: EnhancedDatagrid): {
 };
 
 
-export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends Datagrid<TOriginalRow, TMeta> {
+export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends DatagridCore<TOriginalRow, TMeta> {
     extra: Extra<TOriginalRow>
     customization = {} as CustomizationFeature<TOriginalRow>
 
@@ -316,40 +315,41 @@ export class Extra<TOriginalRow> {
 
     initializeFeatures(config?: EnhancedDatagridExtraStateConfig) {
 
-        // optional
-        this.features.exporting = new ExportingFeature(this.datagrid, config?.features?.exporting);
+        // register plugins
+        this.features.exporting = new ExportingPlugin(this.datagrid, config?.features?.exporting);
+        this.features.animations = new AnimationsPlugin(this.datagrid, config?.features?.animations);
+        this.features.pagination = new PaginationPlugin(config?.features?.pagination);
+        this.features.stripedRows = new StripedRowsPlugin(config?.features?.stripedRows);
+        this.features.statusIndicator = new StatusIndicatorPlugin(config?.features?.statusIndicator);
+        this.features.virtualization = new VirtualizationPlugin(config?.features?.virtualization);
+        this.features.overlay = new OverlayPlugin(config?.features?.overlay);
+        this.features.columnGroups = new ColumnGroupsPlugin(config?.features?.groupHeadersVisibility);
+        this.features.credentials = new CredentialsPlugin(config?.features?.credentials);
+        this.features.fullscreen = new FullscreenPlugin(config?.features?.fullscreen);
+        this.features.clickToCopy = new ClickToCopyPlugin(config?.features?.clickToCopy);
 
-        // maybe optional 
-        this.features.rowSelection = new RowSelectionEnhancedFeature( config?.features?.rowSelection);
-        this.features.rowExpanding = new RowExpandingEnhancedFeature(this.datagrid, config?.features?.rowExpanding);
+        // maybe plugins after refactor 
+        this.features.rowSelection = new RowSelectionEnhancedFeature(config?.features?.rowSelection);
+        this.features.rowExpanding = new RowExpandingEnhancedFeature(config?.features?.rowExpanding);
 
-
-        // customization
-        this.features.stripedRows = new StripedRowsFeature(config?.features?.stripedRows);
-        this.features.statusIndicator = new StatusIndicatorFeature(config?.features?.statusIndicator);
-        this.features.virtualization = new VirtualizationFeature(config?.features?.virtualization);
-        this.features.pagination = new PaginationEnhancedFeature(config?.features?.pagination);
-        this.features.overlay = new OverlayFeature(config?.features?.overlay);
+        // control center
         this.features.grouping = new GroupingEnhancedFeature(config?.features?.grouping);
-        this.features.columnGroups = new ColumnGroupsFeature(config?.features?.groupHeadersVisibility);
+        this.features.controlCenter = new ControlCenterFeature(config?.features?.controlCenter);
+
+        // control center && header cells
         this.features.columnOrdering = new ColumnOrderingEnhancedFeature(config?.features?.columnOrdering);
         this.features.columnPinning = new ColumnPinningEnhancedFeature(config?.features?.columnPinning);
         this.features.columnSizing = new ColumnSizingEnhancedFeature(config?.features?.columnSizing);
         this.features.columnVisibility = new ColumnVisibilityEnhancedFeature(config?.features?.columnVisibility);
-        this.features.controlCenter = new ControlCenterFeature(config?.features?.controlCenter);
-        this.features.credentials = new CredentialsFeature(config?.features?.credentials);
-        this.features.fullscreen = new FullscreenFeature(config?.features?.fullscreen);
+
+        // toolbar
         this.features.globalSearch = new GlobalSearchEnhancedFeature(config?.features?.globalSearch);
-        this.features.clickToCopy = new ClickToCopyFeature(config?.features?.clickToCopy);
 
-
-
+        // customization
 
         // extra
-        this.features.animations = new AnimationsFeature(this.datagrid, config?.features?.animations);
 
         // enhanced
-        this.features.columnFiltering = new ColumnFilteringEnhancedFeature(this.datagrid, config?.features?.columnFiltering);
         this.features.sorting = new SortingEnhancedFeature(this.datagrid, config?.features?.sorting);
     }
 
