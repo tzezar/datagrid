@@ -15,7 +15,7 @@ export class ClickToCopyFeature implements Feature {
     /**
      * Displays the copy button, but only in valid cells
     */
-    display: boolean = $state(false);
+    display: boolean = $state(true);
     
     onClickToCopy: (value: string | number) => void = () => { };
 
