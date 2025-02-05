@@ -328,7 +328,7 @@
 	}
 
 	.grid-head-row-leaf-column-filter-input {
-		@apply h-5 rounded-sm border border-grid-border px-0 py-1 text-xs w-full;
+		@apply h-6 rounded-sm border border-grid-border px-0 py-1 text-xs w-full;
 		color: hsl(var(--muted-foreground));
 	}
 

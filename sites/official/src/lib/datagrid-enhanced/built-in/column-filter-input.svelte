@@ -17,13 +17,8 @@
 		datagrid.cache.invalidate('filteredData');
 		datagrid.features.pagination.goToFirstPage();
 		datagrid.processors.data.executeFullDataTransformation();
-		datagrid.features.columnFaceting.calculateFacets(
-			datagrid.initial.data || [],
-			datagrid.columns
-		);
+		datagrid.features.columnFaceting.calculateFacets(datagrid.initial.data || [], datagrid.columns);
 	};
-
-
 </script>
 
 {#snippet FilterOperator()}
@@ -47,18 +42,23 @@
 				let value = e.currentTarget.value === '' ? null : +e.currentTarget.value;
 				if (value !== null && value < minValue) {
 					value = minValue;
-					e.currentTarget.value = String(value)
+					e.currentTarget.value = String(value);
 				}
 				if (value !== null && value > maxValue) {
 					value = maxValue;
-					e.currentTarget.value = String(value)
+					e.currentTarget.value = String(value);
 				}
 
 				handleColumnFilterChange(column, value);
 			}}
 		/>
-		<span class='text-xs text-muted-foreground'>Min: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.min}
-			Max: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max}</span>
+		<div class="flex justify-between">
+			{@render FilterOperator()}
+			<span class="text-muted-foreground text-[0.5rem]">
+				Max: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max}
+				Min: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.min}
+			</span>
+		</div>
 	{/if}
 	{#if column?._meta?.filterType === 'text'}
 		<select
@@ -87,6 +87,8 @@
 				<option value={option.value}>{option.label}</option>
 			{/each}
 		</select>
-		{@render FilterOperator()}
+		<div class="flex">
+			{@render FilterOperator()}
+		</div>
 	{/if}
 {/if}
