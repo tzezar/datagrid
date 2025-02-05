@@ -5,6 +5,7 @@ import type { ColumnId, Sorting } from "../types";
 export type SortingFeatureConfig = {
     manualSorting: boolean;
     sortConfigs?: Sorting[];
+    enableMultiSort?: boolean;
 
     isMultiSortEvent?: (e: unknown) => boolean;
     maxMultiSortColCount?: number;
@@ -21,7 +22,8 @@ export class SortingFeature {
     manualSorting: boolean = $state(false);
 
     sortings: Sorting[] = $state([]); // List of sort configurations, each representing a column's sort state
-
+    
+    enableMultiSort: boolean = $state(true);
     maxMultiSortColCount: number = $state(99);
     onSortingChange: (config: SortingFeature) => void = () => { };
     isMultiSortEvent: (e: unknown) => boolean = $state((e: unknown) => e instanceof MouseEvent && e.shiftKey);
@@ -36,11 +38,7 @@ export class SortingFeature {
     }
 
     initialize(config?: SortingFeatureConfig) {
-        this.manualSorting = config?.manualSorting ?? this.manualSorting;
-        this.sortings = config?.sortConfigs ?? this.sortings;
-        this.maxMultiSortColCount = config?.maxMultiSortColCount ?? this.maxMultiSortColCount;
-        this.onSortingChange = config?.onSortingChange ?? this.onSortingChange;
-        this.isMultiSortEvent = config?.isMultiSortEvent ?? this.isMultiSortEvent;
+        Object.assign(this, config);
     }
 
 

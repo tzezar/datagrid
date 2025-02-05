@@ -77,6 +77,4 @@ export class DensityToggleFeature implements Feature {
         this.densityOptions = config?.options ?? this.densityOptions;
     }
 
-
-
 }

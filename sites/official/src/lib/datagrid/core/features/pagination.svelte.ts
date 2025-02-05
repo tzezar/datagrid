@@ -1,12 +1,12 @@
 import type { Datagrid } from "../index.svelte";
 
 export type PaginationFeatureConfig = {
-    manual: boolean;
-    page: number;
-    pageSize: number;
-    pageSizes: number[];
-    pageCount: number;
-    visibleRowsCount: number;
+    manual?: boolean;
+    page?: number;
+    pageSize?: number;
+    pageSizes?: number[];
+    pageCount?: number;
+    visibleRowsCount?: number;
 
     autoResetPage?: boolean;
     onPaginationChange?(config: PaginationFeature<any>): void;

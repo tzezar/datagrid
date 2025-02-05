@@ -76,7 +76,7 @@ export class StylingFeature<TOriginalRow> {
 
     getHeadRowLeafColumnCellContentClasses = (column: LeafColumn<TOriginalRow>) => {
         return cn('grid-head-row-leaf-column-cell-content', column.options.sortable &&
-            this.customization.datagrid.extra.features.sorting.enableSorting === true && 'sortable')
+            this.customization.datagrid.extra.features.sorting.enableInHeaderCell === true && 'sortable')
     }
 
     getHeadRowGroupColumnCellContentClasses = () => {
@@ -97,7 +97,7 @@ export class StylingFeature<TOriginalRow> {
 
     getBodyRowClasses = (row: GridBasicRow<TOriginalRow>, rowIndex: number) => {
         return cn('grid-body-row',
-            this.customization.datagrid.extra.features.stripedRows.applyStripedRows(row, rowIndex)
+            this.customization.datagrid.extra.features.stripedRows.getClasses(row, rowIndex)
         )
     }
 

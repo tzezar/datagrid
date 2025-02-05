@@ -17,7 +17,7 @@ import {
     RowSelectionEnhancedFeature,
     SortingEnhancedFeature,
     FullscreenFeature,
-    GroupHeadersVisibilityFeature,
+    ColumnGroupsFeature,
     PaginationEnhancedFeature,
     GlobalSearchEnhancedFeature,
     ClickToCopyFeature,
@@ -32,7 +32,7 @@ import {
     type ExportingFeatureConfig,
     type FullscreenFeatureConfig,
     type GlobalSearchEnhancedFeatureConfig,
-    type GroupHeadersVisibilityFeatureConfig,
+    type ColumnGroupsFeatureConfig,
     type GroupingEnhancedFeatureConfig,
     type StatusIndicatorFeatureConfig,
     type PaginationEnhancedFeatureConfig,
@@ -82,9 +82,9 @@ export type TrzezarsDatagridFeatures = {
     exporting: ExportingFeature,
     fullscreen: FullscreenFeature,
     globalSearch: GlobalSearchEnhancedFeature,
-    groupHeadersVisibility: GroupHeadersVisibilityFeature,
+    columnGroups: ColumnGroupsFeature,
     grouping: GroupingEnhancedFeature,
-    loadingIndicator: StatusIndicatorFeature,
+    statusIndicator: StatusIndicatorFeature,
     pagination: PaginationEnhancedFeature,
     rowExpanding: RowExpandingEnhancedFeature,
     rowNumbers: RowNumbersFeature,
@@ -114,10 +114,10 @@ export type EnhancedDatagridExtraStateConfig = {
         exporting?: ExportingFeatureConfig,
         fullscreen?: FullscreenFeatureConfig,
         globalSearch?: GlobalSearchEnhancedFeatureConfig,
-        groupHeadersVisibility?: GroupHeadersVisibilityFeatureConfig,
+        groupHeadersVisibility?: ColumnGroupsFeatureConfig,
         grouping?: GroupingEnhancedFeatureConfig & GroupingFeatureConfig,
         statusIndicator?: StatusIndicatorFeatureConfig,
-        pagination?: PaginationEnhancedFeatureConfig & PaginationFeatureConfig,
+        pagination?: PaginationEnhancedFeatureConfig & PaginationFeatureConfig;
         rowExpanding?: RowExpandingEnhancedFeatureConfig,
         rowNumbers?: RowNumbersFeatureConfig,
         rowSelection?: RowSelectionEnhancedFeatureConfig,
@@ -323,33 +323,35 @@ export class Extra<TOriginalRow> {
     }
 
     initializeFeatures(config?: EnhancedDatagridExtraStateConfig) {
+        // customization
+        this.features.stripedRows = new StripedRowsFeature(config?.features?.stripedRows);
+        this.features.statusIndicator = new StatusIndicatorFeature(config?.features?.statusIndicator);
+        this.features.virtualization = new VirtualizationFeature(config?.features?.virtualization);
+        this.features.pagination = new PaginationEnhancedFeature(config?.features?.pagination);
+        this.features.overlay = new OverlayFeature(config?.features?.overlay);
+        this.features.grouping = new GroupingEnhancedFeature(config?.features?.grouping);
+        this.features.columnGroups = new ColumnGroupsFeature(config?.features?.groupHeadersVisibility);
+        this.features.columnOrdering = new ColumnOrderingEnhancedFeature(config?.features?.columnOrdering);
+        this.features.columnPinning = new ColumnPinningEnhancedFeature(config?.features?.columnPinning);
+        this.features.columnSizing = new ColumnSizingEnhancedFeature(config?.features?.columnSizing);
+        this.features.columnVisibility = new ColumnVisibilityEnhancedFeature(config?.features?.columnVisibility);
+        this.features.controlCenter = new ControlCenterFeature(config?.features?.controlCenter);
+        this.features.credentials = new CredentialsFeature(config?.features?.credentials);
+        this.features.fullscreen = new FullscreenFeature(config?.features?.fullscreen);
+        this.features.globalSearch = new GlobalSearchEnhancedFeature(config?.features?.globalSearch);
+
         // extra
-        this.features.clickToCopy = new ClickToCopyFeature(this.datagrid, config?.features?.clickToCopy);
-        this.features.credentials = new CredentialsFeature(this.datagrid, config?.features?.credentials);
-        this.features.exporting = new ExportingFeature(this.datagrid, config?.features?.exporting);
-        this.features.fullscreen = new FullscreenFeature(this.datagrid, config?.features?.fullscreen);
-        this.features.groupHeadersVisibility = new GroupHeadersVisibilityFeature(this.datagrid, config?.features?.groupHeadersVisibility);
-        this.features.rowNumbers = new RowNumbersFeature(this.datagrid, config?.features?.rowNumbers);
-        this.features.stripedRows = new StripedRowsFeature(this.datagrid, config?.features?.stripedRows);
-        this.features.overlay = new OverlayFeature(this.datagrid, config?.features?.overlay);
         this.features.animations = new AnimationsFeature(this.datagrid, config?.features?.animations);
-        this.features.controlCenter = new ControlCenterFeature(this.datagrid, config?.features?.controlCenter);
-        this.features.loadingIndicator = new StatusIndicatorFeature(this.datagrid, config?.features?.statusIndicator);
+        this.features.clickToCopy = new ClickToCopyFeature(this.datagrid, config?.features?.clickToCopy);
+        this.features.exporting = new ExportingFeature(this.datagrid, config?.features?.exporting);
+        this.features.rowNumbers = new RowNumbersFeature(this.datagrid, config?.features?.rowNumbers);
         this.features.densityToggle = new DensityToggleFeature(this.datagrid, config?.features?.densityToggle);
         // this.features.customization = new CustomizationFeature(this.datagrid, config?.features?.customization);
-        this.features.virtualization = new VirtualizationFeature(this.datagrid, config?.features?.virtualization);
 
         // enhanced
         this.features.columnFiltering = new ColumnFilteringEnhancedFeature(this.datagrid, config?.features?.columnFiltering);
-        this.features.columnPinning = new ColumnPinningEnhancedFeature(this.datagrid, config?.features?.columnPinning);
-        this.features.columnSizing = new ColumnSizingEnhancedFeature(this.datagrid, config?.features?.columnSizing);
-        this.features.columnVisibility = new ColumnVisibilityEnhancedFeature(this.datagrid, config?.features?.columnVisibility);
-        this.features.globalSearch = new GlobalSearchEnhancedFeature(this.datagrid, config?.features?.globalSearch);
-        this.features.grouping = new GroupingEnhancedFeature(this.datagrid, config?.features?.grouping);
-        this.features.pagination = new PaginationEnhancedFeature(this.datagrid, config?.features?.pagination);
         this.features.rowExpanding = new RowExpandingEnhancedFeature(this.datagrid, config?.features?.rowExpanding);
         this.features.sorting = new SortingEnhancedFeature(this.datagrid, config?.features?.sorting);
-        this.features.columnOrdering = new ColumnOrderingEnhancedFeature(this.datagrid, config?.features?.columnOrdering);
         this.features.rowSelection = new RowSelectionEnhancedFeature(this.datagrid, config?.features?.rowSelection);
     }
 

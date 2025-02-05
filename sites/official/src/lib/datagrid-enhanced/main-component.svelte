@@ -53,7 +53,7 @@
 	}: Props = $props();
 
 	let headerColumns = $derived.by(() => {
-		if (datagrid.extra.features.groupHeadersVisibility.showGroupHeaders) {
+		if (datagrid.extra.features.columnGroups.showColumnGroups) {
 			return datagrid.columnManager.getColumnsInOrder();
 		}
 		return datagrid.columnManager.getLeafColumnsInOrder();
@@ -67,10 +67,10 @@
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
 	const leafColumnsToDisplay = $derived(leafColumns.filter((col) => !col.columnId.startsWith('_')));
 
-	const isFullscreenEnabled = $derived(datagrid.extra.features.fullscreen.isFullscreenEnabled());
-	const showWrapperOverlay = $derived(datagrid.extra.features.overlay.shouldShowWrapperOverlay());
+	const isFullscreenEnabled = $derived(datagrid.extra.features.fullscreen.isFullscreenModeEnabled());
+	const showWrapperOverlay = $derived(datagrid.extra.features.overlay.isEntireDatagridOverlayEnabled());
 	const shouldDisplayPagination = $derived(
-		datagrid.extra.features.pagination.shouldDisplayPagination()
+		datagrid.extra.features.pagination.isPaginationVisible()
 	);
 	const shouldAnimateHeaders = $derived(datagrid.extra.features.animations.shouldAnimateHeaders());
 </script>
@@ -236,7 +236,7 @@
 			use:identifier={{ datagrid, value: 'body' }}
 			class={cn(datagrid.customization.styling.getBodyClasses())}
 		>
-			{#if datagrid.extra.features.overlay.shouldShowBodyOverlay()}
+			{#if datagrid.extra.features.overlay.isBodyOverlayEnabled()}
 				<div class="body-overlay"></div>
 			{/if}
 
@@ -345,7 +345,7 @@
 {/snippet}
 
 {#snippet CredentialsSnippet()}
-	{#if datagrid.extra.features.credentials.enabled && datagrid.extra.features.fullscreen.isFullscreen === false}
+	{#if datagrid.extra.features.credentials.enabled && datagrid.extra.features.fullscreen.fullscreenModeEnabled === false}
 		<MadeWithLoveByTzezar />
 	{/if}
 {/snippet}

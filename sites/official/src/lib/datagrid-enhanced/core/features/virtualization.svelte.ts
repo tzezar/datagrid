@@ -1,4 +1,3 @@
-import type { EnhancedDatagrid } from "../index.svelte";
 
 
 export type VirtualizationFeatureConfig = {
@@ -6,15 +5,9 @@ export type VirtualizationFeatureConfig = {
 }
 
 export class VirtualizationFeature {
-    datagrid: EnhancedDatagrid
     enabled: boolean = $state(true);
 
-    constructor(datagrid: EnhancedDatagrid, config?: VirtualizationFeatureConfig) {
-        this.datagrid = datagrid
-        this.initialize(config);
-    }
-
-    initialize(config?: VirtualizationFeatureConfig) {
+    constructor(config?: VirtualizationFeatureConfig) {
         this.enabled = config?.enabled ?? this.enabled;
     }
 
@@ -27,7 +20,11 @@ export class VirtualizationFeature {
     }
 
     toggleVirtualization() {
-        this.enabled = !this.enabled;
+        if (this.enabled) {
+            this.disableVirtualization();
+        } else {
+            this.enableVirtualization();
+        }
     }
 
     isEnabled() {

@@ -1,50 +1,32 @@
-import type { EnhancedDatagrid } from "../index.svelte";
-import type { Feature } from "./types";
-
 
 export type FullscreenFeatureConfig = {
     isFullscreen?: boolean;
-    enableFullscreen?: boolean;
-    onFullscreenChange?(state: FullscreenFeatureConfig): void;
+    displayFullscreenToggleButton?: boolean;
 };
 
-export class FullscreenFeature implements Feature {
-    datagrid: EnhancedDatagrid;
+export class FullscreenFeature {
 
-    isFullscreen: boolean = $state(false);
-    enabled: boolean = $state(true);
+    fullscreenModeEnabled: boolean = $state(false);
+    displayFullscreenToggleButton: boolean = $state(true);
+
     onFullscreenChange: (config: FullscreenFeatureConfig) => void = () => { };
 
-    constructor(datagrid: EnhancedDatagrid, config?: FullscreenFeatureConfig) {
-        this.datagrid = datagrid;
-        if (config) {
-            this.isFullscreen = config.isFullscreen ?? this.isFullscreen;
-            this.enabled = config.enableFullscreen ?? this.enabled;
-            this.onFullscreenChange = config.onFullscreenChange ?? this.onFullscreenChange;
-        }
+    constructor(config?: FullscreenFeatureConfig) {
+        this.fullscreenModeEnabled = config?.isFullscreen ?? this.fullscreenModeEnabled;
+        this.displayFullscreenToggleButton = config?.displayFullscreenToggleButton ?? this.displayFullscreenToggleButton;
     }
 
     toggleFullscreen() {
-        this.isFullscreen = !this.isFullscreen;
-        this.onFullscreenChange(this);
-    }
-
-    exitFullscreen() {
-        this.isFullscreen = false;
-        this.onFullscreenChange(this);
-    }
-
-    enterFullscreen() {
-        this.isFullscreen = true;
+        this.fullscreenModeEnabled = !this.fullscreenModeEnabled;
         this.onFullscreenChange(this);
     }
 
     shouldDisplayFullscreenToggleButton() {
-        return this.enabled;
+        return this.displayFullscreenToggleButton;
     }
 
-    isFullscreenEnabled() {
-        return this.enabled && this.isFullscreen;
+    isFullscreenModeEnabled() {
+        return this.fullscreenModeEnabled;
     }
 
 }

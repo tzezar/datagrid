@@ -6,15 +6,15 @@ export type SortingEnhancedFeatureConfig = {
     enableSorting?: boolean;
     enableMultiSort?: boolean;
     displayInControlCenter?: boolean;
-    // enableSortingRemoval?: boolean;
 } 
 
 export class SortingEnhancedFeature implements EnhancedFeature {
     datagrid: EnhancedDatagrid
 
+    enableInControlCenter: boolean = $state(false);
+    enableInHeaderCell: boolean = $state(false);
+
     enableSorting: boolean = $state(true);
-    enableMultiSort: boolean = $state(true);
-    // enableSortingRemoval: boolean = $state(true);
     displayInControlCenter: boolean = $state(false);
 
     constructor(datagrid: EnhancedDatagrid<any>, config?: SortingEnhancedFeatureConfig) {
@@ -26,8 +26,6 @@ export class SortingEnhancedFeature implements EnhancedFeature {
 
     initialize(config?: SortingEnhancedFeatureConfig) {
         this.enableSorting = config?.enableSorting ?? this.enableSorting;
-        // this.enableSortingRemoval = config?.enableSortingRemoval ?? this.enableSortingRemoval;
-        this.enableMultiSort = config?.enableMultiSort ?? this.enableMultiSort;
         this.displayInControlCenter = config?.displayInControlCenter ?? this.displayInControlCenter;
     }
 

@@ -34,18 +34,18 @@
 				<DropdownMenu.GroupHeading>Datagrid control center</DropdownMenu.GroupHeading>
 				<DropdownMenu.Separator />
 				<DropdownMenu.Group>
-					{#if datagrid.extra.features.sorting.enableSorting && datagrid.extra.features.sorting.displayInControlCenter === true}
+					{#if datagrid.extra.features.sorting.enableInControlCenter && datagrid.extra.features.sorting.enableInControlCenter === true}
 						<Sorting {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.columnOrdering.enabled}
+					{#if datagrid.extra.features.columnOrdering.enableInControlCenter}
 						<ColumnReordering {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.columnPinning.displayControls}
+					{#if datagrid.extra.features.columnPinning.enableInControlCenter}
 						<ColumnFreezing {datagrid} />
 					{/if}
-					{#if datagrid.extra.features.columnSizing.displayControls}
+					{#if datagrid.extra.features.columnSizing.enableInControlCenter}
 						<ColumnResizing {datagrid} />
 					{/if}
 
@@ -57,7 +57,7 @@
 						<DataExporting {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.groupHeadersVisibility.enableColumnGroupsCreation}
+					{#if datagrid.extra.features.columnGroups.enableColumnGroupsCreation}
 						<DropdownMenu.Separator />
 						<DropdownMenu.Sub>
 							<DropdownMenu.SubTrigger>
@@ -70,10 +70,10 @@
 						</DropdownMenu.Sub>
 					{/if}
 
-					{#if datagrid.extra.features.groupHeadersVisibility.enableGroupHeadersHiding}
+					{#if datagrid.extra.features.columnGroups.enableGroupHeadersToggling}
 						<ColumnGroupsVisibility {datagrid} />
 					{/if}
-					{#if datagrid.extra.features.grouping.enabled}
+					{#if datagrid.extra.features.grouping.enableInControlCenter}
 						<DropdownMenu.Separator />
 						<DropdownMenu.GroupHeading>Group data by column</DropdownMenu.GroupHeading>
 						<GroupingDropdown {datagrid} />

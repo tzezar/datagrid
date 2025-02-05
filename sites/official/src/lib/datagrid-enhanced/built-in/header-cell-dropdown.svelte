@@ -191,7 +191,7 @@
 			<DropdownMenu.Group>
 				<DropdownMenu.GroupHeading>{column.header} Group</DropdownMenu.GroupHeading>
 				<DropdownMenu.Separator />
-				{#if datagrid.extra.features.columnOrdering.enabled === true}
+				{#if datagrid.extra.features.columnOrdering.enableInHeaderCell === true}
 					<DropdownMenu.Item
 						onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
 						closeOnSelect={false}
@@ -302,7 +302,7 @@
 						<span>Group by {column.header}</span>
 					{/if}
 				</DropdownMenu.Item>
-				{#if datagrid.extra.features.columnPinning.displayControls === true}
+				{#if datagrid.extra.features.columnPinning.enableInHeaderCell === true}
 					<DropdownMenu.Separator />
 
 					<DropdownMenu.Item
@@ -339,7 +339,7 @@
 					</DropdownMenu.Item>
 				{/if}
 
-				{#if datagrid.extra.features.columnOrdering.enabled === true}
+				{#if datagrid.extra.features.columnOrdering.enableInHeaderCell === true}
 					<DropdownMenu.Separator />
 					<DropdownMenu.Item
 						onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}

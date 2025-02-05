@@ -1,34 +1,25 @@
-import { PaginationFeature } from "$lib/datagrid/core/features";
 import type { PaginationFeatureConfig } from "$lib/datagrid/core/features/pagination.svelte";
-import type { EnhancedDatagrid } from "../index.svelte";
-import type { EnhancedFeature } from "./types";
 
-
+export type PaginationPosition = 'top' | 'bottom' | 'both' | 'none';
 
 export type PaginationEnhancedFeatureConfig = {
-    displayPagination?: boolean;
-    paginationPosition?: 'top' | 'bottom' | 'both';
+    paginationPosition?: PaginationPosition;
 }
 
-export class PaginationEnhancedFeature implements EnhancedFeature {
-    datagrid: EnhancedDatagrid
+type IPaginationEnhancedFeature = {
+    paginationPosition: PaginationPosition;
+}
 
-    displayPagination: boolean = $state(true);
-    paginationPosition: 'top' | 'bottom' | 'both' = $state('bottom');
 
-    constructor(datagrid: EnhancedDatagrid, config?: PaginationEnhancedFeatureConfig & PaginationFeatureConfig) {
-        this.datagrid = datagrid
-        this.initialize(config);
+export class PaginationEnhancedFeature implements IPaginationEnhancedFeature {
+    paginationPosition: PaginationPosition = $state('bottom');
+
+    constructor(config?: PaginationEnhancedFeatureConfig & PaginationFeatureConfig) {
+        this.paginationPosition = config?.paginationPosition ?? this.paginationPosition;
     }
 
-    get base(): PaginationFeature { return this.datagrid.features.pagination }
-
-    initialize(config?: PaginationEnhancedFeatureConfig) {
-        this.displayPagination = config?.displayPagination ?? this.displayPagination;
-    }
-
-    shouldDisplayPagination() {
-        return this.displayPagination;
+    isPaginationVisible() {
+        return this.paginationPosition !== 'none'
     }
 
 }

@@ -11,18 +11,10 @@
 		columns,
 		data: data.inventory,
 
-		features: {
-			rowSelection: {
-				onRowSelectionChange() {
-					console.log('Row selected ');
-				}
-			}
-		},
-
 		extra: {
 			features: {
 				pagination: {
-					displayPagination: false
+					manual: true,
 				},
 				columnFiltering: {
 
@@ -64,12 +56,6 @@
 <div>
 	<p>Animations</p>
 	<div>
-		<Button onclick={() => (datagrid.extra.features.pagination.displayPagination = true)}>
-			Enable
-		</Button>
-		<Button onclick={() => (datagrid.extra.features.pagination.displayPagination = false)}>
-			False
-		</Button>
 	</div>
 </div>
 {/snippet}
@@ -79,12 +65,6 @@
 <div>
 	<p>Pagination</p>
 	<div>
-		<Button onclick={() => (datagrid.extra.features.pagination.displayPagination = true)}>
-			Enable
-		</Button>
-		<Button onclick={() => (datagrid.extra.features.pagination.displayPagination = false)}>
-			False
-		</Button>
 	</div>
 </div>
 {/snippet}

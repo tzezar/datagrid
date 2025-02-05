@@ -13,9 +13,9 @@
 
 <DropdownMenu.Item
 	closeOnSelect={false}
-	onclick={() => datagrid.extra.features.groupHeadersVisibility.toggleGroupHeaders()}
+	onclick={() => datagrid.extra.features.columnGroups.toggleVisibility()}
 >
-	{#if datagrid.extra.features.groupHeadersVisibility.showGroupHeaders}
+	{#if datagrid.extra.features.columnGroups.showColumnGroups}
 		<ExpandLess class="mr-2 size-4" />
 		Hide column groups
 	{:else}

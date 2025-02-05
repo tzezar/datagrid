@@ -1,28 +1,17 @@
-import { GroupingFeature } from "$lib/datagrid/core/features";
 import type { GroupingFeatureConfig } from "$lib/datagrid/core/features/grouping.svelte";
-import type { EnhancedDatagrid } from "../index.svelte";
-import type { EnhancedFeature } from "./types";
 
 
 export type GroupingEnhancedFeatureConfig = {
-    enabled?: boolean;
+    enableInControlCenter?: boolean;
 }
 
-export class GroupingEnhancedFeature implements EnhancedFeature {
-    datagrid: EnhancedDatagrid
+export class GroupingEnhancedFeature {
 
-    enabled: boolean = $state(true);
+    enableInControlCenter: boolean = $state(true);
 
-    constructor(datagrid: EnhancedDatagrid, config?: GroupingEnhancedFeatureConfig & GroupingFeatureConfig) {
-        this.datagrid = datagrid
-        this.initialize(config);
+    constructor(config?: GroupingEnhancedFeatureConfig & GroupingFeatureConfig) {
+        this.enableInControlCenter = config?.enableInControlCenter ?? this.enableInControlCenter;
 
-    }
-
-    get base(): GroupingFeature { return this.datagrid.features.grouping }
-
-    initialize(config?: GroupingEnhancedFeatureConfig) {
-        this.enabled = config?.enabled ?? this.enabled;
     }
 
 }

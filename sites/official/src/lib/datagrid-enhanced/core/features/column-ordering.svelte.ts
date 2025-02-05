@@ -1,25 +1,18 @@
-import { ColumnOrderingFeature } from "$lib/datagrid/core/features";
-import type { EnhancedDatagrid } from "../index.svelte";
-import type { EnhancedFeature } from "./types";
-
 export type ColumnOrderingEnhancedFeatureConfig = {
-    enableColumnOrdering?: boolean;
+    enableInControlCenter?: boolean;
+    enableInHeaderCellDropdownMenu?: boolean;
 }
 
-export class ColumnOrderingEnhancedFeature implements EnhancedFeature {
-    datagrid: EnhancedDatagrid
+export class ColumnOrderingEnhancedFeature {
 
-    enabled: boolean = $state(true);
+    enableInControlCenter: boolean = $state(false);
+    enableInHeaderCell: boolean = $state(false);
 
-    constructor(datagrid: EnhancedDatagrid, config?: ColumnOrderingEnhancedFeatureConfig) {
-        this.datagrid = datagrid
-        this.initialize(config);
+
+    constructor(config?: ColumnOrderingEnhancedFeatureConfig) {
+        this.enableInControlCenter = config?.enableInControlCenter ?? this.enableInControlCenter;
+        this.enableInHeaderCell = config?.enableInHeaderCellDropdownMenu ?? this.enableInHeaderCell;
     }
-
-    get base(): ColumnOrderingFeature { return this.datagrid.features.columnOrdering }
-
-    initialize(config?: ColumnOrderingEnhancedFeatureConfig) {
-        this.enabled = config?.enableColumnOrdering ?? this.enabled;
-    }
-
 }
+
+

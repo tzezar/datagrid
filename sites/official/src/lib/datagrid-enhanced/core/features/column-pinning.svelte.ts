@@ -1,25 +1,17 @@
-import { ColumnPinningFeature } from "$lib/datagrid/core/features";
-import type { EnhancedDatagrid } from "../index.svelte";
-import type { EnhancedFeature } from "./types";
-
 export type ColumnPinningEnhancedFeatureConfig = {
-    displayControls?: boolean;
-} 
 
-export class ColumnPinningEnhancedFeature implements EnhancedFeature {
-    datagrid: EnhancedDatagrid
-    displayControls: boolean = $state(true);
+    enableInControlCenter?: boolean;
+    enableInHeaderCell?: boolean;
+}
 
-    constructor(datagrid: EnhancedDatagrid, config?: ColumnPinningEnhancedFeatureConfig) {
-        this.datagrid = datagrid
-        this.initialize(config);
+export class ColumnPinningEnhancedFeature {
+
+    enableInControlCenter: boolean = $state(true);
+    enableInHeaderCell: boolean = $state(true);
+
+    constructor(config?: ColumnPinningEnhancedFeatureConfig) {
+        this.enableInControlCenter = config?.enableInControlCenter ?? this.enableInControlCenter;
+        this.enableInHeaderCell = config?.enableInHeaderCell ?? this.enableInHeaderCell;
     }
-
-    get base(): ColumnPinningFeature { return this.datagrid.features.columnPinning }
-
-    initialize(config?: ColumnPinningEnhancedFeatureConfig) {
-        this.displayControls = config?.displayControls ?? this.displayControls;
-    }
-
 
 }

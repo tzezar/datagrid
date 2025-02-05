@@ -8,7 +8,7 @@ import { DensityToggleFeature } from "./density-toggle.svelte";
 import { ExportingFeature } from "./exporting.svelte";
 import { FullscreenFeature } from "./fullscreen.svelte";
 import { GlobalSearchEnhancedFeature } from "./global-search.svelte";
-import { GroupHeadersVisibilityFeature } from "./group-headers-visibility.svelte";
+import { ColumnGroupsFeature } from "./column-groups";
 import { GroupingEnhancedFeature } from "./grouping.svelte";
 import { StatusIndicatorFeature } from "./status-indicator.svelte";
 import { PaginationEnhancedFeature } from "./pagination.svelte";
@@ -32,7 +32,7 @@ import type { DensityToggleFeatureConfig } from "./density-toggle.svelte";
 import type { ExportingFeatureConfig } from "./exporting.svelte";
 import type { FullscreenFeatureConfig } from "./fullscreen.svelte";
 import type { GlobalSearchEnhancedFeatureConfig } from "./global-search.svelte";
-import type { GroupHeadersVisibilityFeatureConfig } from "./group-headers-visibility.svelte";
+import type { ColumnGroupsFeatureConfig } from "./column-groups";
 import type { GroupingEnhancedFeatureConfig } from "./grouping.svelte";
 import type { StatusIndicatorFeatureConfig } from "./status-indicator.svelte";
 import type { PaginationEnhancedFeatureConfig } from "./pagination.svelte";
@@ -55,7 +55,7 @@ export {
     ExportingFeature,
     FullscreenFeature,
     GlobalSearchEnhancedFeature as GlobalSearchEnhancedFeature,
-    GroupHeadersVisibilityFeature,
+    ColumnGroupsFeature as ColumnGroupsFeature,
     GroupingEnhancedFeature,
     StatusIndicatorFeature,
     PaginationEnhancedFeature,
@@ -80,14 +80,14 @@ export type {
     ExportingFeatureConfig,
     FullscreenFeatureConfig,
     GlobalSearchEnhancedFeatureConfig,
-    GroupHeadersVisibilityFeatureConfig,
+    ColumnGroupsFeatureConfig,
     GroupingEnhancedFeatureConfig,
     StatusIndicatorFeatureConfig,
     PaginationEnhancedFeatureConfig,
     RowExpandingEnhancedFeatureConfig,
     RowNumbersFeatureConfig,
     RowSelectionEnhancedFeatureConfig,
-    SortingEnhancedFeatureConfig as SortingEnhancedFeatureConfig,
+    SortingEnhancedFeatureConfig,
     ColumnOrderingEnhancedFeatureConfig,
     ControlCenterFeatureConfig,
     AnimationsFeatureConfig,

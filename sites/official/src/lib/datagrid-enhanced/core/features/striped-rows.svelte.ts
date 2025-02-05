@@ -1,32 +1,33 @@
 import type { GridBasicRow } from "$lib/datagrid/core/types";
-import type { EnhancedDatagrid } from "../index.svelte";
 
+
+type IStripedRows = {
+    enabled: boolean;
+    getClasses(row: GridBasicRow<any>, rowIndex: number): string;
+}
 
 export type StripedRowsFeatureConfig = {
-    enableStripedRows?: boolean;
+    enabled?: boolean;
 }
 
 
-export class StripedRowsFeature {
-    datagrid: EnhancedDatagrid
+export class StripedRowsFeature implements IStripedRows {
     enabled: boolean = $state(true);
 
-    constructor(datagrid: EnhancedDatagrid, config?: StripedRowsFeatureConfig) {
-        this.datagrid = datagrid
-        this.initialize(config);
+    constructor(config?: StripedRowsFeatureConfig) {
+        this.enabled = config?.enabled ?? this.enabled;
     }
 
     initialize(config?: StripedRowsFeatureConfig) {
-        this.enabled = config?.enableStripedRows ?? this.enabled;
+        this.enabled = config?.enabled ?? this.enabled;
     }
 
-    applyStripedRows(row: GridBasicRow<any>, rowIndex: number) {
+    getClasses(row: GridBasicRow<any>, rowIndex: number) {
         let styles = ''
         if (!this.enabled) return styles
         if (rowIndex % 2 === 0) {
             styles += 'bg-grid-secondary'
-        }
-        if (rowIndex % 2 === 1) {
+        } else if (rowIndex % 2 === 1) {
             styles += 'bg-grid-primary'
         }
         return styles

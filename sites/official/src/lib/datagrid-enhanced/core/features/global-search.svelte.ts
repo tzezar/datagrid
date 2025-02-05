@@ -1,46 +1,38 @@
-import { GlobalSearchFeature } from "$lib/datagrid/core/features";
-import type { EnhancedDatagrid } from "../index.svelte";
-import type { EnhancedFeature } from "./types";
-
 
 export type GlobalSearchEnhancedFeatureConfig = {
-    enabled?: boolean;
+    isVisible?: boolean;
     onEnableGlobalSearchChange?(value: boolean): void;
 }
 
 
-export class GlobalSearchEnhancedFeature implements EnhancedFeature {
-    datagrid: EnhancedDatagrid
+export class GlobalSearchEnhancedFeature  {
 
-    private inputVisible: boolean = $state(false);
-    enabled: boolean = $state(true);
+    isVisible: boolean = $state(false);
     onEnableGlobalSearchChange: (value: boolean) => void = () => { };
 
-    constructor(datagrid: EnhancedDatagrid, config?: GlobalSearchEnhancedFeatureConfig) {
-        this.datagrid = datagrid
-        this.initialize(config);
-    }
+    constructor(config?: GlobalSearchEnhancedFeatureConfig) {
+        this.isVisible = config?.isVisible ?? this.isVisible;
 
-    get base(): GlobalSearchFeature { return this.datagrid.features.globalSearch }
-
-    initialize(config?: GlobalSearchEnhancedFeatureConfig) {
-        this.enabled = config?.enabled ?? this.enabled;
     }
 
     hideInput() {
-        this.inputVisible = false;
+        this.isVisible = false;
     }
 
     showInput() {
-        this.inputVisible = true;
+        this.isVisible = true;
     }
 
     toggleInputVisibility() {
-        this.inputVisible = !this.inputVisible;
+        if (this.isVisible) {
+            this.hideInput();
+        } else {
+            this.showInput();
+        }
     }
 
     shouldDisplayInput() {
-        return this.inputVisible && this.enabled;
+        return this.isVisible
     }
 
 }

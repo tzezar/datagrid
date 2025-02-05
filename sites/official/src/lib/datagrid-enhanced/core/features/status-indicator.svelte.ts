@@ -1,58 +1,52 @@
-import type { EnhancedDatagrid } from "../index.svelte";
-import type { Feature } from "./types";
-
-export type StatusIndicatorFeatureConfig = {
-    enableStatusIndicator?: boolean;
-    isLoading?: boolean;
-    isSaving?: boolean;
-    isError?: boolean;
-    onLoadingIndicatorChange?(isLoading: boolean, isSaving: boolean, isError: boolean): void;
+type IStatusIntdicator = {
+    enabled: boolean;
+    position: StatusIndicatorPosition;
+    state: StatusIndicatorState;
+    onLoadingIndicatorChange: (state: StatusIndicatorState) => void;
+    isVisible(target: StatusIndicatorPosition): boolean;
+    updateState(state: StatusIndicatorState): void;
 }
 
+export type StatusIndicatorFeatureConfig = {
+    enabled?: boolean;
+    state?: 'loading' | 'saving' | 'error';
+    position?: StatusIndicatorPosition;
+    onLoadingIndicatorChange?(state: StatusIndicatorState): void;
+}
 
-export class StatusIndicatorFeature implements Feature {
-    datagrid: EnhancedDatagrid;
+export type StatusIndicatorState = 'loading' | 'saving' | 'error' | 'none';
+export type StatusIndicatorPosition = 'top' | 'bottom' | 'both';
 
-    enableStatusIndicator: boolean = $state(true);
-    position: 'top' | 'bottom' | 'both' = $state('top');
-    isLoading: boolean = $state(false);
-    isSaving: boolean = $state(false);
-    isError: boolean = $state(false);
-    onLoadingIndicatorChange: (isLoading: boolean, isSaving: boolean, isError: boolean) => void = () => { };
+export class StatusIndicatorFeature implements IStatusIntdicator {
 
-    constructor(datagrid: EnhancedDatagrid, config?: StatusIndicatorFeatureConfig) {
-        this.datagrid = datagrid;
-        this.initialize(config);
-    }
+    enabled: boolean = $state(true);
+    position: StatusIndicatorPosition = $state('top');
+    state: StatusIndicatorState = $state('none');
 
-    initialize(config?: StatusIndicatorFeatureConfig) {
-        this.enableStatusIndicator = config?.enableStatusIndicator ?? this.enableStatusIndicator;
-        this.isLoading = config?.isLoading ?? this.isLoading;
-        this.isSaving = config?.isSaving ?? this.isSaving;
-        this.isError = config?.isError ?? this.isError;
+    onLoadingIndicatorChange: (state: StatusIndicatorState) => void = () => { };
+
+    constructor(config?: StatusIndicatorFeatureConfig) {
+        this.enabled = config?.enabled ?? this.enabled;
+        this.position = config?.position ?? this.position;
+        this.state = config?.state ?? this.state;
         this.onLoadingIndicatorChange = config?.onLoadingIndicatorChange ?? this.onLoadingIndicatorChange;
     }
 
+    isVisible(target: StatusIndicatorPosition) {
+        if (!this.enabled || this.state === 'none') return false;
 
-    shouldShowLoadingIndicator(target: 'top' | 'bottom' | 'both') {
-        // loading indicator is disabled
-        if (!this.enableStatusIndicator) return false;
+        const positions = {
+            top: ['top', 'both'],
+            bottom: ['bottom', 'both'],
+            both: ['both'],
+        };
 
-        if (target === 'top') {
-            if (this.position === 'top' || this.position === 'both') return true;
-        } else if (target === 'bottom') {
-            if (this.position === 'bottom' || this.position === 'both') return true;
-        } else if (target === 'both') {
-            if (this.position === 'both') return true;
-        }
-        return false;
+        return positions[target]?.includes(this.position) || false;
     }
 
-    changeLoadingIndicatorState(isLoading: boolean, isSaving: boolean, isError: boolean) {
-        this.isLoading = isLoading;
-        this.isSaving = isSaving;
-        this.isError = isError;
-        this.onLoadingIndicatorChange(isLoading, isSaving, isError);
+    updateState(state: StatusIndicatorState) {
+        this.state = state;
+        this.onLoadingIndicatorChange(this.state);
     }
 
 }

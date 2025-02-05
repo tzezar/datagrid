@@ -77,7 +77,7 @@
 		variant="outline"
 		onclick={() => datagrid.extra.features.fullscreen.toggleFullscreen()}
 	>
-		{#if datagrid.extra.features.fullscreen.isFullscreen}
+		{#if datagrid.extra.features.fullscreen.fullscreenModeEnabled}
 			<FullscreenExit />
 		{:else}
 			<Fullscreen />
