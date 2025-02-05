@@ -21,7 +21,7 @@
 {#if column.isVisible()}
 	{@const cellContent = column.cell ? column.cell({ datagrid, column, row }) : null}
 	{@const shouldShowTooltips = datagrid.customization.cellTooltips}
-	{@const cellClasses = datagrid.customization.styling.getBodyRowCellContentClasses()}
+	{@const cellClasses = datagrid.customization.styling.getBodyRowCellContentClasses(column)}
 
 	{#if cellContent}
 		{#if typeof cellContent === 'string'}
@@ -36,8 +36,8 @@
 			{#if shouldShowTooltips && column._meta?.tooltip !== false}
 				<Tooltip.Provider>
 					<Tooltip.Root>
-						<Tooltip.Trigger class="w-full overflow-hidden text-ellipsis text-left">
-							<span class={cellClasses}>
+						<Tooltip.Trigger class="w-full overflow-hidden text-ellipsis ">
+							<span class={cn(cellClasses, '')}>
 								{@html getCellContent(column, row.original)}
 							</span>
 						</Tooltip.Trigger>
@@ -47,7 +47,7 @@
 					</Tooltip.Root>
 				</Tooltip.Provider>
 			{:else}
-				<span class={cellClasses}>
+				<span class={cn(cellClasses,'')}>
 					{@html getCellContent(column, row.original)}
 				</span>
 			{/if}

@@ -63,7 +63,6 @@ export function createAccessorColumn<
 >(
   { header, accessorKey, columnId, getValueFn: getValue, align, options, _meta, state, ...rest }: CreateAccessorColumnProps<TOriginalRow, TKey, TMeta>
 ): AccessorColumn<TOriginalRow, TMeta> {
-
   if (!accessorKey) throw new Error(`accessorKey must be defined`);
   if (!header && !accessorKey && !columnId) throw new Error(`Either header, accessorKey or columnId must be defined`);
 
