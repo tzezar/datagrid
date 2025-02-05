@@ -29,14 +29,14 @@
 		datagrid.customization.styling.getToolbarContainerClasses(),
 		datagrid.extra.features.columnFiltering.shouldDisplayButton() && 'top-bar ',
 		_class,
-		"flex grow flex-row items-center  h-full"
+		"flex  flex-row items-center  "
 	)}
 >
 	{#if datagrid.extra.features.globalSearch.shouldDisplayInput()}
 		<GlobalSearchInput {datagrid} />
 	{:else}
-		<div class="flex grow  pl-2 border-grid-border h-full">
-			<span class="text-md w-full flex items-center justify-start h-full">
+		<div class="flex grow  pl-2 border-grid-border ">
+			<span class="text-md w-full flex items-center justify-start ">
 				{#if title}
 					{title}
 				{:else}
