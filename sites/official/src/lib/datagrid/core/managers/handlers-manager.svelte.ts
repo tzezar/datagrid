@@ -114,6 +114,8 @@ export class HandlersManager {
             column: AnyColumn<any>,
             value: any,
         }) => {
+            // TODO this should be rewritten and placed somewhere else, maybe in filtering feature
+            // TODO handle eg empty without value etc
             const { value } = props;
             let column = props.column
             if (column === null || !column.isFilterable()) return;
@@ -135,7 +137,7 @@ export class HandlersManager {
                 // If condition doesn't exist, add a new one
                 this.datagrid.features.filtering.conditions.push({
                     columnId: String(column.columnId),
-                    operator: 'equals',
+                    operator: 'contains',
                     getValueFn: column.getValueFn,
                     value
                 });

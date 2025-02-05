@@ -34,6 +34,7 @@
 	import StartsWith from '$lib/datagrid/icons/filter-operators/starts-with.svelte';
 	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import type { ColumnMetaEnhanced } from '../core/types';
+	import NotContains from '$lib/datagrid/icons/filter-operators/not-contains.svelte';
 
 	type NumberFilterOperator = {
 		label: string;
@@ -54,6 +55,16 @@
 	};
 
 	const numberOperators: NumberFilterOperator[] = [
+		{
+			label: 'Contains',
+			value: 'contains',
+			icon: Contains
+		},
+		{
+			label: 'Not contains',
+			value: 'notContains',
+			icon: NotContains
+		},
 		{
 			label: 'Equals',
 			value: 'equals',
@@ -139,15 +150,17 @@
 		}
 	];
 
+
+	// ! WARNING: renamed values
 	const selectOperators: SelectFilterOperator[] = [
 		{
 			label: 'Equals',
-			value: 'equals',
+			value: 'contains',
 			icon: Equals
 		},
 		{
 			label: 'Not equals',
-			value: 'notEquals',
+			value: 'notContains',
 			icon: NotEquals
 		}
 	];
