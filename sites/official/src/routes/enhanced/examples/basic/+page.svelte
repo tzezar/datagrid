@@ -1,17 +1,14 @@
 <script lang="ts">
 	import PostComingSoon from '$lib/blocks/post-coming-soon.svelte';
-import { formatDate } from '$lib/utils.js';
-
 	let { data } = $props();
+	// @ts-expect-error
+	import Documentation, {metadata} from './documentation.md';
 </script>
 
-
-{#if data.meta.published}
-
-<div class="prose dark:prose-invert flex flex-col grow min-w-full pb-8"> 
-	<data.content {data}></data.content>
-</div>
-{:else}
+{#if metadata.published}
+	<div class="prose dark:prose-invert flex min-w-full grow flex-col pb-8">
+		<Documentation {data}></Documentation>
+	</div>
+{:else} 
 	<PostComingSoon />
 {/if}
-

@@ -99,39 +99,39 @@
 		</Group>
 		<Group>
 			<GroupTitle title="Examples" />
-			<GroupItem  title="Basic" href={hrefs.enhanced.examples.basic} />
-			<GroupItem disabled title="Column alignment" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Column filters" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Basic" href={hrefs.enhanced.examples.basic} />
+			<GroupItem disabled title="Column alignment" href={hrefs.enhanced.examples.columnAlignment} />
+			<GroupItem disabled title="Column filters" href={hrefs.enhanced.examples.columnFilters} />
 			<GroupItem
 				disabled
 				title="Column filters faceted"
-				href={hrefs.headless.quickStart.installation}
+				href={hrefs.enhanced.examples.columnFiltersFaceted}
 			/>
-			<GroupItem disabled title="Column ordering" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Column pinning" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Column sizing" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Column visibility" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Context menu" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Copying data" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Editable data" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Expanding" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Exporting data" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Fullscreen" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Fully controlled" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Grouping" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Pagination" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Column ordering" href={hrefs.enhanced.examples.columnOrdering} />
+			<GroupItem title="Column pinning" href={hrefs.enhanced.examples.columnPinning} />
+			<GroupItem title="Column sizing" href={hrefs.enhanced.examples.columnSizing} />
+			<GroupItem title="Column visibility" href={hrefs.enhanced.examples.columnVisibility} />
+			<GroupItem title="Context menu" href={hrefs.enhanced.examples.contextMenu} />
+			<GroupItem title="Copying data" href={hrefs.enhanced.examples.copyingData} />
+			<GroupItem title="Editable data" href={hrefs.enhanced.examples.editableData} />
+			<GroupItem title="Exporting data" href={hrefs.enhanced.examples.exportingData} />
+			<GroupItem title="Fullscreen" href={hrefs.enhanced.examples.fullscreen} />
+			<GroupItem title="Fully controlled" href={hrefs.enhanced.examples.fullyControlled} />
+			<GroupItem title="Grouping" href={hrefs.enhanced.examples.grouping} />
+			<GroupItem title="Pagination" href={hrefs.enhanced.examples.pagination} />
 			<GroupItem
-				disabled
-				title="Pagination controlled"
-				href={hrefs.headless.quickStart.installation}
+			disabled
+			title="Pagination controlled"
+			href={hrefs.enhanced.examples.paginationControlled}
 			/>
-			<GroupItem  title="Row selection" href={hrefs.enhanced.examples.rowSelection} />
-			<GroupItem disabled title="Scroll to top" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Sorting" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Spacing" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Status indicator" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Sub components" href={hrefs.headless.quickStart.installation} />
-			<GroupItem disabled title="Text sizing" href={hrefs.headless.quickStart.installation} />
+			<GroupItem title="Row expanding" href={hrefs.enhanced.examples.expanding} />
+			<GroupItem title="Row selection" href={hrefs.enhanced.examples.rowSelection} />
+			<GroupItem title="Scroll to top" href={hrefs.enhanced.examples.scrollToTop} />
+			<GroupItem title="Sorting" href={hrefs.enhanced.examples.sorting} />
+			<GroupItem title="Spacing" href={hrefs.enhanced.examples.spacing} />
+			<GroupItem title="Status indicator" href={hrefs.enhanced.examples.statusIndicator} />
+			<GroupItem title="Sub components" href={hrefs.enhanced.examples.subComponents} />
+			<GroupItem title="Text sizing" href={hrefs.enhanced.examples.textSizing} />
 			<GroupItem title="Virtualization" href={hrefs.enhanced.examples.virtualization} />
 		</Group>
 		<!-- 
