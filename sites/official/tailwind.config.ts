@@ -1,11 +1,16 @@
 import { fontFamily } from "tailwindcss/defaultTheme";
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
+import typography from "@tailwindcss/typography";
+
 
 const config: Config = {
 	darkMode: ["class"],
 	content: ["./src/**/*.{html,js,svelte,ts}"],
 	safelist: ["dark"],
+	plugins: [
+		typography, tailwindcssAnimate
+	],
 	theme: {
 		container: {
 			center: true,
@@ -77,7 +82,7 @@ const config: Config = {
 				sm: "calc(var(--radius) - 4px)"
 			},
 			fontFamily: {
-				sans: [...fontFamily.sans]
+				sans: ['Roboto', ...fontFamily.sans]
 			},
 			keyframes: {
 				"accordion-down": {
@@ -100,7 +105,6 @@ const config: Config = {
 			},
 		},
 	},
-	plugins: [tailwindcssAnimate],
 };
 
 export default config;

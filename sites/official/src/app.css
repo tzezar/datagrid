@@ -92,6 +92,24 @@
 	}
 }
 
+.prose :is(mark) {
+	@apply rounded-sm bg-orange-400 p-[0.08rem] px-1;
+}
+
+.prose :is(code) {
+	@apply text-orange-500
+}
+.prose :is(mark) {
+	@apply bg-orange-500 text-primary rounded-none font-semibold
+}
+.prose :is(blockquote) {
+	quotes: none;
+}
+.prose :is(blockquote) {
+	@apply border-l-orange-500
+}
+
+
 @layer components {
 	.grid-body-overlay {
 		@apply pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[5] h-full w-full bg-grid-overlay opacity-50;

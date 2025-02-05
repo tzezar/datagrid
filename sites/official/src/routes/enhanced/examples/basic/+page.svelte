@@ -1,13 +1,17 @@
 <script lang="ts">
-	import * as Grid from '$lib/datagrid-enhanced';
-	import { columns } from './columns';
+	import PostComingSoon from '$lib/blocks/post-coming-soon.svelte';
+import { formatDate } from '$lib/utils.js';
 
 	let { data } = $props();
-
-	let datagrid = new Grid.EnhancedCore({
-		columns,
-		data: data.inventory
-	});
 </script>
 
-<Grid.Component {datagrid} />
+
+{#if data.meta.published}
+
+<div class="prose dark:prose-invert flex flex-col grow min-w-full pb-8"> 
+	<data.content {data}></data.content>
+</div>
+{:else}
+	<PostComingSoon />
+{/if}
+
