@@ -31,31 +31,44 @@
 	};
 </script>
 
-<LeafColumnCell {datagrid} {column} class={cn('flex h-full w-10 items-center justify-center border-r px-2')}>
-	<DropdownMenu.Root>
-		<DropdownMenu.Trigger>
-			<button class="bg-primary size-[14px]" aria-label="Toggle row selection"></button>
-		</DropdownMenu.Trigger>
-		<DropdownMenu.Content>
-			<DropdownMenu.Group>
-				<DropdownMenu.Label>Row selection</DropdownMenu.Label>
-				<DropdownMenu.Separator />
-				<DropdownMenu.Item onclick={() => handleSelectionAction('selectAll')}>
-					Select every row
-				</DropdownMenu.Item>
-				<DropdownMenu.Item onclick={() => handleSelectionAction('selectPage')}>
-					Select current page
-				</DropdownMenu.Item>
+<LeafColumnCell
+	{datagrid}
+	{column}
+	class={cn('flex h-full w-10 items-center justify-center border-r px-2')}
+>
+	{#if datagrid.extra.features.rowSelection.enableSelectAll || datagrid.extra.features.rowSelection.enableSelectAllOnPage}
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger>
+				<button class="bg-primary size-[14px]" aria-label="Toggle row selection"></button>
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Content>
+				<DropdownMenu.Group>
+					<DropdownMenu.Label>Row selection</DropdownMenu.Label>
+					<DropdownMenu.Separator />
+					{#if datagrid.extra.features.rowSelection.enableSelectAll}
+						<DropdownMenu.Item onclick={() => handleSelectionAction('selectAll')}>
+							Select every row
+						</DropdownMenu.Item>
+					{/if}
+					{#if datagrid.extra.features.rowSelection.enableSelectAllOnPage}
+						<DropdownMenu.Item onclick={() => handleSelectionAction('selectPage')}>
+							Select current page
+						</DropdownMenu.Item>
+					{/if}
 
-				<DropdownMenu.Separator />
-
-				<DropdownMenu.Item onclick={() => handleSelectionAction('deselectAll')}>
-					Deselect every row
-				</DropdownMenu.Item>
-				<DropdownMenu.Item onclick={() => handleSelectionAction('deselectPage')}>
-					Deselect current page
-				</DropdownMenu.Item>
-			</DropdownMenu.Group>
-		</DropdownMenu.Content>
-	</DropdownMenu.Root>
+					<DropdownMenu.Separator />
+					{#if datagrid.extra.features.rowSelection.enableSelectAll}
+						<DropdownMenu.Item onclick={() => handleSelectionAction('deselectAll')}>
+							Deselect every row
+						</DropdownMenu.Item>
+					{/if}
+					{#if datagrid.extra.features.rowSelection.enableSelectAllOnPage}
+						<DropdownMenu.Item onclick={() => handleSelectionAction('deselectPage')}>
+							Deselect current page
+						</DropdownMenu.Item>
+					{/if}
+				</DropdownMenu.Group>
+			</DropdownMenu.Content>
+		</DropdownMenu.Root>
+	{/if}
 </LeafColumnCell>

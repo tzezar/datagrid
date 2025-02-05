@@ -361,13 +361,13 @@
 {/snippet}
 
 {#snippet AdditionalHeaderCells(position: 'left' | 'right')}
-	{#if datagrid.extra.features.rowSelection.position === position && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
+	{#if datagrid.extra.features.rowSelection.position === position}
 		<RowSelectionColumnHeaderCell
 			{datagrid}
 			column={headerColumns.find((col) => col.columnId === '_selection') as LeafColumn<any>}
 		/>
 	{/if}
-	{#if datagrid.extra.features.rowExpanding.position === position && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
+	{#if datagrid.extra.features.rowExpanding.position === position}
 		<RowExpandingColumnHeaderCell
 			{datagrid}
 			column={headerColumns.find((col) => col.columnId === '_expand') as LeafColumn<any>}
@@ -376,14 +376,14 @@
 {/snippet}
 
 {#snippet AdditionalBodyCells(position: 'left' | 'right', row: GridBasicRow<any>)}
-	{#if datagrid.extra.features.rowSelection.position === position && datagrid.extra.features.rowSelection.displayBuiltInComponents === true}
+	{#if datagrid.extra.features.rowSelection.position === position}
 		<RowSelectionCell
 			{datagrid}
 			{row}
 			column={headerColumns.find((col) => col.columnId === '_selection') as LeafColumn<any>}
 		/>
 	{/if}
-	{#if datagrid.extra.features.rowExpanding.position === position && datagrid.extra.features.rowExpanding.displayBuiltInComponents === true}
+	{#if datagrid.extra.features.rowExpanding.position === position && datagrid.extra.features.rowExpanding.createColumnManually === true}
 		<RowExpandingCell
 			{datagrid}
 			{row}

@@ -1,5 +1,4 @@
-import type { EnhancedDatagrid } from "../index.svelte";
-import type { Feature } from "./types";
+import type { Datagrid } from "$lib/datagrid/core/index.svelte";
 
 export type AnimationsFeatureConfig = {
     animateHeaders?: boolean;
@@ -7,13 +6,13 @@ export type AnimationsFeatureConfig = {
     animationMultiplier?: number;
 };
 
-export class AnimationsFeature implements Feature {
-    datagrid: EnhancedDatagrid;
+export class AnimationsFeature {
+    datagrid: Datagrid;
     animateHeaders: boolean = $state(true);
     animateRows: boolean = $state(true);
     animationDuration: number = $state(60);
 
-    constructor(datagrid: EnhancedDatagrid, config?: AnimationsFeatureConfig) {
+    constructor(datagrid: Datagrid, config?: AnimationsFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }

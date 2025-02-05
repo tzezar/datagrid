@@ -17,9 +17,9 @@
 		}
 	) => {
 		if (e.currentTarget.checked) {
-			datagrid.extra.features.rowSelection.selectRow(row.identifier);
+			datagrid.features.rowSelection.selectRow(row.identifier);
 		} else {
-			datagrid.extra.features.rowSelection.unselectRow(row.identifier);
+			datagrid.features.rowSelection.unselectRow(row.identifier);
 		}
 		e.currentTarget.checked = datagrid.features.rowSelection.isRowSelected(row.identifier);
 	};

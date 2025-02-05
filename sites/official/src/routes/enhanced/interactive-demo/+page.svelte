@@ -29,11 +29,6 @@
 					animateRows: true,
 					animateHeaders: true
 				},
-				rowSelection: {
-					onSelectMoreThanMaxSelectedRows() {
-						toast.error('You reached the maximum number of selected rows');
-					}
-				},
 				sorting: {
 					enableMultiSort: true,
 					enableSorting: true,

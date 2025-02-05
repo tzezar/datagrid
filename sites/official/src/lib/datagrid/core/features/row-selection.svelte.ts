@@ -3,10 +3,43 @@ import type { Datagrid } from "../index.svelte";
 import type { GridRowIdentifier } from "../types";
 
 
+export type RowSelectionMode = 'single' | 'multiple' | 'none'
+
+
+interface IRowSelectionFeature<TOriginalRow> {
+    datagrid: Datagrid,
+    selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier>;
+    maxSelectedRows: number;
+
+    onRowSelectionChange(config: RowSelectionFeature<any>): void;
+    getSelectedIdentifiers(): GridRowIdentifier[];
+    selectRow(identifier: GridRowIdentifier): void;
+    unselectRow(identifier: GridRowIdentifier): void;
+    toggleRowSelection(identifier: GridRowIdentifier): void;
+    isRowSelected(identifier: GridRowIdentifier): boolean;
+    getSelectedOriginalRows(): TOriginalRow[];
+    selectRows(identifiers: GridRowIdentifier[]): void;
+    unselectRows(identifiers: GridRowIdentifier[]): void;
+    clearSelection(): void;
+}
+
+export type RowSelectionFeatureConfig = {
+    rowSelectionMode?: RowSelectionMode;
+    maxSelectedRows?: number;
+    selectedRowIds?: SvelteSet<GridRowIdentifier>;
+    onSelectMoreThanMaxSelectedRows?(): void;
+    onRowSelectionChange?(config: RowSelectionFeature<any>): void;
+}
+
+
+const DEFAULT_MAX_SELECTED_ROWS = 99999999;
+
 export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFeature<TOriginalRow> {
     datagrid: Datagrid<TOriginalRow>;
     selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier> = $state(new SvelteSet())
     maxSelectedRows: number = $state(DEFAULT_MAX_SELECTED_ROWS);
+    onSelectMoreThanMaxSelectedRows: () => void = () => { }
+    rowSelectionMode: RowSelectionMode = $state('multiple');
 
     constructor(datagrid: Datagrid<TOriginalRow>, config?: RowSelectionFeatureConfig) {
         this.datagrid = datagrid;
@@ -24,11 +57,38 @@ export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFea
     }
 
     selectRow(identifier: GridRowIdentifier) {
+        if (this.rowSelectionMode === 'single') {
+            this.clearSelection()
+            this.selectedBasicRowIdentifiers.add(identifier);
+            this.onRowSelectionChange()
+            return
+        }
+
+        const isMaxSelectedRowsReached = this.maxSelectedRows !== undefined && this.selectedBasicRowIdentifiers.size >= this.maxSelectedRows;
+        if (isMaxSelectedRowsReached) {
+            this.onSelectMoreThanMaxSelectedRows();
+            return
+        }
+
         this.selectedBasicRowIdentifiers.add(identifier);
+        this.onRowSelectionChange()
     }
+
+    // selectRow(identifier: GridRowIdentifier) {
+    //     this.selectedBasicRowIdentifiers.add(identifier);
+    // }
+
+
     unselectRow(identifier: GridRowIdentifier) {
+        if (this.rowSelectionMode === 'single') {
+            this.clearSelection()
+            return
+        }
         this.selectedBasicRowIdentifiers.delete(identifier);
     }
+
+
+
 
     toggleRowSelection(identifier: GridRowIdentifier) {
         if (this.selectedBasicRowIdentifiers.has(identifier)) this.unselectRow(identifier);
@@ -62,29 +122,3 @@ export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFea
 
 
 
-interface IRowSelectionFeature<TOriginalRow> {
-    datagrid: Datagrid,
-    selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier>;
-    maxSelectedRows: number;
-
-    onRowSelectionChange(config: RowSelectionFeature<any>): void;
-    getSelectedIdentifiers(): GridRowIdentifier[];
-    selectRow(identifier: GridRowIdentifier): void;
-    unselectRow(identifier: GridRowIdentifier): void;
-    toggleRowSelection(identifier: GridRowIdentifier): void;
-    isRowSelected(identifier: GridRowIdentifier): boolean;
-    getSelectedOriginalRows(): TOriginalRow[];
-    selectRows(identifiers: GridRowIdentifier[]): void;
-    unselectRows(identifiers: GridRowIdentifier[]): void;
-    clearSelection(): void;
-}
-
-
-export type RowSelectionFeatureConfig = {
-    maxSelectedRows?: number;
-    selectedRowIds?: SvelteSet<GridRowIdentifier>;
-    onRowSelectionChange?(config: RowSelectionFeature<any>): void;
-}
-
-
-const DEFAULT_MAX_SELECTED_ROWS = 99999999;

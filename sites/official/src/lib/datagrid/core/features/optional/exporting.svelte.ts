@@ -1,8 +1,8 @@
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { XMLBuilder } from 'fast-xml-parser';
-import { EnhancedDatagrid } from '../index.svelte';
 import type { LeafColumn } from '$lib/datagrid/core/types';
+import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 
 
 export type ExportMethods = 'toExcel' | 'toCSV' | 'toJSON' | 'toXML';
@@ -15,7 +15,7 @@ export type ExportingFeatureConfig = {
 }
 
 export class ExportingFeature<T = any> {
-    datagrid: EnhancedDatagrid<T>;
+    datagrid: Datagrid<T>;
 
     exportMethods: ExportMethods[] = ['toExcel', 'toCSV', 'toJSON', 'toXML'];
 
@@ -23,17 +23,13 @@ export class ExportingFeature<T = any> {
 
     fileName: string = $state('table');
 
-    constructor(datagrid: EnhancedDatagrid<T>, config?: ExportingFeatureConfig) {
+    constructor(datagrid: Datagrid<T>, config?: ExportingFeatureConfig) {
         this.datagrid = datagrid;
-        this.initialize(config);
-    }
 
-    initialize(config?: ExportingFeatureConfig) {
         this.enableExporting = config?.enableExporting ?? this.enableExporting;
         this.fileName = config?.fileName ?? this.fileName;
         this.exportMethods = config?.exportMethods ?? this.exportMethods;
     }
-
 
     /**
      * Exports data to JSON format and triggers download

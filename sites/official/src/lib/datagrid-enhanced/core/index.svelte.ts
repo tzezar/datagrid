@@ -5,7 +5,6 @@ import { flattenColumnStructureAndClearGroups } from "$lib/datagrid/core/utils.s
 
 import {
     CredentialsFeature,
-    DensityToggleFeature,
     ExportingFeature,
     ColumnPinningEnhancedFeature,
     ColumnSizingEnhancedFeature,
@@ -13,7 +12,6 @@ import {
     GroupingEnhancedFeature,
     StatusIndicatorFeature,
     RowExpandingEnhancedFeature,
-    RowNumbersFeature,
     RowSelectionEnhancedFeature,
     SortingEnhancedFeature,
     FullscreenFeature,
@@ -28,7 +26,6 @@ import {
     type ColumnSizingEnhancedFeatureConfig,
     type ColumnVisibilityEnhancedFeatureConfig,
     type CredentialsFeatureConfig,
-    type DensityToggleFeatureConfig,
     type ExportingFeatureConfig,
     type FullscreenFeatureConfig,
     type GlobalSearchEnhancedFeatureConfig,
@@ -37,7 +34,6 @@ import {
     type StatusIndicatorFeatureConfig,
     type PaginationEnhancedFeatureConfig,
     type RowExpandingEnhancedFeatureConfig,
-    type RowNumbersFeatureConfig,
     type RowSelectionEnhancedFeatureConfig,
     type SortingEnhancedFeatureConfig,
     ColumnOrderingEnhancedFeature,
@@ -78,7 +74,6 @@ export type TrzezarsDatagridFeatures = {
     columnSizing: ColumnSizingEnhancedFeature,
     columnVisibility: ColumnVisibilityEnhancedFeature,
     credentials: CredentialsFeature,
-    densityToggle: DensityToggleFeature,
     exporting: ExportingFeature,
     fullscreen: FullscreenFeature,
     globalSearch: GlobalSearchEnhancedFeature,
@@ -87,7 +82,6 @@ export type TrzezarsDatagridFeatures = {
     statusIndicator: StatusIndicatorFeature,
     pagination: PaginationEnhancedFeature,
     rowExpanding: RowExpandingEnhancedFeature,
-    rowNumbers: RowNumbersFeature,
     rowSelection: RowSelectionEnhancedFeature,
     sorting: SortingEnhancedFeature,
     columnOrdering: ColumnOrderingEnhancedFeature,
@@ -110,7 +104,6 @@ export type EnhancedDatagridExtraStateConfig = {
         columnSizing?: ColumnSizingEnhancedFeatureConfig,
         columnVisibility?: ColumnVisibilityEnhancedFeatureConfig,
         credentials?: CredentialsFeatureConfig,
-        densityToggle?: DensityToggleFeatureConfig,
         exporting?: ExportingFeatureConfig,
         fullscreen?: FullscreenFeatureConfig,
         globalSearch?: GlobalSearchEnhancedFeatureConfig,
@@ -119,7 +112,6 @@ export type EnhancedDatagridExtraStateConfig = {
         statusIndicator?: StatusIndicatorFeatureConfig,
         pagination?: PaginationEnhancedFeatureConfig & PaginationFeatureConfig;
         rowExpanding?: RowExpandingEnhancedFeatureConfig,
-        rowNumbers?: RowNumbersFeatureConfig,
         rowSelection?: RowSelectionEnhancedFeatureConfig,
         sorting?: SortingEnhancedFeatureConfig & SortingFeatureConfig
         columnOrdering?: ColumnOrderingEnhancedFeatureConfig & ColumnOrderingFeatureConfig
@@ -231,7 +223,7 @@ const createAdditionalColumns = (datagrid: EnhancedDatagrid): {
     const rightCols: AnyColumn<any>[] = [];
     const { rowSelection, rowExpanding } = datagrid.extra.features;
 
-    if (rowSelection?.displayBuiltInComponents === true) {
+    if (rowSelection?.createColumnManually === false) {
         if (rowSelection?.position === 'left') {
             leftCols.push(createColumn('left', '_selection', RowSelectionCell, RowSelectionColumnHeaderCell));
         }
@@ -242,7 +234,7 @@ const createAdditionalColumns = (datagrid: EnhancedDatagrid): {
 
     }
 
-    if (rowExpanding?.displayBuiltInComponents === true) {
+    if (rowExpanding?.createColumnManually === false) {
         if (rowExpanding?.position === 'right') {
             rightCols.push(createColumn('right', '_expand', RowExpandingCell, RowExpandingColumnHeaderCell));
         }
@@ -323,6 +315,15 @@ export class Extra<TOriginalRow> {
     }
 
     initializeFeatures(config?: EnhancedDatagridExtraStateConfig) {
+
+        // optional
+        this.features.exporting = new ExportingFeature(this.datagrid, config?.features?.exporting);
+
+        // maybe optional 
+        this.features.rowSelection = new RowSelectionEnhancedFeature( config?.features?.rowSelection);
+        this.features.rowExpanding = new RowExpandingEnhancedFeature(this.datagrid, config?.features?.rowExpanding);
+
+
         // customization
         this.features.stripedRows = new StripedRowsFeature(config?.features?.stripedRows);
         this.features.statusIndicator = new StatusIndicatorFeature(config?.features?.statusIndicator);
@@ -339,20 +340,17 @@ export class Extra<TOriginalRow> {
         this.features.credentials = new CredentialsFeature(config?.features?.credentials);
         this.features.fullscreen = new FullscreenFeature(config?.features?.fullscreen);
         this.features.globalSearch = new GlobalSearchEnhancedFeature(config?.features?.globalSearch);
+        this.features.clickToCopy = new ClickToCopyFeature(config?.features?.clickToCopy);
+
+
+
 
         // extra
         this.features.animations = new AnimationsFeature(this.datagrid, config?.features?.animations);
-        this.features.clickToCopy = new ClickToCopyFeature(this.datagrid, config?.features?.clickToCopy);
-        this.features.exporting = new ExportingFeature(this.datagrid, config?.features?.exporting);
-        this.features.rowNumbers = new RowNumbersFeature(this.datagrid, config?.features?.rowNumbers);
-        this.features.densityToggle = new DensityToggleFeature(this.datagrid, config?.features?.densityToggle);
-        // this.features.customization = new CustomizationFeature(this.datagrid, config?.features?.customization);
 
         // enhanced
         this.features.columnFiltering = new ColumnFilteringEnhancedFeature(this.datagrid, config?.features?.columnFiltering);
-        this.features.rowExpanding = new RowExpandingEnhancedFeature(this.datagrid, config?.features?.rowExpanding);
         this.features.sorting = new SortingEnhancedFeature(this.datagrid, config?.features?.sorting);
-        this.features.rowSelection = new RowSelectionEnhancedFeature(this.datagrid, config?.features?.rowSelection);
     }
 
     getTitle(): string | undefined {

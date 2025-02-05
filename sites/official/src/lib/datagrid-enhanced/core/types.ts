@@ -17,6 +17,4 @@ export type ColumnMetaEnhanced<TOriginalRow = any> = {
     }
 }
 
-
-
-
+export type AutoColumnPosition = 'left' | 'right' | 'none'
