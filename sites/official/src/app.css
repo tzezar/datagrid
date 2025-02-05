@@ -294,7 +294,7 @@
 	}
 
 	.grid-body-row-cell-content {
-		@apply w-full overflow-hidden text-ellipsis whitespace-nowrap;
+		@apply w-full overflow-hidden text-ellipsis whitespace-nowrap   flex ;
 	}
 
 	.grid-body-group-row {
