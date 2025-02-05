@@ -112,8 +112,13 @@ export class StylingFeature<TOriginalRow> {
         )
     }
 
-    getBodyRowCellContentClasses = () => {
-        return cn('grid-body-row-cell-content')
+    getBodyRowCellContentClasses = (column: LeafColumn<TOriginalRow, ColumnMetaEnhanced>) => {
+        return cn('grid-body-row-cell-content',
+            column.align === 'center' && 'justify-center',
+            column.align === 'left' && 'justify-start',
+            column.align === 'right' && 'justify-end',
+
+        )
     }
 
     getBodyGroupRowClasses = () => {
