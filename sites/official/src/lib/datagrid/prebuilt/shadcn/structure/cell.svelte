@@ -20,7 +20,7 @@
 <div
 	use:identifier={{ datagrid, value: `${row.identifier}-${column.columnId}` }}
 	class:grow={column?._meta?.grow}
-	class={cn(datagrid.customization.styling.getBodyRowCellClasses(datagrid, row, column), 'group', _class)}
+	class={cn(datagrid.customization.styling.getBodyRowCellClasses(datagrid, row, column), 'group transition-none', _class)}
 	class:justify-center={column?._meta?.align === 'center'}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 	style:--width={column.state.size.width + 'px'}
