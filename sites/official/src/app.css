@@ -98,7 +98,7 @@
 	}
 
 	.grid-wrapper-overlay {
-		@apply pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[10000] h-full w-full bg-grid-overlay opacity-50;
+		@apply pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[25] h-full w-full bg-grid-overlay opacity-50;
 	}
 
 	.grid-wrapper {
@@ -107,7 +107,7 @@
 		@apply relative flex  flex-col bg-grid-background max-h-[600px];
 
 		&[data-fullscreen='true'] {
-			@apply absolute inset-0 z-20  max-h-screen ;
+			@apply absolute inset-0 z-20  max-h-screen p-4;
 		}
 	}
 
