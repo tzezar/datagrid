@@ -87,7 +87,9 @@
 	<span class="flex items-center gap-1 text-nowrap text-xs">
 		<span class="md:block"> Page </span>
 		<Input
-			type='number'
+			type='text'
+			inputmode='numeric'
+			pattern="[0-9]*"
 			max={datagrid.features.pagination.pageCount}
 			class={datagrid.customization.styling.getPaginationContainerPageInputClasses()}
 			value={datagrid.features.pagination.page}
