@@ -1,3 +1,4 @@
+import type { EnhancedMeta } from "$lib/datagrid-enhanced";
 import { ColumnFilteringFeature } from "$lib/datagrid/core/features";
 import type { ColumnFilteringFeatureConfig } from "$lib/datagrid/core/features/column-filtering.svelte";
 import type { EnhancedDatagrid } from "../index.svelte";
@@ -6,10 +7,10 @@ import type { EnhancedFeature } from "./types";
 export type ColumnFilteringEnhancedFeatureConfig = {
     columnFiltersVisible?: boolean;
     isToggleButtonVisible?: boolean;
-} 
+}
 
 export class ColumnFilteringEnhancedFeature implements EnhancedFeature {
-    datagrid: EnhancedDatagrid
+    datagrid: EnhancedDatagrid<any, EnhancedMeta>
 
     columnFiltersVisible: boolean = $state(false);
     isToggleButtonVisible: boolean = $state(true);
@@ -41,6 +42,11 @@ export class ColumnFilteringEnhancedFeature implements EnhancedFeature {
     isEnabled() {
         return this.columnFiltersVisible;
     }
+
+    shouldDisplayHeaderCellFilter() {
+        return this.datagrid.columns.some(col => col.options.filterable === true && col._meta.filterType && col.isVisible());
+    }
+
 
     showButton() {
         this.isToggleButtonVisible = true;

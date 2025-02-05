@@ -7,29 +7,21 @@ import type { ColumnMetaEnhanced } from "$lib/datagrid-enhanced/core/types";
 export const columns = [
     accessorColumn({
         accessorKey: 'id',
-        _meta: {
-            tooltip: true,
-        }
     }),
     accessorColumn({
         accessorKey: 'name',
         formatterFn: (row) => row.name.toUpperCase(), 
         _meta: {
             grow: true,
-            clickToCopy: false
         }
     }),
     accessorColumn({
         accessorKey: 'category',
-        _meta: {
-            clickToCopy: false
-        }
     }),
     accessorColumn({
         header: 'Price',
         accessorKey: 'price',
         getValueFn: (row) => row.price,
-        options: { sortable: true },
     }),
     accessorColumn({
         accessorKey: 'quantity'
@@ -41,14 +33,9 @@ export const columns = [
         columnId: 'restockDate',
         accessorKey: 'restockDate',
         getValueFn: (row) => row.restockDate,
-        options: { sortable: true },
-        _meta: {
-            filterType: 'date'
-        }
     }),
     accessorColumn({
         accessorKey: 'status',
-
 
     }),
 

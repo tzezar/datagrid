@@ -89,7 +89,7 @@
 					{/if}
 				</div>
 			</div>
-			{#if datagrid.extra.features.columnFiltering.isEnabled()}
+			{#if datagrid.extra.features.columnFiltering.shouldDisplayHeaderCellFilter()}
 				<div
 					class={datagrid.customization.styling.getHeadRowLeafColumnFilterInputWrapperClasses()}
 				>
