@@ -1,5 +1,5 @@
 import { ColumnOrderingFeature } from "$lib/datagrid/core/features";
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { EnhancedFeature } from "./types";
 
 export type ColumnOrderingEnhancedFeatureConfig = {
@@ -7,11 +7,11 @@ export type ColumnOrderingEnhancedFeatureConfig = {
 }
 
 export class ColumnOrderingEnhancedFeature implements EnhancedFeature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
 
     enabled: boolean = $state(true);
 
-    constructor(datagrid: TzezarsDatagrid, config?: ColumnOrderingEnhancedFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: ColumnOrderingEnhancedFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config);
     }

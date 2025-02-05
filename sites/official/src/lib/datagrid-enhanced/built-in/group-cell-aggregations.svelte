@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
 
 	type Props = {
 		column: LeafColumn<any>;
 		row: GridGroupRow<any>;
-		datagrid: TzezarsDatagrid;
+		datagrid: EnhancedDatagrid;
 	};
 	let { column, row, datagrid }: Props = $props();
 </script>

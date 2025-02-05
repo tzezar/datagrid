@@ -1,5 +1,5 @@
 import type { AnyColumn, GridRow } from "$lib/datagrid/core/types";
-import type { TzezarsDatagrid } from "./index.svelte";
+import type { EnhancedDatagrid } from "./index.svelte";
 
 export type ColumnMetaEnhanced<TOriginalRow = any> = {
     align?: 'start' | 'center' | 'end';
@@ -13,8 +13,8 @@ export type ColumnMetaEnhanced<TOriginalRow = any> = {
 
     // TODO add more types and apply them in components
     styles?: {
-        bodyCell?: ((props: { datagrid: TzezarsDatagrid, column: AnyColumn<TOriginalRow>, row: GridRow<TOriginalRow> }) => string);
-        headerCell?: ((props: { datagrid: TzezarsDatagrid, column: AnyColumn<TOriginalRow> }) => string);
+        bodyCell?: ((props: { datagrid: EnhancedDatagrid, column: AnyColumn<TOriginalRow>, row: GridRow<TOriginalRow> }) => string);
+        headerCell?: ((props: { datagrid: EnhancedDatagrid, column: AnyColumn<TOriginalRow> }) => string);
     }
 }
 

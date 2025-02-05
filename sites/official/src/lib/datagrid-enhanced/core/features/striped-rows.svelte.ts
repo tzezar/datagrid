@@ -1,5 +1,5 @@
 import type { GridBasicRow } from "$lib/datagrid/core/types";
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 
 
 export type StripedRowsFeatureConfig = {
@@ -8,10 +8,10 @@ export type StripedRowsFeatureConfig = {
 
 
 export class StripedRowsFeature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
     enabled: boolean = $state(true);
 
-    constructor(datagrid: TzezarsDatagrid, config?: StripedRowsFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: StripedRowsFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config);
     }

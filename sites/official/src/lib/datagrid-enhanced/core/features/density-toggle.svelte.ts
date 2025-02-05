@@ -1,4 +1,4 @@
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { Feature } from "./types";
 
 export type Density = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
@@ -58,14 +58,14 @@ export const defaultDensityOptions: DensityOption[] = [
 
 
 export class DensityToggleFeature implements Feature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
 
     enabled: boolean = $state(true);
     currentDensity: Density = $state('md');
     densityOptions: DensityOption[] = $state(defaultDensityOptions);
     onDensityChange: (density: Density) => void = () => { };
 
-    constructor(datagrid: TzezarsDatagrid, config?: DensityToggleFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: DensityToggleFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config);
     }

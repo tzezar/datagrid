@@ -19,11 +19,11 @@
 	import RenderColumnCell from './structure/render-column-cell.svelte';
 	import { identifier } from './actions.svelte';
 	import { VirtualList } from './virtualization';
-	import type { TzezarsDatagrid } from './core/index.svelte';
+	import type { EnhancedDatagrid } from './core/index.svelte';
 	import Pagination from './built-in/pagination.svelte';
 
 	type Props = {
-		datagrid: TzezarsDatagrid<any>;
+		datagrid: EnhancedDatagrid<any>;
 
 		// Snippets
 		toolbar?: Snippet;

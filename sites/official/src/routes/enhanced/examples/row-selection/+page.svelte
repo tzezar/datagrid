@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { toast } from 'svelte-sonner';
+	import { columns } from './columns.svelte';
+	import * as Grid from '$lib/datagrid-enhanced';
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory';
-	import { Datagrid, DatagridEnhanced, type EnhancedColumnMeta } from '$lib/datagrid-enhanced';
-	import { inventoryColumns } from './columns.svelte';
 
 	let { data } = $props();
 
-	let datagrid = new DatagridEnhanced<InventoryItem, EnhancedColumnMeta<InventoryItem>>({
-		columns: inventoryColumns,
+	let datagrid = new Grid.EnhancedCore<InventoryItem, Grid.EnhancedMeta<InventoryItem>>({
+		columns,
 		data: data.users,
 
 		features: {
@@ -17,7 +17,6 @@
 				}
 			}
 		},
-
 
 		extra: {
 			features: {
@@ -33,8 +32,7 @@
 				rowSelection: {
 					onSelectMoreThanMaxSelectedRows() {
 						toast.error('You reached the maximum number of selected rows');
-					},
-				
+					}
 				},
 				sorting: {
 					enableMultiSort: true,
@@ -47,9 +45,9 @@
 		}
 	});
 
-	const col = datagrid.columns[0]
-	if (col.type === 'accessor' && col._meta.tooltip){}
-
+	const col = datagrid.columns[0];
+	if (col.type === 'accessor' && col._meta.tooltip) {
+	}
 </script>
 
-<Datagrid {datagrid}></Datagrid>
+<Grid.Component {datagrid}></Grid.Component>

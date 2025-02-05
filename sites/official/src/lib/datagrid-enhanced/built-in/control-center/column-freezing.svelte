@@ -1,12 +1,12 @@
 <script lang="ts">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-	import type { TzezarsDatagrid } from '../../core/index.svelte';
+	import type { EnhancedDatagrid } from '../../core/index.svelte';
 	import StabilizationLock from '$lib/datagrid/icons/material-symbols/stabilization-lock.svelte';
 	import type { AnyColumn, PinningPosition } from '$lib/datagrid/core/types';
 	import * as Select from '$lib/components/ui/select/index.js';
 
 	type Props = {
-		datagrid: TzezarsDatagrid<any>;
+		datagrid: EnhancedDatagrid<any>;
 	};
 
 	let { datagrid }: Props = $props();

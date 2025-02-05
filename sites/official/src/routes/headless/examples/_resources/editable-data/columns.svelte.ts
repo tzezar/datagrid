@@ -111,7 +111,7 @@ export const userColumns = [
         columnId: 'status',
         accessorKey: 'status',
         // cell: ({ row }) => `<span class="${row?.original.status}">${row?.original.status?.toUpperCase()}</span>`,
-        formatter: (row) => row.status?.toUpperCase(),
+        formatterFn: (row) => row.status?.toUpperCase(),
         getValueFn: (row) => row.status,
         options: { sortable: true },
         _meta: {

@@ -81,7 +81,7 @@
 			<GroupItem title="Grid instance" href={hrefs.headless.featureApis.gridInstance} />
 		</Group> -->
 		<GroupTitle
-			title="Shadcn svelte"
+			title="Enhanced"
 			class="border-b-2 border-orange-400 pb-1 text-lg text-orange-400"
 		/>
 		<Group>
@@ -193,4 +193,3 @@
 		</Group> -->
 	</div>
 </div>
-enhancedenhancedenhanced

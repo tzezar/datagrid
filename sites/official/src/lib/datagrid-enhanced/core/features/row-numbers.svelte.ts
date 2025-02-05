@@ -1,4 +1,4 @@
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { Feature } from "./types";
 
 
@@ -8,11 +8,11 @@ export type RowNumbersFeatureConfig = {
 }
 
 export class RowNumbersFeature implements Feature {
-    datagrid: TzezarsDatagrid;
+    datagrid: EnhancedDatagrid;
     enableRowNumbers: boolean = $state(true);
     rowNumberMode: 'original' | 'static' = $state('static');
 
-    constructor(datagrid: TzezarsDatagrid, config?: RowNumbersFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: RowNumbersFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }

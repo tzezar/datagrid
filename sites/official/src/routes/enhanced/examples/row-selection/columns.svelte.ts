@@ -10,7 +10,7 @@ import type { ColumnMetaEnhanced } from "$lib/datagrid-enhanced/core/types";
 //     console.log(value, value)
 // }
 
-export const inventoryColumns = [
+export const columns = [
     // displayColumn({
     //     header: 'Row Selection',
     //     headerCell: () => ({

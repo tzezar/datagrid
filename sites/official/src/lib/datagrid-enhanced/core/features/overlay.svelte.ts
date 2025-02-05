@@ -1,4 +1,4 @@
-import type { TzezarsDatagrid } from "../index.svelte"
+import type { EnhancedDatagrid } from "../index.svelte"
 
 
 export type OverlayFeatureConfig = {
@@ -7,11 +7,11 @@ export type OverlayFeatureConfig = {
 }
 
 export class OverlayFeature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
     wrapperOverlayVisible: boolean = $state(false)
     bodyOverlayVisible: boolean = $state(false)
 
-    constructor(datagrid: TzezarsDatagrid, config?: OverlayFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: OverlayFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config)
     }

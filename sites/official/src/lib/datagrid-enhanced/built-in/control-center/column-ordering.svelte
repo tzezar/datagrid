@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { AnyColumn } from '$lib/datagrid/core/types';
-	import type { TzezarsDatagrid } from '../../core/index.svelte';
+	import type { EnhancedDatagrid } from '../../core/index.svelte';
 	import DeleteOutline from '$lib/datagrid/icons/material-symbols/delete-outline.svelte';
 	import ColumnGrouping from './column-grouping.svelte';
 	import Ordering from './column-ordering.svelte';
 
 	type Props = {
-		datagrid: TzezarsDatagrid<any>;
+		datagrid: EnhancedDatagrid<any>;
 		columns: AnyColumn<any>[];
 		depth: number;
 	};

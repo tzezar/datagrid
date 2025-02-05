@@ -1,12 +1,12 @@
 <script lang="ts">
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import Cell from '../structure/cell.svelte';
 
 	type Props = {
 		column: LeafColumn<any>;
-		datagrid: TzezarsDatagrid<any>;
+		datagrid: EnhancedDatagrid<any>;
 		row: GridBasicRow<any>;
 	};
 

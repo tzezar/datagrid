@@ -3,7 +3,7 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import AdGroupOutlineSharp from '$lib/datagrid/icons/material-symbols/ad-group-outline-sharp.svelte';
 	import Settings from '$lib/datagrid/icons/material-symbols/settings.svelte';
-	import type { TzezarsDatagrid } from '../../core/index.svelte';
+	import type { EnhancedDatagrid } from '../../core/index.svelte';
 	import ColumnFreezing from './column-freezing.svelte';
 	import ColumnGroupsVisibility from './column-groups-visibility.svelte';
 	import ColumnReordering from './column-reordering.svelte';
@@ -16,7 +16,7 @@
 	import type { ColumnMetaEnhanced } from '../../core/types';
 
 	type Props = {
-		datagrid: TzezarsDatagrid<any, ColumnMetaEnhanced<any>>;
+		datagrid: EnhancedDatagrid<any, ColumnMetaEnhanced<any>>;
 	};
 
 	const { datagrid }: Props = $props();

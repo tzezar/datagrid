@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { LeafColumn } from '$lib/datagrid/core/types';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import type { ColumnMetaEnhanced } from '../core/types';
 	import ColumnSortingIndicator from './column-sorting-indicator.svelte';
 	import HeaderCellDropdown from './header-cell-dropdown.svelte';
 
 	type Props = {
 		column: LeafColumn<any, ColumnMetaEnhanced>;
-		datagrid: TzezarsDatagrid;
+		datagrid: EnhancedDatagrid;
 	};
 	let { column, datagrid }: Props = $props();
 

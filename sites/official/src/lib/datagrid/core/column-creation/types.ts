@@ -17,7 +17,7 @@ export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<T
   aggregatedCell?: AggregatedCell<TOriginalRow>;
   groupedCell?: GroupedCell<TOriginalRow>;
   headerCell?: HeaderCell;
-  formatter?: FormatterFn<TOriginalRow>;
+  formatterFn?: FormatterFn<TOriginalRow>;
   options?: {
     searchable?: boolean;
     groupable?: boolean;
@@ -38,7 +38,7 @@ export type CreateComputeColumnProps<TOriginalRow, TMeta> = {
   getValueFn: (row: TOriginalRow) => CellValue;
   aggregate?: AggregationConfig;
   getGroupValueFn?: GetGroupValue<TOriginalRow>;
-  formatter?: FormatterFn<TOriginalRow>;
+  formatterFn?: FormatterFn<TOriginalRow>;
   cell?: CustomCell<TOriginalRow>;
   aggregatedCell?: AggregatedCell<TOriginalRow>;
   groupedCell?: GroupedCell<TOriginalRow>;

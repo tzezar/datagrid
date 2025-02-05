@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { XMLBuilder } from 'fast-xml-parser';
-import { TzezarsDatagrid } from '../index.svelte';
+import { EnhancedDatagrid } from '../index.svelte';
 import type { LeafColumn } from '$lib/datagrid/core/types';
 
 
@@ -15,7 +15,7 @@ export type ExportingFeatureConfig = {
 }
 
 export class ExportingFeature<T = any> {
-    datagrid: TzezarsDatagrid<T>;
+    datagrid: EnhancedDatagrid<T>;
 
     exportMethods: ExportMethods[] = ['toExcel', 'toCSV', 'toJSON', 'toXML'];
 
@@ -23,7 +23,7 @@ export class ExportingFeature<T = any> {
 
     fileName: string = $state('table');
 
-    constructor(datagrid: TzezarsDatagrid<T>, config?: ExportingFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid<T>, config?: ExportingFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }

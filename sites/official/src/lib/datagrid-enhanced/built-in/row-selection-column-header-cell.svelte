@@ -2,10 +2,10 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import { cn } from '$lib/utils';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import LeafColumnCell from '../structure/leaf-column-cell.svelte';
 
-	let { datagrid, column }: { datagrid: TzezarsDatagrid<any>; column: LeafColumn<any> } = $props();
+	let { datagrid, column }: { datagrid: EnhancedDatagrid<any>; column: LeafColumn<any> } = $props();
 
 	type SelectionAction = 'selectAll' | 'deselectAll' | 'selectPage' | 'deselectPage';
 

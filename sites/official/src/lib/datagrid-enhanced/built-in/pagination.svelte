@@ -4,12 +4,12 @@
 	import ChevronRightRounded from '$lib/datagrid/icons/material-symbols/chevron-right-rounded.svelte';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import { cn } from '$lib/utils';
 	import type { PaginationClasses } from './types';
 
 	type Props = {
-		datagrid: TzezarsDatagrid<any>;
+		datagrid: EnhancedDatagrid<any>;
 		class?: PaginationClasses;
 	};
 

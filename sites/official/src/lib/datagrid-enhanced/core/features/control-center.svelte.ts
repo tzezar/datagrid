@@ -1,4 +1,4 @@
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { Feature } from "./types";
 
 export type ControlCenterFeatureConfig = {
@@ -7,11 +7,11 @@ export type ControlCenterFeatureConfig = {
 
 
 export class ControlCenterFeature implements Feature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
 
     displayControlCenter: boolean = $state(true);
 
-    constructor(datagrid: TzezarsDatagrid, config?: ControlCenterFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: ControlCenterFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }

@@ -1,4 +1,4 @@
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import { StylingFeature, type StylingFeatureConfig } from "./styling.svelte";
 
 
@@ -11,7 +11,7 @@ interface CustomizationOptions {
 }
 
 export type CustomizationFeatureConfig<TOriginalRow> = {
-  datagrid?: TzezarsDatagrid<TOriginalRow>
+  datagrid?: EnhancedDatagrid<TOriginalRow>
   styling?: StylingFeatureConfig<TOriginalRow>
 } & CustomizationOptions
 
@@ -19,7 +19,7 @@ export type CustomizationFeatureConfig<TOriginalRow> = {
 
 
 export class CustomizationFeature<TOriginalRow> {
-  datagrid: TzezarsDatagrid<TOriginalRow>
+  datagrid: EnhancedDatagrid<TOriginalRow>
   stickyHeader = $state(true)
   cellTooltips = $state(true)
   customScrollbar = $state(true)
@@ -28,7 +28,7 @@ export class CustomizationFeature<TOriginalRow> {
   styling: StylingFeature<TOriginalRow>
 
 
-  constructor(datagrid: TzezarsDatagrid<TOriginalRow>, config?: CustomizationFeatureConfig<TOriginalRow>) {
+  constructor(datagrid: EnhancedDatagrid<TOriginalRow>, config?: CustomizationFeatureConfig<TOriginalRow>) {
     this.datagrid = datagrid
     this.cellTooltips = config?.cellTooltips ?? this.cellTooltips;
     this.theme = config?.theme ?? this.theme;

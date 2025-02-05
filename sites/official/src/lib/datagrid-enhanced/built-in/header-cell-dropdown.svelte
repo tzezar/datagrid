@@ -32,7 +32,7 @@
 	import Contains from '$lib/datagrid/icons/filter-operators/contains.svelte';
 	import EndsWith from '$lib/datagrid/icons/filter-operators/ends-with.svelte';
 	import StartsWith from '$lib/datagrid/icons/filter-operators/starts-with.svelte';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import type { ColumnMetaEnhanced } from '../core/types';
 
 	type NumberFilterOperator = {
@@ -152,7 +152,7 @@
 		}
 	];
 
-	let { datagrid, column }: { datagrid: TzezarsDatagrid<any>; column: AnyColumn<any, ColumnMetaEnhanced> } = $props();
+	let { datagrid, column }: { datagrid: EnhancedDatagrid<any>; column: AnyColumn<any, ColumnMetaEnhanced> } = $props();
 </script>
 
 {#snippet FilterOperator(

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
 	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import GroupCell from './group-cell.svelte';
 
 	type Props = {
-		datagrid: TzezarsDatagrid;
+		datagrid: EnhancedDatagrid;
 		row: GridGroupRow<any>;
 		column: LeafColumn<any>;
 	};

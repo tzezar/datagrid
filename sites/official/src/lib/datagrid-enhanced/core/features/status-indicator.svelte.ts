@@ -1,4 +1,4 @@
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { Feature } from "./types";
 
 export type StatusIndicatorFeatureConfig = {
@@ -11,7 +11,7 @@ export type StatusIndicatorFeatureConfig = {
 
 
 export class StatusIndicatorFeature implements Feature {
-    datagrid: TzezarsDatagrid;
+    datagrid: EnhancedDatagrid;
 
     enableStatusIndicator: boolean = $state(true);
     position: 'top' | 'bottom' | 'both' = $state('top');
@@ -20,7 +20,7 @@ export class StatusIndicatorFeature implements Feature {
     isError: boolean = $state(false);
     onLoadingIndicatorChange: (isLoading: boolean, isSaving: boolean, isError: boolean) => void = () => { };
 
-    constructor(datagrid: TzezarsDatagrid, config?: StatusIndicatorFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: StatusIndicatorFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }

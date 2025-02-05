@@ -1,14 +1,14 @@
 import type { GridRow } from "$lib/datagrid/core/types";
-import type { TzezarsDatagrid } from "./core/index.svelte";
+import type { EnhancedDatagrid } from "./core/index.svelte";
 
-export function shouldShowColumnFilter(datagrid: TzezarsDatagrid): boolean {
+export function shouldShowColumnFilter(datagrid: EnhancedDatagrid): boolean {
     return datagrid.extra.features.columnFiltering.isEnabled();
 }
 
 
 
 export const shouldHighlightSelectedRow = (
-    datagrid: TzezarsDatagrid,
+    datagrid: EnhancedDatagrid,
     row: GridRow<any>
 ): boolean => {
     return (

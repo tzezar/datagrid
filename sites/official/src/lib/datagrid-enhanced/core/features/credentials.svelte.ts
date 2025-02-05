@@ -1,4 +1,4 @@
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { Feature } from "./types";
 
 export type CredentialsFeatureConfig = {
@@ -7,12 +7,12 @@ export type CredentialsFeatureConfig = {
 }
 
 export class CredentialsFeature implements Feature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
     enabled: boolean = $state(true);
 
     onCredentialsChange: (credentials: CredentialsFeatureConfig) => void = () => { };
 
-    constructor(datagrid: TzezarsDatagrid, config?: CredentialsFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: CredentialsFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }

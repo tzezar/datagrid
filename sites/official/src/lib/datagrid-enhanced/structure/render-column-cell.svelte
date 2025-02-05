@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { GroupColumn, LeafColumn } from '$lib/datagrid/core/types';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import LeafColumnCell from './leaf-column-cell.svelte';
 	import { isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import { flip } from 'svelte/animate';
@@ -12,7 +12,7 @@
 	import ColumnSortingIndicator from '../built-in/column-sorting-indicator.svelte';
 
 	type Props = {
-		datagrid: TzezarsDatagrid;
+		datagrid: EnhancedDatagrid;
 		column: GroupColumn<any, ColumnMetaEnhanced> | LeafColumn<any, ColumnMetaEnhanced>;
 	};
 

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import FileExport from '$lib/datagrid/icons/material-symbols/file-export.svelte';
-	import type { TzezarsDatagrid } from '../../core/index.svelte';
+	import type { EnhancedDatagrid } from '../../core/index.svelte';
 
 	type Props = {
-		datagrid: TzezarsDatagrid<any>;
+		datagrid: EnhancedDatagrid<any>;
 	};
 
 	let { datagrid }: Props = $props();

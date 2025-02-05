@@ -2,11 +2,11 @@
     import { Button } from '$lib/components/ui/button/index.js';
     import { Checkbox } from '$lib/components/ui/checkbox/index.js';
     import Input from '$lib/components/ui/input/input.svelte';
-    import type { TzezarsDatagrid } from '../../core/index.svelte';
+    import type { EnhancedDatagrid } from '../../core/index.svelte';
     import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 
     type Props = {
-        datagrid: TzezarsDatagrid<any>;
+        datagrid: EnhancedDatagrid<any>;
     }
 
     let { datagrid }: Props = $props();

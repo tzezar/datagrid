@@ -1,6 +1,6 @@
 import { RowExpandingFeature } from "$lib/datagrid/core/features";
 import type { RowExpandingFeatureConfig } from "$lib/datagrid/core/features/row-expanding.svelte";
-import { TzezarsDatagrid } from "../index.svelte";
+import { EnhancedDatagrid } from "../index.svelte";
 import type { EnhancedFeature } from "./types";
 
 
@@ -17,14 +17,14 @@ export type RowExpandingEnhancedFeatureConfig = {
 
 
 export class RowExpandingEnhancedFeature implements EnhancedFeature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
     displayBuiltInComponents: boolean = $state(true);
     expandingMode: 'single' | 'multiple' = $state('single');
     expandingPosition: 'left' | 'right' = $state('left');
     maxExpandedRows: number = $state(DEFAULT_MAX_EXPANDED_ROWS);
     position: "left" | "right" | 'none' = $state('right')
 
-    constructor(datagrid: TzezarsDatagrid, config?: RowExpandingEnhancedFeatureConfig & RowExpandingFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: RowExpandingEnhancedFeatureConfig & RowExpandingFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config);
     }

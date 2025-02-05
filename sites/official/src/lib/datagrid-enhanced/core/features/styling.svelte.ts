@@ -1,14 +1,14 @@
 import type { GridBasicRow, LeafColumn } from "$lib/datagrid/core/types"
 import { cn } from "$lib/utils"
 import { shouldHighlightSelectedRow } from "../../utils";
-import type { TzezarsDatagrid } from "../index.svelte"
+import type { EnhancedDatagrid } from "../index.svelte"
 import type { ColumnMetaEnhanced } from "../types";
 import type { CustomizationFeature } from "./customization.svelte"
 
 export type StylingFeatureConfig<TOriginalRow> = {
     getHeadClasses?: () => string;
     getBodyRowClasses?: (row: GridBasicRow<TOriginalRow>, rowIndex: number) => string;
-    getBodyRowCellClasses?: (datagrid: TzezarsDatagrid<TOriginalRow>, row: GridBasicRow<TOriginalRow>, column: LeafColumn<TOriginalRow>) => string;
+    getBodyRowCellClasses?: (datagrid: EnhancedDatagrid<TOriginalRow>, row: GridBasicRow<TOriginalRow>, column: LeafColumn<TOriginalRow>) => string;
     getWrapperOverlayClasses?: () => string;
     getBodyOverlayClasses?: () => string;
     getWrapperClasses?: () => string;
@@ -105,7 +105,7 @@ export class StylingFeature<TOriginalRow> {
         return cn('grid-body-row-expanded')
     }
 
-    getBodyRowCellClasses = (datagrid: TzezarsDatagrid<TOriginalRow>, row: GridBasicRow<TOriginalRow>, column: LeafColumn<TOriginalRow, ColumnMetaEnhanced>) => {
+    getBodyRowCellClasses = (datagrid: EnhancedDatagrid<TOriginalRow>, row: GridBasicRow<TOriginalRow>, column: LeafColumn<TOriginalRow, ColumnMetaEnhanced>) => {
         return cn('grid-body-row-cell',
             shouldHighlightSelectedRow(datagrid, row) && 'grid-body-row-cell-highlighted',
             column._meta.styles?.bodyCell?.({ datagrid, column, row }),

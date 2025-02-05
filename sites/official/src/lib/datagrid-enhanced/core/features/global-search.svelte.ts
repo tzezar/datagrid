@@ -1,5 +1,5 @@
 import { GlobalSearchFeature } from "$lib/datagrid/core/features";
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { EnhancedFeature } from "./types";
 
 
@@ -10,13 +10,13 @@ export type GlobalSearchEnhancedFeatureConfig = {
 
 
 export class GlobalSearchEnhancedFeature implements EnhancedFeature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
 
     private inputVisible: boolean = $state(false);
     enabled: boolean = $state(true);
     onEnableGlobalSearchChange: (value: boolean) => void = () => { };
 
-    constructor(datagrid: TzezarsDatagrid, config?: GlobalSearchEnhancedFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: GlobalSearchEnhancedFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config);
     }

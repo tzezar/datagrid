@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { AnyColumn } from '$lib/datagrid/core/types';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import type { ColumnMetaEnhanced } from '../core/types';
 
 	type Props = {
-		datagrid: TzezarsDatagrid<any>;
+		datagrid: EnhancedDatagrid<any>;
 		column: AnyColumn<any, ColumnMetaEnhanced>;
 	};
 	let { datagrid, column }: Props = $props();

@@ -5,12 +5,12 @@
 	import Fullscreen from '$lib/datagrid/icons/material-symbols/fullscreen.svelte';
 	import FullscreenExit from '$lib/datagrid/icons/material-symbols/fullscreen-exit.svelte';
 	import { cn } from '$lib/utils';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import ControlCenter from '../built-in/control-center/control-center.svelte';
 	import GlobalSearchInput from './global-search-input.svelte';
 
 	type Props = {
-		datagrid: TzezarsDatagrid;
+		datagrid: EnhancedDatagrid;
 
 		title?: string;
 		class?: string;

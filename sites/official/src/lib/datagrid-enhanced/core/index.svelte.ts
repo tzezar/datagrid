@@ -65,9 +65,9 @@ import { VirtualizationFeature, type VirtualizationFeatureConfig } from "./featu
 
 
 
-export type TzezarsDatagridConfig<TOriginalRow = any> = DatagridConfig<TOriginalRow> & {
+export type EnhancedDatagridConfig<TOriginalRow = any> = DatagridConfig<TOriginalRow> & {
     lifecycleHooks?: LifecycleHooks<TOriginalRow>;
-    extra?: TzezarsDatagridExtraStateConfig
+    extra?: EnhancedDatagridExtraStateConfig
     customization?: Omit<CustomizationFeatureConfig<TOriginalRow>, 'datagrid'>
 }
 
@@ -102,7 +102,7 @@ export type TrzezarsDatagridFeatures= {
 
 
 
-export type TzezarsDatagridExtraStateConfig = {
+export type EnhancedDatagridExtraStateConfig = {
     features?: {
         clickToCopy?: ClickToCopyFeatureConfig,
         columnFiltering?: ColumnFilteringEnhancedFeatureConfig,
@@ -200,7 +200,7 @@ function updateColumnPinningOffsets(columns: AnyColumn<any>[]) {
     return newColumns;
 }
 
-const createAdditionalColumns = (datagrid: TzezarsDatagrid): {
+const createAdditionalColumns = (datagrid: EnhancedDatagrid): {
     leftCols: AnyColumn<any>[];
     rightCols: AnyColumn<any>[];
 } => {
@@ -256,11 +256,11 @@ const createAdditionalColumns = (datagrid: TzezarsDatagrid): {
 };
 
 
-export class TzezarsDatagrid<TOriginalRow = any, TMeta = any> extends Datagrid<TOriginalRow, TMeta> {
+export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends Datagrid<TOriginalRow, TMeta> {
     extra: Extra<TOriginalRow>
     customization = {} as CustomizationFeature<TOriginalRow>
 
-    constructor(config: TzezarsDatagridConfig<TOriginalRow>) {
+    constructor(config: EnhancedDatagridConfig<TOriginalRow>) {
         super(config, true);
         this.extra = new Extra(this, config.extra);
 
@@ -310,19 +310,19 @@ export class TzezarsDatagrid<TOriginalRow = any, TMeta = any> extends Datagrid<T
 }
 
 export class Extra<TOriginalRow> {
-    datagrid: TzezarsDatagrid<TOriginalRow>;
+    datagrid: EnhancedDatagrid<TOriginalRow>;
     title: string | undefined;
     features = {} as TrzezarsDatagridFeatures
 
 
-    constructor(datagrid: TzezarsDatagrid<any>, config?: TzezarsDatagridExtraStateConfig) {
+    constructor(datagrid: EnhancedDatagrid<any>, config?: EnhancedDatagridExtraStateConfig) {
         this.datagrid = datagrid;
 
         this.initializeFeatures(config);
         this.title = config?.title || "Your data, Tzezar's Datagrid"
     }
 
-    initializeFeatures(config?: TzezarsDatagridExtraStateConfig) {
+    initializeFeatures(config?: EnhancedDatagridExtraStateConfig) {
         // extra
         this.features.clickToCopy = new ClickToCopyFeature(this.datagrid, config?.features?.clickToCopy);
         this.features.credentials = new CredentialsFeature(this.datagrid, config?.features?.credentials);

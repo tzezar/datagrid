@@ -47,12 +47,12 @@
 		<div class="hidden h-full w-64 shrink-0 flex-col overflow-auto border-r lg:flex">
 			<!-- Logo Section -->
 			<a href="/" class="">
-				<div class="sticky top-0 flex items-center justify-center gap-4 bg-primary-foreground py-4">
-					<div class="flex h-10 flex-row items-center justify-center align-middle">
+				<div class="sticky top-0 flex items-center justify-center gap-4 bg-primary-foreground py-4 w-full">
+					<div class="flex  flex-row items-center justify-center align-middle">
 						{#if schema == 'dark'}
-							<img src={logoWhite} alt="Logo" class="h-[42px] w-[42px]" />
+							<img src={logoWhite} alt="Logo" class="h-[32px] w-[32px]" />
 						{:else}
-							<img src={logoBlack} alt="Logo" class="h-[42px] w-[42px]" />
+							<img src={logoBlack} alt="Logo" class="h-[32px] w-[32px]" />
 						{/if}
 					</div>
 					<div>

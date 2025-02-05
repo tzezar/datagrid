@@ -1,6 +1,6 @@
 import { ColumnFilteringFeature } from "$lib/datagrid/core/features";
 import type { ColumnFilteringFeatureConfig } from "$lib/datagrid/core/features/column-filtering.svelte";
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { EnhancedFeature } from "./types";
 
 export type ColumnFilteringEnhancedFeatureConfig = {
@@ -9,12 +9,12 @@ export type ColumnFilteringEnhancedFeatureConfig = {
 } 
 
 export class ColumnFilteringEnhancedFeature implements EnhancedFeature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
 
     columnFiltersVisible: boolean = $state(false);
     isToggleButtonVisible: boolean = $state(true);
 
-    constructor(datagrid: TzezarsDatagrid, config?: ColumnFilteringEnhancedFeatureConfig & ColumnFilteringFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: ColumnFilteringEnhancedFeatureConfig & ColumnFilteringFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config);
     }

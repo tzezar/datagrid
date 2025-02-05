@@ -3,11 +3,11 @@
 	import { isInGroupTree } from "$lib/datagrid/core/utils.svelte";
 	import MoveDown from "$lib/datagrid/icons/material-symbols/move-down.svelte";
 	import MoveUp from "$lib/datagrid/icons/material-symbols/move-up.svelte";
-	import type { TzezarsDatagrid } from "../../core/index.svelte";
+	import type { EnhancedDatagrid } from "../../core/index.svelte";
 
 
     type Props = {
-        datagrid: TzezarsDatagrid<any>;
+        datagrid: EnhancedDatagrid<any>;
         column: AnyColumn<any>;
     }
 

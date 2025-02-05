@@ -1,10 +1,10 @@
 <script lang="ts" generics="T">
 	import type { Datagrid } from '$lib/datagrid/core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import LeafColumnCell from '../structure/leaf-column-cell.svelte';
 
-	let { datagrid, column }: { datagrid: TzezarsDatagrid<any>; column: LeafColumn<any> } = $props();
+	let { datagrid, column }: { datagrid: EnhancedDatagrid<any>; column: LeafColumn<any> } = $props();
 
 
 

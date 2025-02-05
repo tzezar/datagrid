@@ -5,11 +5,11 @@
 	} from '$lib/datagrid/core/types';
 	import ExpandMoreSqureLine from '$lib/datagrid/icons/si/expand-more-squre-line.svelte';
 	import { cn } from '$lib/utils';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import Cell from '../structure/cell.svelte';
 
 	type Props = {
-		datagrid: TzezarsDatagrid<any>;
+		datagrid: EnhancedDatagrid<any>;
 		row: GridBasicRow<any>;
 		column: LeafColumn<any>;
 	};

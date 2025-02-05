@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import Cell from '../structure/cell.svelte';
 
 	type Props = {
-		datagrid: TzezarsDatagrid<any>;
+		datagrid: EnhancedDatagrid<any>;
 		row: GridBasicRow<any>;
 		column: LeafColumn<any>;
 	};

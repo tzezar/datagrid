@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
-	import { TzezarsDatagrid } from '../core/index.svelte';
+	import { EnhancedDatagrid } from '../core/index.svelte';
 
 	type Props = {
-		datagrid: TzezarsDatagrid<any>;
+		datagrid: EnhancedDatagrid<any>;
 		position: 'top' | 'bottom' | 'both'
 	};
 

@@ -1,6 +1,6 @@
 import { GroupingFeature } from "$lib/datagrid/core/features";
 import type { GroupingFeatureConfig } from "$lib/datagrid/core/features/grouping.svelte";
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { EnhancedFeature } from "./types";
 
 
@@ -9,11 +9,11 @@ export type GroupingEnhancedFeatureConfig = {
 }
 
 export class GroupingEnhancedFeature implements EnhancedFeature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
 
     enabled: boolean = $state(true);
 
-    constructor(datagrid: TzezarsDatagrid, config?: GroupingEnhancedFeatureConfig & GroupingFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: GroupingEnhancedFeatureConfig & GroupingFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config);
 

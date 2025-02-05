@@ -2,14 +2,14 @@
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
-	import type { TzezarsDatagrid } from '../core/index.svelte';
+	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import { getCellContent, isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import ContentCopyOutline from '$lib/datagrid/icons/material-symbols/content-copy-outline.svelte';
 	import Cell from './cell.svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import type { ColumnMetaEnhanced } from '../core/types';
 	type Props = {
-		datagrid: TzezarsDatagrid;
+		datagrid: EnhancedDatagrid;
 		row: GridBasicRow<any>;
 		column: LeafColumn<any, ColumnMetaEnhanced>;
 		children?: Snippet;

@@ -1,4 +1,4 @@
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 
 
 export type VirtualizationFeatureConfig = {
@@ -6,10 +6,10 @@ export type VirtualizationFeatureConfig = {
 }
 
 export class VirtualizationFeature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
     enabled: boolean = $state(true);
 
-    constructor(datagrid: TzezarsDatagrid, config?: VirtualizationFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: VirtualizationFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config);
     }

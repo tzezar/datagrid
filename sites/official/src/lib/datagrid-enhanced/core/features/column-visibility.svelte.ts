@@ -1,5 +1,5 @@
 import type { ColumnVisibilityFeature } from "$lib/datagrid/core/features/column-visibility.svelte";
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { EnhancedFeature } from "./types";
 
 export type ColumnVisibilityEnhancedFeatureConfig = {
@@ -8,12 +8,12 @@ export type ColumnVisibilityEnhancedFeatureConfig = {
 } 
 
 export class ColumnVisibilityEnhancedFeature implements EnhancedFeature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
 
     displayControlCenterControls: boolean = $state(true);
     displayInColumnDropdown: boolean = $state(true);
 
-    constructor(datagrid: TzezarsDatagrid, config?: ColumnVisibilityEnhancedFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: ColumnVisibilityEnhancedFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config);
     }

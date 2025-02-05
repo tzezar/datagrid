@@ -1,5 +1,5 @@
 import { ColumnPinningFeature } from "$lib/datagrid/core/features";
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { EnhancedFeature } from "./types";
 
 export type ColumnPinningEnhancedFeatureConfig = {
@@ -7,10 +7,10 @@ export type ColumnPinningEnhancedFeatureConfig = {
 } 
 
 export class ColumnPinningEnhancedFeature implements EnhancedFeature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
     displayControls: boolean = $state(true);
 
-    constructor(datagrid: TzezarsDatagrid, config?: ColumnPinningEnhancedFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: ColumnPinningEnhancedFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config);
     }

@@ -2,11 +2,11 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import Visibility from '$lib/datagrid/icons/material-symbols/visibility.svelte';
 	import VisibilityOff from '$lib/datagrid/icons/material-symbols/visibility-off.svelte';
-	import type { TzezarsDatagrid } from '../../core/index.svelte';
+	import type { EnhancedDatagrid } from '../../core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 
 	type Props = {
-		datagrid: TzezarsDatagrid<any>;
+		datagrid: EnhancedDatagrid<any>;
 	};
 
 	let { datagrid }: Props = $props();

@@ -1,5 +1,5 @@
 import { SortingFeature } from "$lib/datagrid/core/features";
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { EnhancedFeature } from "./types";
 
 export type SortingEnhancedFeatureConfig = {
@@ -10,14 +10,14 @@ export type SortingEnhancedFeatureConfig = {
 } 
 
 export class SortingEnhancedFeature implements EnhancedFeature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
 
     enableSorting: boolean = $state(true);
     enableMultiSort: boolean = $state(true);
     // enableSortingRemoval: boolean = $state(true);
     displayInControlCenter: boolean = $state(false);
 
-    constructor(datagrid: TzezarsDatagrid<any>, config?: SortingEnhancedFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid<any>, config?: SortingEnhancedFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config);
     }

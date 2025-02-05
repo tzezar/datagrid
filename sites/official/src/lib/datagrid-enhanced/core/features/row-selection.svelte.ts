@@ -1,6 +1,6 @@
 import { RowSelectionFeature } from "$lib/datagrid/core/features";
 import type { GridRowIdentifier } from "$lib/datagrid/core/types";
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { EnhancedFeature } from "./types";
 
 
@@ -16,7 +16,7 @@ export type RowSelectionEnhancedFeatureConfig = {
 }
 
 export class RowSelectionEnhancedFeature implements EnhancedFeature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
 
     displayBuiltInComponents: boolean = $state(true);
     
@@ -30,7 +30,7 @@ export class RowSelectionEnhancedFeature implements EnhancedFeature {
 
     get base(): RowSelectionFeature { return this.datagrid.features.rowSelection }
 
-    constructor(datagrid: TzezarsDatagrid<any>, config?: RowSelectionEnhancedFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid<any>, config?: RowSelectionEnhancedFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config);
     }

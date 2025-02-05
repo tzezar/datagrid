@@ -1,10 +1,12 @@
-import { TzezarsDatagrid } from './core/index.svelte';
+import { EnhancedDatagrid } from './core/index.svelte';
 import type { ColumnMetaEnhanced } from './core/types';
-import DatagridEnhanced from './datagrid-enhanced.svelte';
+import MainComponent from './main-component.svelte';
 
 export {
-    TzezarsDatagrid as DatagridEnhanced,
-    DatagridEnhanced as Datagrid
-};
+    EnhancedDatagrid as EnhancedCore,
+    MainComponent as Component,
+}
 
-export type { ColumnMetaEnhanced as EnhancedColumnMeta };
+export type {
+    ColumnMetaEnhanced as EnhancedMeta
+}

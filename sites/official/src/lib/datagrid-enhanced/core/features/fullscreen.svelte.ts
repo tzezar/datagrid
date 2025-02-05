@@ -1,4 +1,4 @@
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { Feature } from "./types";
 
 
@@ -9,13 +9,13 @@ export type FullscreenFeatureConfig = {
 };
 
 export class FullscreenFeature implements Feature {
-    datagrid: TzezarsDatagrid;
+    datagrid: EnhancedDatagrid;
 
     isFullscreen: boolean = $state(false);
     enabled: boolean = $state(true);
     onFullscreenChange: (config: FullscreenFeatureConfig) => void = () => { };
 
-    constructor(datagrid: TzezarsDatagrid, config?: FullscreenFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: FullscreenFeatureConfig) {
         this.datagrid = datagrid;
         if (config) {
             this.isFullscreen = config.isFullscreen ?? this.isFullscreen;

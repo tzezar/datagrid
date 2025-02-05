@@ -1,5 +1,5 @@
 import { ColumnSizingFeature } from "$lib/datagrid/core/features";
-import type { TzezarsDatagrid } from "../index.svelte";
+import type { EnhancedDatagrid } from "../index.svelte";
 import type { EnhancedFeature } from "./types";
 
 export type ColumnSizingEnhancedFeatureConfig = {
@@ -8,14 +8,14 @@ export type ColumnSizingEnhancedFeatureConfig = {
 } 
 
 export class ColumnSizingEnhancedFeature implements EnhancedFeature {
-    datagrid: TzezarsDatagrid
+    datagrid: EnhancedDatagrid
 
     displayControls: boolean = $state(true);
     columnResizeMode: 'standard' | 'fluid' = $state('standard') // fluid changes width on mouse move
 
     onColumnResize: (columnId: string, width: number) => void = () => { };
 
-    constructor(datagrid: TzezarsDatagrid, config?: ColumnSizingEnhancedFeatureConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: ColumnSizingEnhancedFeatureConfig) {
         this.datagrid = datagrid
         this.initialize(config);
     }

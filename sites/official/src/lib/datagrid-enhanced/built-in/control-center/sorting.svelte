@@ -6,10 +6,10 @@
 	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';
 	import SortAscending from '$lib/datagrid/icons/tabler/sort-ascending.svelte';
 	import SortDescending from '$lib/datagrid/icons/tabler/sort-descending.svelte';
-	import type { TzezarsDatagrid } from '../../core/index.svelte';
+	import type { EnhancedDatagrid } from '../../core/index.svelte';
 
     type Props = {
-        datagrid: TzezarsDatagrid<any>;
+        datagrid: EnhancedDatagrid<any>;
     }
 
     let { datagrid }: Props = $props();
