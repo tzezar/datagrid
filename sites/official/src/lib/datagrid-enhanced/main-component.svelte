@@ -383,7 +383,7 @@
 			column={headerColumns.find((col) => col.columnId === '_selection') as LeafColumn<any>}
 		/>
 	{/if}
-	{#if datagrid.extra.features.rowExpanding.position === position && datagrid.extra.features.rowExpanding.createColumnManually === true}
+	{#if datagrid.extra.features.rowExpanding.position === position}
 		<RowExpandingCell
 			{datagrid}
 			{row}
