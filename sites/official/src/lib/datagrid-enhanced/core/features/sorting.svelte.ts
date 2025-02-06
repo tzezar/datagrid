@@ -1,33 +1,17 @@
-import { SortingFeature } from "$lib/datagrid/core/features";
-import type { EnhancedDatagrid } from "../index.svelte";
-import type { EnhancedFeature } from "./types";
 
 export type SortingEnhancedPluginConfig = {
-    enableSorting?: boolean;
-    enableMultiSort?: boolean;
-    displayInControlCenter?: boolean;
+    enableInControlCenter: boolean
+    enableInHeaderCell: boolean
 } 
 
-export class SortingEnhancedFeature implements EnhancedFeature {
-    datagrid: EnhancedDatagrid
+export class SortingEnhancedFeature  {
 
-    enableInControlCenter: boolean = $state(false);
-    enableInHeaderCell: boolean = $state(false);
+    enableInControlCenter: boolean = $state(true);
+    enableInHeaderCell: boolean = $state(true);
 
-    enableSorting: boolean = $state(true);
-    displayInControlCenter: boolean = $state(false);
-
-    constructor(datagrid: EnhancedDatagrid<any>, config?: SortingEnhancedPluginConfig) {
-        this.datagrid = datagrid
-        this.initialize(config);
+    constructor(config?: SortingEnhancedPluginConfig) {
+        this.enableInControlCenter = config?.enableInControlCenter ?? this.enableInControlCenter
+        this.enableInHeaderCell = config?.enableInHeaderCell ?? this.enableInHeaderCell
     }
-
-    get base(): SortingFeature { return this.datagrid.features.sorting }
-
-    initialize(config?: SortingEnhancedPluginConfig) {
-        this.enableSorting = config?.enableSorting ?? this.enableSorting;
-        this.displayInControlCenter = config?.displayInControlCenter ?? this.displayInControlCenter;
-    }
-
 
 }

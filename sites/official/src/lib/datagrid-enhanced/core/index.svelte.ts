@@ -341,16 +341,15 @@ export class Extra<TOriginalRow> {
         this.features.columnPinning = new ColumnPinningEnhancedFeature(config?.features?.columnPinning);
         this.features.columnSizing = new ColumnSizingEnhancedFeature(config?.features?.columnSizing);
         this.features.columnVisibility = new ColumnVisibilityEnhancedFeature(config?.features?.columnVisibility);
+        this.features.sorting = new SortingEnhancedFeature( config?.features?.sorting);
+        
         // toolbar
         this.features.globalSearch = new GlobalSearchEnhancedFeature(config?.features?.globalSearch);
-
+        
         // customization
 
         // extra
-
-        // enhanced
         this.features.columnFiltering = new ColumnFilteringEnhancedFeature(this.datagrid, config?.features?.columnFiltering)
-        this.features.sorting = new SortingEnhancedFeature(this.datagrid, config?.features?.sorting);
     }
 
     getTitle(): string | undefined {

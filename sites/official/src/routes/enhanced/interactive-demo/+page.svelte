@@ -3,7 +3,6 @@
 	import { columns } from './columns.svelte';
 	import * as Grid from '$lib/datagrid-enhanced';
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory';
-	import Button from '$lib/components/ui/button/button.svelte';
 
 	let { data } = $props();
 

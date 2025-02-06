@@ -5,7 +5,7 @@ export type VirtualizationPluginConfig = {
 }
 
 export class VirtualizationPlugin {
-    enabled: boolean = $state(true);
+    enabled: boolean = $state(false);
 
     constructor(config?: VirtualizationPluginConfig) {
         this.enabled = config?.enabled ?? this.enabled;
