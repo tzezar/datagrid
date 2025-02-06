@@ -20,4 +20,9 @@ export class PaginationPlugin implements IPaginationEnhancedFeature {
         return this.position !== 'none'
     }
 
+    changePosition(position: PaginationPosition) {
+        this.position = position;
+    }
+
+
 }

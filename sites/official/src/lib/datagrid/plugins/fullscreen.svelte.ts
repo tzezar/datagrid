@@ -21,9 +21,6 @@ export class FullscreenPlugin {
         this.onFullscreenChange(this);
     }
 
-    shouldDisplayFullscreenToggleButton() {
-        return this.displayFullscreenToggleButton;
-    }
 
     isFullscreenModeEnabled() {
         return this.fullscreenModeEnabled;

@@ -83,7 +83,9 @@
 		class={cn(datagrid.customization.styling.getWrapperClasses())}
 	>
 		{@render WrapperOverlaySnippet()}
-		{@render ToolbarSnippet()}
+		{#if datagrid.customization.toolbar.shouldDisplayToolbar()}
+			{@render ToolbarSnippet()}
+		{/if}
 		<!-- <div class="grid-toolbar-container">
 			<button onclick={() => datagrid.fullscreen.toggleFullscreen()}> Toggle Fullscreen </button>
 			</div> -->

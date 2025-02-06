@@ -6,6 +6,7 @@
 	import PaginationControl from './controls/pagination-control.svelte';
 	import RowSelectionControl from './controls/row-selection-control.svelte';
 	import RowExpandingControl from './controls/row-expanding-control.svelte';
+	import ToolbarControl from './controls/toolbar-control.svelte';
 
 	let { data } = $props();
 
@@ -14,15 +15,17 @@
 		data: data.inventory
 	});
 
-	$effect(() => {
-		console.log($state.snapshot(datagrid));
-	});
+	$effect(()=> {
+		console.log($state.snapshot(datagrid.columns.filter(col => col.columnId.startsWith('_'))))
+	})
+
 </script>
 
 <div class='pb-20'>
 	<PaginationControl {datagrid} />
 	<RowSelectionControl {datagrid} />
 	<RowExpandingControl {datagrid} />
+	<ToolbarControl {datagrid}/>
 </div>
 
 <Grid.Component {datagrid}></Grid.Component>

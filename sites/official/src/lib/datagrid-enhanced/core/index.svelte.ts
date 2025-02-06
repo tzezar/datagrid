@@ -223,14 +223,14 @@ export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends DatagridC
     constructor(config: EnhancedDatagridConfig<TOriginalRow>) {
         super(config, true);
         this.extra = new Extra(this, config.extra);
-    
+
         this.customization = new CustomizationFeature(this, config.customization);
 
         this.registerLifecycleHooks();
-     
+
         this.initializeState(config);
         if (this.extra.features.virtualization.enabled === true) {
-            this.features.pagination.pageSizes.push(10_000,25_000, 50_000, 100_000)
+            this.features.pagination.pageSizes.push(10_000, 25_000, 50_000, 100_000)
         }
     }
 
@@ -286,7 +286,7 @@ export class Extra<TOriginalRow> {
     }
 
     initializeFeatures(config?: EnhancedDatagridExtraStateConfig) {
-        
+
         // register plugins
         this.features.exporting = new ExportingPlugin(this.datagrid, config?.features?.exporting);
         this.features.animations = new AnimationsPlugin(this.datagrid, config?.features?.animations);
@@ -301,13 +301,13 @@ export class Extra<TOriginalRow> {
         this.features.clickToCopy = new ClickToCopyPlugin(config?.features?.clickToCopy);
 
         // maybe plugins after refactor 
-        this.features.rowSelection = new RowSelectionEnhancedFeature(config?.features?.rowSelection);
-        this.features.rowExpanding = new RowExpandingEnhancedFeature(config?.features?.rowExpanding);
+        this.features.rowSelection = new RowSelectionEnhancedFeature(this.datagrid, config?.features?.rowSelection);
+        this.features.rowExpanding = new RowExpandingEnhancedFeature(this.datagrid, config?.features?.rowExpanding);
 
         // control center
         // control center && header cells
         this.features.columnSizing = new ColumnSizingEnhancedFeature(config?.features?.columnSizing);
-        
+
         this.features.columnFiltering = new ColumnFilteringEnhancedFeature(this.datagrid, config?.features?.columnFiltering)
     }
 
