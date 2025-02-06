@@ -12,7 +12,7 @@ export type RowSelectionEnhancedPluginConfig = {
 
 export class RowSelectionEnhancedFeature {
 
-    createColumnManually: boolean = $state(true);
+    createColumnManually: boolean = $state(false);
     position: AutoColumnPosition = $state('right')
     highlightSelectedRow: boolean = $state(true);
     enableSelectAll: boolean = $state(true);

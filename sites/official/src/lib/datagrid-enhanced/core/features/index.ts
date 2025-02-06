@@ -6,7 +6,7 @@ import { ColumnVisibilityEnhancedFeature } from "./column-visibility.svelte";
 import { CredentialsPlugin } from "../../../datagrid/plugins/credentials.svelte";
 import { FullscreenPlugin } from "../../../datagrid/plugins/fullscreen.svelte";
 import { GlobalSearchEnhancedFeature } from "./global-search.svelte";
-import { ColumnGroupsPlugin } from "../../../datagrid/plugins/column-groups";
+import { ColumnGroupsPlugin } from "../../../datagrid/plugins/column-groups.svelte";
 import { GroupingEnhancedFeature } from "./grouping.svelte";
 import { StatusIndicatorPlugin } from "../../../datagrid/plugins/status-indicator.svelte";
 import { PaginationPlugin } from "../../../datagrid/plugins/pagination.svelte";
@@ -27,7 +27,7 @@ import type { ColumnVisibilityEnhancedPluginConfig } from "./column-visibility.s
 import type { CredentialsPluginConfig } from "../../../datagrid/plugins/credentials.svelte";
 import type { FullscreenPluginConfig } from "../../../datagrid/plugins/fullscreen.svelte";
 import type { GlobalSearchEnhancedPluginConfig } from "./global-search.svelte";
-import type { ColumnGroupsPluginConfig } from "../../../datagrid/plugins/column-groups";
+import type { ColumnGroupsPluginConfig } from "../../../datagrid/plugins/column-groups.svelte";
 import type { GroupingEnhancedPluginConfig } from "./grouping.svelte";
 import type { StatusIndicatorPluginConfig } from "../../../datagrid/plugins/status-indicator.svelte";
 import type { PaginationPluginConfig } from "../../../datagrid/plugins/pagination.svelte";

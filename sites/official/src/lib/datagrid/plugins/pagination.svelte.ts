@@ -1,6 +1,3 @@
-import type { DatagridCore } from "../core/index.svelte";
-import type { DatagridPlugin } from "../core/managers/plugin-manager.svelte";
-
 export type PaginationPosition = 'top' | 'bottom' | 'both' | 'none';
 
 export type PaginationPluginConfig = {
@@ -15,7 +12,7 @@ type IPaginationEnhancedFeature = {
 export class PaginationPlugin implements IPaginationEnhancedFeature {
     position: PaginationPosition = $state('bottom');
 
-    constructor(config?: PaginationPluginConfig) {
+    constructor(config?: PaginationPluginConfig ) {
         this.position = config?.position ?? this.position;
     }
 
@@ -24,12 +21,3 @@ export class PaginationPlugin implements IPaginationEnhancedFeature {
     }
 
 }
-
-const paginationPlugin: DatagridPlugin<PaginationPlugin> = {
-    name: 'pagination',
-    initialize: (datagrid: DatagridCore) => {
-        // Create a new instance of PaginationPlugin and register it
-        const plugin = new PaginationPlugin(datagrid.config.paginationConfig);
-        return plugin;
-    }
-};

@@ -15,7 +15,7 @@ import {
     SortingEnhancedFeature,
     FullscreenPlugin,
     ColumnGroupsPlugin,
-   PaginationPlugin,
+    PaginationPlugin,
     GlobalSearchEnhancedFeature,
     ClickToCopyPlugin,
     ColumnFilteringEnhancedFeature,
@@ -37,7 +37,7 @@ import {
     type ColumnOrderingEnhancedPluginConfig,
     ControlCenterFeature,
     type ControlCenterPluginConfig,
-     AnimationsPlugin,
+    AnimationsPlugin,
     type AnimationsPluginConfig,
 } from "./features";
 
@@ -341,7 +341,6 @@ export class Extra<TOriginalRow> {
         this.features.columnPinning = new ColumnPinningEnhancedFeature(config?.features?.columnPinning);
         this.features.columnSizing = new ColumnSizingEnhancedFeature(config?.features?.columnSizing);
         this.features.columnVisibility = new ColumnVisibilityEnhancedFeature(config?.features?.columnVisibility);
-
         // toolbar
         this.features.globalSearch = new GlobalSearchEnhancedFeature(config?.features?.globalSearch);
 
@@ -350,6 +349,7 @@ export class Extra<TOriginalRow> {
         // extra
 
         // enhanced
+        this.features.columnFiltering = new ColumnFilteringEnhancedFeature(this.datagrid, config?.features?.columnFiltering)
         this.features.sorting = new SortingEnhancedFeature(this.datagrid, config?.features?.sorting);
     }
 
