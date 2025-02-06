@@ -4,7 +4,6 @@ import { ColumnSizingEnhancedFeature } from "./column-resizing.svelte";
 import { CredentialsPlugin } from "../../../datagrid/plugins/credentials.svelte";
 import { FullscreenPlugin } from "../../../datagrid/plugins/fullscreen.svelte";
 import { ColumnGroupsPlugin } from "../../../datagrid/plugins/column-groups.svelte";
-import { GroupingEnhancedFeature } from "./grouping.svelte";
 import { StatusIndicatorPlugin } from "../../../datagrid/plugins/status-indicator.svelte";
 import { PaginationPlugin } from "../../../datagrid/plugins/pagination.svelte";
 import { RowExpandingEnhancedFeature } from "./row-expanding.svelte";
@@ -20,7 +19,6 @@ import type { ColumnSizingEnhancedPluginConfig } from "./column-resizing.svelte"
 import type { CredentialsPluginConfig } from "../../../datagrid/plugins/credentials.svelte";
 import type { FullscreenPluginConfig } from "../../../datagrid/plugins/fullscreen.svelte";
 import type { ColumnGroupsPluginConfig } from "../../../datagrid/plugins/column-groups.svelte";
-import type { GroupingEnhancedPluginConfig } from "./grouping.svelte";
 import type { StatusIndicatorPluginConfig } from "../../../datagrid/plugins/status-indicator.svelte";
 import type { PaginationPluginConfig } from "../../../datagrid/plugins/pagination.svelte";
 import type { RowExpandingEnhancedPluginConfig } from "./row-expanding.svelte";
@@ -43,7 +41,6 @@ export {
 export {
     ColumnFilteringEnhancedFeature,
     ColumnSizingEnhancedFeature,
-    GroupingEnhancedFeature,
     RowExpandingEnhancedFeature,
     RowSelectionEnhancedFeature,
     ControlCenterFeature,
@@ -59,7 +56,6 @@ export type {
     AnimationsPluginConfig,
     ColumnFilteringEnhancedPluginConfig,
     ColumnSizingEnhancedPluginConfig,
-    GroupingEnhancedPluginConfig,
     RowExpandingEnhancedPluginConfig,
     RowSelectionEnhancedPluginConfig,
     ControlCenterPluginConfig,

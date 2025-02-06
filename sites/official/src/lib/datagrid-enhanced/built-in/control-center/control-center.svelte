@@ -22,7 +22,7 @@
 	const { datagrid }: Props = $props();
 </script>
 
-{#if datagrid.extra.features.controlCenter.displayControlCenter}
+{#if datagrid.customization.controlCenter.displayControlCenter}
 	<DropdownMenu.Root>
 		<DropdownMenu.Trigger
 			class={`${buttonVariants({ variant: 'outline' })} rounded-none border-b-0 border-t-0  border-r-0 !border-grid-border`}
@@ -34,22 +34,22 @@
 				<DropdownMenu.GroupHeading>Datagrid control center</DropdownMenu.GroupHeading>
 				<DropdownMenu.Separator />
 				<DropdownMenu.Group>
-					{#if datagrid.extra.features.controlCenter.displaySortingMenu && datagrid.extra.features.controlCenter.displaySortingMenu === true}
+					{#if datagrid.customization.controlCenter.displaySortingMenu && datagrid.customization.controlCenter.displaySortingMenu === true}
 						<Sorting {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.controlCenter.displayOrderingMenu}
+					{#if datagrid.customization.controlCenter.displayOrderingMenu}
 						<ColumnReordering {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.controlCenter.displayPinningMenu}
+					{#if datagrid.customization.controlCenter.displayPinningMenu}
 						<ColumnFreezing {datagrid} />
 					{/if}
-					{#if datagrid.extra.features.controlCenter.displayResizingMenu}
+					{#if datagrid.customization.controlCenter.displayResizingMenu}
 						<ColumnResizing {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.controlCenter.displayVisibilityMenu}
+					{#if datagrid.customization.controlCenter.displayVisibilityMenu}
 						<ColumnVisibility {datagrid} />
 					{/if}
 
@@ -73,7 +73,7 @@
 					{#if datagrid.extra.features.columnGroups.enableGroupHeadersToggling}
 						<ColumnGroupsVisibility {datagrid} />
 					{/if}
-					{#if datagrid.extra.features.grouping.enableInControlCenter}
+					{#if datagrid.customization.controlCenter.displayGroupingMenu}
 						<DropdownMenu.Separator />
 						<DropdownMenu.GroupHeading>Group data by column</DropdownMenu.GroupHeading>
 						<GroupingDropdown {datagrid} />

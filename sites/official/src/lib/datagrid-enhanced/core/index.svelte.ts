@@ -6,7 +6,6 @@ import { flattenColumnStructureAndClearGroups } from "$lib/datagrid/core/utils.s
 import {
     CredentialsPlugin,
     ColumnSizingEnhancedFeature,
-    GroupingEnhancedFeature,
     StatusIndicatorPlugin,
     RowExpandingEnhancedFeature,
     RowSelectionEnhancedFeature,
@@ -21,19 +20,15 @@ import {
     type CredentialsPluginConfig,
     type FullscreenPluginConfig,
     type ColumnGroupsPluginConfig,
-    type GroupingEnhancedPluginConfig,
     type StatusIndicatorPluginConfig,
     type RowExpandingEnhancedPluginConfig,
     type RowSelectionEnhancedPluginConfig,
-    ControlCenterFeature,
-    type ControlCenterPluginConfig,
     AnimationsPlugin,
     type AnimationsPluginConfig,
 } from "./features";
 
 
 import type { PaginationPluginConfig } from "$lib/datagrid/core/features/pagination.svelte";
-import type { GroupingPluginConfig } from "$lib/datagrid/core/features/grouping.svelte";
 import { createDisplayColumn } from "$lib/datagrid/core/column-creation/display-column-creator";
 import RowSelectionCell from "../built-in/row-selection-cell.svelte";
 import RowExpandingCell from "../built-in/row-expanding-cell.svelte";
@@ -44,8 +39,6 @@ import { StripedRowsPlugin, type StripedRowsPluginConfig } from "../../datagrid/
 import { CustomizationFeature, type CustomizationPluginConfig } from "./customization/customization.svelte";
 import { VirtualizationPlugin, type VirtualizationPluginConfig } from "../../datagrid/plugins/virtualization.svelte";
 import { ExportingPlugin, type ExportingPluginConfig } from "$lib/datagrid/plugins/exporting.svelte";
-import { HeaderCellDropdownMenu, type HeaderCellDropdownMenuPluginConfig } from "./customization/header-cell-dropdown-menu.svelte";
-import { ToolbarCustomization, type ToolbarCustomizationConfig } from "./customization/toolbar.svelte";
 
 
 
@@ -56,7 +49,6 @@ export type EnhancedDatagridConfig<TOriginalRow = any> = DatagridCoreConfig<TOri
 }
 
 export type TrzezarsDatagridFeatures = {
-    headerCellDropdownMenu: HeaderCellDropdownMenu,
     clickToCopy: ClickToCopyPlugin,
     columnFiltering: ColumnFilteringEnhancedFeature,
     columnSizing: ColumnSizingEnhancedFeature,
@@ -64,17 +56,14 @@ export type TrzezarsDatagridFeatures = {
     exporting: ExportingPlugin,
     fullscreen: FullscreenPlugin,
     columnGroups: ColumnGroupsPlugin,
-    grouping: GroupingEnhancedFeature,
     statusIndicator: StatusIndicatorPlugin,
     pagination: PaginationPlugin,
     rowExpanding: RowExpandingEnhancedFeature,
     rowSelection: RowSelectionEnhancedFeature,
-    controlCenter: ControlCenterFeature,
     animations: AnimationsPlugin,
     overlay: OverlayPlugin,
     stripedRows: StripedRowsPlugin,
     virtualization: VirtualizationPlugin
-    toolbarCustomization: ToolbarCustomization
 
 }
 
@@ -83,7 +72,6 @@ export type TrzezarsDatagridFeatures = {
 
 export type EnhancedDatagridExtraStateConfig = {
     features?: {
-        headerCellDropdownMenu?: HeaderCellDropdownMenuPluginConfig,
         clickToCopy?: ClickToCopyPluginConfig,
         columnFiltering?: ColumnFilteringEnhancedPluginConfig,
         columnSizing?: ColumnSizingEnhancedPluginConfig,
@@ -91,17 +79,14 @@ export type EnhancedDatagridExtraStateConfig = {
         exporting?: ExportingPluginConfig,
         fullscreen?: FullscreenPluginConfig,
         groupHeadersVisibility?: ColumnGroupsPluginConfig,
-        grouping?: GroupingEnhancedPluginConfig & GroupingPluginConfig,
         statusIndicator?: StatusIndicatorPluginConfig,
         pagination?: PaginationPlugin & PaginationPluginConfig;
         rowExpanding?: RowExpandingEnhancedPluginConfig,
         rowSelection?: RowSelectionEnhancedPluginConfig,
-        controlCenter?: ControlCenterPluginConfig,
         animations?: AnimationsPluginConfig,
         overlay?: OverlayPluginConfig,
         stripedRows?: StripedRowsPluginConfig,
         virtualization?: VirtualizationPluginConfig,
-        toolbarCustomization?: ToolbarCustomizationConfig
     }
 
     title?: string
@@ -293,7 +278,6 @@ export class Extra<TOriginalRow> {
     title: string | undefined;
     features = {} as TrzezarsDatagridFeatures
 
-
     constructor(datagrid: EnhancedDatagrid<any>, config?: EnhancedDatagridExtraStateConfig) {
         this.datagrid = datagrid;
 
@@ -302,7 +286,6 @@ export class Extra<TOriginalRow> {
     }
 
     initializeFeatures(config?: EnhancedDatagridExtraStateConfig) {
-
         
         // register plugins
         this.features.exporting = new ExportingPlugin(this.datagrid, config?.features?.exporting);
@@ -322,18 +305,9 @@ export class Extra<TOriginalRow> {
         this.features.rowExpanding = new RowExpandingEnhancedFeature(config?.features?.rowExpanding);
 
         // control center
-        this.features.grouping = new GroupingEnhancedFeature(config?.features?.grouping);
-        this.features.controlCenter = new ControlCenterFeature(config?.features?.controlCenter);
-        this.features.toolbarCustomization = new ToolbarCustomization(config?.features?.toolbarCustomization);
-        this.features.headerCellDropdownMenu = new HeaderCellDropdownMenu(config?.features?.headerCellDropdownMenu);
         // control center && header cells
         this.features.columnSizing = new ColumnSizingEnhancedFeature(config?.features?.columnSizing);
         
-        // toolbar
-        
-        // customization
-
-        // extra
         this.features.columnFiltering = new ColumnFilteringEnhancedFeature(this.datagrid, config?.features?.columnFiltering)
     }
 

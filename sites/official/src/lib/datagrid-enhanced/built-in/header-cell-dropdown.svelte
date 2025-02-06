@@ -191,7 +191,7 @@
 			<DropdownMenu.Group>
 				<DropdownMenu.GroupHeading>{column.header} Group</DropdownMenu.GroupHeading>
 				<DropdownMenu.Separator />
-				{#if datagrid.extra.features.headerCellDropdownMenu.displayMovementControls === true}
+				{#if datagrid.customization.headerCellDropdownMenu.displayMovementControls === true}
 					<DropdownMenu.Item
 						onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
 						closeOnSelect={false}
@@ -302,7 +302,7 @@
 						<span>Group by {column.header}</span>
 					{/if}
 				</DropdownMenu.Item>
-				{#if datagrid.extra.features.headerCellDropdownMenu.displayColumnPinningControls === true}
+				{#if datagrid.customization.headerCellDropdownMenu.displayColumnPinningControls === true}
 					<DropdownMenu.Separator />
 
 					<DropdownMenu.Item
@@ -328,7 +328,7 @@
 					</DropdownMenu.Item>
 				{/if}
 				<DropdownMenu.Separator />
-				{#if datagrid.extra.features.headerCellDropdownMenu.displayColumnVisibilityControls}
+				{#if datagrid.customization.headerCellDropdownMenu.displayColumnVisibilityControls}
 					<DropdownMenu.Item 
 						disabled={column.options.hideable === false}
 						onclick={() =>
@@ -339,7 +339,7 @@
 					</DropdownMenu.Item>
 				{/if}
 
-				{#if datagrid.extra.features.headerCellDropdownMenu.displayMovementControls === true}
+				{#if datagrid.customization.headerCellDropdownMenu.displayMovementControls === true}
 					<DropdownMenu.Separator />
 					<DropdownMenu.Item
 						onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}

@@ -6,6 +6,7 @@ export type ControlCenterPluginConfig = {
     displayResizingMenu?: boolean
     displayPinningMenu?: boolean
     displaySortingMenu?: boolean
+    displayGroupingMenu?: boolean
 }
 
 
@@ -18,6 +19,8 @@ export class ControlCenterFeature {
     displayVisibilityMenu: boolean = $state(true)
     displayResizingMenu: boolean = $state(true)
     displayPinningMenu: boolean = $state(true)
+    displayGroupingMenu: boolean = $state(true)
+
 
     constructor(config?: ControlCenterPluginConfig) {
         this.displayControlCenter = config?.displayControlCenter ?? this.displayControlCenter;
@@ -26,6 +29,7 @@ export class ControlCenterFeature {
         this.displayPinningMenu = config?.displayPinningMenu ?? this.displayPinningMenu;
         this.displayOrderingMenu = config?.displayOrderingMenu ?? this.displayOrderingMenu;
         this.displaySortingMenu = config?.displaySortingMenu ?? this.displaySortingMenu;
+        this.displayGroupingMenu = config?.displayGroupingMenu ?? this.displayGroupingMenu;
     }
 
 

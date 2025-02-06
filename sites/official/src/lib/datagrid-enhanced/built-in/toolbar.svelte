@@ -19,7 +19,7 @@
 	let { datagrid, title, class: _class }: Props = $props();
 
 	const toggleColumnFiltersVisibility = () => {
-		datagrid.extra.features.toolbarCustomization.toggleInputVisibility()
+		datagrid.customization.toolbar.toggleInputVisibility()
 		datagrid.extra.features.columnFiltering.toggle();
 	};
 </script>
@@ -27,12 +27,12 @@
 <div
 	class={cn(
 		datagrid.customization.styling.getToolbarContainerClasses(),
-		datagrid.extra.features.toolbarCustomization.showColumnFilteringToggler && 'top-bar ',
+		datagrid.customization.toolbar.showColumnFilteringToggler && 'top-bar ',
 		_class,
 		'flex  flex-row items-center  '
 	)}
 >
-	{#if datagrid.extra.features.toolbarCustomization.shouldDisplayInput()}
+	{#if datagrid.customization.toolbar.shouldDisplayInput()}
 		<GlobalSearchInput {datagrid} />
 	{:else}
 		<div class="border-grid-border flex grow pl-2">
@@ -46,7 +46,7 @@
 		</div>
 	{/if}
 
-	{#if datagrid.extra.features.toolbarCustomization.showColumnFilteringToggler}
+	{#if datagrid.customization.toolbar.showColumnFilteringToggler}
 		{@render columnFilteringToggleButton()}
 	{/if}
 
