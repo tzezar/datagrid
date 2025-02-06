@@ -254,11 +254,15 @@ export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends DatagridC
     constructor(config: EnhancedDatagridConfig<TOriginalRow>) {
         super(config, true);
         this.extra = new Extra(this, config.extra);
-
+    
         this.customization = new CustomizationFeature(this, config.customization);
 
         this.registerLifecycleHooks();
+     
         this.initializeState(config);
+        if (this.extra.features.virtualization.enabled === true) {
+            this.features.pagination.pageSizes.push(10_000,25_000, 50_000, 100_000)
+        }
     }
 
 

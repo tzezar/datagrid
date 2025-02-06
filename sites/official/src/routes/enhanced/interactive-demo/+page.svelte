@@ -21,13 +21,6 @@
 					animateRows: true,
 					animateHeaders: true
 				},
-				sorting: {
-					enableMultiSort: true,
-					enableSorting: true,
-					manualSorting: false,
-					maxMultiSortColCount: 2,
-					isMultiSortEvent: () => true
-				}
 			}
 		}
 	});
