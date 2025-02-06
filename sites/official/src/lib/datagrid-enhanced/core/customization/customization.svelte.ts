@@ -24,7 +24,6 @@ type IAnimations = {
 
 }
 
-
 interface CustomizationOptions {
   theme?: 'shadcn' | 'default';
   cellTooltips?: boolean;
@@ -37,10 +36,6 @@ export type CustomizationPluginConfig<TOriginalRow> = {
   datagrid?: EnhancedDatagrid<TOriginalRow>
   styling?: StylingPluginConfig<TOriginalRow>
 } & CustomizationOptions
-
-
-
-
 
 export class CustomizationFeature<TOriginalRow> implements IPagination, IAnimations {
   datagrid: EnhancedDatagrid<TOriginalRow>
@@ -59,10 +54,6 @@ export class CustomizationFeature<TOriginalRow> implements IPagination, IAnimati
   paginationPosition: 'top' | 'bottom' | 'both' = $state('bottom')
 
   // Column filtering
-  
-
-
-
   styling: StylingFeature<TOriginalRow>
 
   constructor(datagrid: EnhancedDatagrid<TOriginalRow>, config?: CustomizationPluginConfig<TOriginalRow>) {

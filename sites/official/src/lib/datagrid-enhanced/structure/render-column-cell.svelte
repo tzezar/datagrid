@@ -65,10 +65,10 @@
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
 				class:sortable={column.options.sortable &&
-					datagrid.extra.features.sorting.enableInHeaderCell === true}
+					datagrid.extra.features.headerCellDropdownMenu.displaySortingMenu === true}
 				class={datagrid.customization.styling.getHeadRowLeafColumnCellContentClasses(column)}
 				onclick={(e) => {
-					if (datagrid.extra.features.sorting.enableInHeaderCell === false) return;
+					if (datagrid.extra.features.headerCellDropdownMenu.displaySortingMenu === false) return;
 					let multisort = false;
 					if (datagrid.features.sorting.enableMultiSort) {
 						multisort = e.shiftKey;
@@ -79,7 +79,7 @@
 				<span class="font-semibold">{column.header}</span>
 
 				<div class="flex gap-1">
-					{#if datagrid.extra.features.sorting.enableInHeaderCell && datagrid.extra.features.sorting.enableInHeaderCell === true}
+					{#if datagrid.extra.features.headerCellDropdownMenu.displaySortingMenu && datagrid.extra.features.headerCellDropdownMenu.displaySortingMenu === true}
 						{#if column.isSortable()}
 							<ColumnSortingIndicator {datagrid} {column} />
 						{/if}

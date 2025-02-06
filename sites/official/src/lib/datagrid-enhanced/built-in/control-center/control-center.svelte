@@ -34,22 +34,22 @@
 				<DropdownMenu.GroupHeading>Datagrid control center</DropdownMenu.GroupHeading>
 				<DropdownMenu.Separator />
 				<DropdownMenu.Group>
-					{#if datagrid.extra.features.sorting.enableInControlCenter && datagrid.extra.features.sorting.enableInControlCenter === true}
+					{#if datagrid.extra.features.controlCenter.displaySortingMenu && datagrid.extra.features.controlCenter.displaySortingMenu === true}
 						<Sorting {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.columnOrdering.enableInControlCenter}
+					{#if datagrid.extra.features.controlCenter.displayOrderingMenu}
 						<ColumnReordering {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.columnPinning.enableInControlCenter}
+					{#if datagrid.extra.features.controlCenter.displayPinningMenu}
 						<ColumnFreezing {datagrid} />
 					{/if}
-					{#if datagrid.extra.features.columnSizing.enableInControlCenter}
+					{#if datagrid.extra.features.controlCenter.displayResizingMenu}
 						<ColumnResizing {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.columnVisibility.displayControlCenterControls}
+					{#if datagrid.extra.features.controlCenter.displayVisibilityMenu}
 						<ColumnVisibility {datagrid} />
 					{/if}
 

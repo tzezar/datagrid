@@ -11,12 +11,10 @@ export class ColumnFilteringEnhancedFeature  {
     datagrid: DatagridCore<any, EnhancedMeta>
 
     columnFiltersVisible: boolean = $state(false);
-    isToggleButtonVisible: boolean = $state(true);
 
     constructor(datagrid: DatagridCore, config?: ColumnFilteringEnhancedPluginConfig & ColumnFilteringPluginConfig) {
         this.datagrid = datagrid;
         this.columnFiltersVisible = config?.columnFiltersVisible ?? this.columnFiltersVisible;
-        this.isToggleButtonVisible = config?.isToggleButtonVisible ?? this.isToggleButtonVisible;
     }
 
     toggle() {
@@ -29,10 +27,6 @@ export class ColumnFilteringEnhancedFeature  {
 
     shouldDisplayHeaderCellFilter() {
         return this.columnFiltersVisible && this.datagrid.columns.some(col => col.options.filterable === true && col._meta.filterType && col.isVisible());
-    }
-
-    shouldDisplayButton() {
-        return this.isToggleButtonVisible;
     }
 
 }

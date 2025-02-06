@@ -5,36 +5,26 @@ import { flattenColumnStructureAndClearGroups } from "$lib/datagrid/core/utils.s
 
 import {
     CredentialsPlugin,
-    ColumnPinningEnhancedFeature,
     ColumnSizingEnhancedFeature,
-    ColumnVisibilityEnhancedFeature,
     GroupingEnhancedFeature,
     StatusIndicatorPlugin,
     RowExpandingEnhancedFeature,
     RowSelectionEnhancedFeature,
-    SortingEnhancedFeature,
     FullscreenPlugin,
     ColumnGroupsPlugin,
     PaginationPlugin,
-    GlobalSearchEnhancedFeature,
     ClickToCopyPlugin,
     ColumnFilteringEnhancedFeature,
     type ClickToCopyPluginConfig,
     type ColumnFilteringEnhancedPluginConfig,
-    type ColumnPinningEnhancedPluginConfig,
     type ColumnSizingEnhancedPluginConfig,
-    type ColumnVisibilityEnhancedPluginConfig,
     type CredentialsPluginConfig,
     type FullscreenPluginConfig,
-    type GlobalSearchEnhancedPluginConfig,
     type ColumnGroupsPluginConfig,
     type GroupingEnhancedPluginConfig,
     type StatusIndicatorPluginConfig,
     type RowExpandingEnhancedPluginConfig,
     type RowSelectionEnhancedPluginConfig,
-    type SortingEnhancedPluginConfig,
-    ColumnOrderingEnhancedFeature,
-    type ColumnOrderingEnhancedPluginConfig,
     ControlCenterFeature,
     type ControlCenterPluginConfig,
     AnimationsPlugin,
@@ -42,10 +32,8 @@ import {
 } from "./features";
 
 
-import type { SortingPluginConfig } from "$lib/datagrid/core/features/sorting.svelte";
 import type { PaginationPluginConfig } from "$lib/datagrid/core/features/pagination.svelte";
 import type { GroupingPluginConfig } from "$lib/datagrid/core/features/grouping.svelte";
-import type { ColumnOrderingPluginConfig } from "$lib/datagrid/core/features/column-ordering.svelte";
 import { createDisplayColumn } from "$lib/datagrid/core/column-creation/display-column-creator";
 import RowSelectionCell from "../built-in/row-selection-cell.svelte";
 import RowExpandingCell from "../built-in/row-expanding-cell.svelte";
@@ -53,9 +41,11 @@ import RowSelectionColumnHeaderCell from "../built-in/row-selection-column-heade
 import RowExpandingColumnHeaderCell from "../built-in/row-expanding-column-header-cell.svelte";
 import { OverlayPlugin, type OverlayPluginConfig } from "../../datagrid/plugins/overlay.svelte";
 import { StripedRowsPlugin, type StripedRowsPluginConfig } from "../../datagrid/plugins/striped-rows.svelte";
-import { CustomizationFeature, type CustomizationPluginConfig } from "./features/customization.svelte";
+import { CustomizationFeature, type CustomizationPluginConfig } from "./customization/customization.svelte";
 import { VirtualizationPlugin, type VirtualizationPluginConfig } from "../../datagrid/plugins/virtualization.svelte";
 import { ExportingPlugin, type ExportingPluginConfig } from "$lib/datagrid/plugins/exporting.svelte";
+import { HeaderCellDropdownMenu, type HeaderCellDropdownMenuPluginConfig } from "./customization/header-cell-dropdown-menu.svelte";
+import { ToolbarCustomization, type ToolbarCustomizationConfig } from "./customization/toolbar.svelte";
 
 
 
@@ -66,28 +56,25 @@ export type EnhancedDatagridConfig<TOriginalRow = any> = DatagridCoreConfig<TOri
 }
 
 export type TrzezarsDatagridFeatures = {
+    headerCellDropdownMenu: HeaderCellDropdownMenu,
     clickToCopy: ClickToCopyPlugin,
     columnFiltering: ColumnFilteringEnhancedFeature,
-    columnPinning: ColumnPinningEnhancedFeature,
     columnSizing: ColumnSizingEnhancedFeature,
-    columnVisibility: ColumnVisibilityEnhancedFeature,
     credentials: CredentialsPlugin,
     exporting: ExportingPlugin,
     fullscreen: FullscreenPlugin,
-    globalSearch: GlobalSearchEnhancedFeature,
     columnGroups: ColumnGroupsPlugin,
     grouping: GroupingEnhancedFeature,
     statusIndicator: StatusIndicatorPlugin,
     pagination: PaginationPlugin,
     rowExpanding: RowExpandingEnhancedFeature,
     rowSelection: RowSelectionEnhancedFeature,
-    sorting: SortingEnhancedFeature,
-    columnOrdering: ColumnOrderingEnhancedFeature,
     controlCenter: ControlCenterFeature,
     animations: AnimationsPlugin,
     overlay: OverlayPlugin,
     stripedRows: StripedRowsPlugin,
     virtualization: VirtualizationPlugin
+    toolbarCustomization: ToolbarCustomization
 
 }
 
@@ -96,28 +83,25 @@ export type TrzezarsDatagridFeatures = {
 
 export type EnhancedDatagridExtraStateConfig = {
     features?: {
+        headerCellDropdownMenu?: HeaderCellDropdownMenuPluginConfig,
         clickToCopy?: ClickToCopyPluginConfig,
         columnFiltering?: ColumnFilteringEnhancedPluginConfig,
-        columnPinning?: ColumnPinningEnhancedPluginConfig,
         columnSizing?: ColumnSizingEnhancedPluginConfig,
-        columnVisibility?: ColumnVisibilityEnhancedPluginConfig,
         credentials?: CredentialsPluginConfig,
         exporting?: ExportingPluginConfig,
         fullscreen?: FullscreenPluginConfig,
-        globalSearch?: GlobalSearchEnhancedPluginConfig,
         groupHeadersVisibility?: ColumnGroupsPluginConfig,
         grouping?: GroupingEnhancedPluginConfig & GroupingPluginConfig,
         statusIndicator?: StatusIndicatorPluginConfig,
         pagination?: PaginationPlugin & PaginationPluginConfig;
         rowExpanding?: RowExpandingEnhancedPluginConfig,
         rowSelection?: RowSelectionEnhancedPluginConfig,
-        sorting?: SortingEnhancedPluginConfig & SortingPluginConfig
-        columnOrdering?: ColumnOrderingEnhancedPluginConfig & ColumnOrderingPluginConfig
         controlCenter?: ControlCenterPluginConfig,
         animations?: AnimationsPluginConfig,
         overlay?: OverlayPluginConfig,
         stripedRows?: StripedRowsPluginConfig,
-        virtualization?: VirtualizationPluginConfig
+        virtualization?: VirtualizationPluginConfig,
+        toolbarCustomization?: ToolbarCustomizationConfig
     }
 
     title?: string
@@ -319,6 +303,7 @@ export class Extra<TOriginalRow> {
 
     initializeFeatures(config?: EnhancedDatagridExtraStateConfig) {
 
+        
         // register plugins
         this.features.exporting = new ExportingPlugin(this.datagrid, config?.features?.exporting);
         this.features.animations = new AnimationsPlugin(this.datagrid, config?.features?.animations);
@@ -339,16 +324,12 @@ export class Extra<TOriginalRow> {
         // control center
         this.features.grouping = new GroupingEnhancedFeature(config?.features?.grouping);
         this.features.controlCenter = new ControlCenterFeature(config?.features?.controlCenter);
-
+        this.features.toolbarCustomization = new ToolbarCustomization(config?.features?.toolbarCustomization);
+        this.features.headerCellDropdownMenu = new HeaderCellDropdownMenu(config?.features?.headerCellDropdownMenu);
         // control center && header cells
-        this.features.columnOrdering = new ColumnOrderingEnhancedFeature(config?.features?.columnOrdering);
-        this.features.columnPinning = new ColumnPinningEnhancedFeature(config?.features?.columnPinning);
         this.features.columnSizing = new ColumnSizingEnhancedFeature(config?.features?.columnSizing);
-        this.features.columnVisibility = new ColumnVisibilityEnhancedFeature(config?.features?.columnVisibility);
-        this.features.sorting = new SortingEnhancedFeature( config?.features?.sorting);
         
         // toolbar
-        this.features.globalSearch = new GlobalSearchEnhancedFeature(config?.features?.globalSearch);
         
         // customization
 
