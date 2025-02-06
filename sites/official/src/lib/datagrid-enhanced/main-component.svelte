@@ -67,10 +67,11 @@
 	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
 	const leafColumnsToDisplay = $derived(leafColumns.filter((col) => !col.columnId.startsWith('_')));
 
-	const isFullscreenEnabled = $derived(datagrid.extra.features.fullscreen.isFullscreenModeEnabled());
-	const showWrapperOverlay = $derived(datagrid.extra.features.overlay.isEntireDatagridOverlayEnabled());
-	const shouldDisplayPagination = $derived(
-		datagrid.extra.features.pagination.isPaginationVisible()
+	const isFullscreenEnabled = $derived(
+		datagrid.extra.features.fullscreen.isFullscreenModeEnabled()
+	);
+	const showWrapperOverlay = $derived(
+		datagrid.extra.features.overlay.isEntireDatagridOverlayEnabled()
 	);
 	const shouldAnimateHeaders = $derived(datagrid.extra.features.animations.shouldAnimateHeaders());
 </script>
@@ -134,61 +135,58 @@
 
 {#snippet BodyRowSnippet(row: GridRow<any>, rowIndex: number)}
 	{#if row.isGroupRow()}
-	<div
-		use:identifier={{ datagrid, value: 'row-' + row.identifier }}
-		class={datagrid.customization.styling.getBodyGroupRowClasses()}
-		data-depth={row.depth}
-		data-expanded={row.isExpanded()}
-	>
-		{#each leafColumns as column, columnIndex (column.columnId)}
-			<RenderGroupCell {datagrid} {row} {column} />
-		{/each}
-	</div>
-{:else}
-	<div
-		class={cn(
-			datagrid.customization.styling.getBodyRowClasses(row, Number(rowIndex)), ''
-		)}
-		use:identifier={{ datagrid, value: 'row-' + row.identifier }}
-	>
-		{@render AdditionalBodyCells('left', row)}
-		{#if datagrid.extra.features.animations.shouldAnimateRows()}
-			{#each leafColumnsToDisplay as column (column.columnId)}
-				<div
-					class:contents={!datagrid.extra.features.animations.shouldAnimateRows()}
-					class={cn(column._meta.grow && 'grow flex')}
-					animate:flip={{
-						duration: (len) => datagrid.extra.features.animations.getRowsFlipDuration(len)
-					}}
-				>
+		<div
+			use:identifier={{ datagrid, value: 'row-' + row.identifier }}
+			class={datagrid.customization.styling.getBodyGroupRowClasses()}
+			data-depth={row.depth}
+			data-expanded={row.isExpanded()}
+		>
+			{#each leafColumns as column, columnIndex (column.columnId)}
+				<RenderGroupCell {datagrid} {row} {column} />
+			{/each}
+		</div>
+	{:else}
+		<div
+			class={cn(datagrid.customization.styling.getBodyRowClasses(row, Number(rowIndex)), '')}
+			use:identifier={{ datagrid, value: 'row-' + row.identifier }}
+		>
+			{@render AdditionalBodyCells('left', row)}
+			{#if datagrid.extra.features.animations.shouldAnimateRows()}
+				{#each leafColumnsToDisplay as column (column.columnId)}
+					<div
+						class:contents={!datagrid.extra.features.animations.shouldAnimateRows()}
+						class={cn(column._meta.grow && 'flex grow')}
+						animate:flip={{
+							duration: (len) => datagrid.extra.features.animations.getRowsFlipDuration(len)
+						}}
+					>
+						<RenderCell {datagrid} {row} {column} />
+					</div>
+				{/each}
+			{:else}
+				{#each leafColumnsToDisplay as column (column.columnId)}
 					<RenderCell {datagrid} {row} {column} />
+				{/each}
+			{/if}
+			{@render AdditionalBodyCells('right', row)}
+		</div>
+		{#if row.isExpanded()}
+			{#if expandedRow}
+				{@render expandedRow(row)}
+			{:else}
+				<div class={datagrid.customization.styling.getBodyRowExpandedClasses()}>
+					<div class="cell sticky left-0">
+						{#if expandedRowContent}
+							{@render expandedRowContent()}
+						{:else}
+							Place your content in the `expandedRowContent` snippet
+						{/if}
+					</div>
 				</div>
-			{/each}
-		{:else}
-			{#each leafColumnsToDisplay as column (column.columnId)}
-				<RenderCell {datagrid} {row} {column} />
-			{/each}
-		{/if}
-		{@render AdditionalBodyCells('right', row)}
-	</div>
-	{#if row.isExpanded()}
-		{#if expandedRow}
-			{@render expandedRow(row)}
-		{:else}
-			<div class={datagrid.customization.styling.getBodyRowExpandedClasses()}>
-				<div class="cell sticky left-0">
-					{#if expandedRowContent}
-						{@render expandedRowContent()}
-					{:else}
-						Place your content in the `expandedRowContent` snippet
-					{/if}
-				</div>
-			</div>
+			{/if}
 		{/if}
 	{/if}
-{/if}
 {/snippet}
-
 
 {#snippet HeadSnippet()}
 	{#if head}
@@ -208,7 +206,7 @@
 					{#each headerColumnsWithoutAdditional as column (column.columnId)}
 						<div
 							class:contents={!shouldAnimateHeaders}
-							class={cn(column._meta.grow && 'grow flex')}
+							class={cn(column._meta.grow && 'flex grow')}
 							animate:flip={{
 								duration: (len) => datagrid.extra.features.animations.getHeadersFlipDuration(len)
 							}}
@@ -254,7 +252,7 @@
 					</div>
 				{:else}
 					<div
-						class={cn(datagrid.customization.styling.getBodyRowClasses(row, rowIndex),)}
+						class={cn(datagrid.customization.styling.getBodyRowClasses(row, rowIndex))}
 						use:identifier={{ datagrid, value: 'row-' + row.identifier }}
 					>
 						{@render AdditionalBodyCells('left', row)}
@@ -325,7 +323,7 @@
 
 {#snippet PaginationSnippet(directions: ('top' | 'bottom' | 'both')[])}
 	<!-- Simplified logic, preserving original intent -->
-	{#if shouldDisplayPagination}
+	{#if datagrid.extra.features.pagination.isPaginationVisible()}
 		{#if ['both', 'top'].includes(datagrid.extra.features.pagination.position) && directions.includes('top')}
 			{#if pagination}
 				{@render pagination()}

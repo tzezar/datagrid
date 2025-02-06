@@ -17,10 +17,12 @@ export class RowExpandingEnhancedFeature  {
     position: AutoColumnPosition = $state('right')
 
     constructor(config?: RowExpandingEnhancedPluginConfig & RowExpandingPluginConfig) {
-
         Object.assign(this, config);
     }
 
-
+    changePosition(position: AutoColumnPosition) {
+        // TODO recalculate offset
+        this.position = position;
+    }
 
 }

@@ -12,7 +12,7 @@ type IPaginationEnhancedFeature = {
 export class PaginationPlugin implements IPaginationEnhancedFeature {
     position: PaginationPosition = $state('bottom');
 
-    constructor(config?: PaginationPluginConfig ) {
+    constructor(config?: PaginationPluginConfig & PaginationPluginConfig) {
         this.position = config?.position ?? this.position;
     }
 
