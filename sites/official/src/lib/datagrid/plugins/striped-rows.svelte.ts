@@ -33,4 +33,23 @@ export class StripedRowsPlugin implements IStripedRows {
         return styles
     }
 
+
+    disable() {
+        this.enabled = false
+    }
+    enable() {
+        this.enabled = true
+    }
+    toggle() {
+        if (this.enabled) this.disable()
+        else this.enable()
+    }
+    changeEnabled(state: boolean) {
+        if (state) this.enable()
+        else this.disable()
+    }
+    isEnabled() {
+        return this.enabled
+    }
+
 }

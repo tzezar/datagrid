@@ -2,13 +2,12 @@ import { SvelteSet } from "svelte/reactivity";
 import type { DatagridCore } from "../index.svelte";
 import type { GridRowIdentifier } from "../types";
 
-const DEFAULT_MAX_EXPANDED_ROWS = 999999999;
-
 export type RowExpandingMode = 'single' | 'multiple';
 
 export type RowExpandingPluginConfig = {
     expandedRowIds?: SvelteSet<GridRowIdentifier>;
     onExpandingChange?: (config: RowExpandingFeature<any>) => void;
+    onExpandingMoreThanMaxChange?: (config: RowExpandingFeature<any>) => void;
     expandingMode?: RowExpandingMode
     maxExpandedRows?: number;
 }
@@ -26,11 +25,11 @@ export class RowExpandingFeature<TOriginalRow = any> {
     expandedRowIds: SvelteSet<GridRowIdentifier> = new SvelteSet()
 
     expandingMode: RowExpandingMode = $state('single');
-    maxExpandedRows: number = $state(DEFAULT_MAX_EXPANDED_ROWS);
+    maxExpandedRows: number = $state(2);
 
 
     onExpandingChange: (config: RowExpandingFeature<any>) => void = () => { };
-
+    onExpandingMoreThanMaxChange: (config: RowExpandingFeature<any>) => void = () => { };
     /**
      * Constructor to initialize the row expansion feature with a reference to the data grid.
      * @param datagrid - The data grid instance to associate with this row expansion feature.

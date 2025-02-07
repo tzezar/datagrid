@@ -13,6 +13,9 @@ interface CustomizationOptions {
   customScrollbar?: boolean;
   stickyHeader?: boolean;
   pagination?: boolean;
+
+
+  columnFiltersVisible?: boolean
 }
 
 export type CustomizationPluginConfig<TOriginalRow> = {
@@ -34,6 +37,15 @@ export class CustomizationFeature<TOriginalRow> {
   theme = $state('shadcn')
 
 
+  isColumnFilterVisible: boolean = $state(false);
+
+
+
+  showColumnSortingIndicator = $state(true)
+  enableSorting = $state(true)
+  enableColumnDropdownMenu = $state(true)
+
+
 
 
   toolbar: ToolbarCustomization
@@ -43,6 +55,9 @@ export class CustomizationFeature<TOriginalRow> {
 
   // Column filtering
   styling: StylingFeature<TOriginalRow>
+
+
+
 
   constructor(datagrid: EnhancedDatagrid<TOriginalRow>, config?: CustomizationPluginConfig<TOriginalRow>) {
     this.datagrid = datagrid
@@ -56,6 +71,17 @@ export class CustomizationFeature<TOriginalRow> {
     this.customScrollbar = config?.customScrollbar ?? this.customScrollbar;
     this.stickyHeader = config?.stickyHeader ?? this.stickyHeader
     this.styling = new StylingFeature(this, config?.styling)
+
   }
+
+  toggleColumnCellFilter() {
+    this.isColumnFilterVisible = !this.isColumnFilterVisible;
+  }
+
+  shouldDisplayHeaderCellFilter() {
+    return this.isColumnFilterVisible && this.datagrid.columns.some(col => col.options.filterable === true && col._meta.filterType && col.isVisible());
+  }
+
+
 
 }

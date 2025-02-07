@@ -53,11 +53,11 @@
 						<ColumnVisibility {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.exporting.enableExporting}
+					{#if datagrid.customization.controlCenter.displayExportingMenu}
 						<DataExporting {datagrid} />
 					{/if}
 
-					{#if datagrid.extra.features.columnGroups.enableColumnGroupsCreation}
+					{#if datagrid.customization.controlCenter.displayColumnGroupCreationMenu}
 						<DropdownMenu.Separator />
 						<DropdownMenu.Sub>
 							<DropdownMenu.SubTrigger>
@@ -70,7 +70,7 @@
 						</DropdownMenu.Sub>
 					{/if}
 
-					{#if datagrid.extra.features.columnGroups.enableGroupHeadersToggling}
+					{#if datagrid.customization.controlCenter.displayHideColumnGroupsMenu}
 						<ColumnGroupsVisibility {datagrid} />
 					{/if}
 					{#if datagrid.customization.controlCenter.displayGroupingMenu}

@@ -76,7 +76,7 @@ export class StylingFeature<TOriginalRow> {
 
     getHeadRowLeafColumnCellContentClasses = (column: LeafColumn<TOriginalRow>) => {
         return cn('grid-head-row-leaf-column-cell-content', column.options.sortable &&
-            this.customization.headerCellDropdownMenu.displaySortingMenu === true && 'sortable')
+            this.customization.headerCellDropdownMenu.displayColumnSortingControls === true && 'sortable')
     }
 
     getHeadRowGroupColumnCellContentClasses = () => {

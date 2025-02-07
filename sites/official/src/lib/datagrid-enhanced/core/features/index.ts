@@ -1,5 +1,4 @@
 import { ClickToCopyPlugin } from "../../../datagrid/plugins/click-to-copy.svelte";
-import { ColumnFilteringEnhancedFeature } from "./column-filtering.svelte";
 import { ColumnSizingEnhancedFeature } from "./column-resizing.svelte";
 import { CredentialsPlugin } from "../../../datagrid/plugins/credentials.svelte";
 import { FullscreenPlugin } from "../../../datagrid/plugins/fullscreen.svelte";
@@ -14,7 +13,6 @@ import { AnimationsPlugin } from "../../../datagrid/plugins/animations.svelte";
 
 
 import type { ClickToCopyPluginConfig } from "../../../datagrid/plugins/click-to-copy.svelte";
-import type { ColumnFilteringEnhancedPluginConfig } from "./column-filtering.svelte";
 import type { ColumnSizingEnhancedPluginConfig } from "./column-resizing.svelte";
 import type { CredentialsPluginConfig } from "../../../datagrid/plugins/credentials.svelte";
 import type { FullscreenPluginConfig } from "../../../datagrid/plugins/fullscreen.svelte";
@@ -39,7 +37,6 @@ export {
 
 // Features
 export {
-    ColumnFilteringEnhancedFeature,
     ColumnSizingEnhancedFeature,
     RowExpandingEnhancedFeature,
     RowSelectionEnhancedFeature,
@@ -54,7 +51,6 @@ export type {
     StatusIndicatorPluginConfig,
     PaginationPluginConfig,
     AnimationsPluginConfig,
-    ColumnFilteringEnhancedPluginConfig,
     ColumnSizingEnhancedPluginConfig,
     RowExpandingEnhancedPluginConfig,
     RowSelectionEnhancedPluginConfig,

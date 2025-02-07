@@ -2,7 +2,7 @@ import type { GridRow } from "$lib/datagrid/core/types";
 import type { EnhancedDatagrid } from "./core/index.svelte";
 
 export function shouldShowColumnFilter(datagrid: EnhancedDatagrid): boolean {
-    return datagrid.extra.features.columnFiltering.isEnabled();
+    return datagrid.customization.isColumnFilterVisible
 }
 
 

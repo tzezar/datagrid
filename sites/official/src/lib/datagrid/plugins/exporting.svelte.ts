@@ -10,7 +10,6 @@ export type ExportMethods = 'toExcel' | 'toCSV' | 'toJSON' | 'toXML';
 export type ExportingPluginConfig = {
     fileName?: string;
     
-    enableExporting?: boolean;
     exportMethods?: ExportMethods[];
 }
 
@@ -19,14 +18,11 @@ export class ExportingPlugin<T = any> {
 
     exportMethods: ExportMethods[] = ['toExcel', 'toCSV', 'toJSON', 'toXML'];
 
-    enableExporting: boolean = $state(true);
-
     fileName: string = $state('table');
 
     constructor(datagrid: DatagridCore<T>, config?: ExportingPluginConfig) {
         this.datagrid = datagrid;
 
-        this.enableExporting = config?.enableExporting ?? this.enableExporting;
         this.fileName = config?.fileName ?? this.fileName;
         this.exportMethods = config?.exportMethods ?? this.exportMethods;
     }

@@ -12,7 +12,7 @@
 </script>
 
 <div>
-	<p>Row selection column position</p>
+	<p>Column sorting</p>
 	<div>
 		<Select.Root
 			type="single"

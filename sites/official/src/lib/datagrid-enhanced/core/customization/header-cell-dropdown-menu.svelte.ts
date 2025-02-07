@@ -1,15 +1,20 @@
 export type HeaderCellDropdownMenuPluginConfig = {
-    displaySortingMenu?: boolean
-    displayMovementControls?: boolean
+    displayColumnSortingControls?: boolean
+    displayColumnFiteringControls?: boolean
+    displayGroupingByColumnControls?: boolean
     displayColumnPinningControls?: boolean
     displayColumnVisibilityControls?: boolean
+    displayColumnMovementControls?: boolean
 }
 
 export class HeaderCellDropdownMenu {
-    displaySortingMenu: boolean = $state(true)
-    displayMovementControls: boolean = $state(true)
+    
+    displayColumnSortingControls: boolean = $state(true)
+    displayColumnFiteringControls: boolean = $state(true)
+    displayGroupingByColumnControls: boolean = $state(true)
     displayColumnPinningControls: boolean = $state(true)
     displayColumnVisibilityControls: boolean = $state(true)
+    displayColumnMovementControls: boolean = $state(true)
 
     constructor(config?: HeaderCellDropdownMenuPluginConfig) {
         Object.assign(this, config)

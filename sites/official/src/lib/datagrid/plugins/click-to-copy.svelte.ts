@@ -22,8 +22,9 @@ export class ClickToCopyPlugin {
     }
 
     shouldDisplayCopyButton(column: AccessorColumn<any, ColumnMetaEnhanced> | ComputedColumn<any, ColumnMetaEnhanced>) {
-        return (this.display === true && column._meta.clickToCopy !== false) ||
-            column._meta.clickToCopy === true;
+        if (this.display === false) return false;
+        if (column._meta.clickToCopy === false) return false;
+        return true
     }
 
     isValidColumn(column: AnyColumn<any>): column is AccessorColumn<any> | ComputedColumn<any> {

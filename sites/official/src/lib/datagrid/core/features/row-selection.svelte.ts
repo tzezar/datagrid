@@ -32,12 +32,10 @@ export type RowSelectionPluginConfig = {
 }
 
 
-const DEFAULT_MAX_SELECTED_ROWS = 99999999;
-
 export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFeature<TOriginalRow> {
     datagrid: DatagridCore<TOriginalRow>;
     selectedBasicRowIdentifiers: SvelteSet<GridRowIdentifier> = $state(new SvelteSet())
-    maxSelectedRows: number = $state(DEFAULT_MAX_SELECTED_ROWS);
+    maxSelectedRows: number = $state(Infinity);
     onSelectMoreThanMaxSelectedRows: () => void = () => { }
     rowSelectionMode: RowSelectionMode = $state('multiple');
 

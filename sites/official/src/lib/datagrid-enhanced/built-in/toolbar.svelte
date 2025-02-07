@@ -20,7 +20,7 @@
 
 	const toggleColumnFiltersVisibility = () => {
 		datagrid.customization.toolbar.toggleGlobalSearchVisibility()
-		datagrid.extra.features.columnFiltering.toggle();
+		datagrid.customization.toggleColumnCellFilter();
 	};
 </script>
 
@@ -63,7 +63,7 @@
 		variant="outline"
 		onclick={toggleColumnFiltersVisibility}
 	>
-		{#if datagrid.extra.features.columnFiltering.isEnabled()}
+		{#if datagrid.customization.isColumnFilterVisible}
 			<FilterAlt />
 		{:else}
 			<FilterAltOff />

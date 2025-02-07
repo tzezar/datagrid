@@ -13,9 +13,7 @@ import {
     ColumnGroupsPlugin,
     PaginationPlugin,
     ClickToCopyPlugin,
-    ColumnFilteringEnhancedFeature,
     type ClickToCopyPluginConfig,
-    type ColumnFilteringEnhancedPluginConfig,
     type ColumnSizingEnhancedPluginConfig,
     type CredentialsPluginConfig,
     type FullscreenPluginConfig,
@@ -50,7 +48,6 @@ export type EnhancedDatagridConfig<TOriginalRow = any> = DatagridCoreConfig<TOri
 
 export type TrzezarsDatagridFeatures = {
     clickToCopy: ClickToCopyPlugin,
-    columnFiltering: ColumnFilteringEnhancedFeature,
     columnSizing: ColumnSizingEnhancedFeature,
     credentials: CredentialsPlugin,
     exporting: ExportingPlugin,
@@ -73,7 +70,6 @@ export type TrzezarsDatagridFeatures = {
 export type EnhancedDatagridExtraStateConfig = {
     features?: {
         clickToCopy?: ClickToCopyPluginConfig,
-        columnFiltering?: ColumnFilteringEnhancedPluginConfig,
         columnSizing?: ColumnSizingEnhancedPluginConfig,
         credentials?: CredentialsPluginConfig,
         exporting?: ExportingPluginConfig,
@@ -308,7 +304,6 @@ export class Extra<TOriginalRow> {
         // control center && header cells
         this.features.columnSizing = new ColumnSizingEnhancedFeature(config?.features?.columnSizing);
 
-        this.features.columnFiltering = new ColumnFilteringEnhancedFeature(this.datagrid, config?.features?.columnFiltering)
     }
 
     getTitle(): string | undefined {

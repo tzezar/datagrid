@@ -150,7 +150,6 @@
 		}
 	];
 
-
 	// ! WARNING: renamed values
 	const selectOperators: SelectFilterOperator[] = [
 		{
@@ -165,7 +164,10 @@
 		}
 	];
 
-	let { datagrid, column }: { datagrid: EnhancedDatagrid<any>; column: AnyColumn<any, ColumnMetaEnhanced> } = $props();
+	let {
+		datagrid,
+		column
+	}: { datagrid: EnhancedDatagrid<any>; column: AnyColumn<any, ColumnMetaEnhanced> } = $props();
 </script>
 
 {#snippet FilterOperator(
@@ -184,14 +186,14 @@
 
 {#if isGroupColumn(column)}
 	<DropdownMenu.Root>
-		<DropdownMenu.Trigger class={cn(buttonVariants({ variant: 'ghost' }), 'size-4 p-2 ml-1 ')}>
+		<DropdownMenu.Trigger class={cn(buttonVariants({ variant: 'ghost' }), 'ml-1 size-4 p-2 ')}>
 			<MoreVert />
 		</DropdownMenu.Trigger>
 		<DropdownMenu.Content class="w-56">
 			<DropdownMenu.Group>
 				<DropdownMenu.GroupHeading>{column.header} Group</DropdownMenu.GroupHeading>
 				<DropdownMenu.Separator />
-				{#if datagrid.customization.headerCellDropdownMenu.displayMovementControls === true}
+				{#if datagrid.customization.headerCellDropdownMenu.displayColumnMovementControls === true}
 					<DropdownMenu.Item
 						onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
 						closeOnSelect={false}
@@ -254,57 +256,61 @@
 				<DropdownMenu.GroupHeading>{column.header}</DropdownMenu.GroupHeading>
 				<DropdownMenu.Separator />
 
-				<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.unSortColumn(column)}>
-					<ArrowsSort class="mr-2 size-4" />
-					<span>Clear sort</span>
-				</DropdownMenu.Item>
-				<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.sortColumnAscending(column)}>
-					<SortAscending class="mr-2 size-4" />
-					<span>Sort ascending </span>
-				</DropdownMenu.Item>
-				<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.sortColumnDescending(column)}>
-					<SortDescending class="mr-2 size-4" />
-					<span>Sort descending </span>
-				</DropdownMenu.Item>
-				<DropdownMenu.Separator />
-				<DropdownMenu.Item>
-					<FilterX class="mr-2 size-4" />
-					<span>Clear filter</span>
-				</DropdownMenu.Item>
-				<DropdownMenu.Sub>
-					<DropdownMenu.SubTrigger
-						disabled={!column._meta.filterType || column.options.filterable === false}
-						class="aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
-					>
-						<FilterCog class="mr-2 size-4" />
-						<span>Filter operator</span>
-					</DropdownMenu.SubTrigger>
-					<DropdownMenu.SubContent>
-						{#if column._meta.filterType === 'number'}
-							{@render FilterOperator(numberOperators)}
-						{/if}
-						{#if column._meta.filterType === 'text'}
-							{@render FilterOperator(stringOperators)}
-						{/if}
-						{#if column._meta.filterType === 'select'}
-							{@render FilterOperator(selectOperators)}
-						{/if}
-					</DropdownMenu.SubContent>
-				</DropdownMenu.Sub>
-
-				<DropdownMenu.Separator />
-				<DropdownMenu.Item onclick={() => datagrid.handlers.grouping.toggle(column.columnId)}>
-					{#if datagrid.features.grouping.isColumnWithinGroup(column.columnId)}
-						<AdGroupOffOutlineSharp class="mr-2 size-4" />
-						<span>Ungroup by {column.header}</span>
-					{:else}
-						<AdGroupOutlineSharp class="mr-2 size-4" />
-						<span>Group by {column.header}</span>
-					{/if}
-				</DropdownMenu.Item>
-				{#if datagrid.customization.headerCellDropdownMenu.displayColumnPinningControls === true}
+				{#if datagrid.customization.headerCellDropdownMenu.displayColumnSortingControls === true}
+					<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.unSortColumn(column)}>
+						<ArrowsSort class="mr-2 size-4" />
+						<span>Clear sort</span>
+					</DropdownMenu.Item>
+					<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.sortColumnAscending(column)}>
+						<SortAscending class="mr-2 size-4" />
+						<span>Sort ascending </span>
+					</DropdownMenu.Item>
+					<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.sortColumnDescending(column)}>
+						<SortDescending class="mr-2 size-4" />
+						<span>Sort descending </span>
+					</DropdownMenu.Item>
 					<DropdownMenu.Separator />
+					<DropdownMenu.Item>
+						<FilterX class="mr-2 size-4" />
+						<span>Clear filter</span>
+					</DropdownMenu.Item>
+					<DropdownMenu.Sub>
+						<DropdownMenu.SubTrigger
+							disabled={!column._meta.filterType || column.options.filterable === false}
+							class="aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+						>
+							<FilterCog class="mr-2 size-4" />
+							<span>Filter operator</span>
+						</DropdownMenu.SubTrigger>
+						<DropdownMenu.SubContent>
+							{#if column._meta.filterType === 'number'}
+								{@render FilterOperator(numberOperators)}
+							{/if}
+							{#if column._meta.filterType === 'text'}
+								{@render FilterOperator(stringOperators)}
+							{/if}
+							{#if column._meta.filterType === 'select'}
+								{@render FilterOperator(selectOperators)}
+							{/if}
+						</DropdownMenu.SubContent>
+					</DropdownMenu.Sub>
 
+					<DropdownMenu.Separator />
+				{/if}
+
+				{#if datagrid.customization.headerCellDropdownMenu.displayGroupingByColumnControls === true}
+					<DropdownMenu.Item onclick={() => datagrid.handlers.grouping.toggle(column.columnId)}>
+						{#if datagrid.features.grouping.isColumnWithinGroup(column.columnId)}
+							<AdGroupOffOutlineSharp class="mr-2 size-4" />
+							<span>Ungroup by {column.header}</span>
+						{:else}
+							<AdGroupOutlineSharp class="mr-2 size-4" />
+							<span>Group by {column.header}</span>
+						{/if}
+					</DropdownMenu.Item>
+					<DropdownMenu.Separator />
+				{/if}
+				{#if datagrid.customization.headerCellDropdownMenu.displayColumnPinningControls === true}
 					<DropdownMenu.Item
 						disabled={column.options.pinnable === false || column.state.pinning.position === 'left'}
 						onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'left')}
@@ -313,7 +319,8 @@
 						<span>Pin to left</span>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item
-						disabled={column.options.pinnable === false || column.state.pinning.position === 'right'}
+						disabled={column.options.pinnable === false ||
+							column.state.pinning.position === 'right'}
 						onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'right')}
 					>
 						<FreezeColumn class="mr-2 size-4 rotate-180" />
@@ -329,7 +336,7 @@
 				{/if}
 				<DropdownMenu.Separator />
 				{#if datagrid.customization.headerCellDropdownMenu.displayColumnVisibilityControls}
-					<DropdownMenu.Item 
+					<DropdownMenu.Item
 						disabled={column.options.hideable === false}
 						onclick={() =>
 							datagrid.handlers.columnVisibility.toggleColumnVisibility(column.columnId)}
@@ -339,7 +346,7 @@
 					</DropdownMenu.Item>
 				{/if}
 
-				{#if datagrid.customization.headerCellDropdownMenu.displayMovementControls === true}
+				{#if datagrid.customization.headerCellDropdownMenu.displayColumnMovementControls === true}
 					<DropdownMenu.Separator />
 					<DropdownMenu.Item
 						onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}

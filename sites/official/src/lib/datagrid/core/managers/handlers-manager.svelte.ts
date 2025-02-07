@@ -252,7 +252,21 @@ export class HandlersManager {
     }
     rowExpanding = {
         toggleRowExpansion: (rowIdentifier: GridRowIdentifier) => {
-            this.datagrid.features.rowExpanding.toggleRowExpansion(rowIdentifier);
+            if (this.datagrid.features.rowExpanding.isRowExpanded(rowIdentifier)) {
+                this.datagrid.features.rowExpanding.toggleRowExpansion(rowIdentifier);
+                return
+            }
+
+            const maxExpandedRows = this.datagrid.features.rowExpanding.maxExpandedRows;
+            const isExpandingMoreThanMax = this.datagrid.features.rowExpanding.expandedRowIds.size >= maxExpandedRows;
+            
+            if (isExpandingMoreThanMax)  {
+                this.datagrid.features.rowExpanding.onExpandingMoreThanMaxChange(this.datagrid.features.rowExpanding)
+                return
+            }
+            
+            this.datagrid.features.rowExpanding.expandedRowIds.add(rowIdentifier);
+
         },
         toggleGroupRowExpansion: (row: GridGroupRow<any>) => {
             this.datagrid.rows.toggleGroupRowExpansion(row);
