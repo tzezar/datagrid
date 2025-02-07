@@ -1,5 +1,4 @@
 import type { GridBasicRow, GridGroupRow, GridRowIdentifier } from "../types";
-import { isGroupRowExpanded } from "../utils.svelte";
 import { BaseService } from "./base-service";
 
 export class RowService extends BaseService {
@@ -56,7 +55,7 @@ export class RowService extends BaseService {
     }
 
     toggleGroupRowExpansion<TOriginalRow>(row: GridGroupRow<TOriginalRow>) {
-        if (isGroupRowExpanded(this.datagrid, row)) {
+        if (row.isExpanded()) {
             this.datagrid.features.grouping.expandedGroups.delete(row.identifier);
         } else {
             this.datagrid.features.grouping.expandedGroups.add(row.identifier);

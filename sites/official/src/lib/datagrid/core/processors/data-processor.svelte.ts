@@ -305,7 +305,7 @@ export class DataDataProcessor<TOriginalRow> {
                     // isExpanded: false,
                     children: groupByLevel(groupRows, depth + 1, `${parentPath}${index + 1}`),
                     aggregations: aggregations,
-                    isExpanded: () => this.datagrid.features.rowExpanding.isRowExpanded(key),
+                    isExpanded: () => this.datagrid.features.grouping.expandedGroups.has(key),
                     isGroupRow: function (): this is GridGroupRow<TOriginalRow> {
                         return true;
                     },

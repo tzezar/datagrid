@@ -138,9 +138,6 @@ export function getGroupColumns<TOriginalRow>(columns: AnyColumn<TOriginalRow>[]
     return flattenColumnStructureAndClearGroups(columns).filter(col => isGroupColumn(col));
 }
 
-export function isGroupRowExpanded<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>, row: GridGroupRow<TOriginalRow>) {
-    return datagrid.features.grouping.expandedGroups.has(row.identifier);
-}
 
 
 export function findRowById<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>, identifier: GridRowIdentifier): GridRow<TOriginalRow> | undefined {

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
-	import { isGroupRowExpanded } from '$lib/datagrid/core/utils.svelte';
 	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
 	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import GroupCell from './group-cell.svelte';
@@ -39,7 +38,7 @@
 		>
 			<span class="border-primary/30 rounded-sm border-[1px]">
 				<ArrowRight
-					class={`${isGroupRowExpanded(datagrid, row) && 'rotate-90'} transition-all `}
+					class={`${row.isExpanded() && 'rotate-90'} transition-all `}
 				/>
 			</span>
 			<span class="w-full overflow-hidden text-ellipsis whitespace-nowrap leading-normal">

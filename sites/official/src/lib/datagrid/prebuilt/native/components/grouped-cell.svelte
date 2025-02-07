@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { DatagridCore } from '$lib/datagrid/core/index.svelte';
 	import type { GridGroupRow, LeafColumn } from '$lib/datagrid/core/types';
-	import { isGroupRowExpanded } from '$lib/datagrid/core/utils.svelte';
 	import ArrowRight from '$lib/datagrid/icons/material-symbols/arrow-right.svelte';
 
 	type Props = {
@@ -19,7 +18,7 @@
 	<button class="flex gap-1" onclick={() => datagrid.handlers.rows.toggleGroupRowExpansion(row)}>
 		<span class="border-primary/30 rounded-sm border-[1px]">
 			<ArrowRight
-				class={`${isGroupRowExpanded(datagrid, row) && 'rotate-90'} transition-all `}
+				class={`${row.isExpanded() && 'rotate-90'} transition-all `}
 			/>
 		</span>
 		<span class="">
