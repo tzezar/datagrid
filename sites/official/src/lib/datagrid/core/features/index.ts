@@ -9,7 +9,7 @@ import { SortingFeature } from "./sorting.svelte";
 import { GlobalSearchFeature } from "./global-search.svelte";
 import { GroupingFeature } from "./grouping.svelte";
 import { PaginationFeature } from "./pagination.svelte";
-import { RowExpansion } from "./row-expanding.svelte";
+import { RowExpansionFeature } from "./row-expanding.svelte";
 import { RowPinningFeature } from "./row-pinning.svelte";
 import { RowSelectionFeature } from "./row-selection.svelte";
 
@@ -25,7 +25,7 @@ export {
     GlobalSearchFeature,
     GroupingFeature,
     PaginationFeature,
-    RowExpansion as RowExpandingFeature,
+    RowExpansionFeature as RowExpandingFeature,
     RowPinningFeature as RowPinningFeature,
     RowSelectionFeature as RowSelectionFeature
 }

@@ -9,31 +9,27 @@ export type RowExpansionState = {
     expansionMode: RowExpansionMode;
     maxExpandedRows: number;
 
-    onExpansionChange: (config: RowExpansion<any>) => void;
-    onExceedMaxExpansion: (config: RowExpansion<any>) => void;
+    onExpansionChange: (config: RowExpansionFeature<any>) => void;
+    onExceedMaxExpansion: (config: RowExpansionFeature<any>) => void;
 }
 
+export type RowExpansionConfig = Partial<RowExpansionState>
 
-export type RowExpansionConfig = {
-} & Partial<RowExpansionState>
-
-export type IRowExpandingFeature<TOriginalRow> = {
-    datagrid: DatagridCore<TOriginalRow>;
-} & RowExpansionState
+export type IRowExpandingFeature = {} & RowExpansionState
 
 /**
  * Manages row expansion functionality within the data grid.
  * Allows expanding and collapsing rows, with the state tracked via expanded row IDs.
  */
-export class RowExpansion<TOriginalRow = any> implements IRowExpandingFeature<TOriginalRow> {
+export class RowExpansionFeature<TOriginalRow = any> implements IRowExpandingFeature {
     datagrid: DatagridCore<TOriginalRow>;
     expandedRowIds: SvelteSet<GridRowIdentifier> = new SvelteSet()
     expansionMode: RowExpansionMode = $state('single');
     maxExpandedRows: number = $state(2);
 
 
-    onExpansionChange: (config: RowExpansion<any>) => void = () => { };
-    onExceedMaxExpansion: (config: RowExpansion<any>) => void = () => { };
+    onExpansionChange: (config: RowExpansionFeature<any>) => void = () => { };
+    onExceedMaxExpansion: (config: RowExpansionFeature<any>) => void = () => { };
 
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: RowExpansionConfig) {
         this.datagrid = datagrid;

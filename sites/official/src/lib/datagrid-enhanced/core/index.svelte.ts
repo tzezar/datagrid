@@ -1,5 +1,4 @@
-import type { AnyColumn, ColumnId } from "$lib/datagrid/core/types";
-import { DatagridCore, type DatagridCoreConfig } from "$lib/datagrid/core/index.svelte";
+import type { AnyColumn, ColumnId, DatagridCoreConfig } from "$lib/datagrid/core/types";
 import { LifecycleHooks } from "$lib/datagrid/core/managers/lifecycle-hooks-manager.svelte";
 import { flattenColumnStructureAndClearGroups } from "$lib/datagrid/core/utils.svelte";
 
@@ -26,7 +25,7 @@ import {
 } from "./features";
 
 
-import type { PaginationPluginConfig } from "$lib/datagrid/core/features/pagination.svelte";
+import type { PaginationFeatureConfig } from "$lib/datagrid/core/features/pagination.svelte";
 import { createDisplayColumn } from "$lib/datagrid/core/column-creation/display-column-creator";
 import RowSelectionCell from "../built-in/row-selection-cell.svelte";
 import RowExpandingCell from "../built-in/row-expanding-cell.svelte";
@@ -37,6 +36,7 @@ import { StripedRowsPlugin, type StripedRowsPluginConfig } from "../../datagrid/
 import { CustomizationFeature, type CustomizationPluginConfig } from "./customization/customization.svelte";
 import { VirtualizationPlugin, type VirtualizationPluginConfig } from "../../datagrid/plugins/virtualization.svelte";
 import { ExportingPlugin, type ExportingPluginConfig } from "$lib/datagrid/plugins/exporting.svelte";
+import { DatagridCore } from "$lib/datagrid/core/index.svelte";
 
 
 
@@ -76,7 +76,7 @@ export type EnhancedDatagridExtraStateConfig = {
         fullscreen?: FullscreenPluginConfig,
         groupHeadersVisibility?: ColumnGroupsPluginConfig,
         statusIndicator?: StatusIndicatorPluginConfig,
-        pagination?: PaginationPlugin & PaginationPluginConfig;
+        pagination?: PaginationPlugin & PaginationFeatureConfig;
         rowExpanding?: RowExpandingEnhancedPluginConfig,
         rowSelection?: RowSelectionEnhancedPluginConfig,
         animations?: AnimationsPluginConfig,

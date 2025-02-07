@@ -2,15 +2,17 @@ import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 import { findColumnById } from "../utils.svelte";
 
-
-export type ColumnVisibilityPluginConfig = {
-    onColumnVisibilityChange?(hiddenColumns: string[]): void;
+export type ColumnVisibilityFeatureState = {
+    onColumnVisibilityChange: (hiddenColumns: string[]) => void
 }
 
+
+export type ColumnVisibilityPluginConfig = Partial<ColumnVisibilityFeatureState>
+export type IColumnVisibilityFeature = ColumnVisibilityFeature
 /**
  * Manages column visibility functionality for a DataGrid.
  */
-export class ColumnVisibilityFeature<TOriginalRow = any> {
+export class ColumnVisibilityFeature<TOriginalRow = any> implements IColumnVisibilityFeature {
     // Reference to the DataGrid instance
     datagrid: DatagridCore<TOriginalRow>;
 

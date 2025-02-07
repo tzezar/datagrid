@@ -9,15 +9,17 @@ export type SortingFeatureState = {
 }
 
 
-export type SortingFeatureConfig = {
-    onSortingChange?(config: any): void;
-} & Partial<SortingFeatureState>
+export type ISortingFeature = {
+    clearSortConfigs(): void;
+    removeSortConfig(columnId: ColumnId): void;
+    changeSortConfigDirection(columnId: ColumnId, desc: boolean): void;
+    addSortConfig(columnId: ColumnId, desc: boolean): void;
+    isColumnSorted(columnId: ColumnId, desc?: boolean): boolean;
+} & SortingFeatureState
 
-/**
- * This class manages the sorting behavior within the data grid.
- * It allows adding, removing, and changing the sorting direction of columns.
- */
-export class SortingFeature implements SortingFeatureState {
+export type SortingFeatureConfig = Partial<SortingFeatureState>
+
+export class SortingFeature implements ISortingFeature {
     datagrid: DatagridCore<any>;
     sortConfigs: Sorting[] = $state([]); // List of sort configurations, each representing a column's sort state
     isManual: boolean = $state(false);

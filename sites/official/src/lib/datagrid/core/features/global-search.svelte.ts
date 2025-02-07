@@ -1,47 +1,38 @@
 import Fuse from "fuse.js";
 
 
-export type GlobalSearchPluginConfig = {
-    manual?: boolean;
-    value?: string;
-    delay?: number;
-    fuzzy?: boolean;
-    fuseInstance?: Fuse<any>;
-    onGlobalSearchChange?(value: string): void;
+export type GlobalSearchState = {
+    manual: boolean;
+    value: string;
+    fuzzy: boolean;
+    delay: number;
+    fuseInstance: Fuse<any> | null;
+
 }
 
+export type GlobalSearchFeatureConfig = Partial<GlobalSearchState>;
+export type IGlobalSearchState = GlobalSearchState
 
-/**
- * Manages global search functionality with fuzzy searching using Fuse.js.
- */
-export class GlobalSearchFeature {
+
+export class GlobalSearchFeature implements IGlobalSearchState {
     manual: boolean = $state(false);
-
-    // State for storing the current search value
     value = $state('');
-
-    // State for the search debounce delay (in milliseconds)
     delay = $state(300);
-
-    // State for toggling fuzzy search behavior
     fuzzy = $state(true);
-
-    // The instance of Fuse.js for performing the search
     fuseInstance: Fuse<any> | null = $state(null)
 
     onGlobalSearchChange: (value: string) => void = () => { };
 
-    constructor(config?: GlobalSearchPluginConfig) {
+    constructor(config?: GlobalSearchFeatureConfig) {
         this.initialize(config);
     }
 
-    initialize(config?: GlobalSearchPluginConfig) {
+    initialize(config?: GlobalSearchFeatureConfig) {
         this.manual = config?.manual ?? this.manual;
         this.value = config?.value ?? this.value;
         this.delay = config?.delay ?? this.delay;
         this.fuzzy = config?.fuzzy ?? this.fuzzy;
         this.fuseInstance = config?.fuseInstance ?? this.fuseInstance;
-        this.onGlobalSearchChange = config?.onGlobalSearchChange ?? this.onGlobalSearchChange;
     }
 
     /**

@@ -8,7 +8,7 @@ import type { ColumnVisibilityFeature } from "./column-visibility.svelte";
 import type { GlobalSearchFeature } from "./global-search.svelte";
 import type { GroupingFeature } from "./grouping.svelte";
 import type { PaginationFeature } from "./pagination.svelte";
-import type { RowExpansion } from "./row-expanding.svelte";
+import type { RowExpansionFeature } from "./row-expanding.svelte";
 import type { RowPinningFeature } from "./row-pinning.svelte";
 import type { RowSelectionFeature } from "./row-selection.svelte";
 import type { SortingFeature } from "./sorting.svelte";
@@ -16,5 +16,5 @@ import type { SortingFeature } from "./sorting.svelte";
 export type BuiltInFeature = ColumnFacetingFeature | ColumnFilteringFeature |
     ColumnGroupingFeature | ColumnOrderingFeature | ColumnPinningFeature |
     ColumnSizingFeature | ColumnVisibilityFeature | GlobalSearchFeature | GroupingFeature |
-    PaginationFeature | RowExpansion | RowPinningFeature | RowSelectionFeature |
+    PaginationFeature | RowExpansionFeature | RowPinningFeature | RowSelectionFeature |
     SortingFeature

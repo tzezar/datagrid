@@ -1,5 +1,21 @@
 import type { Component } from "svelte";
 import type { DatagridCore } from "./index.svelte";
+import type { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
+import type { SortingFeature } from "./features";
+import type { PaginationFeature, PaginationFeatureConfig } from "./features/pagination.svelte";
+import type { ColumnFilteringFeature, ColumnFilteringFeatureConfig } from "./features/column-filtering.svelte";
+import type { ColumnFacetingFeature, ColumnFacetingFeatureConfig } from "./features/column-faceting.svelte";
+import type { GlobalSearchFeature, GlobalSearchFeatureConfig } from "./features/global-search.svelte";
+import type { GroupingFeature, GroupingFeatureConfig } from "./features/grouping.svelte";
+import type { RowExpansionFeature, RowExpansionConfig } from "./features/row-expanding.svelte";
+import type { RowSelectionFeature, RowSelectionFeatureConfig } from "./features/row-selection.svelte";
+import type { RowPinningFeature, RowPinningFeatureConfig } from "./features/row-pinning.svelte";
+import type { ColumnOrderingFeature, ColumnOrderingFeatureConfig } from "./features/column-ordering.svelte";
+import type { ColumnGroupingFeature, ColumnGroupingPluginConfig } from "./features/column-grouping.svelte";
+import type { ColumnPinningFeature, ColumnPinningFeatureConfig } from "./features/column-pinning.svelte";
+import type { ColumnSizingFeature, ColumnSizingFeatureConfig } from "./features/column-sizing.svelte";
+import type { ColumnVisibilityFeature, ColumnVisibilityPluginConfig } from "./features/column-visibility.svelte";
+import type { SortingFeatureConfig } from "./features/sorting.svelte";
 
 // Specific interfaces for different column types
 
@@ -415,3 +431,52 @@ export type AnyColumn<TOriginalRow, TMeta = any> =
 
 
 export type ParentColumnId = string | null;
+
+
+
+export type FeatureConstructor<T> = {
+    new(datagrid: DatagridCore<any>, config?: any): T;  // Class signature
+};
+
+export type InitialState = {
+    sorting?: SortingFeatureConfig,
+    pagination?: PaginationFeatureConfig,
+    filtering?: ColumnFilteringFeatureConfig,
+    faceting?: ColumnFacetingFeatureConfig,
+    globalSearch?: GlobalSearchFeatureConfig,
+    grouping?: GroupingFeatureConfig,
+    rowExpanding?: RowExpansionConfig,
+    rowSelection?: RowSelectionFeatureConfig,
+    rowPinning?: RowPinningFeatureConfig,
+    columnOrdering?: ColumnOrderingFeatureConfig,
+    columnGrouping?: ColumnGroupingPluginConfig,
+    columnPinning?: ColumnPinningFeatureConfig,
+    columnSizing?: ColumnSizingFeatureConfig,
+    columnVisibility?: ColumnVisibilityPluginConfig
+}
+
+
+export type DatagridCoreConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
+    columns: C[];
+    data: TOriginalRow[];
+    lifecycleHooks?: LifecycleHooks<TOriginalRow>;  // Add this
+
+    initialState?: InitialState
+
+    features?: {
+        sorting?: FeatureConstructor<SortingFeature>,
+        pagination?: FeatureConstructor<PaginationFeature>,
+        filtering?: FeatureConstructor<ColumnFilteringFeature>,
+        faceting?: FeatureConstructor<ColumnFacetingFeature>,
+        globalSearch?: FeatureConstructor<GlobalSearchFeature>,
+        grouping?: FeatureConstructor<GroupingFeature>,
+        rowExpanding?: FeatureConstructor<RowExpansionFeature>,
+        rowSelection?: FeatureConstructor<RowSelectionFeature>,
+        rowPinning?: FeatureConstructor<RowPinningFeature>,
+        columnOrdering?: FeatureConstructor<ColumnOrderingFeature>,
+        columnGrouping?: FeatureConstructor<ColumnGroupingFeature>,
+        columnPinning?: FeatureConstructor<ColumnPinningFeature>,
+        columnSizing?: FeatureConstructor<ColumnSizingFeature>,
+        columnVisibility?: FeatureConstructor<ColumnVisibilityFeature>,
+    }
+}

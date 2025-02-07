@@ -13,40 +13,30 @@ export interface MoveOperation {
     };
 }
 
-export type ColumnOrderingPluginConfig = object
+export type ColumnOrderingFeatureState = object
+export type ColumnOrderingFeatureConfig = Partial<ColumnOrderingFeatureState>;
+export type IColumnOrderingFeature = ColumnOrderingFeatureState
 
-/**
- * Manages column ordering functionality for a DataGrid.
- */
-export class ColumnOrderingFeature<TOriginalRow = any> {
+export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderingFeature{
     private readonly datagrid: DatagridCore<TOriginalRow>;
 
-    constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnOrderingPluginConfig) {
+    constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnOrderingFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    initialize(config?: ColumnOrderingPluginConfig) {
+    initialize(config?: ColumnOrderingFeatureConfig) {
     }
 
-    /**
-     * Moves a column left in the column hierarchy
-     */
     moveLeft(columnId: ColumnId): void {
         this.moveColumn(columnId, 'left');
     }
 
-    /**
-     * Moves a column right in the column hierarchy
-     */
     moveRight(columnId: ColumnId): void {
         this.moveColumn(columnId, 'right');
     }
 
-    /**
-     * Finds the index of a column within an array of columns
-     */
     private getColumnIndex(columns: AnyColumn<TOriginalRow>[], columnId: ColumnId): number {
         const index = columns.findIndex(col => col.columnId === columnId);
         if (index === -1) {
@@ -55,9 +45,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> {
         return index;
     }
 
-    /**
-     * Main method to handle column movement in any direction
-     */
+ 
     private moveColumn(columnId: ColumnId, direction: Direction): void {
         const column = this.findColumnOrThrow(columnId);
         const moveOperation = this.calculateMoveOperation(column, direction);
@@ -67,9 +55,6 @@ export class ColumnOrderingFeature<TOriginalRow = any> {
         this.refreshColumnState();
     }
 
-    /**
-     * Finds a column by ID or throws an error
-     */
     findColumnOrThrow(columnId: ColumnId): AnyColumn<TOriginalRow> {
         const column = findColumnById(
             flattenColumnStructurePreservingGroups(this.datagrid.columns),
@@ -81,9 +66,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> {
         return column;
     }
 
-    /**
-     * Calculates the target location for a column move
-     */
+   
     private calculateMoveOperation(column: AnyColumn<TOriginalRow>, direction: Direction): MoveOperation {
         const isRoot = column.parentColumnId === null;
         return isRoot
@@ -91,9 +74,6 @@ export class ColumnOrderingFeature<TOriginalRow = any> {
             : this.calculateGroupLevelMove(column, direction);
     }
 
-    /**
-     * Calculates move operation for root-level columns
-     */
     private calculateRootLevelMove(column: AnyColumn<TOriginalRow>, direction: Direction): MoveOperation {
         const currentIndex = this.getColumnIndex(this.datagrid.columns, column.columnId);
         const targetIndex = direction === 'right' ? currentIndex + 1 : currentIndex - 1;
@@ -123,9 +103,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> {
         };
     }
 
-    /**
-     * Calculates move operation for group-level columns
-     */
+   
     private calculateGroupLevelMove(column: AnyColumn<TOriginalRow>, direction: Direction): MoveOperation {
         const parentGroup = this.findParentGroupOrThrow(column.parentColumnId as string);
         const currentIndex = this.getColumnIndex(parentGroup.columns, column.columnId);
@@ -159,9 +137,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> {
         };
     }
 
-    /**
-     * Calculates move operation when exiting a group
-     */
+   
     private calculateGroupExitMove(
         column: AnyColumn<TOriginalRow>,
         currentGroup: GroupColumn<TOriginalRow>,
@@ -186,9 +162,6 @@ export class ColumnOrderingFeature<TOriginalRow = any> {
         };
     }
 
-    /**
-     * Executes a move operation by directly moving the column
-     */
     executeMove(operation: MoveOperation): void {
         const { sourceColumn, targetLocation } = operation;
         const sourceParentId = sourceColumn.parentColumnId;
@@ -217,9 +190,6 @@ export class ColumnOrderingFeature<TOriginalRow = any> {
         targetArray.splice(targetLocation.index, 0, sourceColumn);
     }
 
-    /**
-     * Finds a parent group column or throws an error
-     */
     private findParentGroupOrThrow(groupId: string): GroupColumn<TOriginalRow> {
         const group = findColumnById(
             flattenColumnStructurePreservingGroups(this.datagrid.columns),
@@ -240,9 +210,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> {
         this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
 
-    /**
-     * Checks if moving a group would create a circular reference
-     */
+   
     private wouldCreateCircularReference(
         sourceGroup: GroupColumn<TOriginalRow>,
         targetGroup: GroupColumn<TOriginalRow>
@@ -261,9 +229,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> {
         return false;
     }
 
-    /**
-     * Validates that a move operation is legal
-     */
+   
     validateMove(operation: MoveOperation): void {
         const { sourceColumn, targetLocation } = operation;
 
@@ -275,9 +241,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> {
         }
     }
 
-    /**
-     * Moves a column to a specific position identified by target column ID
-     */
+   
     moveColumnToPosition(columnId: ColumnId, targetId: ColumnId): void {
         const column = this.findColumnOrThrow(columnId);
 
@@ -311,9 +275,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> {
         this.refreshColumnState();
     }
 
-    /**
-     * Moves a column to the root level
-     */
+   
     private moveToRoot(column: AnyColumn<TOriginalRow>): void {
         const moveOperation: MoveOperation = {
             sourceColumn: column,

@@ -8,13 +8,11 @@ export type RowPinningFeatureState = {
     pinnedBottomRowIds: SvelteSet<GridRowIdentifier>;
 }
 
+export type RowPinningFeatureConfig = Partial<RowPinningFeatureState>
 
+export type IRowPinningFeature = {} & RowPinningFeatureState
 
-export type RowPinningFeatureConfig = {
-} & Partial<RowPinningFeatureState>
-
-
-export class RowPinningFeature<TOriginalRow = any> implements RowPinningFeatureState {
+export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature {
     datagrid: DatagridCore<TOriginalRow>;
     pinnedTopRowIds: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
     pinnedBottomRowIds: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
@@ -123,16 +121,11 @@ export class RowPinningFeature<TOriginalRow = any> implements RowPinningFeatureS
     }
 
 
-    /**
-     * Get rows pinned to the top
-     */
+
     getTopRows(): GridRow<TOriginalRow>[] {
         return this.pinnedTopRowsCache;
     }
 
-    /**
-     * Get unpinned rows (center)
-     */
     getCenterRows(): GridRow<TOriginalRow>[] {
         return (this.datagrid.cache.paginatedRows || []).filter(row => {
             const id = row.identifier;
@@ -140,14 +133,11 @@ export class RowPinningFeature<TOriginalRow = any> implements RowPinningFeatureS
         });
     }
 
-    /**
-     * Get rows pinned to the bottom
-     */
+
     getBottomRows(): GridRow<TOriginalRow>[] {
         return this.pinnedBottomRowsCache;
     }
 
-    // Pin a row or group to the top
     pinRowTop(rowIdentifier: GridRowIdentifier) {
         let row = this.datagrid.rows.findRowByIdentifier(rowIdentifier);
         if (!row) return;
@@ -170,7 +160,6 @@ export class RowPinningFeature<TOriginalRow = any> implements RowPinningFeatureS
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 
-    // Pin a row or group to the bottom
     pinRowBottom(rowIdentifier: GridRowIdentifier) {
         const row = this.datagrid.rows.findRowByIdentifier(rowIdentifier);
         if (!row) return;
@@ -191,7 +180,6 @@ export class RowPinningFeature<TOriginalRow = any> implements RowPinningFeatureS
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 
-    // Unpin a row or group
     unpinRow(rowIdentifier: GridRowIdentifier) {
         const row = this.datagrid.rows.findRowByIdentifier(rowIdentifier);
         if (!row) return;

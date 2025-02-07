@@ -12,19 +12,14 @@ export type PaginationFeatureState = {
 
 }
 
+export type PaginationFeatureConfig = Partial<PaginationFeatureState>
 
-export type PaginationPluginConfig = {
-} & Partial<PaginationFeatureState>
-
-export type IRowPinningFeature<TOriginalRow> = {
-    datagrid: DatagridCore<TOriginalRow>;
-} & PaginationFeatureState
-
+export type IRowPinningFeature = {} & PaginationFeatureState
 
 /**
  * Manages pagination functionality within the data grid.
  */
-export class PaginationFeature<TOriginalRow = any> implements IRowPinningFeature<TOriginalRow> {
+export class PaginationFeature<TOriginalRow = any> implements IRowPinningFeature {
     // The instance of the data grid associated with this feature
     datagrid: DatagridCore<TOriginalRow>;
 
@@ -47,8 +42,8 @@ export class PaginationFeature<TOriginalRow = any> implements IRowPinningFeature
     pageCount: number = $state(0);
     visibleRowsCount: number = $state(0);
 
-  
-    constructor(datagrid: DatagridCore<TOriginalRow>, config?: PaginationPluginConfig) {
+
+    constructor(datagrid: DatagridCore<TOriginalRow>, config?: PaginationFeatureConfig) {
         this.datagrid = datagrid;
         Object.assign(this, config);
     }
@@ -76,7 +71,7 @@ export class PaginationFeature<TOriginalRow = any> implements IRowPinningFeature
         this.goToPage(this.page - 1);
     }
 
-   
+
     goToFirstPage(): void {
         this.goToPage(1);
     }
@@ -90,11 +85,11 @@ export class PaginationFeature<TOriginalRow = any> implements IRowPinningFeature
         this.goToPage(closestPage);
     }
 
-  
+
     getPageCount(data: Array<any>): number {
         return Math.ceil(data.length / this.pageSize);
     }
-   
+
     setPageSize(newSize: number): void {
         if (newSize === this.pageSize) return; // No action if the page size is the same
         this.pageSize = newSize;

@@ -2,34 +2,31 @@ import type { AccessorColumn, AnyColumn, ComputedColumn } from "../types";
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 
-
-export type ColumnFacetingPluginConfig = {
-    numericFacets?: Record<ColumnId, { min: number; max: number }>;
-    categoricalFacets?: Record<ColumnId, { uniqueValuesCount: number; uniqueValues: unknown[] }>;
+export type ColumnFacetingFeatureState = {
+    _numericFacets: Record<ColumnId, { min: number; max: number }>;
+    _categoricalFacets: Record<ColumnId, { uniqueValuesCount: number; uniqueValues: unknown[] }>;
 }
+export type ColumnFacetingFeatureConfig = Partial<ColumnFacetingFeatureState>;
+export type IColumnFacetingFeature = ColumnFacetingFeatureState
 
-/**
- * Handles facet calculations for numeric and categorical data in a data grid.
- * Provides utilities for retrieving and calculating facets for columns.
- */
-export class ColumnFacetingFeature<TOriginalRow = any> {
+export class ColumnFacetingFeature<TOriginalRow = any> implements IColumnFacetingFeature {
     // Reference to the parent DataGrid
     private datagrid: DatagridCore<TOriginalRow>;
 
     // Stores numeric facets (min and max values) for each column
-    private numericFacets: Record<ColumnId, { min: number; max: number }> = $state({});
+    _numericFacets: Record<ColumnId, { min: number; max: number }> = $state({});
 
     // Stores categorical facets (unique values and their count) for each column
-    private categoricalFacets: Record<ColumnId, { uniqueValuesCount: number; uniqueValues: unknown[] }> = $state({});
+    _categoricalFacets: Record<ColumnId, { uniqueValuesCount: number; uniqueValues: unknown[] }> = $state({});
 
-    constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnFacetingPluginConfig) {
+    constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnFacetingFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
-    initialize(config?: ColumnFacetingPluginConfig) {
-        this.numericFacets = config?.numericFacets ?? this.numericFacets;
-        this.categoricalFacets = config?.categoricalFacets ?? this.categoricalFacets;
+    initialize(config?: ColumnFacetingFeatureConfig) {
+        this._numericFacets = config?._numericFacets ?? this._numericFacets;
+        this._categoricalFacets = config?._categoricalFacets ?? this._categoricalFacets;
     }
 
 
@@ -41,7 +38,7 @@ export class ColumnFacetingFeature<TOriginalRow = any> {
      * @returns The numeric facet (min and max) or `null` if not available.
      */
     getNumericFacet(columnId: string) {
-        return this.numericFacets[columnId] ?? null;
+        return this._numericFacets[columnId] ?? null;
     }
 
     /**
@@ -50,7 +47,7 @@ export class ColumnFacetingFeature<TOriginalRow = any> {
      * @returns The categorical facet (unique values and count) or `null` if not available.
      */
     getCategoricalFacet(columnId: string) {
-        return this.categoricalFacets[columnId] ?? null;
+        return this._categoricalFacets[columnId] ?? null;
     }
 
     /**
@@ -58,7 +55,7 @@ export class ColumnFacetingFeature<TOriginalRow = any> {
      * @returns A shallow copy of the numeric facets object.
      */
     getAllNumericFacets() {
-        return { ...this.numericFacets };
+        return { ...this._numericFacets };
     }
 
     /**
@@ -66,7 +63,7 @@ export class ColumnFacetingFeature<TOriginalRow = any> {
      * @returns A shallow copy of the categorical facets object.
      */
     getAllCategoricalFacets() {
-        return { ...this.categoricalFacets };
+        return { ...this._categoricalFacets };
     }
 
     // ==== Facet Calculation ====
@@ -78,8 +75,8 @@ export class ColumnFacetingFeature<TOriginalRow = any> {
      */
     calculateFacets(rows: TOriginalRow[], columns: AnyColumn<TOriginalRow>[]): void {
         // Reset existing facets before recalculating
-        this.numericFacets = {};
-        this.categoricalFacets = {};
+        this._numericFacets = {};
+        this._categoricalFacets = {};
 
         for (const column of columns) {
             // Skip columns that are not accessor or computed columns
@@ -97,7 +94,7 @@ export class ColumnFacetingFeature<TOriginalRow = any> {
                     // Calculate numeric facets (min and max)
                     const numericValues = values.filter((val): val is number => typeof val === 'number');
                     if (numericValues.length > 0) {
-                        this.numericFacets[columnId] = {
+                        this._numericFacets[columnId] = {
                             min: Math.min(...numericValues),
                             max: Math.max(...numericValues),
                         };
@@ -108,7 +105,7 @@ export class ColumnFacetingFeature<TOriginalRow = any> {
                 case 'text': {
                     // Calculate categorical facets (unique values and their count)
                     const uniqueValues = Array.from(new Set(values));
-                    this.categoricalFacets[columnId] = {
+                    this._categoricalFacets[columnId] = {
                         uniqueValuesCount: uniqueValues.length,
                         uniqueValues,
                     };

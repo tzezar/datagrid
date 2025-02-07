@@ -1,15 +1,21 @@
 import { SvelteSet } from "svelte/reactivity";
 import type { ColumnId, GridGroupRowIdentifier } from "../types";
 
-export type GroupingPluginConfig = {
-    manual: boolean;
-    groupByColumns?: ColumnId[];
-    expandedGroups?: SvelteSet<GridGroupRowIdentifier>;
-    onGroupingChange?(expandedGroups: string[]): void;
 
+
+export type GroupingFeatureState = {
+    manual: boolean;
+    groupByColumns: ColumnId[];
+    expandedGroups: SvelteSet<GridGroupRowIdentifier>;
+    onGroupingChange: (expandedGroups: string[]) => void
 }
 
-export class GroupingFeature {
+
+export type GroupingFeatureConfig = Partial<GroupingFeatureState>
+export type IGroupingFeature = GroupingFeature
+
+
+export class GroupingFeature implements IGroupingFeature {
     manual: boolean = $state(false);
 
     groupByColumns: ColumnId[] = $state([]);
@@ -17,11 +23,11 @@ export class GroupingFeature {
 
     onGroupingChange: (expandedGroups: string[]) => void = () => { };
 
-    constructor(config?: GroupingPluginConfig) {
+    constructor(config?: GroupingFeatureConfig) {
         this.initialize(config);
     }
 
-    initialize(config?: GroupingPluginConfig) {
+    initialize(config?: GroupingFeatureConfig) {
         this.manual = config?.manual ?? this.manual;
         this.groupByColumns = config?.groupByColumns ?? this.groupByColumns;
         this.expandedGroups = config?.expandedGroups ?? this.expandedGroups;

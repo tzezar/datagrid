@@ -4,36 +4,37 @@ import type { FilterCondition, FilterOperator } from "../types";
 import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 
 
-export type ColumnFilteringPluginConfig = {
-    conditions?: FilterCondition<any>[];
-    manual?: boolean;
-    onColumnFilteringChange?(filteredColumns: string[]): void;
+
+export type ColumnFilteringState = {
+    conditions: FilterCondition<any>[];
+    manual: boolean;
 }
+
+export type ColumnFilteringFeatureConfig = Partial<ColumnFilteringState>
+export type IColumnFilteringFeature = ColumnFilteringFeature
 
 
 /**
  * Manages column filtering functionality for a data grid.
  * Provides utilities for evaluating filter conditions and toggling the visibility of filters.
  */
-export class ColumnFilteringFeature<TOriginalRow = any> {
+export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilteringFeature{
     datagrid: DatagridCore
 
     // Stores all filter conditions for the columns
     conditions: FilterCondition<TOriginalRow>[] = $state([]);
     manual: boolean = $state(false);
 
-    onColumnFilteringChange: (filteredColumns: string[]) => void = () => { };
 
-    constructor(datagrid: DatagridCore, config?: ColumnFilteringPluginConfig) {
+    constructor(datagrid: DatagridCore, config?: ColumnFilteringFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
 
-    initialize( config?: ColumnFilteringPluginConfig) {
+    initialize( config?: ColumnFilteringFeatureConfig) {
         this.conditions = config?.conditions ?? this.conditions;
         this.manual = config?.manual ?? this.manual;
-        this.onColumnFilteringChange = config?.onColumnFilteringChange ?? this.onColumnFilteringChange;
     }
 
 

@@ -10,14 +10,6 @@
 		columns,
 		data: data.users,
 
-		features: {
-			rowSelection: {
-				onRowSelectionChange() {
-					console.log('Row selected ');
-				}
-			}
-		},
-
 		extra: {
 			features: {
 				clickToCopy: {

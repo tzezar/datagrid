@@ -11,10 +11,7 @@ export type RowSelectionFeatureState = {
     selectionMode: RowSelectionMode;
 }
 
-
 type IRowSelectionFeature<TOriginalRow> = {
-    datagrid: DatagridCore,
-
     getSelectedRowsIds(): GridRowIdentifier[];
     selectRowById(identifier: GridRowIdentifier): void;
     deselectRowById(identifier: GridRowIdentifier): void;
@@ -26,10 +23,9 @@ type IRowSelectionFeature<TOriginalRow> = {
     clearSelection(): void;
 } & RowSelectionFeatureState
 
-export type RowSelectionFeatureConfig = {
-    onSelectMoreThanMaxSelectedRows?(): void;
-    onRowSelectionChange?(config: RowSelectionFeature<any>): void;
-} & Partial<RowSelectionFeatureState>
+export type RowSelectionFeatureConfig = Partial<RowSelectionFeatureState>
+
+
 
 
 export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFeature<TOriginalRow> {
@@ -43,6 +39,8 @@ export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFea
         Object.assign(this, config);
 
     }
+
+
 
     getSelectedRowsIds() {
         return Array.from(this.selectedRowIds)
