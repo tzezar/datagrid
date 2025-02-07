@@ -49,11 +49,11 @@ export class ClickToCopyPlugin {
         this.copyToClipboard(value);
     }
 
-
     addCopyFeedback(element: HTMLElement) {
         element.classList.add('copy-feedback');
         setTimeout(() => {
             element.classList.remove('copy-feedback');
         }, 1000);
     }
+
 }

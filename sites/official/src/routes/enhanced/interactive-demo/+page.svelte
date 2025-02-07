@@ -6,6 +6,7 @@
 	import RowSelectionControl from './controls/row-selection-control.svelte';
 	import RowExpandingControl from './controls/row-expanding-control.svelte';
 	import ControlCenterControl from './controls/control-center-control.svelte';
+	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 
 	let { data } = $props();
 
@@ -13,17 +14,17 @@
 		columns,
 		data: data.inventory
 	});
-
 </script>
 
-<div class='pb-20'>
+<div class="pb-20">
 	<PaginationControl {datagrid} />
 	<RowSelectionControl {datagrid} />
 	<RowExpandingControl {datagrid} />
-	<ControlCenterControl {datagrid}/>
+	<ControlCenterControl {datagrid} />
 </div>
 
 <Grid.Component {datagrid}></Grid.Component>
+
 
 {#snippet Animations()}
 	<div>
@@ -31,4 +32,3 @@
 		<div></div>
 	</div>
 {/snippet}
-
