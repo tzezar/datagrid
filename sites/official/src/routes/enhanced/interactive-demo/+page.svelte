@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { Sorting } from '$lib/datagrid/core/types';
+
 	import { columns } from './columns.svelte';
 	import * as Grid from '$lib/datagrid-enhanced';
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory';
@@ -6,24 +8,52 @@
 	import RowSelectionControl from './controls/row-selection-control.svelte';
 	import RowExpandingControl from './controls/row-expanding-control.svelte';
 	import ControlCenterControl from './controls/control-center-control.svelte';
+	import { SortingFeature } from '$lib/datagrid/core/features';
+	import type { DatagridCore } from '$lib/datagrid/core/index.svelte';
+	import type { SortingFeatureConfig } from '$lib/datagrid/core/features/sorting.svelte';
 
 	let { data } = $props();
 
+	// class CustomSortingFeature extends SortingFeature {
+	// 	sortConfigs: Sorting[] = $state([
+	// 		{
+	// 			columnId: 'id',
+	// 			desc: true
+	// 		}
+	// 	])
+	// }
+
 	let datagrid = new Grid.EnhancedCore<InventoryItem, Grid.EnhancedMeta<InventoryItem>>({
 		columns,
-		data: data.inventory
+		data: data.inventory,
+
+
+		initialState: {
+			sorting: {
+				sortConfigs: [
+					{
+						columnId: 'id',
+						desc: false
+					}
+				]
+			}
+		}
+		
+
+		// features: {
+		// sorting: CustomSortingFeature
+		// }
 	});
 </script>
 
 <div class="pb-20">
-	<PaginationControl {datagrid} />
+	<!-- <PaginationControl {datagrid} />
 	<RowSelectionControl {datagrid} />
 	<RowExpandingControl {datagrid} />
-	<ControlCenterControl {datagrid} />
+	<ControlCenterControl {datagrid} /> -->
 </div>
 
 <Grid.Component {datagrid}></Grid.Component>
-
 
 {#snippet Animations()}
 	<div>
