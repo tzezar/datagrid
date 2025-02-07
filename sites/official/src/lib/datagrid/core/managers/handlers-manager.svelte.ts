@@ -259,7 +259,7 @@ export class HandlersManager {
             const isExpandingMoreThanMax = this.datagrid.features.rowExpanding.expandedRowIds.size >= maxExpandedRows;
             
             if (isExpandingMoreThanMax)  {
-                this.datagrid.features.rowExpanding.onExpandingMoreThanMaxChange(this.datagrid.features.rowExpanding)
+                this.datagrid.features.rowExpanding.onExceedMaxExpansion(this.datagrid.features.rowExpanding)
                 return
             }
             

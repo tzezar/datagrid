@@ -3,18 +3,18 @@ import type { DatagridCore } from "../index.svelte";
 import type { GridGroupRow, GridRow, GridRowIdentifier, RowPinningPosition } from "../types";
 
 
-export type RowPinningState = {
+export type RowPinningFeatureState = {
     pinnedTopRowIds: SvelteSet<GridRowIdentifier>;
     pinnedBottomRowIds: SvelteSet<GridRowIdentifier>;
 }
 
 
 
-export type RowPinningPluginConfig = {
-} & Partial<RowPinningState>
+export type RowPinningFeatureConfig = {
+} & Partial<RowPinningFeatureState>
 
 
-export class RowPinningFeature<TOriginalRow = any> implements RowPinningState {
+export class RowPinningFeature<TOriginalRow = any> implements RowPinningFeatureState {
     datagrid: DatagridCore<TOriginalRow>;
     pinnedTopRowIds: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
     pinnedBottomRowIds: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
@@ -23,12 +23,12 @@ export class RowPinningFeature<TOriginalRow = any> implements RowPinningState {
     private pinnedTopRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
     private pinnedBottomRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
 
-    constructor(datagrid: DatagridCore<TOriginalRow>, config?: RowPinningPluginConfig) {
+    constructor(datagrid: DatagridCore<TOriginalRow>, config?: RowPinningFeatureConfig) {
         this.datagrid = datagrid;
         this.initialize(config);
     }
 
-    initialize(config?: RowPinningPluginConfig) {
+    initialize(config?: RowPinningFeatureConfig) {
         this.pinnedTopRowIds = config?.pinnedTopRowIds ?? this.pinnedTopRowIds;
         this.pinnedBottomRowIds = config?.pinnedBottomRowIds ?? this.pinnedBottomRowIds;
     }

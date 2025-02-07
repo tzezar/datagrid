@@ -1,4 +1,4 @@
-import type { RowExpandingPluginConfig } from "$lib/datagrid/core/features/row-expanding.svelte";
+import type { RowExpansionConfig } from "$lib/datagrid/core/features/row-expanding.svelte";
 import type { EnhancedDatagrid } from "../index.svelte";
 import type { AutoColumnPosition } from "../types";
 
@@ -19,7 +19,7 @@ export class RowExpandingEnhancedFeature  {
     createColumnManually: boolean = $state(false);
     position: AutoColumnPosition = $state('right')
 
-    constructor(datagrid: EnhancedDatagrid, config?: RowExpandingEnhancedPluginConfig & RowExpandingPluginConfig) {
+    constructor(datagrid: EnhancedDatagrid, config?: RowExpandingEnhancedPluginConfig & RowExpansionConfig) {
         this.datagrid = datagrid;
         Object.assign(this, config);
     }

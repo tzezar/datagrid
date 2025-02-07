@@ -28,11 +28,11 @@ type IRowSelectionFeature<TOriginalRow> = {
 
 export type RowSelectionFeatureConfig = {
     onSelectMoreThanMaxSelectedRows?(): void;
-    onRowSelectionChange?(config: RowSelection<any>): void;
+    onRowSelectionChange?(config: RowSelectionFeature<any>): void;
 } & Partial<RowSelectionFeatureState>
 
 
-export class RowSelection<TOriginalRow = any> implements IRowSelectionFeature<TOriginalRow> {
+export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFeature<TOriginalRow> {
     datagrid: DatagridCore<TOriginalRow>;
     selectedRowIds: SvelteSet<GridRowIdentifier> = $state(new SvelteSet())
     maxSelectableRows: number = $state(Infinity);

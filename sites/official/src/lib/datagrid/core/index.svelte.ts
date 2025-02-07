@@ -8,16 +8,16 @@ import { type ColumnFilteringPluginConfig } from "./features/column-filtering.sv
 import { type ColumnFacetingPluginConfig } from "./features/column-faceting.svelte";
 import { type GlobalSearchPluginConfig } from "./features/global-search.svelte";
 import { type GroupingPluginConfig } from "./features/grouping.svelte";
-import { type RowExpandingPluginConfig } from "./features/row-expanding.svelte";
+import { type RowExpansionConfig } from "./features/row-expanding.svelte";
 import { type RowSelectionFeatureConfig, } from "./features/row-selection.svelte";
-import { type SortingPluginConfig, } from "./features/sorting.svelte";
+import { type SortingFeatureConfig, } from "./features/sorting.svelte";
 import { FeatureManager } from "./managers/feature-manager.svelte";
 import type { ColumnOrderingPluginConfig } from "./features/column-ordering.svelte";
 import type { ColumnGroupingPluginConfig } from "./features/column-grouping.svelte";
 import type { ColumnPinningPluginConfig } from "./features/column-pinning.svelte";
 import type { ColumnSizingPluginConfig } from "./features/column-sizing.svelte";
 import type { ColumnVisibilityPluginConfig } from "./features/column-visibility.svelte";
-import type { RowPinningPluginConfig } from "./features/row-pinning.svelte";
+import type { RowPinningFeatureConfig } from "./features/row-pinning.svelte";
 
 export type DatagridCoreConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
     columns: C[];
@@ -30,10 +30,10 @@ export type DatagridCoreConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> =
         globalSearch?: GlobalSearchPluginConfig
         grouping?: GroupingPluginConfig
         pagination?: PaginationPluginConfig
-        rowExpanding?: RowExpandingPluginConfig
-        rowPinning?: RowPinningPluginConfig
+        rowExpanding?: RowExpansionConfig
+        rowPinning?: RowPinningFeatureConfig
         rowSelection?: RowSelectionFeatureConfig
-        sorting?: SortingPluginConfig
+        sorting?: SortingFeatureConfig
         columnSizing?: ColumnSizingPluginConfig
         columnVisibility?: ColumnVisibilityPluginConfig
         columnPinning?: ColumnPinningPluginConfig
