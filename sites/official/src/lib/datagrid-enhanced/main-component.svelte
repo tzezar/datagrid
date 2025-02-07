@@ -111,7 +111,7 @@
 {/snippet}
 
 {#snippet VirtualizedContainerSnippet()}
-	<VirtualList items={datagrid.getVisibleRows()}>
+	<VirtualList items={datagrid.rows.visible}>
 		{#snippet header()}
 			{@render HeadSnippet()}
 		{/snippet}
@@ -241,7 +241,7 @@
 				<div class="body-overlay"></div>
 			{/if}
 
-			{#each datagrid.getVisibleRows() as row, rowIndex (row.identifier)}
+			{#each datagrid.rows.visible as row, rowIndex (row.identifier)}
 				{#if row.isGroupRow()}
 					<div
 						use:identifier={{ datagrid, value: 'row-' + row.identifier }}

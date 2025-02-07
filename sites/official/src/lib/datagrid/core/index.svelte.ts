@@ -21,6 +21,7 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
     });
 
     columns: AnyColumn<TOriginalRow, TMeta>[] = $state([]);
+    rows: Rows<TOriginalRow> = new Rows(this);
 
     processors = {
         data: new DataProcessor(this),
@@ -28,6 +29,7 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
     }
 
     cacheManager = new DatagridCacheManager(this);
+
 
     config = {
         measurePerformance: false,
@@ -125,11 +127,28 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
         if (data.length === 0) throw new Error('Data array must not be empty');
     }
 
-    getVisibleRows(): GridRow<TOriginalRow>[] {
-        const topRows = this.features.rowPinning.getTopRows();
-        const bottomRows = this.features.rowPinning.getBottomRows();
-        const centerRows = this.features.rowPinning.getCenterRows();
+
+}
+
+
+
+type IRows<TOriginalRow> = {
+    paginated: GridRow<TOriginalRow>[]
+    visible: GridRow<TOriginalRow>[]
+}
+
+class Rows<TOriginalRow> implements IRows<TOriginalRow> {
+    constructor(private readonly datagrid: DatagridCore<TOriginalRow>) { }
+
+    get visible(): GridRow<TOriginalRow>[] {
+        const topRows = this.datagrid.features.rowPinning.getTopRows();
+        const bottomRows = this.datagrid.features.rowPinning.getBottomRows();
+        const centerRows = this.datagrid.features.rowPinning.getCenterRows();
         return [...topRows, ...centerRows, ...bottomRows];
+    }
+
+    get paginated(): GridRow<TOriginalRow>[] {
+        return this.datagrid.cacheManager.paginatedRows || [];
     }
 
 }
