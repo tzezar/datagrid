@@ -1,4 +1,4 @@
-import type { AnyColumn, GroupColumn } from "./types";
+import type { AnyColumn, GridRow, GroupColumn } from "./types";
 import type { CellValue, ColumnId, CustomCellComponentWithProps, SortableColumn } from "./types";
 import type { DatagridCore } from "./index.svelte";
 
@@ -117,3 +117,14 @@ export function debounce<T extends (...args: any[]) => void>(func: T, delay: num
 }
 
 
+export function flattenGridRows<TOriginalRow>(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
+    const flattened: GridRow<TOriginalRow>[] = [];
+
+    for (const row of data) {
+        flattened.push(row);
+        if (row.isGroupRow()) {
+            flattened.push(...flattenGridRows(row.children));
+        }
+    }
+    return flattened
+}

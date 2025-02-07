@@ -22,7 +22,7 @@ export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilter
     datagrid: DatagridCore
 
     // Stores all filter conditions for the columns
-    conditions: FilterCondition<TOriginalRow>[] = $state([]);
+    filterConditions: FilterCondition<TOriginalRow>[] = $state([]);
     isManual: boolean = $state(false);
 
     constructor(datagrid: DatagridCore, config: ColumnFilteringFeatureConfig) {
@@ -36,7 +36,7 @@ export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilter
      * @returns The filter condition value or `null` if no condition exists.
      */
     getConditionValue(columnId: string): any {
-        const condition = this.conditions.find(c => c.columnId === columnId);
+        const condition = this.filterConditions.find(c => c.columnId === columnId);
         return condition ? condition.value : null;
     }
 
@@ -46,7 +46,7 @@ export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilter
      * @returns The filter operator or `undefined` if no condition exists.
      */
     getConditionOperator(columnId: string): FilterOperator | undefined {
-        const condition = this.conditions.find(c => c.columnId === columnId);
+        const condition = this.filterConditions.find(c => c.columnId === columnId);
         return condition?.operator;
     }
 
@@ -56,7 +56,7 @@ export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilter
      * @param operator - The new filter operator to set.
      */
     changeConditionOperator(columnId: string, operator: FilterOperator) {
-        let condition = this.conditions.find(c => c.columnId === columnId);
+        let condition = this.filterConditions.find(c => c.columnId === columnId);
         if (!condition) {
             // If no condition exists, create a new one
 
@@ -65,7 +65,7 @@ export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilter
             if (isGroupColumn(column)) throw new Error(`Cannot filter group column: ${columnId}`);
             if (column.type === 'display') throw new Error(`Cannot filter display column: ${columnId}`);
 
-            this.conditions.push({
+            this.filterConditions.push({
                 columnId,
                 operator,
                 value: null,
@@ -73,7 +73,7 @@ export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilter
                 getValueFn: column.getValueFn
             });
         }
-        condition = this.conditions.find(c => c.columnId === columnId);
+        condition = this.filterConditions.find(c => c.columnId === columnId);
         if (!condition) throw new Error(`Condition for column ${columnId} not found`);
         condition.operator = operator;
     }

@@ -8,7 +8,7 @@
 	const debouncedUpdateValue = debounce((value: string) => {
 		datagrid.features.globalSearch.updateSearchQuery(value);
 		datagrid.features.pagination.goToFirstPage();
-		datagrid.cache.invalidate('filteredData');
+		datagrid.cacheManager.invalidate('filteredData');
 		datagrid.processors.data.executeFullDataTransformation();
 	}, datagrid.features.globalSearch.debounceDelay);
 </script>

@@ -118,7 +118,7 @@
 				</div>
 			</div>
 			<div class="grid-body">
-				{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
+				{#each datagrid.rowManager.getVisibleRows() as row (row.identifier)}
 					{@const columns = datagrid.columnManager.getLeafColumnsInOrder()}
 					{#if row.isGroupRow()}
 						{@render GroupRowSnippet(row, columns)}

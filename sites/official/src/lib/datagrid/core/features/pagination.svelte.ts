@@ -93,7 +93,7 @@ export class PaginationFeature<TOriginalRow = any> implements IRowPinningFeature
     setPageSize(newSize: number): void {
         if (newSize === this.pageSize) return; // No action if the page size is the same
         this.pageSize = newSize;
-        this.pageCount = this.getPageCount(this.datagrid.cache.rows || []);
+        this.pageCount = this.getPageCount(this.datagrid.cacheManager.rows || []);
         // Recalculate pagination and ensure the page is within the valid range after the page size change
         this.goToClosestPage();
     }

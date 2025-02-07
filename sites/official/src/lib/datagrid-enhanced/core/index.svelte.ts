@@ -224,7 +224,7 @@ export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends DatagridC
 
         this.registerLifecycleHooks();
 
-        this.initializeState(config);
+        this.initializeGridState(config);
         if (this.extra.features.virtualization.enabled === true) {
             this.features.pagination.pageSizes.push(10_000, 25_000, 50_000, 100_000)
         }

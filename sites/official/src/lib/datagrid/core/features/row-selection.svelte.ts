@@ -82,7 +82,7 @@ export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFea
 
     getSelectedOriginalRows(): TOriginalRow[] {
         return Array.from(this.selectedRowIds)
-            .map(id => this.datagrid.initial.data.find(row => this.datagrid.config.createBasicRowIdentifier(row) === id))
+            .map(id => this.datagrid.originalState.data.find(row => this.datagrid.config.createBasicRowIdentifier(row) === id))
             .filter((row): row is TOriginalRow => row !== undefined); // Type guard for filtering
     }
 

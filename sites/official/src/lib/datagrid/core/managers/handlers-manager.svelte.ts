@@ -58,7 +58,7 @@ export class HandlersManager {
             if (multisort) multipleColumnSort();
             else singleColumnSort();
 
-            datagrid.cache.invalidate('sortedData');
+            datagrid.cacheManager.invalidate('sortedData');
             datagrid.processors.data.executeFullDataTransformation();
 
             datagrid.features.sorting.onSortingChange(datagrid.features.sorting);
@@ -105,7 +105,7 @@ export class HandlersManager {
     filtering = {
         changeFilterOperator: (columnId: string, operator: FilterOperator) => {
             this.datagrid.features.filtering.changeConditionOperator(columnId, operator);
-            this.datagrid.cache.invalidate('filteredData');
+            this.datagrid.cacheManager.invalidate('filteredData');
             this.datagrid.processors.data.executeFullDataTransformation();
         },
 
@@ -122,7 +122,7 @@ export class HandlersManager {
 
             if (!column) return;
             // Find existing condition
-            const conditionIndex = this.datagrid.features.filtering.conditions.findIndex(c => c.columnId === column.columnId);
+            const conditionIndex = this.datagrid.features.filtering.filterConditions.findIndex(c => c.columnId === column.columnId);
 
             // if (value === '' || value === null || value === undefined) {
             //     // If value is empty, remove the condition (do not filter)
@@ -134,7 +134,7 @@ export class HandlersManager {
 
             if (conditionIndex === -1) {
                 // If condition doesn't exist, add a new one
-                this.datagrid.features.filtering.conditions.push({
+                this.datagrid.features.filtering.filterConditions.push({
                     columnId: String(column.columnId),
                     operator: 'contains',
                     getValueFn: column.getValueFn,
@@ -142,7 +142,7 @@ export class HandlersManager {
                 });
             } else {
                 // Update existing condition value
-                this.datagrid.features.filtering.conditions[conditionIndex].value = value;
+                this.datagrid.features.filtering.filterConditions[conditionIndex].value = value;
             }
         }
     }
@@ -160,7 +160,7 @@ export class HandlersManager {
 
             this.datagrid.features.grouping.groupByColumns = newGroupBy;
             this.datagrid.features.pagination.goToFirstPage();
-            this.datagrid.cache.invalidateGroupedRowsCache();
+            this.datagrid.cacheManager.invalidateGroupedRowsCache();
             this.datagrid.processors.data.executeFullDataTransformation();
         },
         toggle: (columnId: ColumnId) => {
@@ -174,7 +174,7 @@ export class HandlersManager {
                 this.datagrid.features.grouping.groupByColumns = [...this.datagrid.features.grouping.groupByColumns, columnId];
             }
             this.datagrid.features.pagination.goToFirstPage();
-            this.datagrid.cache.invalidateGroupedRowsCache();
+            this.datagrid.cacheManager.invalidateGroupedRowsCache();
             this.datagrid.processors.data.executeFullDataTransformation();
         }
     }
@@ -214,22 +214,22 @@ export class HandlersManager {
     }
     rowSelection = {
         selectRowsOnPage: () => {
-            const rowsOnPage = (this.datagrid.cache.paginatedRows || []).filter(row => !row.isGroupRow()) as GridBasicRow<any>[];
+            const rowsOnPage = (this.datagrid.cacheManager.paginatedRows || []).filter(row => !row.isGroupRow()) as GridBasicRow<any>[];
             const ids = rowsOnPage.map(row => row.identifier);
             this.datagrid.features.rowSelection.selectRows(ids);
         },
         unselectRowsOnPage: () => {
-            const rowsOnPage = (this.datagrid.cache.paginatedRows || []).filter(row => !row.isGroupRow()) as GridBasicRow<any>[];
+            const rowsOnPage = (this.datagrid.cacheManager.paginatedRows || []).filter(row => !row.isGroupRow()) as GridBasicRow<any>[];
             const ids = rowsOnPage.map(row => row.identifier);
             this.datagrid.features.rowSelection.unselectRows(ids);
         },
         selectAllRows: () => {
-            const rows = (this.datagrid.cache.rows || []).filter(row => !row.isGroupRow()) as GridBasicRow<any>[];
+            const rows = (this.datagrid.cacheManager.rows || []).filter(row => !row.isGroupRow()) as GridBasicRow<any>[];
             const ids = rows.map(row => row.identifier);
             this.datagrid.features.rowSelection.selectRows(ids);
         },
         unselectAllRows: () => {
-            const rows = (this.datagrid.cache.rows || []).filter(row => !row.isGroupRow()) as GridBasicRow<any>[];
+            const rows = (this.datagrid.cacheManager.rows || []).filter(row => !row.isGroupRow()) as GridBasicRow<any>[];
             const ids = rows.map(row => row.identifier);
             this.datagrid.features.rowSelection.unselectRows(ids);
         },
@@ -267,7 +267,7 @@ export class HandlersManager {
 
         },
         toggleGroupRowExpansion: (row: GridGroupRow<any>) => {
-            this.datagrid.rows.toggleGroupRowExpansion(row);
+            this.datagrid.rowManager.toggleGroupRowExpansion(row);
         }
     }
     columnSizing = {
@@ -286,7 +286,7 @@ export class HandlersManager {
         updateValue: (value: string) => {
             this.datagrid.features.globalSearch.updateSearchQuery(value)
             this.datagrid.features.pagination.goToFirstPage();
-            this.datagrid.cache.invalidate('filteredData');
+            this.datagrid.cacheManager.invalidate('filteredData');
             this.datagrid.processors.data.executeFullDataTransformation();
         }
     }

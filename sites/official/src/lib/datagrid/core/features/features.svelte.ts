@@ -7,7 +7,7 @@ import {
 import type { DatagridCore } from "../index.svelte";
 import type { DatagridCoreConfig } from "../types";
 
-export class FeatureManager<TOriginalRow = any> {
+export class DatagridFeatures<TOriginalRow = any> {
     datagrid: DatagridCore<any>;
 
     pagination: PaginationFeature

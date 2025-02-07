@@ -83,7 +83,7 @@ export class ExportingPlugin<T = any> {
      * Prepares data for export by mapping rows and columns
      */
     private prepareData(): Record<string, unknown>[] {
-        return this.datagrid.initial.data.map(row => {
+        return this.datagrid.originalState.data.map(row => {
             const rowData: Record<string, unknown> = {};
             this.datagrid.columnManager.getLeafColumns().forEach((column: LeafColumn<T>) => {
                 if (column.type === 'accessor') {

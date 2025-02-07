@@ -59,7 +59,7 @@ export class GlobalSearchFeature implements IGlobalSearchState {
 
     getFuseSearchEngine(): Fuse<any> | null {
         if (!this.fuseSearchEngine) {
-            this.setFuseSearchEngine(this.initializeFuseInstance(this.datagrid.initial.data || [], flattenColumnStructureAndClearGroups(this.datagrid.columns).map(col => col.columnId as string)))
+            this.setFuseSearchEngine(this.initializeFuseInstance(this.datagrid.originalState.data || [], flattenColumnStructureAndClearGroups(this.datagrid.columns).map(col => col.columnId as string)))
         }
         return this.fuseSearchEngine;
     }

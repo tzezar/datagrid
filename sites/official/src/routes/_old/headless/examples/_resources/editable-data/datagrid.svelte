@@ -38,7 +38,7 @@
 
 
 	function updateCellValue(column: AccessorColumn<any>, row: GridBasicRow<any>, value: string) { 
-		const foundRow = datagrid.initial.data.find(r => r.id === row.original.id) as any
+		const foundRow = datagrid.originalState.data.find(r => r.id === row.original.id) as any
 		if (!foundRow) return;
 		foundRow[column.accessorKey] = value;
 		datagrid.processors.data.executeFullDataTransformation();
@@ -122,7 +122,7 @@
 				</div>
 			</div>
 			<div class="grid-body">
-				{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
+				{#each datagrid.rowManager.getVisibleRows() as row (row.identifier)}
 					{@const columns = datagrid.columnManager.getLeafColumnsInOrder()}
 					{#if row.isGroupRow()}
 						{@render GroupRowSnippet(row, columns)}

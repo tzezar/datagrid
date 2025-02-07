@@ -13,10 +13,10 @@
 			column,
 			value
 		});
-		datagrid.cache.invalidate('filteredData');
+		datagrid.cacheManager.invalidate('filteredData');
 		datagrid.features.pagination.goToFirstPage();
 		datagrid.processors.data.executeFullDataTransformation();
-		datagrid.features.columnFaceting.calculateFacets(datagrid.cache.sortedData || [], datagrid.columns);
+		datagrid.features.columnFaceting.calculateFacets(datagrid.cacheManager.sortedData || [], datagrid.columns);
 	};
 	
 </script>

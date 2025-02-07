@@ -34,11 +34,11 @@
 	>
 		<button
 			class="flex w-full items-center justify-center gap-1 overflow-hidden"
-			onclick={() => datagrid.rows.toggleGroupRowExpansion(row)}
+			onclick={() => datagrid.rowManager.toggleGroupRowExpansion(row)}
 		>
 			<span class="border-primary/30 rounded-sm border-[1px]">
 				<ArrowRight
-					class={`${datagrid.rows.isGroupRowExpanded(row) && 'rotate-90'} transition-all `}
+					class={`${datagrid.rowManager.isGroupRowExpanded(row) && 'rotate-90'} transition-all `}
 				/>
 			</span>
 			<span class="w-full overflow-hidden text-ellipsis whitespace-nowrap leading-normal">

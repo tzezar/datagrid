@@ -41,7 +41,7 @@
 	<div>
 		Showing {datagrid.features.pagination.pageSize * (datagrid.features.pagination.page - 1)} to
 		{datagrid.features.pagination.pageSize * datagrid.features.pagination.page} of {(
-			datagrid.cache.rows || []
+			datagrid.cacheManager.rows || []
 		).length} rows
 	</div>
 </div>

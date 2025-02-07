@@ -14,10 +14,10 @@
 			column,
 			value
 		});
-		datagrid.cache.invalidate('filteredData');
+		datagrid.cacheManager.invalidate('filteredData');
 		datagrid.features.pagination.goToFirstPage();
 		datagrid.processors.data.executeFullDataTransformation();
-		datagrid.features.columnFaceting.calculateFacets(datagrid.initial.data || [], datagrid.columns);
+		datagrid.features.columnFaceting.calculateFacets(datagrid.originalState.data || [], datagrid.columns);
 	};
 </script>
 

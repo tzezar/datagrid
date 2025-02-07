@@ -3,30 +3,32 @@ import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
 import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
-import { FeatureManager } from "./managers/feature-manager.svelte";
+import { DatagridFeatures } from "./features/features.svelte";
 
 
 
 
 
 export class DatagridCore<TOriginalRow = any, TMeta = any> {
-    identifier = $state('tzezars-datagrid')
+    gridIdentifier = $state('tzezars-datagrid')
+    readonly performanceMetrics = new PerformanceMetrics();
 
-    readonly metrics = new PerformanceMetrics();
-    initial = $state.raw({
+    originalState = $state.raw({
         columns: [] as AnyColumn<TOriginalRow, TMeta>[],
         data: [] as TOriginalRow[]
     });
+
     columns: AnyColumn<TOriginalRow, TMeta>[] = $state([]);
 
     handlers = new HandlersManager(this);
+
     processors = {
         data: new DataProcessor(this),
         column: new ColumnProcessor(this)
     }
 
-    cache = new DatagridCacheManager(this);
-    rows = new RowManager(this);
+    cacheManager = new DatagridCacheManager(this);
+    rowManager = new RowManager(this);
     columnManager = new ColumnManager(this);
 
     config = {
@@ -36,70 +38,65 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
             parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
     }
 
-    features: FeatureManager<TOriginalRow> = new FeatureManager(this);
+    features: DatagridFeatures<TOriginalRow> = new DatagridFeatures(this);
 
     lifecycleHooks = new LifecycleHooks<TOriginalRow>();
 
-    constructor(config: DatagridCoreConfig<TOriginalRow>, lazy: boolean = true) {
-        this.features = new FeatureManager(this, config);
+    constructor(config: DatagridCoreConfig<TOriginalRow>, lazyInitialization: boolean = true) {
+        this.features = new DatagridFeatures(this, config);
 
         if (config.lifecycleHooks) this.lifecycleHooks = config.lifecycleHooks;
-        if (lazy) return;
-        this.initializeState(config);
+        if (lazyInitialization) return;
+        this.initializeGridState(config);
     }
 
-
-
-    initializeState(config: DatagridCoreConfig<TOriginalRow>) {
-        this.validateConfigInputs(config);
+    initializeGridState(config: DatagridCoreConfig<TOriginalRow>) {
+        this.validateConfiguration(config);
 
         // !!! IMPORTANT !!!
         // This has to run in this order, otherwise the datagrid will not be initialized properly
-
         // * Features has to be initialized first to prevent some bugs eg. not updating pagination
         // * when there is wrapper around the datagrid that implements its own features
         // * it might be worked around by processing data after extra features are initialized
         // * but it involves extra processing which is not needed, maybe some refactoring is needed
 
+        this.initializeSourceColumns(config.columns);
+        this.initializeSourceData(config.data)
 
-
-        this.initializeOriginalColumns(config.columns);
-        this.initializeOriginalData(config.data)
-
-        this.columns = this.processors.column.initializeColumns(this.initial.columns)
-        this.features = new FeatureManager(this, config);
+        this.columns = this.processors.column.initializeColumns(this.originalState.columns)
+        this.features = new DatagridFeatures(this, config);
         this.processors.data.executeFullDataTransformation();
 
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
-        this.features.columnFaceting.calculateFacets(this.cache.sortedData || [], this.columns);
+        this.features.columnFaceting.calculateFacets(this.cacheManager.sortedData || [], this.columns);
 
     }
 
-    private initializeOriginalColumns(columns: AnyColumn<TOriginalRow>[]) {
+    private initializeSourceColumns(columns: AnyColumn<TOriginalRow>[]) {
         // * Parent column Ids must be assigned before the columns are processed to ensure correct grouping
         columns = this.lifecycleHooks.executePreProcessOriginalColumns(this.processors.column.assignParentColumnIds(columns));
-        this.initial.columns = columns;
-        this.initial.columns = this.lifecycleHooks.executePostProcessOriginalColumns(this.initial.columns);
+        this.originalState.columns = columns;
+        this.originalState.columns = this.lifecycleHooks.executePostProcessOriginalColumns(this.originalState.columns);
     }
 
-    private initializeOriginalData(data: TOriginalRow[]) {
+    private initializeSourceData(data: TOriginalRow[]) {
         data = this.lifecycleHooks.executePreProcessData(data);
-        this.initial.data = data;
-        this.initial.data = this.lifecycleHooks.executePostProcessData(this.initial.data);
+        this.originalState.data = data;
+        this.originalState.data = this.lifecycleHooks.executePostProcessData(this.originalState.data);
     }
 
     /**
        * Performs a refresh with different levels of data recalculation
        */
-    refresh(operation: () => void, options: {
+    refresh(updateOperation: () => void, options: {
         recalculateAll?: boolean;
         recalculateGroups?: boolean;
         recalculatePagination?: boolean;
     } = {}): void {
         const timeStart = performance.now();
 
-        operation();
+        updateOperation();
 
         const {
             recalculateAll = false,
@@ -118,7 +115,7 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
         if (this.config.measurePerformance) console.log(`Operation took ${performance.now() - timeStart}ms`);
     }
 
-    private validateConfigInputs({ columns, data }: DatagridCoreConfig<TOriginalRow>) {
+    private validateConfiguration({ columns, data }: DatagridCoreConfig<TOriginalRow>) {
         if (!columns) throw new Error('Columns are required');
         if (!data) throw new Error('Data is required');
         if (!Array.isArray(data)) throw new Error('Data must be an array');

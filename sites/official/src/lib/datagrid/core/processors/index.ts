@@ -1,7 +1,7 @@
 import { ColumnProcessor } from "./column-processor.svelte";
-import { DataProcessor } from "./data-processor.svelte";
+import { DataDataProcessor } from "./data-processor.svelte";
 
 export {
     ColumnProcessor,
-    DataProcessor
+    DataDataProcessor as DataProcessor
 }

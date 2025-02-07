@@ -78,7 +78,7 @@
 		<div class="grid-container">
 			{@render Header()}
 			<div class="grid-body">
-				{#each datagrid.rows.getBasicRows() as row (row.identifier)}
+				{#each datagrid.rowManager.getBasicRows() as row (row.identifier)}
 					{@render BodyRow(row)}
 					{#if row.isExpanded()}
 						<div class="grid-body-row">

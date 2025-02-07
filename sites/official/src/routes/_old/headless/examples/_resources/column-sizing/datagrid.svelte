@@ -61,7 +61,7 @@
 				</div>
 			</div>
 			<div class="body">
-				{#each datagrid.rows.getBasicRows() as row (row.identifier)}
+				{#each datagrid.rowManager.getBasicRows() as row (row.identifier)}
 					<div class="body-row">
 						{#each columns as column (column.columnId)}
 							{#if column.isVisible()}

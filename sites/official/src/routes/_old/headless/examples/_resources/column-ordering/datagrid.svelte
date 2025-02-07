@@ -93,7 +93,7 @@
 				</div>
 			</div>
 			<div class="grid-body">
-				{#each datagrid.rows.getVisibleRows() as row (row.identifier)}
+				{#each datagrid.rowManager.getVisibleRows() as row (row.identifier)}
 					<div class="grid-body-row">
 						{#each datagrid.columnManager.getLeafColumnsInOrder() as column (column.columnId)}
 							{#if !row.isGroupRow()}

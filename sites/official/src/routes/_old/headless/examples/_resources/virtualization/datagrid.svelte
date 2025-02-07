@@ -87,7 +87,7 @@
 {/snippet}
 
 <div class="flex flex-col">
-	<VirtualList items={datagrid.rows.getBasicRows()} class="list-table" style="height:600px">
+	<VirtualList items={datagrid.rowManager.getBasicRows()} class="list-table" style="height:600px">
 		{#snippet header()}
 			{@render HeaderSnippet()}
 		{/snippet}

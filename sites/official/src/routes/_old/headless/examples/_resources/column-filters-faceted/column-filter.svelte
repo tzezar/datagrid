@@ -13,11 +13,11 @@
 			column,
 			value
 		});
-		datagrid.cache.invalidate('filteredData');
+		datagrid.cacheManager.invalidate('filteredData');
 		datagrid.features.pagination.goToFirstPage();
 		datagrid.processors.data.executeFullDataTransformation();
 		datagrid.features.columnFaceting.calculateFacets(
-			datagrid.initial.data || [],
+			datagrid.originalState.data || [],
 			datagrid.columns
 		);
 	};
