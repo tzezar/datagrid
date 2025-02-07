@@ -4,13 +4,7 @@
 	import { columns } from './columns.svelte';
 	import * as Grid from '$lib/datagrid-enhanced';
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory';
-	import PaginationControl from './controls/pagination-control.svelte';
-	import RowSelectionControl from './controls/row-selection-control.svelte';
-	import RowExpandingControl from './controls/row-expanding-control.svelte';
-	import ControlCenterControl from './controls/control-center-control.svelte';
 	import { SortingFeature } from '$lib/datagrid/core/features';
-	import type { DatagridCore } from '$lib/datagrid/core/index.svelte';
-	import type { SortingFeatureConfig } from '$lib/datagrid/core/features/sorting.svelte';
 
 	let { data } = $props();
 
@@ -20,7 +14,7 @@
 				columnId: 'id',
 				desc: true
 			}
-		])
+		]);
 	}
 
 	let datagrid = new Grid.EnhancedCore<InventoryItem, Grid.EnhancedMeta<InventoryItem>>({
@@ -32,12 +26,14 @@
 		},
 		initialState: {
 			globalSearch: {
-				searchQuery: 'Pants'
 			}
 		}
-
-
 	});
+
+	datagrid.events.on('toggleSort', (data) => {
+		console.log('About to sort column:', data.column.columnId);
+	});
+
 </script>
 
 <div class="pb-20">

@@ -480,3 +480,27 @@ export type DatagridCoreConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> =
         columnVisibility?: FeatureConstructor<ColumnVisibilityFeature>,
     }
 }
+
+export interface Command {
+    execute(): void;
+    undo?(): void;
+}
+
+export type CommandPayload = {
+    type: string;
+    payload: any;
+}
+
+export type GridEventCallback = (data: any) => void;
+
+export type GridEventType = 
+    | 'toggleSort' 
+    // | 'afterSort'
+    // | 'beforeFilter' 
+    // | 'afterFilter'
+    // | 'beforeRowExpand' 
+    // | 'afterRowExpand'
+    // | 'beforeGroupExpand'
+    // | 'afterGroupExpand'
+    // | 'beforeSelectionChange'
+    // | 'afterSelectionChange';

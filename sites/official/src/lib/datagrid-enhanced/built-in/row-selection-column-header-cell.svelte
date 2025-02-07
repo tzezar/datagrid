@@ -12,19 +12,19 @@
 	const handleSelectionAction = (action: SelectionAction) => {
 		switch (action) {
 			case 'selectAll': {
-				datagrid.handlers.rowSelection.selectAllRows();
+				datagrid.handlers.rows.selectAllRows();
 				break;
 			}
 			case 'deselectAll': {
-				datagrid.handlers.rowSelection.unselectAllRows();
+				datagrid.handlers.rows.unselectAllRows();
 				break;
 			}
 			case 'selectPage': {
-				datagrid.handlers.rowSelection.selectRowsOnPage();
+				datagrid.handlers.rows.selectRowsOnPage();
 				break;
 			}
 			case 'deselectPage': {
-				datagrid.handlers.rowSelection.unselectRowsOnPage();
+				datagrid.handlers.rows.unselectRowsOnPage();
 				break;
 			}
 		}

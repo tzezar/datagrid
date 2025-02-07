@@ -1,9 +1,11 @@
 import type { AnyColumn, DatagridCoreConfig } from "./types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { DataProcessor, ColumnProcessor } from "./processors";
-import { DatagridCacheManager, HandlersManager, RowManager, ColumnManager } from "./managers";
+import { DatagridCacheManager, RowManager } from "./managers";
 import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
 import { DatagridFeatures } from "./features/features.svelte";
+import { HandlersManager } from "./managers/handler-manager";
+import { EventService } from "./services/event-service";
 
 
 export class DatagridCore<TOriginalRow = any, TMeta = any> {
@@ -17,8 +19,6 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
 
     columns: AnyColumn<TOriginalRow, TMeta>[] = $state([]);
 
-    handlers = new HandlersManager(this);
-
     processors = {
         data: new DataProcessor(this),
         column: new ColumnProcessor(this)
@@ -26,7 +26,9 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
 
     cacheManager = new DatagridCacheManager(this);
     rowManager = new RowManager(this);
-    columnManager = new ColumnManager(this);
+
+    readonly events: EventService;
+    handlers: HandlersManager
 
     config = {
         measurePerformance: false,
@@ -40,6 +42,9 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
     lifecycleHooks = new LifecycleHooks<TOriginalRow>();
 
     constructor(config: DatagridCoreConfig<TOriginalRow>, lazyInitialization: boolean = true) {
+        this.events = new EventService();
+        this.handlers = new HandlersManager(this, this.events);
+
         this.features = new DatagridFeatures(this, config);
 
         if (config.lifecycleHooks) this.lifecycleHooks = config.lifecycleHooks;

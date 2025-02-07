@@ -4,6 +4,7 @@
 	import StabilizationLock from '$lib/datagrid/icons/material-symbols/stabilization-lock.svelte';
 	import type { AnyColumn, PinningPosition } from '$lib/datagrid/core/types';
 	import * as Select from '$lib/components/ui/select/index.js';
+	import { getLeafColumns } from '$lib/datagrid/core/utils.svelte';
 
 	type Props = {
 		datagrid: EnhancedDatagrid<any>;
@@ -11,10 +12,10 @@
 
 	let { datagrid }: Props = $props();
 
-	const leafColumns = datagrid.columnManager.getLeafColumns();
+	const leafColumns = getLeafColumns(datagrid);
 
 	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
-		datagrid.handlers.columnPinning.changeColumnPinningPosition(column.columnId, position);
+		datagrid.handlers.column.changeColumnPinningPosition(column.columnId, position);
 	}
 
 

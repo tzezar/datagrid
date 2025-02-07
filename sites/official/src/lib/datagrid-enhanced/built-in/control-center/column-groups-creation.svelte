@@ -48,7 +48,7 @@
             class="w-full"
             disabled={!newGroupName || !Object.values(selectedColumns).some((v) => v)}
             onclick={() => {
-                datagrid.handlers.columnGrouping.createGroup({
+                datagrid.handlers.column.createGroup({
                     newGroupName,
                     selectedColumns
                 });

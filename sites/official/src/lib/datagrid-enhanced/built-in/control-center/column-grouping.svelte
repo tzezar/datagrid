@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { AnyColumn, GroupColumn } from "$lib/datagrid/core/types";
-	import { isInGroupTree } from "$lib/datagrid/core/utils.svelte";
+	import { getGroupColumns, isInGroupTree } from "$lib/datagrid/core/utils.svelte";
 	import MoveDown from "$lib/datagrid/icons/material-symbols/move-down.svelte";
 	import MoveUp from "$lib/datagrid/icons/material-symbols/move-up.svelte";
 	import type { EnhancedDatagrid } from "../../core/index.svelte";
@@ -16,10 +16,10 @@
 </script>
 
 <div class="text-muted-foreground flex flex-row gap-2 text-xs">
-    <button onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}>
+    <button onclick={() => datagrid.handlers.column.moveLeft(column.columnId)}>
         <MoveUp />
     </button>
-    <button onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}>
+    <button onclick={() => datagrid.handlers.column.moveRight(column.columnId)}>
         <MoveDown />
     </button>
     <select
@@ -31,8 +31,7 @@
             if (targetGroupId === column.parentColumnId) return;
 
             if (column.type === 'group') {
-                const targetGroup = datagrid.columnManager
-                    .getGroupColumns()
+                const targetGroup = getGroupColumns(datagrid.columns)
                     .find((group: GroupColumn<any>) => group.columnId === targetGroupId);
 
                 if (targetGroup && isInGroupTree(targetGroup, column)) {
@@ -42,15 +41,14 @@
                 }
             }
 
-            datagrid.handlers.columnOrdering.moveColumnToPosition({
+            datagrid.handlers.column.moveColumnToPosition({
                 columnId: column.columnId,
                 targetGroupColumnId: targetGroupId
             });
         }}
     >
         <option value="">Root Level</option>
-        {#each datagrid.columnManager
-            .getGroupColumns()
+        {#each getGroupColumns(datagrid.columns)
             .filter((groupCol: GroupColumn<any>) => column.type !== 'group' || (groupCol !== column && !isInGroupTree(groupCol, column))) as groupColumn (groupColumn.columnId)}
             <option value={groupColumn.columnId} disabled={groupColumn === column}>
                 {groupColumn.header}

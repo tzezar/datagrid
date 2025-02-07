@@ -21,7 +21,7 @@ export class GlobalSearchFeature implements IGlobalSearchState {
     datagrid: DatagridCore
 
     isManual: boolean = $state(false);
-    searchQuery = $state('Beauty');
+    searchQuery = $state('');
     debounceDelay = $state(300);
     isFuzzySearchEnabled = $state(true);
     fuseSearchEngine: Fuse<any> | null = $state(null)

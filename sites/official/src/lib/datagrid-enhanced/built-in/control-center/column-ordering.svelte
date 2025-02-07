@@ -21,7 +21,7 @@
 				<div class="flex flex-col gap-2">
 					<div class="flex w-full flex-row justify-between gap-4">
 						<span class="text-xs font-bold">{column.header}</span>
-						<button onclick={() => datagrid.handlers.columnGrouping.deleteGroupColumn(column)}>
+						<button onclick={() => datagrid.handlers.column.deleteGroupColumn(column)}>
 							<DeleteOutline />
 						</button>
 					</div>

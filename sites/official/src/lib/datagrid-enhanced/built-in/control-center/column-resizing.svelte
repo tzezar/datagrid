@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import Slider from '$lib/components/ui/slider/slider.svelte';
+	import { getLeafColumns } from '$lib/datagrid/core/utils.svelte';
 	import Width from '$lib/datagrid/icons/material-symbols/width.svelte';
 	import type { EnhancedDatagrid } from '../../core/index.svelte';
 
@@ -10,7 +11,7 @@
 
 	let { datagrid }: Props = $props();
 
-	const leafColumns = datagrid.columnManager.getLeafColumns();
+	const leafColumns = getLeafColumns(datagrid);
 </script>
 
 <DropdownMenu.Sub>
@@ -21,7 +22,7 @@
 	<DropdownMenu.SubContent>
 		{#each leafColumns as column}
 			<DropdownMenu.Item closeOnSelect={false} class="flex flex-col">
-				<span class=' w-full'>{column.header}</span>
+				<span class=" w-full">{column.header}</span>
 				<Slider
 					class="ml-auto"
 					type="single"
@@ -30,12 +31,12 @@
 					value={column.state.size.width}
 					onValueCommit={(value: number) => {
 						if (datagrid.extra.features.columnSizing.columnResizeMode === 'standard') {
-							datagrid.handlers.columnSizing.updateColumnSize(column.columnId, Number(value));
+							datagrid.handlers.column.updateColumnSize(column.columnId, Number(value));
 						}
 					}}
 					onValueChange={(value: number) => {
 						if (datagrid.extra.features.columnSizing.columnResizeMode === 'fluid') {
-							datagrid.handlers.columnSizing.updateColumnSize(column.columnId, Number(value));
+							datagrid.handlers.column.updateColumnSize(column.columnId, Number(value));
 						}
 					}}
 				/>

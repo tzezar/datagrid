@@ -18,7 +18,7 @@
 	class="grid-header-cell-content items-end {column.options.sortable ? 'sortable' : ''}"
 	onclick={(e) => {
 		const multisort = e.shiftKey;
-		datagrid.handlers.sorting.toggleColumnSorting(column, multisort);
+		datagrid.handlers.sorting.toggleSort(column, multisort);
 	}}
 >
 	{@render children()}

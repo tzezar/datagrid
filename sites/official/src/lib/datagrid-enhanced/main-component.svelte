@@ -21,6 +21,7 @@
 	import type { EnhancedDatagrid } from './core/index.svelte';
 	import Pagination from './built-in/pagination.svelte';
 	import MadeWithLoveByTzezar from './built-in/made-with-love-by-tzezar.svelte';
+	import { getColumnsInOrder, getLeafColumnsInOrder } from '$lib/datagrid/core/utils.svelte';
 
 	type Props = {
 		datagrid: EnhancedDatagrid<any>;
@@ -54,9 +55,9 @@
 
 	let headerColumns = $derived.by(() => {
 		if (datagrid.extra.features.columnGroups.showColumnGroups) {
-			return datagrid.columnManager.getColumnsInOrder();
+			return getColumnsInOrder(datagrid);
 		}
-		return datagrid.columnManager.getLeafColumnsInOrder();
+		return getLeafColumnsInOrder(datagrid);
 	});
 
 	let headerColumnsWithoutAdditional = $derived(
@@ -64,7 +65,7 @@
 	);
 
 	// Crazy boost in performance
-	const leafColumns = $derived(datagrid.columnManager.getLeafColumnsInOrder());
+	const leafColumns = $derived(getLeafColumnsInOrder(datagrid));
 	const leafColumnsToDisplay = $derived(leafColumns.filter((col) => !col.columnId.startsWith('_')));
 
 	const isFullscreenEnabled = $derived(

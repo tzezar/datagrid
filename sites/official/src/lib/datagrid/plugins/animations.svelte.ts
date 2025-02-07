@@ -1,4 +1,5 @@
 import type { DatagridCore } from "$lib/datagrid/core/index.svelte";
+import { getLeafColumns } from "../core/utils.svelte";
 
 export type AnimationsPluginConfig = {
     animateHeaders?: boolean;
@@ -25,8 +26,7 @@ export class AnimationsPlugin {
     }
 
     private shouldAnimate(): boolean {
-        const { columnManager } = this.datagrid;
-        const columns = columnManager.getLeafColumns();
+        const columns = getLeafColumns(this.datagrid);
 
         const isLeftPinned = columns.some(col => col.isVisible() && col.state.pinning.position === 'left');
         const isRightPinned = columns.some(col => col.isVisible() && col.state.pinning.position === 'right');

@@ -35,6 +35,7 @@
 	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import type { ColumnMetaEnhanced } from '../core/types';
 	import NotContains from '$lib/datagrid/icons/filter-operators/not-contains.svelte';
+	import { getGroupColumns } from '$lib/datagrid/core/utils.svelte';
 
 	type NumberFilterOperator = {
 		label: string;
@@ -195,14 +196,14 @@
 				<DropdownMenu.Separator />
 				{#if datagrid.customization.headerCellDropdownMenu.displayColumnMovementControls === true}
 					<DropdownMenu.Item
-						onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
+						onclick={() => datagrid.handlers.column.moveLeft(column.columnId)}
 						closeOnSelect={false}
 					>
 						<ArrowMoveLeft class="mr-2 size-4" />
 						<span>Move left</span>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item
-						onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}
+						onclick={() => datagrid.handlers.column.moveRight(column.columnId)}
 						closeOnSelect={false}
 					>
 						<ArrowMoveRight class="mr-2 size-4" />
@@ -217,7 +218,7 @@
 							<DropdownMenu.Item
 								closeOnSelect={false}
 								onclick={() =>
-									datagrid.handlers.columnOrdering.moveColumnToPosition({
+									datagrid.handlers.column.moveColumnToPosition({
 										columnId: column.columnId,
 										targetGroupColumnId: ''
 									})}
@@ -226,11 +227,11 @@
 									<span>Root level</span>
 								</div>
 							</DropdownMenu.Item>
-							{#each datagrid.columnManager.getGroupColumns() as groupCol}
+							{#each getGroupColumns(datagrid.columns) as groupCol}
 								<DropdownMenu.Item
 									closeOnSelect={false}
 									onclick={() =>
-										datagrid.handlers.columnOrdering.moveColumnToPosition({
+										datagrid.handlers.column.moveColumnToPosition({
 											columnId: column.columnId,
 											targetGroupColumnId: groupCol.columnId
 										})}
@@ -261,11 +262,15 @@
 						<ArrowsSort class="mr-2 size-4" />
 						<span>Clear sort</span>
 					</DropdownMenu.Item>
-					<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.sortColumnAscending(column)}>
+					<DropdownMenu.Item
+						onclick={() => datagrid.handlers.sorting.sortColumnAscending(column)}
+					>
 						<SortAscending class="mr-2 size-4" />
 						<span>Sort ascending </span>
 					</DropdownMenu.Item>
-					<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.sortColumnDescending(column)}>
+					<DropdownMenu.Item
+						onclick={() => datagrid.handlers.sorting.sortColumnDescending(column)}
+					>
 						<SortDescending class="mr-2 size-4" />
 						<span>Sort descending </span>
 					</DropdownMenu.Item>
@@ -313,7 +318,7 @@
 				{#if datagrid.customization.headerCellDropdownMenu.displayColumnPinningControls === true}
 					<DropdownMenu.Item
 						disabled={column.options.pinnable === false || column.state.pinning.position === 'left'}
-						onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'left')}
+						onclick={() => datagrid.handlers.column.pinColumn(column.columnId, 'left')}
 					>
 						<FreezeColumn class="mr-2 size-4" />
 						<span>Pin to left</span>
@@ -321,14 +326,14 @@
 					<DropdownMenu.Item
 						disabled={column.options.pinnable === false ||
 							column.state.pinning.position === 'right'}
-						onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'right')}
+						onclick={() => datagrid.handlers.column.pinColumn(column.columnId, 'right')}
 					>
 						<FreezeColumn class="mr-2 size-4 rotate-180" />
 						<span>Pin to right</span>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item
 						disabled={column.options.pinnable === false || column.state.pinning.position === 'none'}
-						onclick={() => datagrid.handlers.columnPinning.pinColumn(column.columnId, 'none')}
+						onclick={() => datagrid.handlers.column.pinColumn(column.columnId, 'none')}
 					>
 						<ColumnsOff class="mr-2 size-4" />
 						<span>Unpin</span>
@@ -339,7 +344,7 @@
 					<DropdownMenu.Item
 						disabled={column.options.hideable === false}
 						onclick={() =>
-							datagrid.handlers.columnVisibility.toggleColumnVisibility(column.columnId)}
+							datagrid.handlers.column.toggleColumnVisibility(column.columnId)}
 					>
 						<VisibilityOff class="mr-2 size-4" />
 						<span>Hide column</span>
@@ -349,14 +354,14 @@
 				{#if datagrid.customization.headerCellDropdownMenu.displayColumnMovementControls === true}
 					<DropdownMenu.Separator />
 					<DropdownMenu.Item
-						onclick={() => datagrid.handlers.columnOrdering.moveLeft(column.columnId)}
+						onclick={() => datagrid.handlers.column.moveLeft(column.columnId)}
 						closeOnSelect={false}
 					>
 						<ArrowMoveLeft class="mr-2 size-4" />
 						<span>Move left</span>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item
-						onclick={() => datagrid.handlers.columnOrdering.moveRight(column.columnId)}
+						onclick={() => datagrid.handlers.column.moveRight(column.columnId)}
 						closeOnSelect={false}
 					>
 						<ArrowMoveRight class="mr-2 size-4" />
@@ -372,7 +377,7 @@
 							<DropdownMenu.Item
 								closeOnSelect={false}
 								onclick={() =>
-									datagrid.handlers.columnOrdering.moveColumnToPosition({
+									datagrid.handlers.column.moveColumnToPosition({
 										columnId: column.columnId,
 										targetGroupColumnId: ''
 									})}
@@ -381,11 +386,11 @@
 									<span>Root level</span>
 								</div>
 							</DropdownMenu.Item>
-							{#each datagrid.columnManager.getGroupColumns() as groupCol}
+							{#each getGroupColumns(datagrid.columns) as groupCol}
 								<DropdownMenu.Item
 									closeOnSelect={false}
 									onclick={() =>
-										datagrid.handlers.columnOrdering.moveColumnToPosition({
+										datagrid.handlers.column.moveColumnToPosition({
 											columnId: column.columnId,
 											targetGroupColumnId: groupCol.columnId
 										})}
