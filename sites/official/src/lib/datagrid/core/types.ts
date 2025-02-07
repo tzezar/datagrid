@@ -172,7 +172,7 @@ export type HeaderCell = (
 export interface Sorting {
     columnId: ColumnId;
     desc: boolean;
-    index: number;
+    // index: number;
 }
 
 /**

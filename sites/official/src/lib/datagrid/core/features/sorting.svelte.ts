@@ -99,7 +99,7 @@ export class SortingFeature implements SortingState {
         if (this.sortConfigs.length >= this.maxMultiSortColumns) return;
         this.sortConfigs = [
             ...this.sortConfigs,
-            { columnId, desc, index: this.sortConfigs.length }
+            { columnId, desc }
         ];
     }
 

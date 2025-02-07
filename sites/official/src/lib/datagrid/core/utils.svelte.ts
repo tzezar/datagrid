@@ -92,7 +92,7 @@ export const getSortIndex = (datagrid: DatagridCore<any>, column: AnyColumn<any>
     if (!column.options.sortable) return null;
     const columnId = column.columnId || column.header;
     const sortConfig = datagrid.features.sorting.sortConfigs.find((config) => config.columnId === columnId);
-    return sortConfig ? sortConfig.index + 1 : null;
+    return sortConfig ? datagrid.features.sorting.sortConfigs.indexOf(sortConfig) + 1 : null;
 };
 
 
