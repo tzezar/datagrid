@@ -70,7 +70,7 @@
 				onclick={(e) => {
 					if (datagrid.customization.enableSorting === false) return;
 					let multisort = false;
-					if (datagrid.features.sorting.enableMultiSort) {
+					if (datagrid.features.sorting.allowMultiSort) {
 						multisort = e.shiftKey;
 					}
 					datagrid.handlers.sorting.toggleColumnSorting(column, multisort);

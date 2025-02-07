@@ -39,11 +39,11 @@ export class HandlersManager {
 
             const multipleColumnSort = () => {
                 if (!isColumnSorted) {
-                    const isOverMaxColCount = datagrid.features.sorting.sortings.length >= datagrid.features.sorting.maxMultiSortColCount;
+                    const isOverMaxColCount = datagrid.features.sorting.sortConfigs.length >= datagrid.features.sorting.maxMultiSortColumns;
                     if (isOverMaxColCount) {
                         // remove first sorting config
                         console.log('removing first sorting config');
-                        datagrid.features.sorting.removeSortConfig(datagrid.features.sorting.sortings[0].columnId);
+                        datagrid.features.sorting.removeSortConfig(datagrid.features.sorting.sortConfigs[0].columnId);
                     }
 
                     datagrid.features.sorting.addSortConfig(columnId, false);

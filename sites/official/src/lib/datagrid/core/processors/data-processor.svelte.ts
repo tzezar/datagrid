@@ -123,10 +123,10 @@ export class DataProcessor<TOriginalRow> {
         data = this.datagrid.lifecycleHooks.executePreSort(data);
 
         const isMnualSortingEnabled = this.datagrid.features.globalSearch.manual
-        const noSorting = this.datagrid.features.sorting.sortings.length === 0
+        const noSorting = this.datagrid.features.sorting.sortConfigs.length === 0
         if (isMnualSortingEnabled || noSorting) return data
 
-        const sortInstructions = this.datagrid.features.sorting.sortings
+        const sortInstructions = this.datagrid.features.sorting.sortConfigs
             .map(config => {
                 const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), config.columnId) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>);
                 if (!column || isGroupColumn(column) || !column.isSortable()) {
