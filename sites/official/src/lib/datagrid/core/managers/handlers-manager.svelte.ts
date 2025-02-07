@@ -26,14 +26,14 @@ export class HandlersManager {
 
             const singleColumnSort = () => {
                 if (!isColumnSorted) {
-                    this.datagrid.features.sorting.clearSorting();
+                    this.datagrid.features.sorting.clearSortConfigs();
                     this.datagrid.features.sorting.addSortConfig(columnId, false)
                 }
                 else if (isColumnSortedAscending) {
-                    this.datagrid.features.sorting.clearSorting();
+                    this.datagrid.features.sorting.clearSortConfigs();
                     datagrid.features.sorting.addSortConfig(columnId, true);
                 }
-                else this.datagrid.features.sorting.clearSorting();
+                else this.datagrid.features.sorting.clearSortConfigs();
 
             }
 
@@ -48,7 +48,7 @@ export class HandlersManager {
 
                     datagrid.features.sorting.addSortConfig(columnId, false);
                 } else if (isColumnSortedAscending) {
-                    datagrid.features.sorting.changeDirection(columnId, true);
+                    datagrid.features.sorting.changeSortConfigDirection(columnId, true);
                 } else {
                     datagrid.features.sorting.removeSortConfig(columnId);
 
@@ -67,7 +67,7 @@ export class HandlersManager {
 
         sortColumnAscending: (column: LeafColumn<any>) => {
             const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
-            if (isColumnSorted) this.datagrid.features.sorting.changeDirection(column.columnId, false);
+            if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, false);
             else this.datagrid.features.sorting.addSortConfig(column.columnId, true);
 
             this.datagrid.processors.data.executeFullDataTransformation();
@@ -75,7 +75,7 @@ export class HandlersManager {
 
         sortColumnDescending: (column: LeafColumn<any>) => {
             const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
-            if (isColumnSorted) this.datagrid.features.sorting.changeDirection(column.columnId, true);
+            if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, true);
             else this.datagrid.features.sorting.addSortConfig(column.columnId, false);
 
             this.datagrid.processors.data.executeFullDataTransformation();
@@ -85,11 +85,11 @@ export class HandlersManager {
         sortColumn: (column: LeafColumn<any>, desc: boolean) => {
             if (desc) {
                 const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
-                if (isColumnSorted) this.datagrid.features.sorting.changeDirection(column.columnId, true);
+                if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, true);
                 else this.datagrid.features.sorting.addSortConfig(column.columnId, true);
             } else {
                 const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
-                if (isColumnSorted) this.datagrid.features.sorting.changeDirection(column.columnId, false);
+                if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, false);
                 else this.datagrid.features.sorting.addSortConfig(column.columnId, false);
             }
             this.datagrid.processors.data.executeFullDataTransformation();
@@ -235,7 +235,6 @@ export class HandlersManager {
         },
         toggleRowSelection: (rowIdentifier: GridRowIdentifier) => {
             this.datagrid.features.rowSelection.toggleRowSelection(rowIdentifier);
-            this.datagrid.features.rowSelection.onRowSelectionChange?.();
         }
     }
     rowPinning = {

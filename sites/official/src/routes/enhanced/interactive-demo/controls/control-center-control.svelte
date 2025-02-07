@@ -194,8 +194,8 @@
 	/>
 
 	<p>Max selected rows</p>
-	<Input bind:value={datagrid.features.rowSelection.maxSelectedRows} type="number" />
-	<p>Max expanded rows</p>
+	<Input bind:value={datagrid.features.rowSelection.maxSelectableRows} type="number"/>
+		<p>Max expanded rows</p>
 	<Input bind:value={datagrid.features.rowExpanding.maxExpandedRows} type="number" />
 
 	<p>Body cell click to copy</p>

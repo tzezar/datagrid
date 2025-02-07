@@ -11,7 +11,7 @@ import { GroupingFeature } from "./grouping.svelte";
 import { PaginationFeature } from "./pagination.svelte";
 import { RowExpandingFeature } from "./row-expanding.svelte";
 import { RowPinningFeature } from "./row-pinning.svelte";
-import { RowSelectionFeature } from "./row-selection.svelte";
+import { RowSelection } from "./row-selection.svelte";
 
 export {
     ColumnFilteringFeature,
@@ -27,5 +27,5 @@ export {
     PaginationFeature,
     RowExpandingFeature,
     RowPinningFeature,
-    RowSelectionFeature
+    RowSelection as RowSelectionFeature
 }

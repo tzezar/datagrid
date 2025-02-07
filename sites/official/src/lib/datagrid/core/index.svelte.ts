@@ -9,7 +9,7 @@ import { type ColumnFacetingPluginConfig } from "./features/column-faceting.svel
 import { type GlobalSearchPluginConfig } from "./features/global-search.svelte";
 import { type GroupingPluginConfig } from "./features/grouping.svelte";
 import { type RowExpandingPluginConfig } from "./features/row-expanding.svelte";
-import { type RowSelectionPluginConfig, } from "./features/row-selection.svelte";
+import { type RowSelectionFeatureConfig, } from "./features/row-selection.svelte";
 import { type SortingPluginConfig, } from "./features/sorting.svelte";
 import { FeatureManager } from "./managers/feature-manager.svelte";
 import type { ColumnOrderingPluginConfig } from "./features/column-ordering.svelte";
@@ -32,7 +32,7 @@ export type DatagridCoreConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> =
         pagination?: PaginationPluginConfig
         rowExpanding?: RowExpandingPluginConfig
         rowPinning?: RowPinningPluginConfig
-        rowSelection?: RowSelectionPluginConfig
+        rowSelection?: RowSelectionFeatureConfig
         sorting?: SortingPluginConfig
         columnSizing?: ColumnSizingPluginConfig
         columnVisibility?: ColumnVisibilityPluginConfig

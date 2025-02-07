@@ -6,7 +6,6 @@
 	import RowSelectionControl from './controls/row-selection-control.svelte';
 	import RowExpandingControl from './controls/row-expanding-control.svelte';
 	import ControlCenterControl from './controls/control-center-control.svelte';
-	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 
 	let { data } = $props();
 

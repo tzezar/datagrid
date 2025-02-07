@@ -10,11 +10,11 @@ import type { GroupingFeature } from "./grouping.svelte";
 import type { PaginationFeature } from "./pagination.svelte";
 import type { RowExpandingFeature } from "./row-expanding.svelte";
 import type { RowPinningFeature } from "./row-pinning.svelte";
-import type { RowSelectionFeature } from "./row-selection.svelte";
+import type { RowSelection } from "./row-selection.svelte";
 import type { SortingFeature } from "./sorting.svelte";
 
 export type BuiltInFeature = ColumnFacetingFeature | ColumnFilteringFeature |
     ColumnGroupingFeature | ColumnOrderingFeature | ColumnPinningFeature |
     ColumnSizingFeature | ColumnVisibilityFeature | GlobalSearchFeature | GroupingFeature |
-    PaginationFeature | RowExpandingFeature | RowPinningFeature | RowSelectionFeature |
+    PaginationFeature | RowExpandingFeature | RowPinningFeature | RowSelection |
     SortingFeature

@@ -95,5 +95,5 @@
 
 
 <div class='p-2 px-4 border'>
-	{JSON.stringify($state.snapshot(datagrid.features.rowSelection.getSelectedIdentifiers()))}
+	{JSON.stringify($state.snapshot(datagrid.features.rowSelection.getSelectedRowsIds()))}
 </div>

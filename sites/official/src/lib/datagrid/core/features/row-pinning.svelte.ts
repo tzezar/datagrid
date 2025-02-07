@@ -3,21 +3,25 @@ import type { DatagridCore } from "../index.svelte";
 import type { GridGroupRow, GridRow, GridRowIdentifier, RowPinningPosition } from "../types";
 
 
-export type RowPinningPluginConfig = {
-    rowIdsPinnedTop?: SvelteSet<GridRowIdentifier>;
-    rowIdsPinnedBottom?: SvelteSet<GridRowIdentifier>;
+export type RowPinningState = {
+    pinnedTopRowIds: SvelteSet<GridRowIdentifier>;
+    pinnedBottomRowIds: SvelteSet<GridRowIdentifier>;
 }
 
 
-export class RowPinningFeature<TOriginalRow = any> {
+
+export type RowPinningPluginConfig = {
+} & Partial<RowPinningState>
+
+
+export class RowPinningFeature<TOriginalRow = any> implements RowPinningState {
     datagrid: DatagridCore<TOriginalRow>;
-    rowIdsPinnedTop: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
-    rowIdsPinnedBottom: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
+    pinnedTopRowIds: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
+    pinnedBottomRowIds: SvelteSet<GridRowIdentifier> = new SvelteSet([]);
 
     // Cache for pinned rows
-    private topRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
-    private bottomRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
-
+    private pinnedTopRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
+    private pinnedBottomRowsCache: GridRow<TOriginalRow>[] = $state.raw([]);
 
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: RowPinningPluginConfig) {
         this.datagrid = datagrid;
@@ -25,8 +29,8 @@ export class RowPinningFeature<TOriginalRow = any> {
     }
 
     initialize(config?: RowPinningPluginConfig) {
-        this.rowIdsPinnedTop = config?.rowIdsPinnedTop ?? this.rowIdsPinnedTop;
-        this.rowIdsPinnedBottom = config?.rowIdsPinnedBottom ?? this.rowIdsPinnedBottom;
+        this.pinnedTopRowIds = config?.pinnedTopRowIds ?? this.pinnedTopRowIds;
+        this.pinnedBottomRowIds = config?.pinnedBottomRowIds ?? this.pinnedBottomRowIds;
     }
 
     // Update the caches based on current processedRowsCache
@@ -40,17 +44,17 @@ export class RowPinningFeature<TOriginalRow = any> {
         for (let i = 0; i < this.datagrid.cache.rows.length; i++) {
             const row = this.datagrid.cache.rows[i];
             const rowIdentifier = row.identifier;
-            if (this.rowIdsPinnedTop.has(rowIdentifier)) {
+            if (this.pinnedTopRowIds.has(rowIdentifier)) {
                 pinnedTop.push(row);
-            } else if (this.rowIdsPinnedBottom.has(rowIdentifier)) {
+            } else if (this.pinnedBottomRowIds.has(rowIdentifier)) {
                 pinnedBottom.push(row);
             } else {
                 unpinned.push(row);
             }
         }
 
-        this.topRowsCache = pinnedTop;
-        this.bottomRowsCache = pinnedBottom;
+        this.pinnedTopRowsCache = pinnedTop;
+        this.pinnedBottomRowsCache = pinnedBottom;
     }
 
     updatePinnedRowsInOrder() {
@@ -58,13 +62,13 @@ export class RowPinningFeature<TOriginalRow = any> {
         const pinnedBottom: GridRow<TOriginalRow>[] = [];
         const unpinned: GridRow<TOriginalRow>[] = [];
 
-        for (const rowIdentifier of this.rowIdsPinnedTop) {
+        for (const rowIdentifier of this.pinnedTopRowIds) {
             const row = this.datagrid.rows.findRowByIdentifier(rowIdentifier);
             if (row) pinnedTop.push(row);
         }
 
         // Iterate through all pinned bottom rows
-        for (const rowIdentifier of this.rowIdsPinnedBottom) {
+        for (const rowIdentifier of this.pinnedBottomRowIds) {
             const row = this.datagrid.rows.findRowByIdentifier(rowIdentifier);
             if (row) pinnedBottom.push(row);
         }
@@ -72,7 +76,7 @@ export class RowPinningFeature<TOriginalRow = any> {
         // Iterate through all rows to populate unpinned array
         this.datagrid.cache.rows.forEach(row => {
             const rowIdentifier = row.identifier;
-            if (!this.rowIdsPinnedTop.has(rowIdentifier) && !this.rowIdsPinnedBottom.has(rowIdentifier)) {
+            if (!this.pinnedTopRowIds.has(rowIdentifier) && !this.pinnedBottomRowIds.has(rowIdentifier)) {
                 unpinned.push(row);
             }
         });
@@ -123,7 +127,7 @@ export class RowPinningFeature<TOriginalRow = any> {
      * Get rows pinned to the top
      */
     getTopRows(): GridRow<TOriginalRow>[] {
-        return this.topRowsCache;
+        return this.pinnedTopRowsCache;
     }
 
     /**
@@ -140,7 +144,7 @@ export class RowPinningFeature<TOriginalRow = any> {
      * Get rows pinned to the bottom
      */
     getBottomRows(): GridRow<TOriginalRow>[] {
-        return this.bottomRowsCache;
+        return this.pinnedBottomRowsCache;
     }
 
     // Pin a row or group to the top
@@ -151,18 +155,18 @@ export class RowPinningFeature<TOriginalRow = any> {
         if (row.isGroupRow()) {
             row = row as GridGroupRow<TOriginalRow>;
             // Pin the group itself
-            this.rowIdsPinnedTop.add(row.identifier);
+            this.pinnedTopRowIds.add(row.identifier);
             // Pin all descendants
             const descendantIndices = this.datagrid.rows.getAllDescendantIndifiers(row);
-            descendantIndices.forEach(id => this.rowIdsPinnedTop.add(id));
+            descendantIndices.forEach(id => this.pinnedTopRowIds.add(id));
         } else {
-            if (this.isPinnedTop(rowIdentifier)) this.rowIdsPinnedTop.delete(rowIdentifier);
-            else this.rowIdsPinnedTop.add(rowIdentifier);
-            
+            if (this.isPinnedTop(rowIdentifier)) this.pinnedTopRowIds.delete(rowIdentifier);
+            else this.pinnedTopRowIds.add(rowIdentifier);
+
         }
-        
+
         // Remove from bottom pins if necessary
-        this.rowIdsPinnedBottom.delete(rowIdentifier);
+        this.pinnedBottomRowIds.delete(rowIdentifier);
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 
@@ -173,17 +177,17 @@ export class RowPinningFeature<TOriginalRow = any> {
 
         if (row.isGroupRow()) {
             // Pin the group itself
-            this.rowIdsPinnedBottom.add(row.identifier);
+            this.pinnedBottomRowIds.add(row.identifier);
             // Pin all descendants
             const descendantIds = this.datagrid.rows.getAllDescendantIndifiers(row);
-            descendantIds.forEach(id => this.rowIdsPinnedBottom.add(id));
+            descendantIds.forEach(id => this.pinnedBottomRowIds.add(id));
         } else {
-            if (this.isPinnedBottom(rowIdentifier)) this.rowIdsPinnedBottom.delete(rowIdentifier);
-            else this.rowIdsPinnedBottom.add(rowIdentifier);
+            if (this.isPinnedBottom(rowIdentifier)) this.pinnedBottomRowIds.delete(rowIdentifier);
+            else this.pinnedBottomRowIds.add(rowIdentifier);
         }
 
         // Remove from top pins if necessary
-        this.rowIdsPinnedTop.delete(rowIdentifier);
+        this.pinnedTopRowIds.delete(rowIdentifier);
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 
@@ -194,28 +198,28 @@ export class RowPinningFeature<TOriginalRow = any> {
 
         if (row.isGroupRow()) {
             // Unpin the group itself
-            this.rowIdsPinnedTop.delete(row.identifier);
-            this.rowIdsPinnedBottom.delete(row.identifier);
+            this.pinnedTopRowIds.delete(row.identifier);
+            this.pinnedBottomRowIds.delete(row.identifier);
             // Unpin all descendants
             const descendantIds = this.datagrid.rows.getAllDescendantIndifiers(row);
             descendantIds.forEach(id => {
-                this.rowIdsPinnedTop.delete(id);
-                this.rowIdsPinnedBottom.delete(id);
+                this.pinnedTopRowIds.delete(id);
+                this.pinnedBottomRowIds.delete(id);
             });
         } else {
-            this.rowIdsPinnedTop.delete(rowIdentifier);
-            this.rowIdsPinnedBottom.delete(rowIdentifier);
+            this.pinnedTopRowIds.delete(rowIdentifier);
+            this.pinnedBottomRowIds.delete(rowIdentifier);
         }
 
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 
     isPinnedTop(rowId: GridRowIdentifier): boolean {
-        return this.rowIdsPinnedTop.has(rowId);
+        return this.pinnedTopRowIds.has(rowId);
     }
 
     isPinnedBottom(rowId: GridRowIdentifier): boolean {
-        return this.rowIdsPinnedBottom.has(rowId);
+        return this.pinnedBottomRowIds.has(rowId);
     }
 
     isPinned(rowId: GridRowIdentifier): boolean {
@@ -239,16 +243,16 @@ export class RowPinningFeature<TOriginalRow = any> {
 
     // Clear all pinned rows
     clearPinnedRows() {
-        this.rowIdsPinnedTop.clear();
-        this.rowIdsPinnedBottom.clear();
+        this.pinnedTopRowIds.clear();
+        this.pinnedBottomRowIds.clear();
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 
     // Get all pinned row IDs
     getIdentifiersOfPinnedRows() {
         return {
-            top: Array.from(this.rowIdsPinnedTop),
-            bottom: Array.from(this.rowIdsPinnedBottom)
+            top: Array.from(this.pinnedTopRowIds),
+            bottom: Array.from(this.pinnedBottomRowIds)
         };
     }
 

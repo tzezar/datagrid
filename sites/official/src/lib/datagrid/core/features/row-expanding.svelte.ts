@@ -12,7 +12,6 @@ export type RowExpandingPluginConfig = {
     maxExpandedRows?: number;
 }
 
-
 /**
  * Manages row expansion functionality within the data grid.
  * Allows expanding and collapsing rows, with the state tracked via expanded row IDs.
