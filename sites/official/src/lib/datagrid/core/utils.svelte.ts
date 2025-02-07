@@ -1,4 +1,4 @@
-import type { AnyColumn, GridGroupRow, GridRow, GridRowIdentifier, GroupColumn, LeafColumn } from "./types";
+import type { AnyColumn, GridGroupRow, GridRow, GridRowIdentifier, GroupColumn } from "./types";
 import type { CellValue, ColumnId, CustomCellComponentWithProps, SortableColumn } from "./types";
 import type { DatagridCore } from "./index.svelte";
 import { isGroupColumn } from "./helpers/column-guards";
@@ -131,34 +131,8 @@ export function flattenGridRows<TOriginalRow>(data: GridRow<TOriginalRow>[]): Gr
 }
 
 
-export function getColumnsInOrder<TOriginalRow>(datagrid: DatagridCore): AnyColumn<TOriginalRow>[] {
-    const getColumnsPinnedToLeft = (): AnyColumn<TOriginalRow>[] => {
-        return flattenColumnStructureAndClearGroups(datagrid.columns).filter(col => col.state.pinning.position === 'left' || datagrid.features.grouping.groupByColumns.includes(col.columnId))
-    }
-    const getColumnsPinnedToRight = (): AnyColumn<TOriginalRow>[] => {
-        return flattenColumnStructureAndClearGroups(datagrid.columns).filter(col => col.type !== 'group').filter(col => col.state.pinning.position === 'right')
-    }
-    const getColumnsPinnedToNone = (): AnyColumn<TOriginalRow>[] => {
-        // return this.datagrid.columnManager.getLeafColumns().filter(col => col.state.pinning.position === 'none').filter(col => !this.datagrid.features.grouping.groupByColumns.includes(col.columnId))
-        return flattenColumnStructureAndClearGroups(datagrid.columns).filter(col => col.state.pinning.position === 'none' && !datagrid.features.grouping.groupByColumns.includes(col.columnId))
-    }
 
-    const pinnedLeft = getColumnsPinnedToLeft()
-    const pinnedNone = getColumnsPinnedToNone()
-    const pinnedRight = getColumnsPinnedToRight()
-    return [...pinnedLeft, ...datagrid.processors.column.createColumnHierarchy(pinnedNone), ...pinnedRight]
-}
 
-export function getLeafColumns<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>): LeafColumn<TOriginalRow>[] {
-    return flattenColumnStructureAndClearGroups(datagrid.columns).filter(col => col.type !== 'group')
-}
-
-export function getLeafColumnsInOrder<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>): LeafColumn<TOriginalRow>[] {
-    // let timeStart = performance.now();
-    const cols = flattenColumnStructureAndClearGroups(getColumnsInOrder(datagrid)).filter(col => col.type !== 'group')
-    // console.log(`getLeafColumnsInOrder took ${performance.now() - timeStart}ms`)
-    return cols
-}
 
 export function getGroupColumns<TOriginalRow>(columns: AnyColumn<TOriginalRow>[]): GroupColumn<TOriginalRow>[] {
     return flattenColumnStructureAndClearGroups(columns).filter(col => isGroupColumn(col));

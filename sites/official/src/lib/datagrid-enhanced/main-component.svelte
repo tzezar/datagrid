@@ -21,7 +21,6 @@
 	import type { EnhancedDatagrid } from './core/index.svelte';
 	import Pagination from './built-in/pagination.svelte';
 	import MadeWithLoveByTzezar from './built-in/made-with-love-by-tzezar.svelte';
-	import { getColumnsInOrder, getLeafColumnsInOrder } from '$lib/datagrid/core/utils.svelte';
 
 	type Props = {
 		datagrid: EnhancedDatagrid<any>;
@@ -55,9 +54,9 @@
 
 	let headerColumns = $derived.by(() => {
 		if (datagrid.extra.features.columnGroups.showColumnGroups) {
-			return getColumnsInOrder(datagrid);
+			return datagrid.columns.getColumnsInOrder(datagrid);
 		}
-		return getLeafColumnsInOrder(datagrid);
+		return datagrid.columns.getLeafColumnsInOrder();
 	});
 
 	let headerColumnsWithoutAdditional = $derived(
@@ -65,7 +64,7 @@
 	);
 
 	// Crazy boost in performance
-	const leafColumns = $derived(getLeafColumnsInOrder(datagrid));
+	const leafColumns = $derived(datagrid.columns.getLeafColumnsInOrder());
 	const leafColumnsToDisplay = $derived(leafColumns.filter((col) => !col.columnId.startsWith('_')));
 
 	const isFullscreenEnabled = $derived(
@@ -111,7 +110,7 @@
 {/snippet}
 
 {#snippet VirtualizedContainerSnippet()}
-	<VirtualList items={datagrid.rows.visible}>
+	<VirtualList items={datagrid.rows.getVisibleRows()}>
 		{#snippet header()}
 			{@render HeadSnippet()}
 		{/snippet}
@@ -241,7 +240,7 @@
 				<div class="body-overlay"></div>
 			{/if}
 
-			{#each datagrid.rows.visible as row, rowIndex (row.identifier)}
+			{#each datagrid.rows.getVisibleRows() as row, rowIndex (row.identifier)}
 				{#if row.isGroupRow()}
 					<div
 						use:identifier={{ datagrid, value: 'row-' + row.identifier }}

@@ -16,7 +16,7 @@
 		datagrid.cacheManager.invalidate('filteredData');
 		datagrid.features.pagination.goToFirstPage();
 		datagrid.processors.data.executeFullDataTransformation();
-		datagrid.features.columnFaceting.calculateFacets(datagrid.cacheManager.sortedData || [], datagrid.columns);
+		datagrid.features.columnFaceting.calculateFacets(datagrid.cacheManager.sortedData || [], datagrid._columns);
 	};
 	
 </script>

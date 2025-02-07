@@ -56,7 +56,7 @@ export class ColumnProcessor<TOriginalRow> {
     }
 
     refreshColumnPinningOffsets(columns?: AnyColumn<any>[]) {
-        if (!columns) columns = flattenColumnStructureAndClearGroups(this.datagrid.columns);
+        if (!columns) columns = flattenColumnStructureAndClearGroups(this.datagrid._columns);
 
         const newColumns: AnyColumn<any>[] = [];
         for (let i = 0; i < columns.length; i++) {
@@ -72,7 +72,7 @@ export class ColumnProcessor<TOriginalRow> {
 
         const hierarchicalColumns = this.datagrid.processors.column.createColumnHierarchy(newColumns);
 
-        this.datagrid.columns = hierarchicalColumns
+        this.datagrid._columns = hierarchicalColumns
     };
 
 

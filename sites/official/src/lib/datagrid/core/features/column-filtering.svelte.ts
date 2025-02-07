@@ -60,7 +60,7 @@ export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilter
         if (!condition) {
             // If no condition exists, create a new one
 
-            const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), columnId);
+            const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), columnId);
             if (!column) throw new Error(`Column ${columnId} not found`);
             if (isGroupColumn(column)) throw new Error(`Cannot filter group column: ${columnId}`);
             if (column.type === 'display') throw new Error(`Cannot filter display column: ${columnId}`);

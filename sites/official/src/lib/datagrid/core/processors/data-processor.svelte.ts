@@ -65,7 +65,7 @@ export class DataDataProcessor<TOriginalRow> {
 
         }
         const applySimpleSearch = (data: TOriginalRow[]) => {
-            const searchableColumns = flattenColumnStructureAndClearGroups(this.datagrid.columns).filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>)[];
+            const searchableColumns = flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>)[];
             return data.filter(item =>
                 searchableColumns.some(column =>
                     String(column.getValueFn(item))
@@ -128,7 +128,7 @@ export class DataDataProcessor<TOriginalRow> {
 
         const sortInstructions = this.datagrid.features.sorting.sortConfigs
             .map(config => {
-                const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), config.columnId) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>);
+                const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), config.columnId) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>);
                 if (!column || isGroupColumn(column) || !column.isSortable()) {
                     return null;
                 }
@@ -266,7 +266,7 @@ export class DataDataProcessor<TOriginalRow> {
 
             if (depth >= groupCols.length) return this.createBasicRows(rows, parentPath);
 
-            const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), groupCols[depth]);
+            const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), groupCols[depth]);
 
             if (!column) throw new Error(`Invalid group column: ${groupCols[depth]}`);
             if (isGroupColumn(column)) throw new Error(`Cannot group by group column: ${groupCols[depth]}`);
@@ -286,7 +286,7 @@ export class DataDataProcessor<TOriginalRow> {
 
             // Create group rows with aggregation
             return Array.from(groups.entries()).map(([key, groupRows], index) => {
-                const aggregations = flattenColumnStructureAndClearGroups(this.datagrid.columns)
+                const aggregations = flattenColumnStructureAndClearGroups(this.datagrid._columns)
                     .filter(col =>
                         (col.type === 'accessor' || col.type === 'computed') &&
                         col.aggregate

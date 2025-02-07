@@ -48,19 +48,19 @@ export class ColumnGroupingFeature<TOriginalRow = any> implements IColumnGroupin
         if (groupColumn.parentColumnId === null) {
             // Group is at root level
             // Remove the group from root level columns
-            const groupIndex = this.datagrid.columns.findIndex(col => col === groupColumn);
+            const groupIndex = this.datagrid._columns.findIndex(col => col === groupColumn);
             if (groupIndex !== -1) {
-                this.datagrid.columns.splice(groupIndex, 1);
+                this.datagrid._columns.splice(groupIndex, 1);
 
                 // Move all children to root level
                 childColumns.forEach(childColumn => {
                     childColumn.parentColumnId = null;
-                    this.datagrid.columns.splice(groupIndex, 0, childColumn);
+                    this.datagrid._columns.splice(groupIndex, 0, childColumn);
                 });
             }
         } else {
             // Group is nested within another group
-            const parentGroup = findColumnById(flattenColumnStructurePreservingGroups(this.datagrid.columns), groupColumn.parentColumnId) as GroupColumn<TOriginalRow>;
+            const parentGroup = findColumnById(flattenColumnStructurePreservingGroups(this.datagrid._columns), groupColumn.parentColumnId) as GroupColumn<TOriginalRow>;
             if (!parentGroup) throw new Error('Parent group not found');
             if (parentGroup) {
                 // Find and remove the group from its parent
@@ -90,7 +90,7 @@ export class ColumnGroupingFeature<TOriginalRow = any> implements IColumnGroupin
         });
 
         // Add the group directly to the root level
-        this.datagrid.columns.push(groupColumn);
+        this.datagrid._columns.push(groupColumn);
 
         // Get the column IDs that need to be grouped
         const columnIdsToBeGrouped = Object.entries(selectedColumns)

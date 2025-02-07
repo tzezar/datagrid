@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-	import { getLeafColumns, getSortDirection, getSortIndex } from '$lib/datagrid/core/utils.svelte';
+	import {  getSortDirection, getSortIndex } from '$lib/datagrid/core/utils.svelte';
 	import Sort from '$lib/datagrid/icons/material-symbols/sort.svelte';
 	import ArrowsSort from '$lib/datagrid/icons/tabler/arrows-sort.svelte';
 	import SortAscending from '$lib/datagrid/icons/tabler/sort-ascending.svelte';
@@ -14,7 +14,7 @@
 
 	let { datagrid }: Props = $props();
 
-	const leafColumns = getLeafColumns(datagrid);
+	const leafColumns = datagrid.columns.getLeafColumns();
 	let sortableColumns = $derived(leafColumns.filter((column) => column.options.sortable === true));
 </script>
 

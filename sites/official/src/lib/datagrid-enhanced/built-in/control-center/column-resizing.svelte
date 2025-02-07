@@ -1,7 +1,6 @@
 <script lang="ts">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import Slider from '$lib/components/ui/slider/slider.svelte';
-	import { getLeafColumns } from '$lib/datagrid/core/utils.svelte';
 	import Width from '$lib/datagrid/icons/material-symbols/width.svelte';
 	import type { EnhancedDatagrid } from '../../core/index.svelte';
 
@@ -11,7 +10,7 @@
 
 	let { datagrid }: Props = $props();
 
-	const leafColumns = getLeafColumns(datagrid);
+	const leafColumns = datagrid.columns.getLeafColumns();
 </script>
 
 <DropdownMenu.Sub>

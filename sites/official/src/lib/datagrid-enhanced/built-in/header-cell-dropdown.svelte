@@ -227,7 +227,7 @@
 									<span>Root level</span>
 								</div>
 							</DropdownMenu.Item>
-							{#each getGroupColumns(datagrid.columns) as groupCol}
+							{#each getGroupColumns(datagrid._columns) as groupCol}
 								<DropdownMenu.Item
 									closeOnSelect={false}
 									onclick={() =>
@@ -386,7 +386,7 @@
 									<span>Root level</span>
 								</div>
 							</DropdownMenu.Item>
-							{#each getGroupColumns(datagrid.columns) as groupCol}
+							{#each getGroupColumns(datagrid._columns) as groupCol}
 								<DropdownMenu.Item
 									closeOnSelect={false}
 									onclick={() =>

@@ -53,7 +53,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
 
     findColumnOrThrow(columnId: ColumnId): AnyColumn<TOriginalRow> {
         const column = findColumnById(
-            flattenColumnStructurePreservingGroups(this.datagrid.columns),
+            flattenColumnStructurePreservingGroups(this.datagrid._columns),
             columnId
         );
         if (!column) {
@@ -71,14 +71,14 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
     }
 
     private calculateRootLevelMove(column: AnyColumn<TOriginalRow>, direction: Direction): MoveOperation {
-        const currentIndex = this.getColumnIndex(this.datagrid.columns, column.columnId);
+        const currentIndex = this.getColumnIndex(this.datagrid._columns, column.columnId);
         const targetIndex = direction === 'right' ? currentIndex + 1 : currentIndex - 1;
 
-        if (targetIndex < 0 || targetIndex >= this.datagrid.columns.length) {
+        if (targetIndex < 0 || targetIndex >= this.datagrid._columns.length) {
             throw new Error('Cannot move column outside bounds');
         }
 
-        const targetColumn = this.datagrid.columns[targetIndex];
+        const targetColumn = this.datagrid._columns[targetIndex];
 
         if (targetColumn.type === 'group') {
             return {
@@ -145,7 +145,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
 
         const currentGroupIndex = parentGroup
             ? this.getColumnIndex(parentGroup.columns, currentGroup.columnId)
-            : this.getColumnIndex(this.datagrid.columns, currentGroup.columnId);
+            : this.getColumnIndex(this.datagrid._columns, currentGroup.columnId);
 
         const targetIndex = direction === 'right' ? currentGroupIndex + 1 : currentGroupIndex;
 
@@ -164,12 +164,12 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
 
         // Get source array (either root or parent group's columns)
         const sourceArray = sourceParentId === null 
-            ? this.datagrid.columns 
+            ? this.datagrid._columns 
             : this.findParentGroupOrThrow(sourceParentId).columns;
 
         // Get target array (either root or target group's columns)
         const targetArray = targetLocation.parentId === null
-            ? this.datagrid.columns
+            ? this.datagrid._columns
             : this.findParentGroupOrThrow(targetLocation.parentId).columns;
 
         // Remove from source array
@@ -188,7 +188,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
 
     private findParentGroupOrThrow(groupId: string): GroupColumn<TOriginalRow> {
         const group = findColumnById(
-            flattenColumnStructurePreservingGroups(this.datagrid.columns),
+            flattenColumnStructurePreservingGroups(this.datagrid._columns),
             groupId
         ) as GroupColumn<TOriginalRow>;
 
@@ -277,7 +277,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
             sourceColumn: column,
             targetLocation: {
                 parentId: null,
-                index: this.datagrid.columns.length
+                index: this.datagrid._columns.length
             }
         };
 

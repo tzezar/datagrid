@@ -7,7 +7,7 @@ export class GroupingService extends BaseService {
 
         const newGroupBy: ColumnId[] = values
             .map((option) => {
-                const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), option);
+                const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), option);
                 if (!column) return null;
                 if (column.options.groupable === false) return null;
                 return option;
@@ -20,7 +20,7 @@ export class GroupingService extends BaseService {
         this.datagrid.processors.data.executeFullDataTransformation();
     }
     toggle(columnId: ColumnId) {
-        const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), columnId);
+        const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), columnId);
         if (!column) return;
         if (column.options.groupable === false) return;
 

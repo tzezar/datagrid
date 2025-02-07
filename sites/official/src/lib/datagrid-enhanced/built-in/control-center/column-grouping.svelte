@@ -31,7 +31,7 @@
             if (targetGroupId === column.parentColumnId) return;
 
             if (column.type === 'group') {
-                const targetGroup = getGroupColumns(datagrid.columns)
+                const targetGroup = getGroupColumns(datagrid._columns)
                     .find((group: GroupColumn<any>) => group.columnId === targetGroupId);
 
                 if (targetGroup && isInGroupTree(targetGroup, column)) {
@@ -48,7 +48,7 @@
         }}
     >
         <option value="">Root Level</option>
-        {#each getGroupColumns(datagrid.columns)
+        {#each getGroupColumns(datagrid._columns)
             .filter((groupCol: GroupColumn<any>) => column.type !== 'group' || (groupCol !== column && !isInGroupTree(groupCol, column))) as groupColumn (groupColumn.columnId)}
             <option value={groupColumn.columnId} disabled={groupColumn === column}>
                 {groupColumn.header}

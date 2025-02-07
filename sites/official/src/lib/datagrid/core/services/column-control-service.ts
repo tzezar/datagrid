@@ -24,7 +24,7 @@ export class ColumnControlService extends BaseService {
     }
 
     pinColumn(columnId: string, position: PinningPosition) {
-        const column = findColumnById(flattenColumnStructurePreservingGroups(this.datagrid.columns), columnId);
+        const column = findColumnById(flattenColumnStructurePreservingGroups(this.datagrid._columns), columnId);
         if (!column) return;
         this.datagrid.features.columnPinning.changeColumnPinningPosition(column, position);
         this.datagrid.processors.column.refreshColumnPinningOffsets();
@@ -32,7 +32,7 @@ export class ColumnControlService extends BaseService {
     }
 
     changeColumnPinningPosition(columnId: string, position: PinningPosition) {
-        const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid.columns), columnId);
+        const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), columnId);
         if (!column) throw new Error(`Column ${columnId} not found`);
         this.datagrid.features.columnPinning.changeColumnPinningPosition(column, position);
         this.datagrid.processors.column.refreshColumnPinningOffsets();

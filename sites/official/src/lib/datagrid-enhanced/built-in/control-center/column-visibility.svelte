@@ -4,7 +4,6 @@
 	import VisibilityOff from '$lib/datagrid/icons/material-symbols/visibility-off.svelte';
 	import type { EnhancedDatagrid } from '../../core/index.svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
-	import { getLeafColumnsInOrder } from '$lib/datagrid/core/utils.svelte';
 
 	type Props = {
 		datagrid: EnhancedDatagrid<any>;
@@ -19,7 +18,7 @@
 		<span>Visibility</span>
 	</DropdownMenu.SubTrigger>
 	<DropdownMenu.SubContent>
-		{#each getLeafColumnsInOrder(datagrid).filter((col: LeafColumn<any>) => col.options.hideable !== false) as column (column.columnId)}
+		{#each datagrid.columns.getLeafColumnsInOrder().filter((col: LeafColumn<any>) => col.options.hideable !== false) as column (column.columnId)}
 			<DropdownMenu.Item
 				disabled={column.options.hideable === false}
 				class={`${column.state.visible === true ? 'text-primary' : 'text-muted-foreground'}`}

@@ -22,7 +22,7 @@
 	<Dialog.Content class="h-full max-h-[80vh] max-w-4xl overflow-auto">
 		<div class="h-full w-full overflow-auto">
 			<div style="" class="inline-block">
-				<Ordering {datagrid} columns={datagrid.columns} depth={0} />
+				<Ordering {datagrid} columns={datagrid._columns} depth={0} />
 			</div>
 		</div>
 	</Dialog.Content>

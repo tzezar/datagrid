@@ -8,13 +8,13 @@
 	let { datagrid }: { datagrid: DatagridCore<any> } = $props();
 
 	let columns = $derived(
-		flattenColumnStructureAndClearGroups(datagrid.columns)
+		flattenColumnStructureAndClearGroups(datagrid._columns)
 			.filter((col) => columnsWithGetters.includes(col.type as (typeof columnsWithGetters)[number]))
 			.filter((col) => col.options.groupable === true)
 	);
 
 	const getColumnById = (columnId: string) => {
-		return flattenColumnStructureAndClearGroups(datagrid.columns).find((col) => col.columnId === columnId);
+		return flattenColumnStructureAndClearGroups(datagrid._columns).find((col) => col.columnId === columnId);
 	};
 	const getColumnHeaders = () => {};
 </script>

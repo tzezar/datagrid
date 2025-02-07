@@ -3,7 +3,6 @@ import * as XLSX from 'xlsx';
 import { XMLBuilder } from 'fast-xml-parser';
 import type { LeafColumn } from '$lib/datagrid/core/types';
 import type { DatagridCore } from '$lib/datagrid/core/index.svelte';
-import { getLeafColumns } from '../core/utils.svelte';
 
 
 export type ExportMethods = 'toExcel' | 'toCSV' | 'toJSON' | 'toXML';
@@ -86,7 +85,7 @@ export class ExportingPlugin<T = any> {
     private prepareData(): Record<string, unknown>[] {
         return this.datagrid.originalState.data.map(row => {
             const rowData: Record<string, unknown> = {};
-            getLeafColumns(this.datagrid).forEach((column: LeafColumn<T>) => {
+            this.datagrid.columns.getLeafColumns().forEach((column: LeafColumn<T>) => {
                 if (column.type === 'accessor') {
                     rowData[column.columnId as string] = column.getValueFn(row)
                 } else if (column.type === 'computed') {

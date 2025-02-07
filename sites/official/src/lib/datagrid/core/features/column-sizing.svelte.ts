@@ -1,6 +1,5 @@
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
-import { getLeafColumns } from "../utils.svelte";
 
 export type ColumnSizingFeatureState = object
     // defaultWidth: number,
@@ -50,7 +49,7 @@ export class ColumnSizingFeature<TOriginalRow = any> implements IColumnSizingFea
      */
     updateColumnSize(columnId: ColumnId, width: number): void {
         // Retrieve all leaf columns (ignoring grouped columns)
-        const leafColumns = getLeafColumns(this.datagrid);
+        const leafColumns = this.datagrid.columns.getLeafColumns();
 
         // Find the column with the specified ID
         const column = leafColumns.find(c => c.columnId === columnId);

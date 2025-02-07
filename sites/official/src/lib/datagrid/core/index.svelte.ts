@@ -1,4 +1,4 @@
-import type { AnyColumn, DatagridCoreConfig, GridRow } from "./types";
+import type { AnyColumn, DatagridCoreConfig, GridRow, LeafColumn } from "./types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager } from "./managers";
@@ -6,6 +6,7 @@ import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
 import { DatagridFeatures } from "./features/features.svelte";
 import { HandlersManager } from "./managers/handler-manager";
 import { EventService } from "./services/event-service";
+import { flattenColumnStructureAndClearGroups } from "./utils.svelte";
 
 
 export class DatagridCore<TOriginalRow = any, TMeta = any> {
@@ -20,7 +21,9 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
         data: [] as TOriginalRow[]
     });
 
-    columns: AnyColumn<TOriginalRow, TMeta>[] = $state([]);
+    _columns: AnyColumn<TOriginalRow, TMeta>[] = $state([]);
+
+    columns: Columns<TOriginalRow> = new Columns(this);
     rows: Rows<TOriginalRow> = new Rows(this);
 
     processors = {
@@ -29,7 +32,6 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
     }
 
     cacheManager = new DatagridCacheManager(this);
-
 
     config = {
         measurePerformance: false,
@@ -66,13 +68,13 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
         this.initializeSourceColumns(config.columns);
         this.initializeSourceData(config.data)
 
-        this.columns = this.processors.column.initializeColumns(this.originalState.columns)
+        this._columns = this.processors.column.initializeColumns(this.originalState.columns)
         this.features = new DatagridFeatures(this, config);
         this.processors.data.executeFullDataTransformation();
 
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
-        this.features.columnFaceting.calculateFacets(this.cacheManager.sortedData || [], this.columns);
+        this.features.columnFaceting.calculateFacets(this.cacheManager.sortedData || [], this._columns);
 
     }
 
@@ -133,22 +135,70 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
 
 
 type IRows<TOriginalRow> = {
-    paginated: GridRow<TOriginalRow>[]
-    visible: GridRow<TOriginalRow>[]
+    getVisibleRows: () => GridRow<TOriginalRow>[]
+    getPaginatedRows: () => GridRow<TOriginalRow>[]
 }
 
 class Rows<TOriginalRow> implements IRows<TOriginalRow> {
     constructor(private readonly datagrid: DatagridCore<TOriginalRow>) { }
 
-    get visible(): GridRow<TOriginalRow>[] {
+    getVisibleRows(): GridRow<TOriginalRow>[] {
         const topRows = this.datagrid.features.rowPinning.getTopRows();
         const bottomRows = this.datagrid.features.rowPinning.getBottomRows();
         const centerRows = this.datagrid.features.rowPinning.getCenterRows();
         return [...topRows, ...centerRows, ...bottomRows];
     }
 
-    get paginated(): GridRow<TOriginalRow>[] {
+    getPaginatedRows(): GridRow<TOriginalRow>[] {
         return this.datagrid.cacheManager.paginatedRows || [];
     }
+
+}
+
+
+type IColumns<TOriginalRow> = {
+    getLeafColumnsInOrder: () => LeafColumn<TOriginalRow>[]
+}
+
+class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
+
+    constructor(private readonly datagrid: DatagridCore<TOriginalRow>) { }
+    
+    getLeafColumns<TOriginalRow>(): LeafColumn<TOriginalRow>[] {
+        return flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(col => col.type !== 'group')
+    }
+
+    getLeafColumnsInOrder(): LeafColumn<TOriginalRow>[] {
+        const cols = flattenColumnStructureAndClearGroups(this.getColumnsInOrder(this.datagrid)).filter(col => col.type !== 'group')
+        return cols
+    }
+
+
+    getColumnsInOrder<TOriginalRow>(datagrid: DatagridCore): AnyColumn<TOriginalRow>[] {
+        const { groupByColumns } = datagrid.features.grouping;
+    
+        const columns = flattenColumnStructureAndClearGroups(datagrid._columns).reduce(
+            (acc, col) => {
+                const position = col.state.pinning.position;
+                if (position === 'left' || groupByColumns.includes(col.columnId)) {
+                    acc.left.push(col);
+                } else if (position === 'right' && col.type !== 'group') {
+                    acc.right.push(col);
+                } else {
+                    acc.none.push(col);
+                }
+                return acc;
+            },
+            { left: [], right: [], none: [] } as Record<'left' | 'right' | 'none', AnyColumn<TOriginalRow>[]>
+        );
+    
+        return [
+            ...columns.left,
+            ...datagrid.processors.column.createColumnHierarchy(columns.none),
+            ...columns.right
+        ];
+    }
+
+   
 
 }

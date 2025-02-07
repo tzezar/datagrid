@@ -27,7 +27,7 @@
     </div>
 
     <div class=" flex flex-col gap-2">
-        {#each datagrid.columns as column}
+        {#each datagrid._columns as column}
             {#if !isGroupColumn(column)}
                 <div class="flex flex-row items-center gap-2">
                     <Checkbox

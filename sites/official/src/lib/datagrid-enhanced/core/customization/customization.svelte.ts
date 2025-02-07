@@ -79,7 +79,7 @@ export class CustomizationFeature<TOriginalRow> {
   }
 
   shouldDisplayHeaderCellFilter() {
-    return this.isColumnFilterVisible && this.datagrid.columns.some(col => col.options.filterable === true && col._meta.filterType && col.isVisible());
+    return this.isColumnFilterVisible && this.datagrid._columns.some(col => col.options.filterable === true && col._meta.filterType && col.isVisible());
   }
 
 
