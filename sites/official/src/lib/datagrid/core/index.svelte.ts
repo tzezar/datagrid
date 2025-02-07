@@ -9,9 +9,12 @@ import { EventService } from "./services/event-service";
 
 
 export class DatagridCore<TOriginalRow = any, TMeta = any> {
-    gridIdentifier = $state('tzezars-datagrid')
+    readonly events: EventService;
     readonly performanceMetrics = new PerformanceMetrics();
-
+    readonly handlers: HandlersManager
+    
+    gridIdentifier = $state('tzezars-datagrid')
+    
     originalState = $state.raw({
         columns: [] as AnyColumn<TOriginalRow, TMeta>[],
         data: [] as TOriginalRow[]
@@ -26,9 +29,6 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
 
     cacheManager = new DatagridCacheManager(this);
     rowManager = new RowManager(this);
-
-    readonly events: EventService;
-    handlers: HandlersManager
 
     config = {
         measurePerformance: false,
