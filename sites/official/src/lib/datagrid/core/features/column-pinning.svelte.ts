@@ -4,7 +4,7 @@ import type { ColumnId, PinningPosition } from "../types";
 
 
 
-export type ColumnPinningFeatureState = {}
+export type ColumnPinningFeatureState = object
 export type ColumnPinningFeatureConfig = Partial<ColumnPinningFeatureState>
 export type IColumnPinningFeature = ColumnPinningFeatureState
 
@@ -17,6 +17,7 @@ export class ColumnPinningFeature implements IColumnPinningFeature {
     // Initialize the ColumnPinningFeature with a reference to the DataGrid
     constructor(datagrid: DatagridCore<any>, config?: ColumnPinningFeatureConfig) {
         this.datagrid = datagrid;
+        Object.assign(this, config);
     }
 
     /**

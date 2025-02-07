@@ -1,12 +1,15 @@
-import Fuse from "fuse.js";
+import Fuse, { type IFuseOptions } from "fuse.js";
+import { flattenColumnStructureAndClearGroups } from "../utils.svelte";
+import type { DatagridCore } from "../index.svelte";
+import { DEFAULT_FUSE_OPTIONS } from "../defaults";
 
 
 export type GlobalSearchState = {
-    manual: boolean;
-    value: string;
-    fuzzy: boolean;
-    delay: number;
-    fuseInstance: Fuse<any> | null;
+    isManual: boolean;
+    searchQuery: string;
+    isFuzzySearchEnabled: boolean;
+    debounceDelay: number;
+    fuseSearchEngine: Fuse<any> | null;
 
 }
 
@@ -15,39 +18,57 @@ export type IGlobalSearchState = GlobalSearchState
 
 
 export class GlobalSearchFeature implements IGlobalSearchState {
-    manual: boolean = $state(false);
-    value = $state('');
-    delay = $state(300);
-    fuzzy = $state(true);
-    fuseInstance: Fuse<any> | null = $state(null)
+    datagrid: DatagridCore
 
-    onGlobalSearchChange: (value: string) => void = () => { };
+    isManual: boolean = $state(false);
+    searchQuery = $state('Beauty');
+    debounceDelay = $state(300);
+    isFuzzySearchEnabled = $state(true);
+    fuseSearchEngine: Fuse<any> | null = $state(null)
 
-    constructor(config?: GlobalSearchFeatureConfig) {
-        this.initialize(config);
+    onSearchQueryChange: (value: string) => void = () => { };
+
+    constructor(datagrid: DatagridCore, config: GlobalSearchFeatureConfig) {
+        this.datagrid = datagrid
+        Object.assign(this, config);
     }
 
-    initialize(config?: GlobalSearchFeatureConfig) {
-        this.manual = config?.manual ?? this.manual;
-        this.value = config?.value ?? this.value;
-        this.delay = config?.delay ?? this.delay;
-        this.fuzzy = config?.fuzzy ?? this.fuzzy;
-        this.fuseInstance = config?.fuseInstance ?? this.fuseInstance;
-    }
 
-    /**
-     * Sets the Fuse.js instance used for performing searches.
-     * @param fuseInstance - The Fuse.js instance to use for searching.
-     */
-    setFuseInstance(fuseInstance: Fuse<any> | null): void {
-        this.fuseInstance = fuseInstance;
+    updateSearchQuery(query: string): void {
+        this.searchQuery = query;
+        if (this.fuseSearchEngine && query) {
+            this.fuseSearchEngine.search(query);
+            // Handle the results (e.g., update state, display results)
+        }
     }
 
     /**
-     * Updates the current search value.
-     * @param value - The new search value to set.
+     * Initializes a new Fuse.js instance with the provided items and search keys.
+     * This is used to set up the search functionality for the given data.
+     * @param items - The array of items to search through.
+     * @param keys - The keys within each item to search on.
+     * @returns The initialized Fuse.js instance configured with search options.
      */
-    updateSearchValue(value: string): void {
-        this.value = value;
+    initializeFuseInstance<T>(items: T[], keys: string[], config: IFuseOptions<T> = DEFAULT_FUSE_OPTIONS): Fuse<T> {
+        // Configure Fuse.js options to perform fuzzy search
+        return new Fuse(items, {
+            keys,               // Specify which fields to search on
+            ...config,          // Merge default options with provided options
+        });
     }
+
+    getFuseSearchEngine(): Fuse<any> | null {
+        if (!this.fuseSearchEngine) {
+            this.setFuseSearchEngine(this.initializeFuseInstance(this.datagrid.initial.data || [], flattenColumnStructureAndClearGroups(this.datagrid.columns).map(col => col.columnId as string)))
+        }
+        return this.fuseSearchEngine;
+    }
+
+
+    setFuseSearchEngine(fuseSearchEngine: Fuse<any> | null): void {
+        this.fuseSearchEngine = fuseSearchEngine;
+    }
+
+
+
 }

@@ -23,12 +23,7 @@ export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature
 
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: RowPinningFeatureConfig) {
         this.datagrid = datagrid;
-        this.initialize(config);
-    }
-
-    initialize(config?: RowPinningFeatureConfig) {
-        this.pinnedTopRowIds = config?.pinnedTopRowIds ?? this.pinnedTopRowIds;
-        this.pinnedBottomRowIds = config?.pinnedBottomRowIds ?? this.pinnedBottomRowIds;
+        Object.assign(this, config);
     }
 
     // Update the caches based on current processedRowsCache

@@ -6,7 +6,6 @@ import {
 } from "../features";
 import type { DatagridCore } from "../index.svelte";
 import type { DatagridCoreConfig } from "../types";
-import { flattenColumnStructureAndClearGroups, initializeFuseInstance } from "../utils.svelte";
 
 export class FeatureManager<TOriginalRow = any> {
     datagrid: DatagridCore<any>;
@@ -45,7 +44,7 @@ export class FeatureManager<TOriginalRow = any> {
         this.pagination = new (config?.features?.pagination || PaginationFeature)(this.datagrid, config?.initialState?.pagination || {});
         this.grouping = new (config?.features?.grouping || GroupingFeature)(this.datagrid, config?.initialState?.grouping || {});
         this.globalSearch = new (config?.features?.globalSearch || GlobalSearchFeature)(this.datagrid, config?.initialState?.globalSearch || {});
-        this.globalSearch.setFuseInstance(initializeFuseInstance(this.datagrid.initial.data || [], flattenColumnStructureAndClearGroups(this.datagrid.columns).map(col => col.columnId as string)))
+        // this.globalSearch.setFuseSearchEngine(initializeFuseInstance(this.datagrid.initial.data || [], flattenColumnStructureAndClearGroups(this.datagrid.columns).map(col => col.columnId as string)))
         this.columnGrouping = new (config?.features?.columnGrouping || ColumnGroupingFeature)(this.datagrid, config?.initialState?.columnGrouping || {});
         this.columnPinning = new (config?.features?.columnPinning || ColumnPinningFeature)(this.datagrid, config?.initialState?.columnPinning || {});
         this.columnSizing = new (config?.features?.columnSizing || ColumnSizingFeature)(this.datagrid, config?.initialState?.columnSizing || {});

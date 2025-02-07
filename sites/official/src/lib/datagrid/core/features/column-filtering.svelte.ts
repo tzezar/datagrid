@@ -7,7 +7,7 @@ import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.s
 
 export type ColumnFilteringState = {
     conditions: FilterCondition<any>[];
-    manual: boolean;
+    isManual: boolean;
 }
 
 export type ColumnFilteringFeatureConfig = Partial<ColumnFilteringState>
@@ -18,25 +18,17 @@ export type IColumnFilteringFeature = ColumnFilteringFeature
  * Manages column filtering functionality for a data grid.
  * Provides utilities for evaluating filter conditions and toggling the visibility of filters.
  */
-export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilteringFeature{
+export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilteringFeature {
     datagrid: DatagridCore
 
     // Stores all filter conditions for the columns
     conditions: FilterCondition<TOriginalRow>[] = $state([]);
-    manual: boolean = $state(false);
+    isManual: boolean = $state(false);
 
-
-    constructor(datagrid: DatagridCore, config?: ColumnFilteringFeatureConfig) {
+    constructor(datagrid: DatagridCore, config: ColumnFilteringFeatureConfig) {
         this.datagrid = datagrid;
-        this.initialize(config);
+        Object.assign(this, config);
     }
-
-
-    initialize( config?: ColumnFilteringFeatureConfig) {
-        this.conditions = config?.conditions ?? this.conditions;
-        this.manual = config?.manual ?? this.manual;
-    }
-
 
     /**
      * Retrieves the filter condition value for a given column.
@@ -78,7 +70,7 @@ export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilter
                 operator,
                 value: null,
                 valueTo: undefined,
-                getValueFn: column.getValueFn 
+                getValueFn: column.getValueFn
             });
         }
         condition = this.conditions.find(c => c.columnId === columnId);

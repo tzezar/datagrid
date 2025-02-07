@@ -50,16 +50,16 @@ export class DataProcessor<TOriginalRow> {
     applyGlobalSearch(data: TOriginalRow[]): TOriginalRow[] {
         data = this.datagrid.lifecycleHooks.executePreGlobalSearch(data);
 
-        const isManualSortingEnabled = this.datagrid.features.globalSearch.manual
-        const valueIsEmpty = this.datagrid.features.globalSearch.value === ''
+        const isManualSortingEnabled = this.datagrid.features.globalSearch.isManual
+        const valueIsEmpty = this.datagrid.features.globalSearch.searchQuery === ''
 
         if (isManualSortingEnabled || valueIsEmpty) return data
 
-        const searchValue = this.datagrid.features.globalSearch.value.toLowerCase();
+        const searchValue = this.datagrid.features.globalSearch.searchQuery.toLowerCase();
 
 
         const applyFuzzySearch = () => {
-            const fuseInstance = this.datagrid.features.globalSearch.fuseInstance;
+            const fuseInstance = this.datagrid.features.globalSearch.getFuseSearchEngine();
             if (!fuseInstance) throw new Error('Fuse instance is not initialized');
             return fuseInstance.search(searchValue).map(result => result.item);
 
@@ -75,7 +75,7 @@ export class DataProcessor<TOriginalRow> {
             );
         }
 
-        const isFuzzySearchEnabled = this.datagrid.features.globalSearch.fuzzy;
+        const isFuzzySearchEnabled = this.datagrid.features.globalSearch.isFuzzySearchEnabled;
 
         this.metrics.measure('Global Search', () => {
             if (isFuzzySearchEnabled) {
@@ -91,7 +91,7 @@ export class DataProcessor<TOriginalRow> {
     applyColumnFilters(data: TOriginalRow[]): TOriginalRow[] {
         data = this.datagrid.lifecycleHooks.executePreFilter(data);
 
-        const isMnualSortingEnabled = this.datagrid.features.globalSearch.manual
+        const isMnualSortingEnabled = this.datagrid.features.globalSearch.isManual
         const noFilters = this.datagrid.features.filtering.conditions.length === 0
 
         if (isMnualSortingEnabled || noFilters) return data
@@ -122,7 +122,7 @@ export class DataProcessor<TOriginalRow> {
     applySorting(data: TOriginalRow[]): TOriginalRow[] {
         data = this.datagrid.lifecycleHooks.executePreSort(data);
 
-        const isMnualSortingEnabled = this.datagrid.features.globalSearch.manual
+        const isMnualSortingEnabled = this.datagrid.features.globalSearch.isManual
         const noSorting = this.datagrid.features.sorting.sortConfigs.length === 0
         if (isMnualSortingEnabled || noSorting) return data
 

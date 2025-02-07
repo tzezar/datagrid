@@ -21,14 +21,8 @@ export class ColumnFacetingFeature<TOriginalRow = any> implements IColumnFacetin
 
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnFacetingFeatureConfig) {
         this.datagrid = datagrid;
-        this.initialize(config);
+        Object.assign(this, config);
     }
-
-    initialize(config?: ColumnFacetingFeatureConfig) {
-        this._numericFacets = config?._numericFacets ?? this._numericFacets;
-        this._categoricalFacets = config?._categoricalFacets ?? this._categoricalFacets;
-    }
-
 
     // ==== Getters for facets ====
 

@@ -14,35 +14,29 @@
 
 	let { data } = $props();
 
-	// class CustomSortingFeature extends SortingFeature {
-	// 	sortConfigs: Sorting[] = $state([
-	// 		{
-	// 			columnId: 'id',
-	// 			desc: true
-	// 		}
-	// 	])
-	// }
+	class CustomSortingFeature extends SortingFeature {
+		sortConfigs: Sorting[] = $state([
+			{
+				columnId: 'id',
+				desc: true
+			}
+		])
+	}
 
 	let datagrid = new Grid.EnhancedCore<InventoryItem, Grid.EnhancedMeta<InventoryItem>>({
 		columns,
 		data: data.inventory,
 
-
+		features: {
+			sorting: CustomSortingFeature
+		},
 		initialState: {
-			sorting: {
-				sortConfigs: [
-					{
-						columnId: 'id',
-						desc: false
-					}
-				]
+			globalSearch: {
+				searchQuery: 'Pants'
 			}
 		}
-		
 
-		// features: {
-		// sorting: CustomSortingFeature
-		// }
+
 	});
 </script>
 

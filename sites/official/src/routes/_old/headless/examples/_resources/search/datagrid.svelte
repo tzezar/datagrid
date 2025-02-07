@@ -74,7 +74,7 @@
 
 <input
 	type="text"
-	value={datagrid.features.globalSearch.value}
+	value={datagrid.features.globalSearch.searchQuery}
 	oninput={(e) => (datagrid.handlers.globalSearch.updateValue(e.currentTarget.value))}
 />
 

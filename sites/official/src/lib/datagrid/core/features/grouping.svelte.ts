@@ -24,14 +24,7 @@ export class GroupingFeature implements IGroupingFeature {
     onGroupingChange: (expandedGroups: string[]) => void = () => { };
 
     constructor(config?: GroupingFeatureConfig) {
-        this.initialize(config);
-    }
-
-    initialize(config?: GroupingFeatureConfig) {
-        this.manual = config?.manual ?? this.manual;
-        this.groupByColumns = config?.groupByColumns ?? this.groupByColumns;
-        this.expandedGroups = config?.expandedGroups ?? this.expandedGroups;
-        this.onGroupingChange = config?.onGroupingChange ?? this.onGroupingChange;
+        Object.assign(this, config);
     }
 
     isColumnWithinGroup(columnId: ColumnId): boolean {

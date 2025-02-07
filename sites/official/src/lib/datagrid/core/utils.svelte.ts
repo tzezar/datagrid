@@ -1,8 +1,6 @@
 import type { AnyColumn, GroupColumn } from "./types";
 import type { CellValue, ColumnId, CustomCellComponentWithProps, SortableColumn } from "./types";
 import type { DatagridCore } from "./index.svelte";
-import Fuse, { type IFuseOptions } from "fuse.js";
-import { DEFAULT_FUSE_OPTIONS } from "./defaults";
 
 
 export function generateRandomColumnId(): string {
@@ -119,17 +117,3 @@ export function debounce<T extends (...args: any[]) => void>(func: T, delay: num
 }
 
 
-/**
- * Initializes a new Fuse.js instance with the provided items and search keys.
- * This is used to set up the search functionality for the given data.
- * @param items - The array of items to search through.
- * @param keys - The keys within each item to search on.
- * @returns The initialized Fuse.js instance configured with search options.
- */
-export function initializeFuseInstance<T>(items: T[], keys: string[], config: IFuseOptions<T> = DEFAULT_FUSE_OPTIONS): Fuse<T> {
-    // Configure Fuse.js options to perform fuzzy search
-    return new Fuse(items, {
-        keys,               // Specify which fields to search on
-        ...config,          // Merge default options with provided options
-    });
-}

@@ -24,11 +24,7 @@ export class ColumnVisibilityFeature<TOriginalRow = any> implements IColumnVisib
      */
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnVisibilityPluginConfig) {
         this.datagrid = datagrid;
-        this.initialize(config);
-    }
-
-    initialize(config?: ColumnVisibilityPluginConfig) {
-        this.onColumnVisibilityChange = config?.onColumnVisibilityChange ?? this.onColumnVisibilityChange;
+        Object.assign(this, config);
     }
 
     /**

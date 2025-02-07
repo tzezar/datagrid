@@ -12,9 +12,6 @@ const createGroupColumnColumnId = ({ columnId, header }: { columnId?: string, he
 export function createColumnGroup<TOriginalRow, TMeta>(
   { header, columns, columnId, _meta, ...rest }: CreateGroupColumnProps<TOriginalRow, TMeta>
 ): GroupColumn<TOriginalRow> {
-
-
-
   const computedColumnId = createGroupColumnColumnId({ header, columnId });
 
   return {

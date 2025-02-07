@@ -1,7 +1,11 @@
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 
-export type ColumnSizingFeatureState = {}
+export type ColumnSizingFeatureState = object
+    // defaultWidth: number,
+    // defaultMinWidth: number,
+    // defaultMaxWidth: number
+
 export type ColumnSizingFeatureConfig = Partial<ColumnSizingFeatureState>
 export type IColumnSizingFeature = Partial<ColumnSizingFeatureConfig>
 
@@ -14,6 +18,16 @@ export class ColumnSizingFeature<TOriginalRow = any> implements IColumnSizingFea
     // Reference to the DataGrid instance
     datagrid: DatagridCore<TOriginalRow>;
 
+
+    // TODO 
+    // ? How to make this work with column creators?
+    // Default width, minWidth, and maxWidth for all columns
+    // Applies if not specified for a specific column
+    // defaultWidth: number = 100;
+    // defaultMinWidth: number = 50;
+    // defaultMaxWidth: number = 200;
+
+
     onColumnResize: (columnId: string, width: number) => void = () => { };
 
     /**
@@ -22,6 +36,7 @@ export class ColumnSizingFeature<TOriginalRow = any> implements IColumnSizingFea
      */
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnSizingFeatureConfig) {
         this.datagrid = datagrid;
+        Object.assign(this, config);
     }
 
 

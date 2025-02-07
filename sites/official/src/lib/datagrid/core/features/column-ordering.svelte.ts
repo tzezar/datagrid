@@ -22,11 +22,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
 
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnOrderingFeatureConfig) {
         this.datagrid = datagrid;
-        this.initialize(config);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    initialize(config?: ColumnOrderingFeatureConfig) {
+        Object.assign(this, config);
     }
 
     moveLeft(columnId: ColumnId): void {

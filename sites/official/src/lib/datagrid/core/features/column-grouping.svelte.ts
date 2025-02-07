@@ -34,11 +34,9 @@ export class ColumnGroupingFeature<TOriginalRow = any> implements IColumnGroupin
      */
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnGroupingPluginConfig) {
         this.datagrid = datagrid;
-        this.initialize(config);
+        Object.assign(this, config);
     }
 
-    initialize(config?: ColumnGroupingPluginConfig) {
-    }
 
     /**
         * Deletes a group column and reassigns its children to the appropriate level.
