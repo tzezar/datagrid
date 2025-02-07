@@ -7,7 +7,6 @@ export type SortingPluginConfig = {
     sortConfigs?: Sorting[];
     enableMultiSort?: boolean;
 
-    isMultiSortEvent?: (e: unknown) => boolean;
     maxMultiSortColCount?: number;
     onSortingChange?(config: any): void;
 
@@ -26,7 +25,6 @@ export class SortingFeature {
     enableMultiSort: boolean = $state(true);
     maxMultiSortColCount: number = $state(99);
     onSortingChange: (config: SortingFeature) => void = () => { };
-    isMultiSortEvent: (e: unknown) => boolean = $state((e: unknown) => e instanceof MouseEvent && e.shiftKey);
 
     /**
      * Constructor to initialize the sorting feature with a reference to the data grid.

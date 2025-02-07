@@ -15,7 +15,6 @@ export class HandlersManager {
 
     sorting = {
         toggleColumnSorting: (column: LeafColumn<any>, multisort: boolean) => {
-            multisort = this.datagrid.features.sorting.isMultiSortEvent(multisort);
             const datagrid = this.datagrid;
             const columnId = column.columnId;
 
