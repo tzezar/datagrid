@@ -35,7 +35,7 @@
                 }}
             >
                 {#if column.options.sortable}
-                    <div class="sort-indicator">
+                    <div class="flex flex-row">
                         {#if getSortDirection(datagrid, column) === 'desc'}
                             <SortDescending />
                         {:else if getSortDirection(datagrid, column) === 'asc'}
