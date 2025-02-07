@@ -6,9 +6,6 @@ import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
 import { DatagridFeatures } from "./features/features.svelte";
 
 
-
-
-
 export class DatagridCore<TOriginalRow = any, TMeta = any> {
     gridIdentifier = $state('tzezars-datagrid')
     readonly performanceMetrics = new PerformanceMetrics();
