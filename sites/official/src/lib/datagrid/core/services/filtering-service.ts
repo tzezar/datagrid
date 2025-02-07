@@ -12,7 +12,6 @@ export class FilteringService extends BaseService {
         column: AnyColumn<any>,
         value: any,
     }) {
-        // TODO this should be rewritten and placed somewhere else, maybe in filtering feature
         // TODO handle eg empty without value etc
         const { value } = props;
         let column = props.column

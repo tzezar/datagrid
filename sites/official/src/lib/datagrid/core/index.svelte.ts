@@ -1,7 +1,7 @@
-import type { AnyColumn, DatagridCoreConfig } from "./types";
+import type { AnyColumn, DatagridCoreConfig, GridRow } from "./types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { DataProcessor, ColumnProcessor } from "./processors";
-import { DatagridCacheManager, RowManager } from "./managers";
+import { DatagridCacheManager } from "./managers";
 import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
 import { DatagridFeatures } from "./features/features.svelte";
 import { HandlersManager } from "./managers/handler-manager";
@@ -12,9 +12,9 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
     readonly events: EventService;
     readonly performanceMetrics = new PerformanceMetrics();
     readonly handlers: HandlersManager
-    
+
     gridIdentifier = $state('tzezars-datagrid')
-    
+
     originalState = $state.raw({
         columns: [] as AnyColumn<TOriginalRow, TMeta>[],
         data: [] as TOriginalRow[]
@@ -28,7 +28,6 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
     }
 
     cacheManager = new DatagridCacheManager(this);
-    rowManager = new RowManager(this);
 
     config = {
         measurePerformance: false,
@@ -125,4 +124,12 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
         if (columns.length === 0) throw new Error('Columns array must not be empty');
         if (data.length === 0) throw new Error('Data array must not be empty');
     }
+
+    getVisibleRows(): GridRow<TOriginalRow>[] {
+        const topRows = this.features.rowPinning.getTopRows();
+        const bottomRows = this.features.rowPinning.getBottomRows();
+        const centerRows = this.features.rowPinning.getCenterRows();
+        return [...topRows, ...centerRows, ...bottomRows];
+    }
+
 }

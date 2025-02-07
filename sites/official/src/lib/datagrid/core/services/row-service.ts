@@ -1,7 +1,8 @@
 import type { GridBasicRow, GridGroupRow, GridRowIdentifier } from "../types";
+import { isGroupRowExpanded } from "../utils.svelte";
 import { BaseService } from "./base-service";
 
-export class RowControlService extends BaseService {
+export class RowService extends BaseService {
     selectRowsOnPage() {
         const rowsOnPage = (this.datagrid.cacheManager.paginatedRows || []).filter(row => !row.isGroupRow()) as GridBasicRow<any>[];
         const ids = rowsOnPage.map(row => row.identifier);
@@ -37,8 +38,6 @@ export class RowControlService extends BaseService {
         this.datagrid.features.rowPinning.unpinRow(rowIdentifier);
     }
 
-
-
     toggleRowExpansion(rowIdentifier: GridRowIdentifier) {
         if (this.datagrid.features.rowExpanding.isRowExpanded(rowIdentifier)) {
             this.datagrid.features.rowExpanding.toggleRowExpansion(rowIdentifier);
@@ -56,7 +55,18 @@ export class RowControlService extends BaseService {
         this.datagrid.features.rowExpanding.expandedRowIds.add(rowIdentifier);
     }
 
-    toggleGroupRowExpansion(row: GridGroupRow<any>) {
-        this.datagrid.rowManager.toggleGroupRowExpansion(row);
+    toggleGroupRowExpansion<TOriginalRow>(row: GridGroupRow<TOriginalRow>) {
+        if (isGroupRowExpanded(this.datagrid, row)) {
+            this.datagrid.features.grouping.expandedGroups.delete(row.identifier);
+        } else {
+            this.datagrid.features.grouping.expandedGroups.add(row.identifier);
+        }
+
+        // Only invalidate the flattened view cache
+        this.datagrid.cacheManager.invalidateGroupedRowsCache();
+
+        // Use the new optimized method instead of full transformation
+        this.datagrid.processors.data.handleGroupExpansion();
     }
+
 }

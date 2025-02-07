@@ -1,4 +1,4 @@
-import type { AnyColumn, GridRow, GroupColumn, LeafColumn } from "./types";
+import type { AnyColumn, GridGroupRow, GridRow, GridRowIdentifier, GroupColumn, LeafColumn } from "./types";
 import type { CellValue, ColumnId, CustomCellComponentWithProps, SortableColumn } from "./types";
 import type { DatagridCore } from "./index.svelte";
 import { isGroupColumn } from "./helpers/column-guards";
@@ -162,4 +162,28 @@ export function getLeafColumnsInOrder<TOriginalRow>(datagrid: DatagridCore<TOrig
 
 export function getGroupColumns<TOriginalRow>(columns: AnyColumn<TOriginalRow>[]): GroupColumn<TOriginalRow>[] {
     return flattenColumnStructureAndClearGroups(columns).filter(col => isGroupColumn(col));
+}
+
+export function isGroupRowExpanded<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>, row: GridGroupRow<TOriginalRow>) {
+    return datagrid.features.grouping.expandedGroups.has(row.identifier);
+}
+
+
+export function findRowById<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>, identifier: GridRowIdentifier): GridRow<TOriginalRow> | undefined {
+    return (datagrid.cacheManager.rows || []).find(row => row.identifier === identifier);
+}
+
+
+export function getGroupRowChildrenIds<TOriginalRow>(row: GridGroupRow<TOriginalRow>): string[] {
+    const ids: string[] = [];
+    for (const child of row.children) {
+        if (child.isGroupRow()) {
+            ids.push(child.identifier);
+            ids.push(...getGroupRowChildrenIds(child));
+        } else {
+            ids.push(child.index);
+        }
+    }
+
+    return ids;
 }

@@ -5,7 +5,7 @@ import { FilteringService } from "../services/filtering-service";
 import { SearchService } from "../services/global-search-service";
 import { GroupingService } from "../services/grouping-service";
 import { PaginationService } from "../services/pagination-service";
-import { RowControlService } from "../services/row-control-service";
+import { RowService } from "../services/row-service";
 import { SortingService } from "../services/sorting-service";
 
 export class HandlersManager {
@@ -14,7 +14,7 @@ export class HandlersManager {
     readonly globalSearch: SearchService
     readonly grouping: GroupingService
     readonly pagination: PaginationService
-    readonly rows: RowControlService
+    readonly rows: RowService
     readonly sorting: SortingService;
 
 
@@ -25,6 +25,6 @@ export class HandlersManager {
         this.globalSearch = new SearchService(datagrid, eventService);
         this.grouping = new GroupingService(datagrid, eventService);
         this.pagination = new PaginationService(datagrid, eventService);
-        this.rows = new RowControlService(datagrid, eventService);
+        this.rows = new RowService(datagrid, eventService);
     }
 }
