@@ -66,7 +66,8 @@ export class RowService extends BaseService implements RowOperations {
         const isExpandingMoreThanMax = this.datagrid.features.rowExpanding.expandedRowIds.size >= maxExpandedRows;
 
         if (isExpandingMoreThanMax) {
-            this.datagrid.features.rowExpanding.onExceedMaxExpansion(this.datagrid.features.rowExpanding)
+            // TODO
+            // this.datagrid.features.rowExpanding.onExceedMaxExpansion(this.datagrid.features.rowExpanding)
             return
         }
 

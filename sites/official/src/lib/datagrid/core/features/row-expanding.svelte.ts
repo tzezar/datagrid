@@ -8,9 +8,6 @@ export type RowExpansionState = {
     expandedRowIds: SvelteSet<GridRowIdentifier>;
     expansionMode: RowExpansionMode;
     maxExpandedRows: number;
-
-    onExpansionChange: (config: RowExpansionFeature<any>) => void;
-    onExceedMaxExpansion: (config: RowExpansionFeature<any>) => void;
 }
 
 export type RowExpansionConfig = Partial<RowExpansionState>
@@ -25,11 +22,7 @@ export class RowExpansionFeature<TOriginalRow = any> implements IRowExpandingFea
     datagrid: DatagridCore<TOriginalRow>;
     expandedRowIds: SvelteSet<GridRowIdentifier> = new SvelteSet()
     expansionMode: RowExpansionMode = $state('single');
-    maxExpandedRows: number = $state(2);
-
-
-    onExpansionChange: (config: RowExpansionFeature<any>) => void = () => { };
-    onExceedMaxExpansion: (config: RowExpansionFeature<any>) => void = () => { };
+    maxExpandedRows: number = $state(Infinity);
 
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: RowExpansionConfig) {
         this.datagrid = datagrid;
@@ -41,6 +34,10 @@ export class RowExpansionFeature<TOriginalRow = any> implements IRowExpandingFea
         if (this.expandedRowIds.has(identifier)) {
             this.expandedRowIds.delete(identifier); // Collapse the row
         } else {
+            if (this.expandedRowIds.size >= this.maxExpandedRows) {
+                // Enforce max limit
+                return
+            }
             this.expandedRowIds.add(identifier); // Expand the row
         }
     }
