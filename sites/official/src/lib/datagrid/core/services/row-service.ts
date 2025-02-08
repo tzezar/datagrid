@@ -1,13 +1,32 @@
 import type { GridBasicRow, GridGroupRow, GridRowIdentifier } from "../types";
 import { BaseService } from "./base-service";
 
-export class RowService extends BaseService {
-    selectRowsOnPage() {
+
+export type RowOperations = {
+    // Row selection
+    selectRowsOnCurrentPage: () => void;
+    deselectRowsOnCurrentPage: () => void;
+    selectAllRows: () => void;
+    deselectAllRows: () => void;
+    toggleRowSelection: (rowIdentifier: GridRowIdentifier) => void;
+    
+    // Row pinning
+    pinRowToTop: (rowIdentifier: GridRowIdentifier) => void;
+    pinRowToBottom: (rowIdentifier: GridRowIdentifier) => void;
+    unpinRow: (rowIdentifier: GridRowIdentifier) => void;
+    
+    toggleRowExpansion: (rowIdentifier: GridRowIdentifier) => void;
+    toggleGroupRowExpansion: (row: GridGroupRow<any>) => void
+
+}
+
+export class RowService extends BaseService implements RowOperations {
+    selectRowsOnCurrentPage() {
         const rowsOnPage = (this.datagrid.cacheManager.paginatedRows || []).filter(row => !row.isGroupRow()) as GridBasicRow<any>[];
         const ids = rowsOnPage.map(row => row.identifier);
         this.datagrid.features.rowSelection.selectRows(ids);
     }
-    unselectRowsOnPage() {
+    deselectRowsOnCurrentPage() {
         const rowsOnPage = (this.datagrid.cacheManager.paginatedRows || []).filter(row => !row.isGroupRow()) as GridBasicRow<any>[];
         const ids = rowsOnPage.map(row => row.identifier);
         this.datagrid.features.rowSelection.unselectRows(ids);
@@ -17,7 +36,7 @@ export class RowService extends BaseService {
         const ids = rows.map(row => row.identifier);
         this.datagrid.features.rowSelection.selectRows(ids);
     }
-    unselectAllRows() {
+    deselectAllRows() {
         const rows = (this.datagrid.cacheManager.rows || []).filter(row => !row.isGroupRow()) as GridBasicRow<any>[];
         const ids = rows.map(row => row.identifier);
         this.datagrid.features.rowSelection.unselectRows(ids);
@@ -27,10 +46,10 @@ export class RowService extends BaseService {
     }
 
 
-    pinRowTop(rowIdentifier: GridRowIdentifier) {
+    pinRowToTop(rowIdentifier: GridRowIdentifier) {
         this.datagrid.features.rowPinning.pinRowTop(rowIdentifier);
     }
-    pinRowBottom(rowIdentifier: GridRowIdentifier) {
+    pinRowToBottom(rowIdentifier: GridRowIdentifier) {
         this.datagrid.features.rowPinning.pinRowBottom(rowIdentifier);
     }
     unpinRow(rowIdentifier: GridRowIdentifier) {

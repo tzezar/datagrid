@@ -30,50 +30,43 @@ export type RowSelectionFeatureConfig = Partial<RowSelectionFeatureState>
 
 export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFeature<TOriginalRow> {
     datagrid: DatagridCore<TOriginalRow>;
-    selectedRowIds: SvelteSet<GridRowIdentifier> = $state(new SvelteSet())
+    selectedRowIds: SvelteSet<GridRowIdentifier> = $state(new SvelteSet());
     maxSelectableRows: number = $state(Infinity);
     selectionMode: RowSelectionMode = $state('multiple');
 
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: RowSelectionFeatureConfig) {
         this.datagrid = datagrid;
         Object.assign(this, config);
-
     }
 
-
-
     getSelectedRowsIds() {
-        return Array.from(this.selectedRowIds)
+        return Array.from(this.selectedRowIds);
     }
 
     selectRowById(identifier: GridRowIdentifier) {
         if (this.selectionMode === 'single') {
-            this.clearSelection()
+            this.clearSelection();
             this.selectedRowIds.add(identifier);
-            return
+            return;
         }
 
-        const isMaxSelectedRowsReached = this.maxSelectableRows !== undefined && this.selectedRowIds.size >= this.maxSelectableRows;
-        if (isMaxSelectedRowsReached) {
-            // this.onSelectMoreThanMaxSelectedRows();
-            return
-        }
+        if (this.selectedRowIds.has(identifier)) return; // Prevent re-adding
+
+        if (this.selectedRowIds.size >= this.maxSelectableRows) return; // Enforce max limit
 
         this.selectedRowIds.add(identifier);
     }
 
     deselectRowById(identifier: GridRowIdentifier) {
-        if (this.selectionMode === 'single') {
-            this.clearSelection()
-            return
-        }
         this.selectedRowIds.delete(identifier);
     }
 
-
     toggleRowSelection(identifier: GridRowIdentifier) {
-        if (this.selectedRowIds.has(identifier)) this.deselectRowById(identifier);
-        else this.selectRowById(identifier);
+        if (this.selectedRowIds.has(identifier)) {
+            this.deselectRowById(identifier);
+        } else {
+            this.selectRowById(identifier);
+        }
     }
 
     isRowSelected(identifier: GridRowIdentifier) {
@@ -97,8 +90,6 @@ export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFea
     clearSelection() {
         this.selectedRowIds.clear();
     }
-
 }
-
 
 

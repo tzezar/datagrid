@@ -16,15 +16,15 @@
 				break;
 			}
 			case 'deselectAll': {
-				datagrid.handlers.rows.unselectAllRows();
+				datagrid.handlers.rows.deselectAllRows();
 				break;
 			}
 			case 'selectPage': {
-				datagrid.handlers.rows.selectRowsOnPage();
+				datagrid.handlers.rows.selectRowsOnCurrentPage();
 				break;
 			}
 			case 'deselectPage': {
-				datagrid.handlers.rows.unselectRowsOnPage();
+				datagrid.handlers.rows.deselectRowsOnCurrentPage();
 				break;
 			}
 		}

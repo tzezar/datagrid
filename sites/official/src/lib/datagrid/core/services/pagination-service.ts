@@ -1,6 +1,13 @@
 import { BaseService } from "./base-service";
 
-export class PaginationService extends BaseService {
+export type PaginationOperations = {
+    goToPrevPage: () => void;
+    goToNextPage: () => void;
+    changePageSize: (newPageSize: number) => void;
+    goToPage: (newPage: number) => void;
+}
+
+export class PaginationService extends BaseService implements PaginationOperations {
     goToPrevPage() {
         this.datagrid.refresh(() => this.datagrid.features.pagination.goToPrevPage(), {
             recalculateAll: false,
