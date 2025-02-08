@@ -40,14 +40,14 @@ export class DataDataProcessor<TOriginalRow> {
             this.datagrid.cacheManager.filteredData = data;
             
             if (this.datagrid.features.columnFaceting.recalculateFacetsAfterFiltering) {
-                if (this.datagrid.features.columnFaceting.dataToObtainFacets === 'all') {
+                if (this.datagrid.features.columnFaceting.facetsSource === 'originalData') {
                     this.metrics.measure('Column faceting from original data', () => {
                         this.datagrid.features.columnFaceting.calculateFacets(
                             this.datagrid.originalState.data || [],
                             this.datagrid._columns
                         );
                     })
-                } else if (this.datagrid.features.columnFaceting.dataToObtainFacets === 'filtered') {
+                } else if (this.datagrid.features.columnFaceting.facetsSource === 'filteredData') {
                     this.metrics.measure('Column faceting from filtered data', () => {
                         this.datagrid.features.columnFaceting.calculateFacets(
                             data,

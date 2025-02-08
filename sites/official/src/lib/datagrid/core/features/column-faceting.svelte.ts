@@ -21,7 +21,7 @@ export class ColumnFacetingFeature<TOriginalRow = any> implements IColumnFacetin
     _categoricalFacets: Record<ColumnId, { uniqueValuesCount: number; uniqueValues: unknown[] }> = $state({});
 
     recalculateFacetsAfterFiltering = $state(true)
-    dataToObtainFacets: 'all' | 'filtered' = $state('filtered')
+    facetsSource: 'originalData' | 'filteredData' = $state('filteredData')
 
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnFacetingFeatureConfig) {
         this.datagrid = datagrid;
