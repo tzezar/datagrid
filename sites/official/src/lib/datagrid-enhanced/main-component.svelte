@@ -59,6 +59,8 @@
 		return datagrid.columns.getLeafColumnsInOrder();
 	});
 
+	
+
 	let headerColumnsWithoutAdditional = $derived(
 		headerColumns.filter((col) => !col.columnId.startsWith('_'))
 	);

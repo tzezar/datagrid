@@ -1,6 +1,6 @@
 
 import { type ColumnDef } from "$lib/datagrid/core/types";
-import { accessorColumn, computedColumn } from "$lib/datagrid/core/column-creation";
+import { accessorColumn, columnGroup, computedColumn } from "$lib/datagrid/core/column-creation";
 import type { InventoryItem } from "$lib/data-generators/generate/inventory";
 import { cn } from "$lib/utils";
 import type { ColumnMetaEnhanced } from "$lib/datagrid-enhanced/core/types";
@@ -52,56 +52,79 @@ export const columns = [
     }),
 
 
+    columnGroup({
+        header: "Grupa",
+        columns: [
+            columnGroup({
+                header: 'Product',
+                columns: [
+                    accessorColumn({
+                        accessorKey: 'name',
+                        options: {
+                            calculateFacets: true
+                        }, _meta: {
+                            grow: true,
+                            clickToCopy: true,
+                            filterType: 'text',
+                        }
+                    }),
+                    accessorColumn({
+                        accessorKey: 'category',
+                        _meta: {
+                            clickToCopy: false
+                        }
+                    }),
+        
+                ]
+            }),
+            columnGroup({
+                header: 'Stock',
+                columns: [
+                    accessorColumn({
+                        accessorKey: 'quantity'
+                    }),
+                    computedColumn({
+                        header: 'Test',
+                        columnId: 'test',
+                        getValueFn: (row) => row.category + row.id,
+                        _meta: {
+                            filterType: 'text'
+                        }
+                    }),
+                ]
+            }),
+        ]
+    }),
 
+    columnGroup({
+        header: 'Pricing',
+        columns: [
+            accessorColumn({
+                header: 'Price',
+                accessorKey: 'price',
+                getValueFn: (row) => row.price,
+                options: { sortable: true },
+                _meta: {
+                    filterType: 'number',
+                    styles: {
+                        bodyCell(props) {
+                            const { row } = props
+                            if (row.isGroupRow()) return ""
+                            return cn(row.original.price < 400 && 'border-r-2 border-red-400', row.original.price > 1000 && 'border-r-2 border-green-400')
+        
+                        },
+        
+                    }
+                }
+            }),
+            accessorColumn({
+                accessorKey: 'supplier.name'
+            }),
+        ]
+    }),
 
-    accessorColumn({
-        accessorKey: 'name',
-        options: {
-            calculateFacets: true
-        },_meta: {
-            grow: true,
-            clickToCopy: true,
-            filterType: 'text',
-        }
-    }),
-    computedColumn({
-        header: 'Test',
-        columnId: 'test',
-        getValueFn: (row) => row.category + row.id,
-        _meta: {
-            filterType: 'text'
-        }
-    }),
-    accessorColumn({
-        accessorKey: 'category',
-        _meta: {
-            clickToCopy: false
-        }
-    }),
-    accessorColumn({
-        header: 'Price',
-        accessorKey: 'price',
-        getValueFn: (row) => row.price,
-        options: { sortable: true },
-        _meta: {
-            filterType: 'number',
-            styles: {
-                bodyCell(props) {
-                    const { row } = props
-                    if (row.isGroupRow()) return ""
-                    return cn(row.original.price < 400 && 'border-r-2 border-red-400', row.original.price > 1000 && 'border-r-2 border-green-400')
+   
 
-                },
-
-            }
-        }
-    }),
-    accessorColumn({
-        accessorKey: 'quantity'
-    }),
-    accessorColumn({
-        accessorKey: 'supplier.name'
-    }),
     accessorColumn({
         columnId: 'restockDate',
         accessorKey: 'restockDate',

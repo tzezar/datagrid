@@ -21,20 +21,16 @@
 		columns,
 		data: data.inventory,
 
-		measurePerformance: true,
+		// measurePerformance: true,
 
 		features: {
 			sorting: CustomSortingFeature
 		}
 	});
-	
-	$effect(() => {
-		console.log($state.snapshot(datagrid.columns.getColumnsInOrder()))
-	})
 
-	datagrid.events.on('onPageChange', (data) => {
-		console.log(data.prevPage); // This will be strongly typed based on the `OnPageChangePayload` type
-	});
+	// datagrid.events.on('onPageChange', (data) => {
+	// 	console.log(data.prevPage); // This will be strongly typed based on the `OnPageChangePayload` type
+	// });
 </script>
 
 <div class="pb-20">
