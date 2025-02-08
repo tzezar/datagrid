@@ -15,8 +15,6 @@
 
 	const leafColumns = datagrid.columns.getLeafColumns();
 	let sortableColumns = $derived(leafColumns.filter((column) => column.options.sortable === true));
-
-
 </script>
 
 <DropdownMenu.Sub>
@@ -35,16 +33,16 @@
 			>
 				{#if column.options.sortable}
 					<div class="flex flex-row">
-						{#if datagrid.features.sorting.getSortDirection(column.columnId) === 'desc'}
+						{#if datagrid.features.sorting.getSortDirection(column.columnId) === 'descending'}
 							<SortDescending />
-						{:else if datagrid.features.sorting.getSortDirection(column.columnId) === 'asc'}
+						{:else if datagrid.features.sorting.getSortDirection(column.columnId) === 'ascending'}
 							<SortAscending />
 						{:else if datagrid.features.sorting.getSortDirection(column.columnId) === 'intermediate'}
 							<ArrowsSort />
 						{/if}
 
-						{#if datagrid.features.sorting.getSortIndex(column.columnId)}
-							<span class="text-xs">{datagrid.features.sorting.getSortIndex(column.columnId)}</span>
+						{#if datagrid.features.sorting.getSortConfigIndex(column.columnId)}
+							<span class="text-xs">{datagrid.features.sorting.getSortConfigIndex(column.columnId)}</span>
 						{/if}
 					</div>
 				{/if}

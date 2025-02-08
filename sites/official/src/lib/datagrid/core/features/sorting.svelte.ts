@@ -12,9 +12,11 @@ export type SortingFeatureState = {
 export type ISortingFeature = {
     clearSortConfigs(): void;
     removeSortConfig(columnId: ColumnId): void;
-    changeSortConfigDirection(columnId: ColumnId, desc: boolean): void;
+    changeSortConfigDirection(columnId: ColumnId, direction: SortingDirection): void;
     addSortConfig(columnId: ColumnId, direction: SortingDirection): void;
     isColumnSorted(columnId: ColumnId, direction?: SortingDirection): boolean;
+    findSortConfigIndex(columnId: ColumnId): number;
+    findSortConfigByColumnId(columnId: ColumnId): Sorting | undefined;
 } & SortingFeatureState
 
 export type SortingFeatureConfig = Partial<SortingFeatureState>
@@ -34,19 +36,28 @@ export class SortingFeature implements ISortingFeature {
 
     }
 
-    getSortIndex = (columnId: ColumnId): number | null => {
-        const column = this.datagrid.columns.findColumnById(columnId)
-        if (!column) throw new Error(`Column ${columnId} not found`);
-        const sortConfig = this.datagrid.features.sorting.sortConfigs.find((config) => config.columnId === column.columnId);
+    getSortConfigByColumnId(columnId: ColumnId): Sorting | undefined {
+        return this.findSortConfigByColumnId(columnId);
+    }
+
+    findSortConfigByColumnId(columnId: ColumnId): Sorting | undefined {
+        return this.sortConfigs.find((config) => config.columnId === columnId);
+    }
+
+    findSortConfigIndex(columnId: ColumnId): number {
+        return this.sortConfigs.findIndex((config) => config.columnId === columnId);
+    }
+
+
+    getSortConfigIndex = (columnId: ColumnId): number | null => {
+        const sortConfig = this.getSortConfigByColumnId(columnId);
         return sortConfig ? this.datagrid.features.sorting.sortConfigs.indexOf(sortConfig) + 1 : null;
     };
 
-    getSortDirection = (columnId: ColumnId): 'desc' | 'asc' | 'intermediate' | null => {
-        const column = this.datagrid.columns.findColumnById(columnId)
-        if (!column) throw new Error(`Column ${columnId} not found`);
-        const sortConfig = this.datagrid.features.sorting.sortConfigs.find((config) => config.columnId === column.columnId);
+    getSortDirection = (columnId: ColumnId): SortingDirection => {
+        const sortConfig = this.getSortConfigByColumnId(columnId);
         if (!sortConfig) return 'intermediate';
-        return sortConfig.direction === 'descending' ? 'desc' : 'asc';
+        return sortConfig.direction;
     };
 
     clearSortConfigs() {
@@ -57,17 +68,14 @@ export class SortingFeature implements ISortingFeature {
         this.sortConfigs = this.sortConfigs.filter((config) => config.columnId !== columnId);
     }
 
-    findSortConfigIndex(columnId: ColumnId): number {
-        return this.sortConfigs.findIndex((config) => config.columnId === columnId);
-    }
 
-    changeSortConfigDirection(columnId: ColumnId, desc: boolean) {
+    changeSortConfigDirection(columnId: ColumnId, direction: SortingDirection) {
         const index = this.findSortConfigIndex(columnId);
         if (index === -1) return; // If the column is not sorted, do nothing
 
         // Update the sort direction for the specified column
         this.sortConfigs = this.sortConfigs.map((config, i) =>
-            i === index ? { ...config, desc } : config
+            i === index ? { ...config, direction } : config
         );
     }
 

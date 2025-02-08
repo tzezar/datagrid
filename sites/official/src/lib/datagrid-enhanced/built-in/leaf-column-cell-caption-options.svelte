@@ -2,8 +2,8 @@
 	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import type { ColumnMetaEnhanced } from '../core/types';
-	import ColumnSortingIndicator from './column-sorting-indicator.svelte';
 	import HeaderCellDropdown from './header-cell-dropdown.svelte';
+	import SortingIndicator from './sorting-indicator.svelte';
 
 	type Props = {
 		column: LeafColumn<any, ColumnMetaEnhanced>;
@@ -18,7 +18,7 @@
 
 <div class="flex gap-1">
 	{#if column.isSortable()}
-		<ColumnSortingIndicator {datagrid} {column} />
+		<SortingIndicator {datagrid} {column} />
 	{/if}
 	{#if shouldShowColumnOptionsDropdown(column)}
 		<HeaderCellDropdown {datagrid} {column} />

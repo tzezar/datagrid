@@ -255,4 +255,10 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
         return this.flattenColumnStructure(this.datagrid._columns).find((col) => col.columnId === columnId) ?? null;
     }
 
+    findColumnByIdOrThrow(columnId: ColumnId): AnyColumn<TOriginalRow> {
+        const column = this.findColumnById(columnId);
+        if (!column) throw new Error(`Column ${columnId} not found`);
+        return column;
+    }
+
 }

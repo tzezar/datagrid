@@ -1,6 +1,14 @@
 import type { LeafColumn } from "../types";
 import { BaseService } from "./base-service";
 
+
+export type ISortingService = {
+    toggleColumnSort(column: LeafColumn<any>, multisort: boolean): void
+    applyAscendingSort(column: LeafColumn<any>): void
+    applyDescendingSort(column: LeafColumn<any>): void
+    clearColumnSort(column: LeafColumn<any>): void
+}
+
 export class SortingService extends BaseService {
     toggleColumnSort(column: LeafColumn<any>, multisort: boolean) {
         this.events.emit('toggleSort', { column, multisort });
@@ -38,7 +46,7 @@ export class SortingService extends BaseService {
 
                 datagrid.features.sorting.addSortConfig(columnId, 'ascending');
             } else if (isColumnSortedAscending) {
-                datagrid.features.sorting.changeSortConfigDirection(columnId, true);
+                datagrid.features.sorting.changeSortConfigDirection(columnId, 'descending');
             } else {
                 datagrid.features.sorting.removeSortConfig(columnId);
 
@@ -56,16 +64,15 @@ export class SortingService extends BaseService {
 
     applyAscendingSort(column: LeafColumn<any>) {
         const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
-        if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, false);
+        if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, 'ascending');
         else this.datagrid.features.sorting.addSortConfig(column.columnId, 'ascending');
 
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 
-
     applyDescendingSort(column: LeafColumn<any>) {
         const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
-        if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, true);
+        if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, 'descending');
         else this.datagrid.features.sorting.addSortConfig(column.columnId, 'descending');
 
         this.datagrid.processors.data.executeFullDataTransformation();

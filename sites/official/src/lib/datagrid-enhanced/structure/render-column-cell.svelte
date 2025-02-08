@@ -9,7 +9,7 @@
 	import HeaderCellDropdown from '../built-in/header-cell-dropdown.svelte';
 	import ColumnFilterInput from '../built-in/column-filter-input.svelte';
 	import type { ColumnMetaEnhanced } from '../core/types';
-	import ColumnSortingIndicator from '../built-in/column-sorting-indicator.svelte';
+	import SortingIndicator from '../built-in/sorting-indicator.svelte';
 
 	type Props = {
 		datagrid: EnhancedDatagrid;
@@ -81,7 +81,7 @@
 				<div class="flex gap-1">
 					{#if datagrid.customization.enableSorting === true && column.isSortable() && datagrid.customization.showColumnSortingIndicator === true}
 						{#if column.isSortable()}
-							<ColumnSortingIndicator {datagrid} {column} />
+							<SortingIndicator {datagrid} {column} />
 						{/if}
 					{/if}
 					{#if column._meta.showColumnManagerDropdownMenu === true && datagrid.customization.enableColumnDropdownMenu === true}
