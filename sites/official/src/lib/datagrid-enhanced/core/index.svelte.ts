@@ -245,7 +245,7 @@ export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends DatagridC
     }
 
     private processColumnsWithExtras(columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
-        const flattenedColumns = this.columns.flattenColumnStructureAndClearGroups([...columns]);
+        const flattenedColumns = this.columns.flattenColumnStructure([...columns], false);
         const additionalColumns = createAdditionalColumns(this);
         const allColumns = [
             ...additionalColumns.leftCols,
@@ -256,7 +256,7 @@ export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends DatagridC
     }
 
     private processColumns(columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
-        const flattenedColumns = this.columns.flattenColumnStructureAndClearGroups([...columns]);
+        const flattenedColumns = this.columns.flattenColumnStructure([...columns], false);
         return this.createHierarchicalColumns(flattenedColumns);
     }
 
