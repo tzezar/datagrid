@@ -40,15 +40,16 @@ export class ColumnGroupingFeature<TOriginalRow = any> implements IColumnGroupin
 
     /**
         * Deletes a group column and reassigns its children to the appropriate level.
-        * @param groupColumn - The group column to delete.
+        * @param columnGroup - The group column to delete.
         */
-    deleteGroupColumn(groupColumn: GroupColumn<TOriginalRow>): void {
-        const childColumns = [...groupColumn.columns];
+    deleteGroupColumn(columnGroup: GroupColumn<TOriginalRow>): void {
+        this.datagrid.events.emit('onColumnGroupDeletion', { columnGroup });
+        const childColumns = [...columnGroup.columns];
 
-        if (groupColumn.parentColumnId === null) {
+        if (columnGroup.parentColumnId === null) {
             // Group is at root level
             // Remove the group from root level columns
-            const groupIndex = this.datagrid._columns.findIndex(col => col === groupColumn);
+            const groupIndex = this.datagrid._columns.findIndex(col => col === columnGroup);
             if (groupIndex !== -1) {
                 this.datagrid._columns.splice(groupIndex, 1);
 
@@ -60,11 +61,11 @@ export class ColumnGroupingFeature<TOriginalRow = any> implements IColumnGroupin
             }
         } else {
             // Group is nested within another group
-            const parentGroup = this.datagrid.columns.findColumnById(groupColumn.parentColumnId) as GroupColumn<TOriginalRow>;
+            const parentGroup = this.datagrid.columns.findColumnById(columnGroup.parentColumnId) as GroupColumn<TOriginalRow>;
             if (!parentGroup) throw new Error('Parent group not found');
             if (parentGroup) {
                 // Find and remove the group from its parent
-                const groupIndex = parentGroup.columns.findIndex(col => col === groupColumn);
+                const groupIndex = parentGroup.columns.findIndex(col => col === columnGroup);
                 if (groupIndex !== -1) {
                     parentGroup.columns.splice(groupIndex, 1);
 
@@ -82,15 +83,15 @@ export class ColumnGroupingFeature<TOriginalRow = any> implements IColumnGroupin
 
     createGroup({ newGroupName, selectedColumns }: CreateGroupParams) {
         // Create the new group column
-        const groupColumn = createColumnGroup({
+        const columnGroup = createColumnGroup({
             header: newGroupName,
             columnId: generateRandomColumnId(),
             parentColumnId: null,
             columns: []
-        });
+        })
 
         // Add the group directly to the root level
-        this.datagrid._columns.push(groupColumn);
+        this.datagrid._columns.push(columnGroup);
 
         // Get the column IDs that need to be grouped
         const columnIdsToBeGrouped = Object.entries(selectedColumns)
@@ -105,8 +106,8 @@ export class ColumnGroupingFeature<TOriginalRow = any> implements IColumnGroupin
             const moveOperation: MoveOperation = {
                 sourceColumn: column,
                 targetLocation: {
-                    parentId: groupColumn.columnId,
-                    index: groupColumn.columns.length
+                    parentId: columnGroup.columnId,
+                    index: columnGroup.columns.length
                 }
             };
 
@@ -116,6 +117,8 @@ export class ColumnGroupingFeature<TOriginalRow = any> implements IColumnGroupin
 
         // Refresh the column state
         this.datagrid.features.columnOrdering.refreshColumnState();
+
+        this.datagrid.events.emit('onColumnGroupCreation', { columnGroup });
     }
 
 

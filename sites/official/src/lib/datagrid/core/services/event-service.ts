@@ -1,7 +1,7 @@
-import type { GridEventType, EventPayloadMap } from "../types";
+import type {  EventPayloadMap } from "../types";
 
 export class EventService {
-    private listeners = new Map<GridEventType, ((data: any) => void)[]>(); 
+    private listeners = new Map<keyof EventPayloadMap, ((data: any) => void)[]>(); 
 
     // Constrain T to keys of EventPayloadMap
     on<T extends keyof EventPayloadMap>(event: T, callback: (data: EventPayloadMap[T]) => void) {

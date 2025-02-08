@@ -1,14 +1,14 @@
 <script lang="ts">
 	import type { DatagridCore } from '$lib/datagrid/core/index.svelte';
-	import type { AnyColumn } from '$lib/datagrid/core/types';
+	import type {  LeafColumn } from '$lib/datagrid/core/types';
 
 	type Props = {
 		datagrid: DatagridCore<any>;
-		column: AnyColumn<any>;
+		column: LeafColumn<any>;
 	};
 	let { datagrid, column }: Props = $props();
 
-	const handleColumnFilterChange = (column: AnyColumn<any>, value: any) => {
+	const handleColumnFilterChange = (column: LeafColumn<any>, value: any) => {
 		datagrid.handlers.filtering.updateFilterCondition({
 			column,
 			value

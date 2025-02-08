@@ -4,7 +4,6 @@ import { BaseService } from "./base-service";
 
 export class ColumnControlService extends BaseService {
 
-
     updateColumnSize(columnId: ColumnId, width: number) {
         this.datagrid.features.columnSizing.updateColumnSize(columnId, width);
         this.datagrid.processors.column.refreshColumnPinningOffsets();
@@ -23,29 +22,27 @@ export class ColumnControlService extends BaseService {
     }
 
     pinColumn(columnId: string, position: PinningPosition) {
-        const column = this.datagrid.columns.findColumnById(columnId);
-        if (!column) return;
+        const column = this.datagrid.columns.findLeafColumnByIdOrThrow(columnId);
         this.datagrid.features.columnPinning.changeColumnPinningPosition(column, position);
         this.datagrid.processors.column.refreshColumnPinningOffsets();
 
     }
 
     changeColumnPinningPosition(columnId: string, position: PinningPosition) {
-        const column = this.datagrid.columns.findColumnById(columnId);
-        if (!column) throw new Error(`Column ${columnId} not found`);
+        const column = this.datagrid.columns.findLeafColumnByIdOrThrow(columnId)
         this.datagrid.features.columnPinning.changeColumnPinningPosition(column, position);
         this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
 
 
     moveLeft(columnId: ColumnId) {
-        this.datagrid.features.columnOrdering.moveLeft(columnId);
+        this.datagrid.features.columnOrdering.move(columnId, 'left');
     }
     moveRight(columnId: ColumnId) {
-        this.datagrid.features.columnOrdering.moveRight(columnId)
+        this.datagrid.features.columnOrdering.move(columnId, 'right')
     }
     moveColumnToPosition({ columnId, targetGroupColumnId }: { columnId: ColumnId, targetGroupColumnId: string }) {
-        this.datagrid.features.columnOrdering.moveColumnToPosition(columnId, targetGroupColumnId);
+        this.datagrid.features.columnOrdering.moveToPosition(columnId, targetGroupColumnId);
     }
-    
+
 }

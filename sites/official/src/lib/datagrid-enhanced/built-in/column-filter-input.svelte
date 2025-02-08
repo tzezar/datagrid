@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { AnyColumn, LeafColumn } from '$lib/datagrid/core/types';
+	import type {  LeafColumn } from '$lib/datagrid/core/types';
 	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import type { ColumnMetaEnhanced } from '../core/types';
 
@@ -9,7 +9,7 @@
 	};
 	let { datagrid, column }: Props = $props();
 
-	const handleColumnFilterChange = (column: AnyColumn<any>, value: any) => {
+	const handleColumnFilterChange = (column: LeafColumn<any>, value: any) => {
 		datagrid.handlers.filtering.updateFilterCondition({
 			column,
 			value

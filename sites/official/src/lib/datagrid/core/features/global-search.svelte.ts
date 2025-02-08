@@ -34,6 +34,7 @@ export class GlobalSearchFeature implements IGlobalSearchState {
 
 
     updateSearchQuery(query: string): void {
+        this.datagrid.events.emit('onSearchQueryChange', { prevQuery: this.searchQuery, newQuery: query });
         this.searchQuery = query;
         if (this.fuseSearchEngine && query) {
             this.fuseSearchEngine.search(query);

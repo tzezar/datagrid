@@ -196,7 +196,7 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
     }
 
     getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
-        const { activeGroups : groupByColumns } = this.datagrid.features.grouping;
+        const { activeGroups: groupByColumns } = this.datagrid.features.grouping;
 
         const columns = this.flattenColumnStructure(this.datagrid._columns, false).reduce(
             (acc, col) => {
@@ -255,8 +255,17 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
         return this.flattenColumnStructure(this.datagrid._columns).find((col) => col.columnId === columnId) ?? null;
     }
 
+    findLeafColumnById(columnId: ColumnId): LeafColumn<TOriginalRow> | null {
+        return this.getLeafColumns().find((col) => col.columnId === columnId) ?? null;
+    }
+
     findColumnByIdOrThrow(columnId: ColumnId): AnyColumn<TOriginalRow> {
         const column = this.findColumnById(columnId);
+        if (!column) throw new Error(`Column ${columnId} not found`);
+        return column;
+    }
+    findLeafColumnByIdOrThrow(columnId: ColumnId): LeafColumn<TOriginalRow> {
+        const column = this.findLeafColumnById(columnId);
         if (!column) throw new Error(`Column ${columnId} not found`);
         return column;
     }

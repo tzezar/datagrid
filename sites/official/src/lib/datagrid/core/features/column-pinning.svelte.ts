@@ -1,4 +1,4 @@
-import type { AnyColumn } from "../types";
+import type { AnyColumn, LeafColumn } from "../types";
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId, PinningPosition } from "../types";
 
@@ -25,7 +25,8 @@ export class ColumnPinningFeature implements IColumnPinningFeature {
      * @param column - The column to update.
      * @param position - The new pinning position ('left', 'right', or null).
      */
-    changeColumnPinningPosition(column: AnyColumn<any>, position: PinningPosition): void {
+    changeColumnPinningPosition(column: LeafColumn<any>, position: PinningPosition): void {
+        this.datagrid.events.emit('onColumnPinningChange', {column});
         column.state.pinning.position = position;
     }
 

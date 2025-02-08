@@ -1,5 +1,5 @@
 import type { DatagridCore } from "../index.svelte";
-import type { ColumnId } from "../types";
+import type { ColumnId, LeafColumn } from "../types";
 
 export type ColumnSizingFeatureState = object
     // defaultWidth: number,
@@ -48,14 +48,8 @@ export class ColumnSizingFeature<TOriginalRow = any> implements IColumnSizingFea
      * @throws If the column with the specified ID is not found.
      */
     updateColumnSize(columnId: ColumnId, width: number): void {
-        // Retrieve all leaf columns (ignoring grouped columns)
-        const leafColumns = this.datagrid.columns.getLeafColumns();
-
-        // Find the column with the specified ID
-        const column = leafColumns.find(c => c.columnId === columnId);
-        if (!column) {
-            throw new Error(`Column with ID "${columnId}" not found.`);
-        }
+        const column = this.datagrid.columns.findColumnByIdOrThrow(columnId) as LeafColumn<TOriginalRow>;
+        this.datagrid.events.emit('onColumnResize', { column });
 
         // Determine the new width, clamped between the column's minWidth and maxWidth
         const { minWidth, maxWidth } = column.state.size;

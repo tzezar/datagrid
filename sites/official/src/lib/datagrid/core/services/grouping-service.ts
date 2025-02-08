@@ -16,6 +16,8 @@ export class GroupingService extends BaseService {
         this.datagrid.features.pagination.goToFirstPage();
         this.datagrid.cacheManager.invalidateGroupedRowsCache();
         this.datagrid.processors.data.executeFullDataTransformation();
+            
+        this.datagrid.events.emit('onGroupingChange', { activeGroups: validGroupColumns });
     }
 
     toggleGrouping(columnId: ColumnId) {
@@ -32,5 +34,7 @@ export class GroupingService extends BaseService {
         this.datagrid.features.pagination.goToFirstPage();
         this.datagrid.cacheManager.invalidateGroupedRowsCache();
         this.datagrid.processors.data.executeFullDataTransformation();
+
+        this.datagrid.events.emit('onGroupingChange', { activeGroups: this.datagrid.features.grouping.activeGroups });
     }
 }

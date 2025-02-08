@@ -1,4 +1,4 @@
-import type { AnyColumn, FilterableColumn, FilterOperator } from "../types";
+import type {  FilterableColumn, FilterOperator, LeafColumn } from "../types";
 import { BaseService } from "./base-service";
 
 export class FilteringService extends BaseService {
@@ -9,9 +9,11 @@ export class FilteringService extends BaseService {
     }
 
     updateFilterCondition(props: {
-        column: AnyColumn<any>,
+        column: LeafColumn<any>,
         value: any,
     }) {
+        this.datagrid.events.emit('onFilterChange', { column: props.column });
+
         // TODO handle eg empty without value etc
         const { value } = props;
         let column = props.column

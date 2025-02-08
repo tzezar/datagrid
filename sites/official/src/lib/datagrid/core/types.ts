@@ -10,7 +10,7 @@ import type { GroupingFeature, GroupingFeatureConfig } from "./features/grouping
 import type { RowExpansionFeature, RowExpansionConfig } from "./features/row-expanding.svelte";
 import type { RowSelectionFeature, RowSelectionFeatureConfig } from "./features/row-selection.svelte";
 import type { RowPinningFeature, RowPinningFeatureConfig } from "./features/row-pinning.svelte";
-import type { ColumnOrderingFeature, ColumnOrderingFeatureConfig } from "./features/column-ordering.svelte";
+import type { ColumnMovementDirection, ColumnOrderingFeature, ColumnOrderingFeatureConfig } from "./features/column-ordering.svelte";
 import type { ColumnGroupingFeature, ColumnGroupingPluginConfig } from "./features/column-grouping.svelte";
 import type { ColumnPinningFeature, ColumnPinningFeatureConfig } from "./features/column-pinning.svelte";
 import type { ColumnSizingFeature, ColumnSizingFeatureConfig } from "./features/column-sizing.svelte";
@@ -518,40 +518,19 @@ export type EventPayloadMap = {
     'onGroupCollapse': { groupIdentifier: GridGroupRowIdentifier };
     'onGroupExpansionLimitExceeded': { maxExpandedGroups: number };
 
+    'onGroupingChange': { activeGroups: ColumnId[] };
+
+    'onSearchQueryChange': { prevQuery: string, newQuery: string };
+
+    'onFilterChange': { column: LeafColumn<any> };
+    'onColumnResize': { column: LeafColumn<any> };
+    'onColumnVisibilityChange': { column: LeafColumn<any> };
+
+    'onColumnGroupCreation': { columnGroup: GroupColumn<any> };
+    'onColumnGroupDeletion': { columnGroup: GroupColumn<any> };
+    'onColumnPinningChange': { column: LeafColumn<any> };
+    'onColumnReorder': { columnId: ColumnId, direction: ColumnMovementDirection };
+
 };
 
 
-export type GridEventType = 
-    | 'onColumnSort'
-
-    | 'onRowPin'
-    | 'onRowUnpin'
-
-    | 'onRowExpand'
-    | 'onRowCollapse'
-    | 'onRowExpansionLimitExceeded'
-
-    | 'onGroupExpand'
-    | 'onGroupCollapse'
-    | 'onGroupExpansionLimitExceeded'
-
-    | 'onRowDeselect'
-    | 'onRowSelect'
-    | 'onRowSelectionLimitExceeded'
-
-    | 'onPageChange'
-    | 'onPageSizeChange'
-    
-
-
-    | 'beforeRender'
-
-    // | 'afterSort'
-    // | 'beforeFilter' 
-    // | 'afterFilter'
-    // | 'beforeRowExpand' 
-    // | 'afterRowExpand'
-    // | 'beforeGroupExpand'
-    // | 'afterGroupExpand'
-    // | 'beforeSelectionChange'
-    // | 'afterSelectionChange';
