@@ -71,12 +71,6 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
         this._columns = this.processors.column.initializeColumns(this.originalState.columns)
         this.features = new DatagridFeatures(this, config);
         this.processors.data.executeFullDataTransformation();
-
-        // Recompute faceted values
-        // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
-        // TODO: Check if this is still needed
-        // this.features.columnFaceting.calculateFacets(this.cacheManager.sortedData || [], this._columns);
-
     }
 
     private initializeSourceColumns(columns: AnyColumn<TOriginalRow>[]) {

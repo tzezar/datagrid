@@ -56,8 +56,6 @@ export class DataDataProcessor<TOriginalRow> {
                     })
                 }
             } 
-         
-                
 
         } else {
             data = this.datagrid.cacheManager.filteredData;
