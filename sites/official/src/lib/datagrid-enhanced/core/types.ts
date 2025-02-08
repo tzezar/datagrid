@@ -13,7 +13,8 @@ export type ColumnMetaEnhanced<TOriginalRow = any> = {
     styles?: {
         bodyCell?: ((props: { datagrid: EnhancedDatagrid, column: AnyColumn<TOriginalRow>, row: GridRow<TOriginalRow> }) => string);
         headerCell?: ((props: { datagrid: EnhancedDatagrid, column: AnyColumn<TOriginalRow> }) => string);
-    }
+    },
+    // calculateFacets?: boolean
 }
 
 export type AutoColumnPosition = 'left' | 'right' | 'none'

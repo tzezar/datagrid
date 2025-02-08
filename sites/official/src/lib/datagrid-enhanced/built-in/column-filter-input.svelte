@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {  LeafColumn } from '$lib/datagrid/core/types';
+	import type { LeafColumn } from '$lib/datagrid/core/types';
 	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import type { ColumnMetaEnhanced } from '../core/types';
 
@@ -14,16 +14,13 @@
 			column,
 			value
 		});
-		datagrid.cacheManager.invalidate('filteredData');
-		datagrid.features.pagination.goToFirstPage();
-		datagrid.processors.data.executeFullDataTransformation();
-		datagrid.features.columnFaceting.calculateFacets(datagrid.originalState.data || [], datagrid._columns);
+	
 	};
 </script>
 
 {#snippet FilterOperator()}
-	<span class="text-muted-foreground text-[0.5rem]"
-		>Filter mode: {datagrid.features.filtering.getConditionOperator(column.columnId)}</span
+	<span class="text-[0.5rem] text-muted-foreground">
+		Filter mode: {datagrid.features.filtering.getConditionOperator(column.columnId)}</span
 	>
 {/snippet}
 
@@ -69,7 +66,7 @@
 			/>
 			<div class="flex justify-between">
 				{@render FilterOperator()}
-				<span class="text-muted-foreground text-[0.5rem]">
+				<span class="text-[0.5rem] text-muted-foreground">
 					Max: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max}
 					Min: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.min}
 				</span>

@@ -5,6 +5,7 @@ import type { ColumnId } from "../types";
 export type ColumnFacetingFeatureState = {
     _numericFacets: Record<ColumnId, { min: number; max: number }>;
     _categoricalFacets: Record<ColumnId, { uniqueValuesCount: number; uniqueValues: unknown[] }>;
+    recalculateFacetsAfterFiltering: boolean
 }
 export type ColumnFacetingFeatureConfig = Partial<ColumnFacetingFeatureState>;
 export type IColumnFacetingFeature = ColumnFacetingFeatureState
@@ -18,6 +19,9 @@ export class ColumnFacetingFeature<TOriginalRow = any> implements IColumnFacetin
 
     // Stores categorical facets (unique values and their count) for each column
     _categoricalFacets: Record<ColumnId, { uniqueValuesCount: number; uniqueValues: unknown[] }> = $state({});
+
+    recalculateFacetsAfterFiltering = $state(true)
+    dataToObtainFacets: 'all' | 'filtered' = $state('filtered')
 
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnFacetingFeatureConfig) {
         this.datagrid = datagrid;
@@ -72,43 +76,55 @@ export class ColumnFacetingFeature<TOriginalRow = any> implements IColumnFacetin
         this._numericFacets = {};
         this._categoricalFacets = {};
 
-        for (const column of columns) {
+
+        // Iterate over each column
+        for (const column of columns.filter(col => col.state.visible === true && col.type !== 'group' && col.options.calculateFacets === true)) {
             // Skip columns that are not accessor or computed columns
             if (!['accessor', 'computed'].includes(column.type)) continue;
 
             const columnId = column.columnId;
             const valueGetter = (column as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>).getValueFn;
 
-            // Retrieve all values for the column
-            const values = rows.map(row => valueGetter(row));
+            // Initialize variables for facet calculation
+            let numericMin: number | null = null;
+            let numericMax: number | null = null;
+            const valueCountMap: Record<string, number> = {};
 
-            switch (column._meta.filterType) {
-                case 'number':
-                case 'range': {
-                    // Calculate numeric facets (min and max)
-                    const numericValues = values.filter((val): val is number => typeof val === 'number');
-                    if (numericValues.length > 0) {
-                        this._numericFacets[columnId] = {
-                            min: Math.min(...numericValues),
-                            max: Math.max(...numericValues),
-                        };
-                    }
-                    break;
+            // Iterate over rows directly to process values without creating an array
+            for (const row of rows) {
+                const value = valueGetter(row);
+
+                // Handle numeric values
+                if (typeof value === 'number') {
+                    if (numericMin === null || value < numericMin) numericMin = value;
+                    if (numericMax === null || value > numericMax) numericMax = value;
                 }
-                case 'select':
-                case 'text': {
-                    // Calculate categorical facets (unique values and their count)
-                    const uniqueValues = Array.from(new Set(values));
-                    this._categoricalFacets[columnId] = {
-                        uniqueValuesCount: uniqueValues.length,
-                        uniqueValues,
-                    };
-                    break;
+
+                // Handle categorical values (e.g., text or select)
+                else {
+                    const valueStr = String(value); // Ensure string comparison
+                    valueCountMap[valueStr] = (valueCountMap[valueStr] || 0) + 1;
                 }
-                default:
-                    // Unsupported filter types are ignored
-                    break;
+            }
+
+            // Save numeric facets if applicable
+            if (numericMin !== null && numericMax !== null) {
+                this._numericFacets[columnId] = {
+                    min: numericMin,
+                    max: numericMax,
+                };
+            }
+
+            // Save categorical facets if applicable
+            if (Object.keys(valueCountMap).length > 0) {
+                const uniqueValues = Object.keys(valueCountMap);
+                this._categoricalFacets[columnId] = {
+                    uniqueValuesCount: uniqueValues.length,
+                    uniqueValues,
+                };
             }
         }
+
     }
+
 }

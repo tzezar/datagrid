@@ -5,6 +5,7 @@ export class SearchService extends BaseService {
         this.datagrid.features.globalSearch.updateSearchQuery(value)
         this.datagrid.features.pagination.goToFirstPage();
         this.datagrid.cacheManager.invalidate('filteredData');
+        
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 }

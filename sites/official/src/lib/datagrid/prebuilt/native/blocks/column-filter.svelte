@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { DatagridCore } from '$lib/datagrid/core/index.svelte';
-	import type {  LeafColumn } from '$lib/datagrid/core/types';
+	import type { LeafColumn } from '$lib/datagrid/core/types';
 
 	type Props = {
 		datagrid: DatagridCore<any>;
@@ -13,16 +13,13 @@
 			column,
 			value
 		});
-		datagrid.cacheManager.invalidate('filteredData');
-		datagrid.features.pagination.goToFirstPage();
-		datagrid.processors.data.executeFullDataTransformation();
-		datagrid.features.columnFaceting.calculateFacets(datagrid.cacheManager.sortedData || [], datagrid._columns);
 	};
-	
 </script>
 
 {#snippet FilterOperator()}
-	<span class="text-muted-foreground text-[0.5rem]">Filter mode: {datagrid.features.filtering.getConditionOperator(column.columnId)}</span>
+	<span class="text-[0.5rem] text-muted-foreground"
+		>Filter mode: {datagrid.features.filtering.getConditionOperator(column.columnId)}</span
+	>
 {/snippet}
 
 {#if column.options.filterable !== false}

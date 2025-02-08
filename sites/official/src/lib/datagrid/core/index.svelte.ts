@@ -33,12 +33,9 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
 
     cacheManager = new DatagridCacheManager(this);
 
-    config = {
-        measurePerformance: false,
-        createBasicRowIdentifier: (row: TOriginalRow) => (row as any).id,
-        createBasicRowIndex: (row: TOriginalRow, parentIndex: string | null, index: number) =>
-            parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
-    }
+    measurePerformance: boolean = $state(false)
+    rowIdGetter: (row: TOriginalRow) => GridRowIdentifier = (row: TOriginalRow) => (row as any).id
+    rowIndexGetter: (row: TOriginalRow, parentIndex: string | null, index: number) => string = (row: TOriginalRow, parentIndex: string | null, index: number) => parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1)
 
     features: DatagridFeatures<TOriginalRow> = new DatagridFeatures(this);
 
@@ -47,8 +44,11 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
     constructor(config: DatagridCoreConfig<TOriginalRow>, lazyInitialization: boolean = true) {
         this.events = new EventService();
         this.handlers = new HandlersManager(this, this.events);
-
         this.features = new DatagridFeatures(this, config);
+        
+        this.measurePerformance = config?.measurePerformance ?? this.measurePerformance
+        this.rowIdGetter = config?.rowIdGetter ?? this.rowIdGetter
+        this.rowIndexGetter = config?.rowIndexGetter ?? this.rowIndexGetter
 
         if (config.lifecycleHooks) this.lifecycleHooks = config.lifecycleHooks;
         if (lazyInitialization) return;
@@ -74,7 +74,8 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
 
         // Recompute faceted values
         // Moved out of executeFullDataTransformation to avoid unnecessary recomputation
-        this.features.columnFaceting.calculateFacets(this.cacheManager.sortedData || [], this._columns);
+        // TODO: Check if this is still needed
+        // this.features.columnFaceting.calculateFacets(this.cacheManager.sortedData || [], this._columns);
 
     }
 
@@ -117,7 +118,7 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
             this.processors.data.handlePaginationChange();
         }
 
-        if (this.config.measurePerformance) console.log(`Operation took ${performance.now() - timeStart}ms`);
+        if (this.measurePerformance) console.log(`Operation took ${performance.now() - timeStart}ms`);
     }
 
     private validateConfiguration({ columns, data }: DatagridCoreConfig<TOriginalRow>) {

@@ -25,7 +25,7 @@ export class DataDataProcessor<TOriginalRow> {
        * Executes the entire data transformation pipeline: search, filter, sort, and group.
        */
     executeFullDataTransformation(): void {
-        const shouldRunGrouping = this.datagrid.features.grouping.activeGroups .length > 0 || this.datagrid.features.grouping.manual;
+        const shouldRunGrouping = this.datagrid.features.grouping.activeGroups.length > 0 || this.datagrid.features.grouping.manual;
 
         this.metrics.clear();
 
@@ -36,6 +36,29 @@ export class DataDataProcessor<TOriginalRow> {
             // Apply global search if value is set
             data = this.applyGlobalSearch(data);
             data = this.applyColumnFilters(data);
+
+            this.datagrid.cacheManager.filteredData = data;
+            
+            if (this.datagrid.features.columnFaceting.recalculateFacetsAfterFiltering) {
+                if (this.datagrid.features.columnFaceting.dataToObtainFacets === 'all') {
+                    this.metrics.measure('Column faceting from original data', () => {
+                        this.datagrid.features.columnFaceting.calculateFacets(
+                            this.datagrid.originalState.data || [],
+                            this.datagrid._columns
+                        );
+                    })
+                } else if (this.datagrid.features.columnFaceting.dataToObtainFacets === 'filtered') {
+                    this.metrics.measure('Column faceting from filtered data', () => {
+                        this.datagrid.features.columnFaceting.calculateFacets(
+                            data,
+                            this.datagrid._columns
+                        );
+                    })
+                }
+            } 
+         
+                
+
         } else {
             data = this.datagrid.cacheManager.filteredData;
         }
@@ -53,7 +76,7 @@ export class DataDataProcessor<TOriginalRow> {
         else this.processRegularData(data);
 
 
-        if (this.datagrid.config.measurePerformance) this.datagrid.performanceMetrics.print();
+        if (this.datagrid.measurePerformance) this.datagrid.performanceMetrics.print();
     }
 
     applyGlobalSearch(data: TOriginalRow[]): TOriginalRow[] {
@@ -62,7 +85,9 @@ export class DataDataProcessor<TOriginalRow> {
         const isManualSortingEnabled = this.datagrid.features.globalSearch.isManual
         const valueIsEmpty = this.datagrid.features.globalSearch.searchQuery === ''
 
-        if (isManualSortingEnabled || valueIsEmpty) return data
+        if (isManualSortingEnabled || valueIsEmpty) {
+            return data
+        }
 
         const searchValue = this.datagrid.features.globalSearch.searchQuery.toLowerCase();
 
@@ -93,6 +118,7 @@ export class DataDataProcessor<TOriginalRow> {
                 data = applySimpleSearch(data);
             }
         });
+
 
         return this.datagrid.lifecycleHooks.executePostGlobalSearch(data);
     }
@@ -236,7 +262,7 @@ export class DataDataProcessor<TOriginalRow> {
     }
 
     createHierarchicalData(data: TOriginalRow[]): GridRow<TOriginalRow>[] {
-        const groupCols = this.datagrid.features.grouping.activeGroups ;
+        const groupCols = this.datagrid.features.grouping.activeGroups;
         if (!groupCols.length) return this.createBasicRows(data);
 
         const groupByLevel = (
@@ -318,10 +344,10 @@ export class DataDataProcessor<TOriginalRow> {
 
     private createBasicRows(rows: TOriginalRow[], parentIndex?: string): GridRow<TOriginalRow>[] {
         return rows.map((row, i) => {
-            const identifier = this.datagrid.config.createBasicRowIdentifier(row);
+            const identifier = this.datagrid.rowIdGetter(row);
             return {
                 identifier,
-                index: this.datagrid.config.createBasicRowIndex(row, parentIndex || null, i),
+                index: this.datagrid.rowIndexGetter(row, parentIndex || null, i),
                 parentIndex: parentIndex ?? null,
                 original: row,
                 isExpanded: () => this.datagrid.features.rowExpanding.isRowExpanded(identifier),

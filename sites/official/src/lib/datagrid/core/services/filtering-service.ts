@@ -1,4 +1,4 @@
-import type {  FilterableColumn, FilterOperator, LeafColumn } from "../types";
+import type { FilterableColumn, FilterOperator, LeafColumn } from "../types";
 import { BaseService } from "./base-service";
 
 export class FilteringService extends BaseService {
@@ -44,5 +44,14 @@ export class FilteringService extends BaseService {
             // Update existing condition value
             this.datagrid.features.filtering.filterConditions[conditionIndex].value = value;
         }
+
+        this.datagrid.cacheManager.invalidate('filteredData');
+        this.datagrid.features.pagination.goToFirstPage();
+        this.datagrid.processors.data.executeFullDataTransformation();
+        
+        // this.datagrid.features.columnFaceting.calculateFacets(
+        //     this.datagrid.originalState.data || [],
+        //     this.datagrid._columns
+        // );
     }
 }

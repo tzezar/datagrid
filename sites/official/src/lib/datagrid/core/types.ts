@@ -461,15 +461,13 @@ export type InitialState = {
 export type DatagridCoreConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
     columns: C[];
     data: TOriginalRow[];
-    lifecycleHooks?: LifecycleHooks<TOriginalRow>;  // Add this
+    lifecycleHooks?: LifecycleHooks<TOriginalRow>; 
 
     initialState?: InitialState
 
-    config?: {
-        measurePerformance?: boolean
-        createBasicRowIdentifier?: (row: TOriginalRow) => string
-        createBasicRowIndex?: (row: TOriginalRow) => string
-    }
+    measurePerformance?: boolean
+    rowIdGetter?: (row: TOriginalRow) => string
+    rowIndexGetter?: (row: TOriginalRow) => string
 
     features?: {
         sorting?: FeatureConstructor<SortingFeature>,

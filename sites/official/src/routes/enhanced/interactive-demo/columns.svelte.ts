@@ -35,6 +35,9 @@ export const columns = [
     // }),
     accessorColumn({
         accessorKey: 'id',
+        options: {
+            calculateFacets: true
+        },
         _meta: {
             tooltip: true,
             filterType: 'number',
@@ -53,7 +56,9 @@ export const columns = [
 
     accessorColumn({
         accessorKey: 'name',
-        _meta: {
+        options: {
+            calculateFacets: true
+        },_meta: {
             grow: true,
             clickToCopy: true,
             filterType: 'text',
