@@ -1,4 +1,3 @@
-import { sort } from "fast-sort";
 import { isGroupColumn } from "../helpers/column-guards";
 import type { DatagridCore } from "../index.svelte";
 import type { Aggregation, AggregationFn, FilterCondition, GridGroupRow, GridRow } from "../types";
@@ -6,9 +5,10 @@ import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.s
 import type { PerformanceMetrics } from "../helpers/performance-metrics.svelte";
 import type { AccessorColumn, ComputedColumn } from "../types";
 import { aggregationFunctions } from "../helpers/aggregation-functions";
+import { applySorting } from "./apply-sorting";
 
 export class DataDataProcessor<TOriginalRow> {
-    private readonly metrics: PerformanceMetrics;
+    readonly metrics: PerformanceMetrics;
     private customAggregationFns: Map<string, AggregationFn>;
 
     constructor(private readonly datagrid: DatagridCore<TOriginalRow>) {
@@ -31,7 +31,7 @@ export class DataDataProcessor<TOriginalRow> {
         } else {
             data = this.datagrid.cacheManager.filteredData;
         }
-        data = this.applySorting(data);
+        data = applySorting(this.datagrid, data);
 
         // Cache sorted or sortend and filtered results
         this.datagrid.cacheManager.sortedData = data;
@@ -117,33 +117,6 @@ export class DataDataProcessor<TOriginalRow> {
         })
 
         return this.datagrid.lifecycleHooks.executePostFilter(data);
-    }
-
-    applySorting(data: TOriginalRow[]): TOriginalRow[] {
-        data = this.datagrid.lifecycleHooks.executePreSort(data);
-
-        const isMnualSortingEnabled = this.datagrid.features.globalSearch.isManual
-        const noSorting = this.datagrid.features.sorting.sortConfigs.length === 0
-        if (isMnualSortingEnabled || noSorting) return data
-
-        const sortInstructions = this.datagrid.features.sorting.sortConfigs
-            .map(config => {
-                const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), config.columnId) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>);
-                if (!column || isGroupColumn(column) || !column.isSortable()) {
-                    return null;
-                }
-
-                const getValueFn = (row: TOriginalRow) => column.getValueFn(row);
-                return config.desc ? { desc: getValueFn } : { asc: getValueFn };
-            })
-            .filter(Boolean);
-
-        this.metrics.measure('Sorting', () => {
-            data = sort(data).by(sortInstructions as any);
-        });
-
-        return this.datagrid.lifecycleHooks.executePostSort(data);
-
     }
 
     processGroupedData(data: TOriginalRow[]): void {
@@ -335,7 +308,6 @@ export class DataDataProcessor<TOriginalRow> {
     }
 
     private createBasicRows(rows: TOriginalRow[], parentIndex?: string): GridRow<TOriginalRow>[] {
-
         return rows.map((row, i) => {
             const identifier = this.datagrid.config.createBasicRowIdentifier(row);
             return {
