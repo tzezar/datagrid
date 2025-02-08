@@ -14,8 +14,13 @@
 		<Group>
 			<GroupTitle title="Quick start" />
 			<GroupItem disabled title="Installation" href={''} />
-			<GroupItem disabled title="Getting started" href={''} />
+			<GroupItem title="Getting started" href={hrefs.headless.quickStart.gettingStarted} />
 		</Group>
+		<Group>
+			<GroupTitle title="Examples" />
+			<GroupItem title="Basic" href={hrefs.headless.examples.basic} />
+		</Group>
+
 
 		<GroupTitle
 			title="Enhanced"

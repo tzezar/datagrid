@@ -4,6 +4,15 @@
 export const hrefs = {
     default: "/",
 
+    headless: {
+        quickStart: {
+            gettingStarted: "/headless/quick-start/getting-started",
+        },
+        examples: {
+            basic: "/headless/examples/basic",
+        }
+    },
+
     enhanced: {
         interactiveDemo: "/enhanced/interactive-demo"
     }

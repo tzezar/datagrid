@@ -465,6 +465,12 @@ export type DatagridCoreConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> =
 
     initialState?: InitialState
 
+    config?: {
+        measurePerformance?: boolean
+        createBasicRowIdentifier?: (row: TOriginalRow) => string
+        createBasicRowIndex?: (row: TOriginalRow) => string
+    }
+
     features?: {
         sorting?: FeatureConstructor<SortingFeature>,
         pagination?: FeatureConstructor<PaginationFeature>,
