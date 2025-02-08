@@ -44,6 +44,7 @@ export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFea
     }
 
     selectRowById(identifier: GridRowIdentifier) {
+        this.datagrid.events.emit('onRowSelect', { rowIdentifier: identifier });
         if (this.selectionMode === 'single') {
             this.clearSelection();
             this.selectedRowIds.add(identifier);
@@ -52,12 +53,17 @@ export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFea
 
         if (this.selectedRowIds.has(identifier)) return; // Prevent re-adding
 
-        if (this.selectedRowIds.size >= this.maxSelectableRows) return; // Enforce max limit
-
+        if (this.selectedRowIds.size >= this.maxSelectableRows) {
+            // Enforce max limit
+            this.datagrid.events.emit('onRowSelectionLimitExceeded', { rowIdentifier: identifier });
+            return
+        }; 
+        
         this.selectedRowIds.add(identifier);
     }
 
     deselectRowById(identifier: GridRowIdentifier) {
+        this.datagrid.events.emit('onRowDeselect', { rowIdentifier: identifier });
         this.selectedRowIds.delete(identifier);
     }
 

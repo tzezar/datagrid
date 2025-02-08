@@ -8,7 +8,6 @@ export type ClickToCopyPluginConfig = {
 };
 
 export class ClickToCopyPlugin {
-
     /**
      * Displays the copy button, but only in valid cells
     */

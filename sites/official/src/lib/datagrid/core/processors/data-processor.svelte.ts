@@ -39,6 +39,7 @@ export class DataDataProcessor<TOriginalRow> {
         } else {
             data = this.datagrid.cacheManager.filteredData;
         }
+
         data = applySorting(this.datagrid, data);
 
         // Cache sorted or sortend and filtered results

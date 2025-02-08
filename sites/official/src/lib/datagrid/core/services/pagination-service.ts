@@ -29,10 +29,7 @@ export class PaginationService extends BaseService implements PaginationOperatio
     }
     goToPage(newPage: number) {
         this.datagrid.refresh(() => {
-            this.datagrid.features.pagination.page = Math.min(
-                Math.max(newPage, 1),
-                this.datagrid.features.pagination.pageCount
-            );
+            this.datagrid.features.pagination.goToPage(newPage);
         });
     }
 }

@@ -34,7 +34,7 @@
 	>
 		<button
 			class="flex w-full items-center justify-center gap-1 overflow-hidden"
-			onclick={() => datagrid.handlers.rows.toggleGroupRowExpansion(row)}
+			onclick={() => datagrid.handlers.rows.toggleGroupExpansion(row)}
 		>
 			<span class="border-primary/30 rounded-sm border-[1px]">
 				<ArrowRight

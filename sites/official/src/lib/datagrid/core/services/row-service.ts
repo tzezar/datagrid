@@ -9,14 +9,14 @@ export type RowOperations = {
     selectAllRows: () => void;
     deselectAllRows: () => void;
     toggleRowSelection: (rowIdentifier: GridRowIdentifier) => void;
-    
+
     // Row pinning
     pinRowToTop: (rowIdentifier: GridRowIdentifier) => void;
     pinRowToBottom: (rowIdentifier: GridRowIdentifier) => void;
     unpinRow: (rowIdentifier: GridRowIdentifier) => void;
-    
+
     toggleRowExpansion: (rowIdentifier: GridRowIdentifier) => void;
-    toggleGroupRowExpansion: (row: GridGroupRow<any>) => void
+    toggleGroupExpansion: (row: GridGroupRow<any>) => void
 
 }
 
@@ -47,39 +47,35 @@ export class RowService extends BaseService implements RowOperations {
 
 
     pinRowToTop(rowIdentifier: GridRowIdentifier) {
-        this.datagrid.features.rowPinning.pinRowTop(rowIdentifier);
+        this.datagrid.features.rowPinning.pinRow(rowIdentifier, 'top');
     }
     pinRowToBottom(rowIdentifier: GridRowIdentifier) {
-        this.datagrid.features.rowPinning.pinRowBottom(rowIdentifier);
+        this.datagrid.features.rowPinning.pinRow(rowIdentifier, 'bottom');
     }
     unpinRow(rowIdentifier: GridRowIdentifier) {
+        this.datagrid.events.emit('onRowUnpin', { rowIdentifier });
         this.datagrid.features.rowPinning.unpinRow(rowIdentifier);
     }
 
     toggleRowExpansion(rowIdentifier: GridRowIdentifier) {
         if (this.datagrid.features.rowExpanding.isRowExpanded(rowIdentifier)) {
-            this.datagrid.features.rowExpanding.toggleRowExpansion(rowIdentifier);
+            this.datagrid.features.rowExpanding.collapseRow(rowIdentifier);
             return
         }
 
         const maxExpandedRows = this.datagrid.features.rowExpanding.maxExpandedRows;
-        const isExpandingMoreThanMax = this.datagrid.features.rowExpanding.expandedRowIds.size >= maxExpandedRows;
+        const isExceedingLimit = this.datagrid.features.rowExpanding.expandedRowIds.size >= maxExpandedRows;
 
-        if (isExpandingMoreThanMax) {
-            // TODO
-            // this.datagrid.features.rowExpanding.onExceedMaxExpansion(this.datagrid.features.rowExpanding)
+        if (isExceedingLimit) {
             return
         }
 
         this.datagrid.features.rowExpanding.expandedRowIds.add(rowIdentifier);
     }
 
-    toggleGroupRowExpansion<TOriginalRow>(row: GridGroupRow<TOriginalRow>) {
-        if (row.isExpanded()) {
-            this.datagrid.features.grouping.expandedGroups.delete(row.identifier);
-        } else {
-            this.datagrid.features.grouping.expandedGroups.add(row.identifier);
-        }
+    toggleGroupExpansion<TOriginalRow>(row: GridGroupRow<TOriginalRow>) {
+        if (row.isExpanded()) this.datagrid.features.grouping.collapseGroup(row.identifier);
+        else this.datagrid.features.grouping.expandGroup(row.identifier);
 
         // Only invalidate the flattened view cache
         this.datagrid.cacheManager.invalidateGroupedRowsCache();

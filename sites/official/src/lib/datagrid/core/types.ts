@@ -493,10 +493,59 @@ export type CommandPayload = {
     payload: any;
 }
 
-export type GridEventCallback = (data: any) => void;
+export type GridEventCallback<T= any> = (data: T) => void;
+
+export type OnPageChangePayload = { prevPage: number; newPage: number };
+
+export type EventPayloadMap = {
+    'onColumnSort': { column: LeafColumn<any>, multisort?: boolean };
+    
+    'onRowPin': { rowId: GridRowIdentifier };
+    'onRowUnpin': { rowIdentifier: GridRowIdentifier };
+
+    'onRowSelect': { rowIdentifier: GridRowIdentifier };
+    'onRowDeselect': { rowIdentifier: GridRowIdentifier };
+    'onRowSelectionLimitExceeded': { rowIdentifier: GridRowIdentifier };
+
+    'onRowExpand': { rowIdentifier: GridRowIdentifier };
+    'onRowCollapse': { rowIdentifier: GridRowIdentifier };
+    'onRowExpansionLimitExceeded': { rowIdentifier: GridRowIdentifier };
+
+    'onPageChange': OnPageChangePayload;
+    'onPageSizeChange': { prevSize: number, pageSize: number };
+
+    'onGroupExpand': { groupIdentifier: GridGroupRowIdentifier };
+    'onGroupCollapse': { groupIdentifier: GridGroupRowIdentifier };
+    'onGroupExpansionLimitExceeded': { maxExpandedGroups: number };
+
+};
+
 
 export type GridEventType = 
-    | 'toggleSort' 
+    | 'onColumnSort'
+
+    | 'onRowPin'
+    | 'onRowUnpin'
+
+    | 'onRowExpand'
+    | 'onRowCollapse'
+    | 'onRowExpansionLimitExceeded'
+
+    | 'onGroupExpand'
+    | 'onGroupCollapse'
+    | 'onGroupExpansionLimitExceeded'
+
+    | 'onRowDeselect'
+    | 'onRowSelect'
+    | 'onRowSelectionLimitExceeded'
+
+    | 'onPageChange'
+    | 'onPageSizeChange'
+    
+
+
+    | 'beforeRender'
+
     // | 'afterSort'
     // | 'beforeFilter' 
     // | 'afterFilter'

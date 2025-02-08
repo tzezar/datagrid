@@ -29,16 +29,27 @@ export class RowExpansionFeature<TOriginalRow = any> implements IRowExpandingFea
         Object.assign(this, config);
     }
 
+    expandRow(identifier: GridRowIdentifier) {
+        if (this.expandedRowIds.size >= this.maxExpandedRows) {
+            // Enforce max limit
+            this.datagrid.events.emit('onRowExpansionLimitExceeded', { rowIdentifier: identifier });
+            
+            return
+        }
+        this.datagrid.events.emit('onRowExpand', { rowIdentifier: identifier });
+        this.expandedRowIds.add(identifier);
+    }
+
+    collapseRow(identifier: GridRowIdentifier) {
+        this.datagrid.events.emit('onRowCollapse', { rowIdentifier: identifier });
+        this.expandedRowIds.delete(identifier);
+    }
+
     toggleRowExpansion(identifier: GridRowIdentifier) {
-        // If the row is already expanded, collapse it, otherwise expand it
-        if (this.expandedRowIds.has(identifier)) {
-            this.expandedRowIds.delete(identifier); // Collapse the row
+        if (this.isRowExpanded(identifier)) {
+            this.collapseRow(identifier);
         } else {
-            if (this.expandedRowIds.size >= this.maxExpandedRows) {
-                // Enforce max limit
-                return
-            }
-            this.expandedRowIds.add(identifier); // Expand the row
+            this.expandRow(identifier);
         }
     }
 

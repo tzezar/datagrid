@@ -56,32 +56,45 @@ export class PaginationFeature<TOriginalRow = any> implements IRowPinningFeature
         return this.page === this.pageCount;
     }
 
-    goToPage(page: number): void {
-        if (page === this.page) return; // No action if already on the specified page
-        this.page = page;
+    goToPage(newPage: number): void {
+        if (newPage === this.page) return; // No action if already on the specified page
+        this.datagrid.events.emit('onPageChange', { prevPage: this.page, newPage: newPage });
+        this.page = Math.min(
+            Math.max(newPage, 1),
+            this.datagrid.features.pagination.pageCount
+        );
     }
 
     goToNextPage(): void {
         if (this.canGoToNextPage()) return;
-        this.goToPage(this.page + 1);
+        const newPage = this.page + 1;
+        this.datagrid.events.emit('onPageChange', { prevPage: this.page, newPage });
+        this.goToPage(newPage);
     }
 
     goToPrevPage(): void {
         if (this.canGoToPrevPage()) return;
-        this.goToPage(this.page - 1);
+        const newPage = this.page - 1;
+        this.datagrid.events.emit('onPageChange', { prevPage: this.page, newPage });
+        this.goToPage(newPage);
     }
 
 
     goToFirstPage(): void {
-        this.goToPage(1);
+        const firstPage = 1;
+        this.datagrid.events.emit('onPageChange', { prevPage: this.page, newPage: firstPage });
+        this.goToPage(firstPage);
     }
 
     goToLastPage(): void {
-        this.goToPage(this.pageCount);
+        const lastPage = this.pageCount;
+        this.datagrid.events.emit('onPageChange', { prevPage: this.page, newPage: lastPage });
+        this.goToPage(lastPage);
     }
 
     goToClosestPage(): void {
         const closestPage = Math.min(this.page, this.pageCount); // Ensure the page is within valid bounds
+        this.datagrid.events.emit('onPageChange', { prevPage: this.page, newPage: closestPage });
         this.goToPage(closestPage);
     }
 
@@ -91,6 +104,7 @@ export class PaginationFeature<TOriginalRow = any> implements IRowPinningFeature
     }
 
     setPageSize(newSize: number): void {
+        this.datagrid.events.emit('onPageSizeChange', { prevSize: this.pageSize, pageSize: newSize });
         if (newSize === this.pageSize) return; // No action if the page size is the same
         this.pageSize = newSize;
         this.pageCount = this.getPageCount(this.datagrid.cacheManager.rows || []);

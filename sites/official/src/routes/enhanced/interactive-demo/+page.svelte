@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Sorting } from '$lib/datagrid/core/types';
+	import type { OnPageChangePayload, Sorting } from '$lib/datagrid/core/types';
 
 	import { columns } from './columns.svelte';
 	import * as Grid from '$lib/datagrid-enhanced';
@@ -26,8 +26,8 @@
 		}
 	});
 
-	datagrid.events.on('toggleSort', (data) => {
-		console.log('About to sort column:', data.column.columnId);
+	datagrid.events.on('onPageChange', (data) => {
+		console.log(data.prevPage); // This will be strongly typed based on the `OnPageChangePayload` type
 	});
 </script>
 

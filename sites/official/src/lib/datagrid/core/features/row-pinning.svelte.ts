@@ -148,7 +148,14 @@ export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature
         return this.pinnedBottomRowsCache;
     }
 
-    pinRowTop(rowIdentifier: GridRowIdentifier) {
+    pinRow(rowId: GridRowIdentifier, position: RowPinningPosition) {
+        this.datagrid.events.emit('onRowPin', { rowId });
+
+        if (position === 'top') this.pinRowTop(rowId);
+        else if (position === 'bottom') this.pinRowBottom(rowId);
+    }
+
+    private pinRowTop(rowIdentifier: GridRowIdentifier) {
         let row = this.datagrid.rows.findRowById(rowIdentifier);
 
         if (!row) return;
@@ -171,7 +178,8 @@ export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 
-    pinRowBottom(rowIdentifier: GridRowIdentifier) {
+    private pinRowBottom(rowIdentifier: GridRowIdentifier) {
+
         const row = this.datagrid.rows.findRowById(rowIdentifier);
 
         if (!row) return;
@@ -193,6 +201,7 @@ export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature
     }
 
     unpinRow(rowIdentifier: GridRowIdentifier) {
+        this.datagrid.events.emit('onRowUnpin', { rowIdentifier });
         const row = this.datagrid.rows.findRowById(rowIdentifier);
         if (!row) return;
 
