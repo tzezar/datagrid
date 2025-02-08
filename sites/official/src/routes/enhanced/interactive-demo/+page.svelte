@@ -24,10 +24,6 @@
 		features: {
 			sorting: CustomSortingFeature
 		},
-		initialState: {
-			globalSearch: {
-			}
-		}
 	});
 
 	datagrid.events.on('toggleSort', (data) => {

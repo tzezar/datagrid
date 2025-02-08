@@ -1,8 +1,6 @@
-import type { AnyColumn, GridGroupRow, GridRow, GridRowIdentifier, GroupColumn } from "./types";
+import type { AnyColumn, GridGroupRow, GroupColumn } from "./types";
 import type { CellValue, ColumnId, CustomCellComponentWithProps, SortableColumn } from "./types";
 import type { DatagridCore } from "./index.svelte";
-import { isGroupColumn } from "./helpers/column-guards";
-
 
 export function generateRandomColumnId(): string {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
