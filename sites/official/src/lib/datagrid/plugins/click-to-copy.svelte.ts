@@ -12,7 +12,7 @@ export class ClickToCopyPlugin {
     /**
      * Displays the copy button, but only in valid cells
     */
-    display: boolean = $state(true);
+    display: boolean = $state(false);
     
     onClickToCopy: (value: string | number) => void = () => { };
 
