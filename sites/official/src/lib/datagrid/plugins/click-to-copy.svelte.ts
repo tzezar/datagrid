@@ -1,4 +1,4 @@
-import type { AccessorColumn, AnyColumn, CellValue, ComputedColumn } from "$lib/datagrid/core/types";
+import type { AccessorColumn, ColumnDef, CellValue, ComputedColumn } from "$lib/datagrid/core/types";
 import { getCellContent } from "$lib/datagrid/core/utils.svelte";
 import type { ColumnMetaEnhanced } from "../../datagrid-enhanced/core/types";
 
@@ -26,7 +26,7 @@ export class ClickToCopyPlugin {
         return true
     }
 
-    isValidColumn(column: AnyColumn<any>): column is AccessorColumn<any> | ComputedColumn<any> {
+    isValidColumn(column: ColumnDef<any>): column is AccessorColumn<any> | ComputedColumn<any> {
         return column.type === 'accessor' || column.type === 'computed';
     }
 

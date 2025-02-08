@@ -1,11 +1,11 @@
-import { type AnyColumn, type GroupColumn } from "../types";
+import { type ColumnDef, type GroupColumn } from "../types";
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 
 export type ColumnMovementDirection = 'left' | 'right';
 
 export interface MoveOperation {
-    sourceColumn: AnyColumn<any>;
+    sourceColumn: ColumnDef<any>;
     targetLocation: {
         parentId: ColumnId | null;
         index: number;
@@ -37,7 +37,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
     //     this.moveColumn(columnId, 'right');
     // }
 
-    private getColumnIndex(columns: AnyColumn<TOriginalRow>[], columnId: ColumnId): number {
+    private getColumnIndex(columns: ColumnDef<TOriginalRow>[], columnId: ColumnId): number {
         const index = columns.findIndex(col => col.columnId === columnId);
         if (index === -1) {
             throw new Error(`Column ${columnId} not found in columns array`);
@@ -55,7 +55,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
         this.refreshColumnState();
     }
 
-    findColumnOrThrow(columnId: ColumnId): AnyColumn<TOriginalRow> {
+    findColumnOrThrow(columnId: ColumnId): ColumnDef<TOriginalRow> {
         const column = this.datagrid.columns.findColumnById(columnId);
         if (!column) {
             throw new Error(`Column ${columnId} not found`);
@@ -64,14 +64,14 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
     }
 
 
-    private calculateMoveOperation(column: AnyColumn<TOriginalRow>, direction: ColumnMovementDirection): MoveOperation {
+    private calculateMoveOperation(column: ColumnDef<TOriginalRow>, direction: ColumnMovementDirection): MoveOperation {
         const isRoot = column.parentColumnId === null;
         return isRoot
             ? this.calculateRootLevelMove(column, direction)
             : this.calculateGroupLevelMove(column, direction);
     }
 
-    private calculateRootLevelMove(column: AnyColumn<TOriginalRow>, direction: ColumnMovementDirection): MoveOperation {
+    private calculateRootLevelMove(column: ColumnDef<TOriginalRow>, direction: ColumnMovementDirection): MoveOperation {
         const currentIndex = this.getColumnIndex(this.datagrid._columns, column.columnId);
         const targetIndex = direction === 'right' ? currentIndex + 1 : currentIndex - 1;
 
@@ -101,7 +101,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
     }
 
 
-    private calculateGroupLevelMove(column: AnyColumn<TOriginalRow>, direction: ColumnMovementDirection): MoveOperation {
+    private calculateGroupLevelMove(column: ColumnDef<TOriginalRow>, direction: ColumnMovementDirection): MoveOperation {
         const parentGroup = this.findParentGroupOrThrow(column.parentColumnId as string);
         const currentIndex = this.getColumnIndex(parentGroup.columns, column.columnId);
         const targetIndex = direction === 'right' ? currentIndex + 1 : currentIndex - 1;
@@ -136,7 +136,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
 
 
     private calculateGroupExitMove(
-        column: AnyColumn<TOriginalRow>,
+        column: ColumnDef<TOriginalRow>,
         currentGroup: GroupColumn<TOriginalRow>,
         direction: ColumnMovementDirection
     ): MoveOperation {
@@ -270,7 +270,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
     }
 
 
-    private moveToRoot(column: AnyColumn<TOriginalRow>): void {
+    private moveToRoot(column: ColumnDef<TOriginalRow>): void {
         const moveOperation: MoveOperation = {
             sourceColumn: column,
             targetLocation: {

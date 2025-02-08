@@ -2,7 +2,7 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import type { EnhancedDatagrid } from '../../core/index.svelte';
 	import StabilizationLock from '$lib/datagrid/icons/material-symbols/stabilization-lock.svelte';
-	import type { AnyColumn, PinningPosition } from '$lib/datagrid/core/types';
+	import type { ColumnDef, PinningPosition } from '$lib/datagrid/core/types';
 	import * as Select from '$lib/components/ui/select/index.js';
 
 	type Props = {
@@ -13,7 +13,7 @@
 
 	const leafColumns = datagrid.columns.getLeafColumns();
 
-	function handleColumnPinningChange(column: AnyColumn<any>, position: PinningPosition) {
+	function handleColumnPinningChange(column: ColumnDef<any>, position: PinningPosition) {
 		datagrid.handlers.column.changeColumnPinningPosition(column.columnId, position);
 	}
 

@@ -1,5 +1,5 @@
 
-import { type AnyColumn } from "$lib/datagrid/core/types";
+import { type ColumnDef } from "$lib/datagrid/core/types";
 import { accessorColumn, computedColumn } from "$lib/datagrid/core/column-creation";
 import type { InventoryItem } from "$lib/data-generators/generate/inventory";
 import { cn } from "$lib/utils";
@@ -117,4 +117,4 @@ export const columns = [
 
     }),
 
-] satisfies AnyColumn<InventoryItem, ColumnMetaEnhanced<InventoryItem>>[]
+] satisfies ColumnDef<InventoryItem, ColumnMetaEnhanced<InventoryItem>>[]

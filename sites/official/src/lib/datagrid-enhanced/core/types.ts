@@ -1,4 +1,4 @@
-import type { AnyColumn, GridRow } from "$lib/datagrid/core/types";
+import type { ColumnDef, GridRow } from "$lib/datagrid/core/types";
 import type { EnhancedDatagrid } from "./index.svelte";
 
 export type ColumnMetaEnhanced<TOriginalRow = any> = {
@@ -11,8 +11,8 @@ export type ColumnMetaEnhanced<TOriginalRow = any> = {
     clickToCopy?: boolean;
     tooltip?: boolean;
     styles?: {
-        bodyCell?: ((props: { datagrid: EnhancedDatagrid, column: AnyColumn<TOriginalRow>, row: GridRow<TOriginalRow> }) => string);
-        headerCell?: ((props: { datagrid: EnhancedDatagrid, column: AnyColumn<TOriginalRow> }) => string);
+        bodyCell?: ((props: { datagrid: EnhancedDatagrid, column: ColumnDef<TOriginalRow>, row: GridRow<TOriginalRow> }) => string);
+        headerCell?: ((props: { datagrid: EnhancedDatagrid, column: ColumnDef<TOriginalRow> }) => string);
     },
     // calculateFacets?: boolean
 }

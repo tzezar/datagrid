@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { AnyColumn, GroupColumn } from '$lib/datagrid/core/types';
+	import type { ColumnDef, GroupColumn } from '$lib/datagrid/core/types';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 	import type { Snippet } from 'svelte';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
@@ -7,7 +7,7 @@
 
 	type Props = {
 		datagrid: DatagridCore<any>;
-		column: AnyColumn<any>;
+		column: ColumnDef<any>;
 		groupCell: Snippet<[column: GroupColumn<any>]>;
 		cell: Snippet<[column: LeafColumn<any>]>;
 	};

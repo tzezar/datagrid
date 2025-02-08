@@ -103,7 +103,7 @@
 			</div>
 
 			<!-- Main Content -->
-			<div class="min-h-0 flex-1 p-4 py-6 pb-24 lg:p-8">
+			<div class="min-h-0 flex-1 p-4 py-4  lg:p-4 flex flex-col gap-4">
 				{@render children()}
 			</div>
 			<!-- FOOTER -->

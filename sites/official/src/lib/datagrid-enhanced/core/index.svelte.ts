@@ -1,4 +1,4 @@
-import type { AnyColumn, ColumnId, DatagridCoreConfig } from "$lib/datagrid/core/types";
+import type { ColumnDef, ColumnId, DatagridCoreConfig } from "$lib/datagrid/core/types";
 import { LifecycleHooks } from "$lib/datagrid/core/managers/lifecycle-hooks-manager.svelte";
 
 import {
@@ -94,7 +94,7 @@ export type EnhancedDatagridExtraStateConfig = {
 
 
 
-function transformColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+function transformColumns(columns: ColumnDef<any>[]): ColumnDef<any>[] {
     const newCols = columns.map(col => {
         return {
             ...col,
@@ -109,8 +109,8 @@ function transformColumns(columns: AnyColumn<any>[]): AnyColumn<any>[] {
 }
 
 
-function updateColumnPinningOffsets(columns: AnyColumn<any>[]) {
-    function calculateOffset(columns: AnyColumn<any>[], columnId: ColumnId, position: 'left' | 'right' | null): number {
+function updateColumnPinningOffsets(columns: ColumnDef<any>[]) {
+    function calculateOffset(columns: ColumnDef<any>[], columnId: ColumnId, position: 'left' | 'right' | null): number {
         if (position === null) return -1; // No offset for unpinned columns
 
         // Get all visible columns pinned to the specified position
@@ -140,7 +140,7 @@ function updateColumnPinningOffsets(columns: AnyColumn<any>[]) {
         }
     }
 
-    const newColumns: AnyColumn<any>[] = [];
+    const newColumns: ColumnDef<any>[] = [];
     for (let i = 0; i < columns.length; i++) {
         const col = columns[i];
         if (col.state.pinning.position === 'none') {
@@ -155,8 +155,8 @@ function updateColumnPinningOffsets(columns: AnyColumn<any>[]) {
 }
 
 const createAdditionalColumns = (datagrid: EnhancedDatagrid): {
-    leftCols: AnyColumn<any>[];
-    rightCols: AnyColumn<any>[];
+    leftCols: ColumnDef<any>[];
+    rightCols: ColumnDef<any>[];
 } => {
     const createColumn = (
         position: 'left' | 'right',
@@ -181,8 +181,8 @@ const createAdditionalColumns = (datagrid: EnhancedDatagrid): {
         }),
     });
 
-    const leftCols: AnyColumn<any>[] = [];
-    const rightCols: AnyColumn<any>[] = [];
+    const leftCols: ColumnDef<any>[] = [];
+    const rightCols: ColumnDef<any>[] = [];
     const { rowSelection, rowExpanding } = datagrid.extra.features;
 
 
@@ -235,16 +235,16 @@ export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends DatagridC
         // * It might be better to place this logic into datagrid component itselt, it might allow easier styling
         this.lifecycleHooks.register(
             LifecycleHooks.HOOKS.PRE_PROCESS_ORIGINAL_COLUMNS,
-            (columns: AnyColumn<TOriginalRow>[]) => this.processColumnsWithExtras(columns)
+            (columns: ColumnDef<TOriginalRow>[]) => this.processColumnsWithExtras(columns)
         );
 
         this.lifecycleHooks.register(
             LifecycleHooks.HOOKS.PRE_PROCESS_COLUMNS,
-            (columns: AnyColumn<TOriginalRow>[]) => this.processColumns(columns)
+            (columns: ColumnDef<TOriginalRow>[]) => this.processColumns(columns)
         );
     }
 
-    private processColumnsWithExtras(columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
+    private processColumnsWithExtras(columns: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[] {
         const flattenedColumns = this.columns.flattenColumnStructure([...columns], false);
         const additionalColumns = createAdditionalColumns(this);
         const allColumns = [
@@ -255,12 +255,12 @@ export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends DatagridC
         return this.createHierarchicalColumns(allColumns);
     }
 
-    private processColumns(columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
+    private processColumns(columns: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[] {
         const flattenedColumns = this.columns.flattenColumnStructure([...columns], false);
         return this.createHierarchicalColumns(flattenedColumns);
     }
 
-    private createHierarchicalColumns(columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
+    private createHierarchicalColumns(columns: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[] {
         let transformedColumns = transformColumns(columns);
         transformedColumns = updateColumnPinningOffsets(transformedColumns);
         return this.processors.column.createColumnHierarchy(transformedColumns);

@@ -1,4 +1,4 @@
-import type { FormatterFn, AggregationConfig, GetGroupValue, CustomCell, HeaderCell, ColumnId, CellValue, ColumnSizeState, ColumnPinningState, AnyColumn, ParentColumnId, AggregatedCell, GroupedCell, ColumnAlign } from "../types";
+import type { FormatterFn, AggregationConfig, GetGroupValue, CustomCell, HeaderCell, ColumnId, CellValue, ColumnSizeState, ColumnPinningState, ColumnDef, ParentColumnId, AggregatedCell, GroupedCell, ColumnAlign } from "../types";
 
 type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
 export type DotNestedKeys<T> = (T extends object ? {
@@ -81,7 +81,7 @@ export type CreateDisplayColumnProps<TOriginalRow, TMeta> = {
 export type CreateGroupColumnProps<TOriginalRow, TMeta> = {
   header: string;
   headerCell?: HeaderCell;
-  columns: AnyColumn<TOriginalRow>[];
+  columns: ColumnDef<TOriginalRow>[];
 } & CommonColumnCreationProps<TMeta>
 
 

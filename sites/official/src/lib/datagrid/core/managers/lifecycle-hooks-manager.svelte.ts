@@ -1,4 +1,4 @@
-import type { AnyColumn } from "../types";
+import type { ColumnDef } from "../types";
 
 export type HookFunction<T = any> = (...args: any[]) => T;
 
@@ -68,19 +68,19 @@ export class LifecycleHooks<TRow> {
      * Convenience methods for common hooks
      */
     
-    executePreProcessOriginalColumns(columns: AnyColumn<TRow>[]): AnyColumn<TRow>[] {
+    executePreProcessOriginalColumns(columns: ColumnDef<TRow>[]): ColumnDef<TRow>[] {
         return this.execute(LifecycleHooks.HOOKS.PRE_PROCESS_ORIGINAL_COLUMNS, columns);
     }
 
-    executePostProcessOriginalColumns(columns: AnyColumn<TRow>[]): AnyColumn<TRow>[] {
+    executePostProcessOriginalColumns(columns: ColumnDef<TRow>[]): ColumnDef<TRow>[] {
         return this.execute(LifecycleHooks.HOOKS.POST_PROCESS_ORIGINAL_COLUMNS, columns);
     }
 
-    executePreProcessColumns(columns: AnyColumn<TRow>[]): AnyColumn<TRow>[] {
+    executePreProcessColumns(columns: ColumnDef<TRow>[]): ColumnDef<TRow>[] {
         return this.execute(LifecycleHooks.HOOKS.PRE_PROCESS_COLUMNS, columns);
     }
 
-    executePostProcessColumns(columns: AnyColumn<TRow>[]): AnyColumn<TRow>[] {
+    executePostProcessColumns(columns: ColumnDef<TRow>[]): ColumnDef<TRow>[] {
         return this.execute(LifecycleHooks.HOOKS.POST_PROCESS_COLUMNS, columns);
     }
 

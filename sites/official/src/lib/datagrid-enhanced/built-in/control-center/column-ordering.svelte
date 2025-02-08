@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { AnyColumn } from '$lib/datagrid/core/types';
+	import type { ColumnDef } from '$lib/datagrid/core/types';
 	import type { EnhancedDatagrid } from '../../core/index.svelte';
 	import DeleteOutline from '$lib/datagrid/icons/material-symbols/delete-outline.svelte';
 	import ColumnGrouping from './column-grouping.svelte';
@@ -7,7 +7,7 @@
 
 	type Props = {
 		datagrid: EnhancedDatagrid<any>;
-		columns: AnyColumn<any>[];
+		columns: ColumnDef<any>[];
 		depth: number;
 	};
 

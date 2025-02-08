@@ -17,7 +17,7 @@
 	import ArrowMoveRight from '$lib/datagrid/icons/tabler/arrow-move-right.svelte';
 	import MoveUp from '$lib/datagrid/icons/material-symbols/move-up.svelte';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
-	import type { AnyColumn } from '$lib/datagrid/core/types';
+	import type { ColumnDef } from '$lib/datagrid/core/types';
 	import { selectFilterOperators, stringFilterOperators } from '$lib/datagrid/core/constants';
 	import { numberFilterOperators } from '$lib/datagrid/core/constants';
 	import Equals from '$lib/datagrid/icons/filter-operators/equals.svelte';
@@ -167,7 +167,7 @@
 	let {
 		datagrid,
 		column
-	}: { datagrid: EnhancedDatagrid<any>; column: AnyColumn<any, ColumnMetaEnhanced> } = $props();
+	}: { datagrid: EnhancedDatagrid<any>; column: ColumnDef<any, ColumnMetaEnhanced> } = $props();
 </script>
 
 {#snippet FilterOperator(

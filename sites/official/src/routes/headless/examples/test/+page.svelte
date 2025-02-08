@@ -1,12 +1,12 @@
 <script lang="ts">
-	import BasicDatagrid from '../_components/datagrids/basic/basic-datagrid.svelte';
+	import TestDatagrid from '../_components/datagrids/test/test-datagrid.svelte';
 
 	let { data } = $props();
 </script>
 
 
 <h2>Basic datagrid implementation</h2>
-<BasicDatagrid {data} />
+<TestDatagrid {data} />
 
 <div class="prose w-full min-w-full">
 	<!-- <Readme /> -->

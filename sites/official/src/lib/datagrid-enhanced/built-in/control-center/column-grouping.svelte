@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { AnyColumn, GroupColumn } from "$lib/datagrid/core/types";
+	import type { ColumnDef, GroupColumn } from "$lib/datagrid/core/types";
 	import {  isColumnInGroupTree } from "$lib/datagrid/core/utils.svelte";
 	import MoveDown from "$lib/datagrid/icons/material-symbols/move-down.svelte";
 	import MoveUp from "$lib/datagrid/icons/material-symbols/move-up.svelte";
@@ -8,7 +8,7 @@
 
     type Props = {
         datagrid: EnhancedDatagrid<any>;
-        column: AnyColumn<any>;
+        column: ColumnDef<any>;
     }
 
     let { datagrid, column }: Props = $props();

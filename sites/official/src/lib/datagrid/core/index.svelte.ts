@@ -1,4 +1,4 @@
-import type { AnyColumn, ColumnId, DatagridCoreConfig, GridRow, GridRowIdentifier, GroupColumn, LeafColumn } from "./types";
+import type { ColumnDef, ColumnId, DatagridCoreConfig, GridBasicRow, GridRow, GridRowIdentifier, GroupColumn, LeafColumn } from "./types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager } from "./managers";
@@ -17,11 +17,11 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
     gridIdentifier = $state('tzezars-datagrid')
 
     originalState = $state.raw({
-        columns: [] as AnyColumn<TOriginalRow, TMeta>[],
+        columns: [] as ColumnDef<TOriginalRow, TMeta>[],
         data: [] as TOriginalRow[]
     });
 
-    _columns: AnyColumn<TOriginalRow, TMeta>[] = $state([]);
+    _columns: ColumnDef<TOriginalRow, TMeta>[] = $state([]);
 
     columns: Columns<TOriginalRow> = new Columns(this);
     rows: Rows<TOriginalRow> = new Rows(this);
@@ -73,7 +73,7 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
         this.processors.data.executeFullDataTransformation();
     }
 
-    private initializeSourceColumns(columns: AnyColumn<TOriginalRow>[]) {
+    private initializeSourceColumns(columns: ColumnDef<TOriginalRow>[]) {
         // * Parent column Ids must be assigned before the columns are processed to ensure correct grouping
         columns = this.lifecycleHooks.executePreProcessOriginalColumns(this.processors.column.assignParentColumnIds(columns));
         this.originalState.columns = columns;
@@ -137,6 +137,11 @@ type IRows<TOriginalRow> = {
 class Rows<TOriginalRow> implements IRows<TOriginalRow> {
     constructor(private readonly datagrid: DatagridCore<TOriginalRow>) { }
 
+
+    getVisibleBasicRows(): GridBasicRow<TOriginalRow>[] {
+        return this.datagrid.cacheManager.rows.filter(row => !row.isGroupRow()) as GridBasicRow<TOriginalRow>[] || [] as GridBasicRow<TOriginalRow>[]
+    }
+
     getVisibleRows(): GridRow<TOriginalRow>[] {
         const topRows = this.datagrid.features.rowPinning.getTopRows();
         const bottomRows = this.datagrid.features.rowPinning.getBottomRows();
@@ -170,11 +175,11 @@ class Rows<TOriginalRow> implements IRows<TOriginalRow> {
 type IColumns<TOriginalRow> = {
     getLeafColumns: () => LeafColumn<TOriginalRow>[];
     getLeafColumnsInOrder: () => LeafColumn<TOriginalRow>[];
-    getColumnsInOrder: () => AnyColumn<TOriginalRow>[];
+    getColumnsInOrder: () => ColumnDef<TOriginalRow>[];
     getGroupColumns: () => GroupColumn<TOriginalRow>[]
-    getFlattenedColumnStructure: (preserveGroups: boolean) => AnyColumn<TOriginalRow>[]
-    flattenColumnStructure: (columns: AnyColumn<TOriginalRow>[], preserveGroups: boolean) => AnyColumn<TOriginalRow>[]
-    findColumnById: (columnId: ColumnId) => AnyColumn<TOriginalRow> | null
+    getFlattenedColumnStructure: (preserveGroups: boolean) => ColumnDef<TOriginalRow>[]
+    flattenColumnStructure: (columns: ColumnDef<TOriginalRow>[], preserveGroups: boolean) => ColumnDef<TOriginalRow>[]
+    findColumnById: (columnId: ColumnId) => ColumnDef<TOriginalRow> | null
 }
 
 class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
@@ -187,7 +192,7 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
      * 
      * @returns An array of all columns.
      */
-    getColumns(): AnyColumn<TOriginalRow>[] {
+    getColumns(): ColumnDef<TOriginalRow>[] {
         return this.datagrid._columns;
     }
 
@@ -223,7 +228,7 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
      * 
      * @returns An array of columns ordered by their pinning position.
      */
-    getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
+    getColumnsInOrder(): ColumnDef<TOriginalRow>[] {
         const { activeGroups: groupByColumns } = this.datagrid.features.grouping;
 
         const columns = this.flattenColumnStructure(this.datagrid._columns, false).reduce(
@@ -238,7 +243,7 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
                 }
                 return acc;
             },
-            { left: [], right: [], none: [] } as Record<'left' | 'right' | 'none', AnyColumn<TOriginalRow>[]>
+            { left: [], right: [], none: [] } as Record<'left' | 'right' | 'none', ColumnDef<TOriginalRow>[]>
         );
 
         return [
@@ -265,7 +270,7 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
      * @param preserveGroups Whether to preserve group columns in the structure.
      * @returns An array of columns, possibly with group columns preserved.
      */
-    getFlattenedColumnStructure(preserveGroups: boolean = true): AnyColumn<TOriginalRow>[] {
+    getFlattenedColumnStructure(preserveGroups: boolean = true): ColumnDef<TOriginalRow>[] {
         return this.flattenColumnStructure(this.datagrid._columns, preserveGroups);
     }
 
@@ -278,12 +283,12 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
      * @returns A flattened array of columns.
      */
     flattenColumnStructure(
-        columns: AnyColumn<TOriginalRow>[],
+        columns: ColumnDef<TOriginalRow>[],
         preserveGroups: boolean = false
-    ): AnyColumn<TOriginalRow>[] {
-        const flattened: AnyColumn<TOriginalRow>[] = [];
+    ): ColumnDef<TOriginalRow>[] {
+        const flattened: ColumnDef<TOriginalRow>[] = [];
 
-        const processColumns = (columns: AnyColumn<any>[], result: AnyColumn<any>[]) => {
+        const processColumns = (columns: ColumnDef<any>[], result: ColumnDef<any>[]) => {
             for (let i = 0; i < columns.length; i++) {
                 const column = columns[i];
                 if (column.type === 'group') {
@@ -305,7 +310,7 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
      * @param columnId The unique identifier of the column.
      * @returns The column if found, otherwise null.
      */
-    findColumnById(columnId: ColumnId): AnyColumn<TOriginalRow> | null {
+    findColumnById(columnId: ColumnId): ColumnDef<TOriginalRow> | null {
         return this.flattenColumnStructure(this.datagrid._columns).find((col) => col.columnId === columnId) ?? null;
     }
 
@@ -326,7 +331,7 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
      * @returns The column if found.
      * @throws Error if the column is not found.
      */
-    findColumnByIdOrThrow(columnId: ColumnId): AnyColumn<TOriginalRow> {
+    findColumnByIdOrThrow(columnId: ColumnId): ColumnDef<TOriginalRow> {
         const column = this.findColumnById(columnId);
         if (!column) throw new Error(`Column ${columnId} not found`);
         return column;

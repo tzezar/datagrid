@@ -1,5 +1,5 @@
 import { isGroupColumn } from "../helpers/column-guards";
-import type { AnyColumn, GroupColumn } from "../types";
+import type { ColumnDef, GroupColumn } from "../types";
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 
@@ -10,7 +10,7 @@ export class ColumnProcessor<TOriginalRow> {
         this.datagrid = datagrid;
     }
 
-    initializeColumns = (columns: AnyColumn<any>[]): AnyColumn<any>[] => {
+    initializeColumns = (columns: ColumnDef<any>[]): ColumnDef<any>[] => {
         columns = this.datagrid.lifecycleHooks.executePreProcessColumns(columns);
 
         columns = this.placeGroupColumnsInFront(columns);
@@ -27,7 +27,7 @@ export class ColumnProcessor<TOriginalRow> {
         return columns
     };
 
-    assignParentColumnIds(columns: AnyColumn<TOriginalRow>[], parentColumnId: ColumnId | null = null) {
+    assignParentColumnIds(columns: ColumnDef<TOriginalRow>[], parentColumnId: ColumnId | null = null) {
         columns.forEach(column => {
             if (isGroupColumn(column)) {
                 const groupColumn = column as GroupColumn<TOriginalRow>;
@@ -38,10 +38,10 @@ export class ColumnProcessor<TOriginalRow> {
         return columns;
     }
 
-    placeGroupColumnsInFront = (columns: AnyColumn<any>[]): AnyColumn<any>[] => {
+    placeGroupColumnsInFront = (columns: ColumnDef<any>[]): ColumnDef<any>[] => {
         const groupByColumns = this.datagrid.features.grouping.activeGroups ;
-        const groupedColumns: AnyColumn<TOriginalRow>[] = [];
-        const nonGroupedColumns: AnyColumn<TOriginalRow>[] = [];
+        const groupedColumns: ColumnDef<TOriginalRow>[] = [];
+        const nonGroupedColumns: ColumnDef<TOriginalRow>[] = [];
         columns.forEach((column) => {
             if (groupByColumns.includes(column.columnId)) {
                 groupedColumns.push(column);
@@ -54,10 +54,10 @@ export class ColumnProcessor<TOriginalRow> {
         return [...groupedColumns, ...nonGroupedColumns];
     }
 
-    refreshColumnPinningOffsets(columns?: AnyColumn<any>[]) {
+    refreshColumnPinningOffsets(columns?: ColumnDef<any>[]) {
         if (!columns) columns = this.datagrid.columns.getFlattenedColumnStructure();
 
-        const newColumns: AnyColumn<any>[] = [];
+        const newColumns: ColumnDef<any>[] = [];
         for (let i = 0; i < columns.length; i++) {
             const col = columns[i];
             if (col.state.pinning.position === 'none') {
@@ -77,8 +77,8 @@ export class ColumnProcessor<TOriginalRow> {
 
 
 
-    createColumnHierarchy<TOriginalRow>(partialFlatColumns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
-        const results: AnyColumn<TOriginalRow>[] = [];
+    createColumnHierarchy<TOriginalRow>(partialFlatColumns: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[] {
+        const results: ColumnDef<TOriginalRow>[] = [];
 
         // handle root columns first
         partialFlatColumns.forEach(col => {
@@ -89,7 +89,7 @@ export class ColumnProcessor<TOriginalRow> {
         partialFlatColumns = partialFlatColumns.filter(col => col.parentColumnId !== null)
 
 
-        const findGroupColumnInResults = (columns: AnyColumn<TOriginalRow>[], column: AnyColumn<TOriginalRow>): GroupColumn<TOriginalRow> | null => {
+        const findGroupColumnInResults = (columns: ColumnDef<TOriginalRow>[], column: ColumnDef<TOriginalRow>): GroupColumn<TOriginalRow> | null => {
             for (const col of columns) {
                 if (col.columnId === column.parentColumnId) return col as GroupColumn<TOriginalRow>;
                 if (col.type === 'group' && col.columns) {

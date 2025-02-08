@@ -1,4 +1,4 @@
-import type { AnyColumn, LeafColumn } from "../types";
+import type { ColumnDef, LeafColumn } from "../types";
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId, PinningPosition } from "../types";
 
@@ -30,7 +30,7 @@ export class ColumnPinningFeature implements IColumnPinningFeature {
         column.state.pinning.position = position;
     }
 
-    calculateOffset(columns: AnyColumn<any>[], columnId: ColumnId, position: 'left' | 'right' | null): number {
+    calculateOffset(columns: ColumnDef<any>[], columnId: ColumnId, position: 'left' | 'right' | null): number {
         if (position === null) return -1; // No offset for unpinned columns
 
         // Get all visible columns pinned to the specified position

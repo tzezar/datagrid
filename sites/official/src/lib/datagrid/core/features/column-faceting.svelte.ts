@@ -1,4 +1,4 @@
-import type { AccessorColumn, AnyColumn, ComputedColumn } from "../types";
+import type { AccessorColumn, ColumnDef, ComputedColumn } from "../types";
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 
@@ -71,7 +71,7 @@ export class ColumnFacetingFeature<TOriginalRow = any> implements IColumnFacetin
      * @param rows - Array of original row data.
      * @param columns - Array of columns to calculate facets for.
      */
-    calculateFacets(rows: TOriginalRow[], columns: AnyColumn<TOriginalRow>[]): void {
+    calculateFacets(rows: TOriginalRow[], columns: ColumnDef<TOriginalRow>[]): void {
         // Reset existing facets before recalculating
         this._numericFacets = {};
         this._categoricalFacets = {};

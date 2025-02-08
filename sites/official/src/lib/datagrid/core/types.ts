@@ -174,7 +174,7 @@ export type GroupedCell<TOriginalRow> = (
 
 // Header Cell
 export type HeaderCellProps = {
-    column: AnyColumn<any>;
+    column: ColumnDef<any>;
     datagrid: DatagridCore<any>;
 };
 
@@ -404,7 +404,7 @@ export interface GroupColumn<TOriginalRow, TMeta = any> {
     headerCell?: HeaderCell;
     columnId: ColumnId
     parentColumnId: string | null;
-    columns: AnyColumn<TOriginalRow>[];
+    columns: ColumnDef<TOriginalRow>[];
     options: {
         searchable: null;
         groupable: null;
@@ -425,7 +425,7 @@ export interface GroupColumn<TOriginalRow, TMeta = any> {
 }
 // Union type for all column types
 
-export type AnyColumn<TOriginalRow, TMeta = any> =
+export type ColumnDef<TOriginalRow, TMeta = any> =
     AccessorColumn<TOriginalRow, TMeta> |
     ComputedColumn<TOriginalRow, TMeta> |
     DisplayColumn<TOriginalRow, TMeta> |
@@ -458,7 +458,7 @@ export type InitialState = {
 }
 
 
-export type DatagridCoreConfig<TOriginalRow, C extends AnyColumn<TOriginalRow> = AnyColumn<TOriginalRow>> = {
+export type DatagridCoreConfig<TOriginalRow, C extends ColumnDef<TOriginalRow> = ColumnDef<TOriginalRow>> = {
     columns: C[];
     data: TOriginalRow[];
     lifecycleHooks?: LifecycleHooks<TOriginalRow>; 

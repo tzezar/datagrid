@@ -1,11 +1,11 @@
-import type { AnyColumn, GroupColumn } from "./types";
+import type { ColumnDef, GroupColumn } from "./types";
 import type { CellValue, CustomCellComponentWithProps, } from "./types";
 
 export function generateRandomColumnId(): string {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
-export function getCellContent(column: AnyColumn<any>, originalRow: any): CellValue | HTMLElement {
+export function getCellContent(column: ColumnDef<any>, originalRow: any): CellValue | HTMLElement {
     switch (column.type) {
         case 'accessor':
             if (column.formatterFn) {
