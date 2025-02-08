@@ -224,7 +224,6 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
         return this.flattenColumnStructure(this.datagrid._columns, true).filter(col => isGroupColumn(col));
     }
 
-
     getFlattenedColumnStructure(preserveGroups: boolean = true): AnyColumn<TOriginalRow>[] {
         return this.flattenColumnStructure(this.datagrid._columns, preserveGroups);
     }
@@ -264,6 +263,7 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
         if (!column) throw new Error(`Column ${columnId} not found`);
         return column;
     }
+
     findLeafColumnByIdOrThrow(columnId: ColumnId): LeafColumn<TOriginalRow> {
         const column = this.findLeafColumnById(columnId);
         if (!column) throw new Error(`Column ${columnId} not found`);
