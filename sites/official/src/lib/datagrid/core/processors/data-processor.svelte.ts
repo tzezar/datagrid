@@ -6,6 +6,11 @@ import type { AccessorColumn, ComputedColumn } from "../types";
 import { aggregationFunctions } from "../helpers/aggregation-functions";
 import { applySorting } from "./apply-sorting";
 
+
+
+/**
+ * Handles data processing tasks such as filtering, sorting, grouping, and pagination for a datagrid component.
+ */
 export class DataDataProcessor<TOriginalRow> {
     readonly metrics: PerformanceMetrics;
     private customAggregationFns: Map<string, AggregationFn>;
@@ -15,6 +20,9 @@ export class DataDataProcessor<TOriginalRow> {
         this.customAggregationFns = new Map();
     }
 
+    /**
+       * Executes the entire data transformation pipeline: search, filter, sort, and group.
+       */
     executeFullDataTransformation(): void {
         const shouldRunGrouping = this.datagrid.features.grouping.groupByColumns.length > 0 || this.datagrid.features.grouping.manual;
 
