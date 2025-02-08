@@ -54,7 +54,7 @@
 
 	let headerColumns = $derived.by(() => {
 		if (datagrid.extra.features.columnGroups.showColumnGroups) {
-			return datagrid.columns.getColumnsInOrder(datagrid);
+			return datagrid.columns.getColumnsInOrder();
 		}
 		return datagrid.columns.getLeafColumnsInOrder();
 	});

@@ -157,7 +157,6 @@ class Rows<TOriginalRow> implements IRows<TOriginalRow> {
         return this.datagrid.cacheManager.rows?.find(row => row.identifier === identifier);
     }
 
-
     flattenGridRows<TOriginalRow>(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
         const flattened: GridRow<TOriginalRow>[] = [];
 
@@ -170,12 +169,17 @@ class Rows<TOriginalRow> implements IRows<TOriginalRow> {
         return flattened
     }
 
-
 }
 
 
 type IColumns<TOriginalRow> = {
-    getLeafColumnsInOrder: () => LeafColumn<TOriginalRow>[]
+    getLeafColumns: () => LeafColumn<TOriginalRow>[];
+    getLeafColumnsInOrder: () => LeafColumn<TOriginalRow>[];
+    getColumnsInOrder: () => AnyColumn<TOriginalRow>[];
+    getGroupColumns: () => GroupColumn<TOriginalRow>[]
+    getFlattenedColumnStructure: (preserveGroups: boolean) => AnyColumn<TOriginalRow>[]
+    flattenColumnStructure: (columns: AnyColumn<TOriginalRow>[], preserveGroups: boolean) => AnyColumn<TOriginalRow>[]
+    findColumnById: (columnId: ColumnId) => AnyColumn<TOriginalRow> | null
 }
 
 class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
@@ -187,14 +191,14 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
     }
 
     getLeafColumnsInOrder(): LeafColumn<TOriginalRow>[] {
-        const cols = this.flattenColumnStructure(this.getColumnsInOrder(this.datagrid), false).filter(col => col.type !== 'group')
+        const cols = this.flattenColumnStructure(this.getColumnsInOrder(), false).filter(col => col.type !== 'group')
         return cols
     }
 
-    getColumnsInOrder(datagrid: DatagridCore): AnyColumn<TOriginalRow>[] {
-        const { groupByColumns } = datagrid.features.grouping;
+    getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
+        const { groupByColumns } = this.datagrid.features.grouping;
 
-        const columns = this.flattenColumnStructure(datagrid._columns, false).reduce(
+        const columns = this.flattenColumnStructure(this.datagrid._columns, false).reduce(
             (acc, col) => {
                 const position = col.state.pinning.position;
                 if (position === 'left' || groupByColumns.includes(col.columnId)) {
@@ -211,7 +215,7 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
 
         return [
             ...columns.left,
-            ...datagrid.processors.column.createColumnHierarchy(columns.none),
+            ...this.datagrid.processors.column.createColumnHierarchy(columns.none),
             ...columns.right
         ];
     }
@@ -247,8 +251,8 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
         return flattened;
     }
 
-    findColumnById(id: ColumnId): AnyColumn<TOriginalRow> | null {
-        return this.flattenColumnStructure(this.datagrid._columns).find((col) => col.columnId === id) ?? null;
+    findColumnById(columnId: ColumnId): AnyColumn<TOriginalRow> | null {
+        return this.flattenColumnStructure(this.datagrid._columns).find((col) => col.columnId === columnId) ?? null;
     }
 
 }
