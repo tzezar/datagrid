@@ -35,11 +35,7 @@ export function getCellContent(column: AnyColumn<any>, originalRow: any): CellVa
     }
 }
 
-
-
-
 // Find column by ID in nested structure
-
 export function isInGroupTree(possibleDescendant: GroupColumn<any>, ancestor: GroupColumn<any>): boolean {
     if (!possibleDescendant) return false;
 
@@ -85,16 +81,4 @@ export function debounce<T extends (...args: any[]) => void>(func: T, delay: num
 }
 
 
-export function getGroupRowChildrenIds<TOriginalRow>(row: GridGroupRow<TOriginalRow>): string[] {
-    const ids: string[] = [];
-    for (const child of row.children) {
-        if (child.isGroupRow()) {
-            ids.push(child.identifier);
-            ids.push(...getGroupRowChildrenIds(child));
-        } else {
-            ids.push(child.index);
-        }
-    }
 
-    return ids;
-}

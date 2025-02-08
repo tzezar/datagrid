@@ -1,7 +1,6 @@
 import { SvelteSet } from "svelte/reactivity";
 import type { DatagridCore } from "../index.svelte";
 import type { GridGroupRow, GridRow, GridRowIdentifier, RowPinningPosition } from "../types";
-import { getGroupRowChildrenIds } from "../utils.svelte";
 
 
 export type RowPinningFeatureState = {
@@ -25,6 +24,20 @@ export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: RowPinningFeatureConfig) {
         this.datagrid = datagrid;
         Object.assign(this, config);
+    }
+
+    private getGroupRowChildrenIds<TOriginalRow>(row: GridGroupRow<TOriginalRow>): string[] {
+        const ids: string[] = [];
+        for (const child of row.children) {
+            if (child.isGroupRow()) {
+                ids.push(child.identifier);
+                ids.push(...this.getGroupRowChildrenIds(child));
+            } else {
+                ids.push(child.index);
+            }
+        }
+
+        return ids;
     }
 
     // Update the caches based on current processedRowsCache
@@ -145,7 +158,7 @@ export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature
             // Pin the group itself
             this.pinnedTopRowIds.add(row.identifier);
             // Pin all descendants
-            const descendantIndices = getGroupRowChildrenIds(row);
+            const descendantIndices = this.getGroupRowChildrenIds(row);
             descendantIndices.forEach(id => this.pinnedTopRowIds.add(id));
         } else {
             if (this.isPinnedTop(rowIdentifier)) this.pinnedTopRowIds.delete(rowIdentifier);
@@ -167,7 +180,7 @@ export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature
             // Pin the group itself
             this.pinnedBottomRowIds.add(row.identifier);
             // Pin all descendants
-            const descendantIds = getGroupRowChildrenIds(row);
+            const descendantIds = this.getGroupRowChildrenIds(row);
             descendantIds.forEach(id => this.pinnedBottomRowIds.add(id));
         } else {
             if (this.isPinnedBottom(rowIdentifier)) this.pinnedBottomRowIds.delete(rowIdentifier);
@@ -188,7 +201,7 @@ export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature
             this.pinnedTopRowIds.delete(row.identifier);
             this.pinnedBottomRowIds.delete(row.identifier);
             // Unpin all descendants
-            const descendantIds = getGroupRowChildrenIds(row);
+            const descendantIds = this.getGroupRowChildrenIds(row);
             descendantIds.forEach(id => {
                 this.pinnedTopRowIds.delete(id);
                 this.pinnedBottomRowIds.delete(id);
