@@ -1,7 +1,9 @@
 import { inPlaceSort } from "fast-sort";
 import { isGroupColumn } from "../helpers/column-guards";
 import type { DatagridCore } from "../index.svelte";
-import type { AccessorColumn, ComputedColumn } from "../types";
+import type { AccessorColumn, ComputedColumn, SortingDirection } from "../types";
+
+
 
 export function applySorting<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>, data: TOriginalRow[]): TOriginalRow[] {
     data = datagrid.lifecycleHooks.executePreSort(data);
@@ -19,10 +21,10 @@ export function applySorting<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>,
             }
             return {
                 getValue: (row: TOriginalRow) => column.getValueFn(row),
-                desc: config.desc
+                direction: config.direction
             };
         })
-        .filter(Boolean) as { getValue: (row: TOriginalRow) => any; desc: boolean }[];
+        .filter(Boolean) as { getValue: (row: TOriginalRow) => any; direction: SortingDirection }[];
 
     // Decorate each row with its precomputed sort keys.
     const decorated = data.map(row => ({
@@ -30,13 +32,15 @@ export function applySorting<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>,
         keys: sortConfigs.map(cfg => cfg.getValue(row))
     }));
 
-    // Create fast‑sort instructions that operate on the decorated keys.
+    // Create fast-sort instructions that operate on the decorated keys.
     // (Precompute the instruction array once, using the key index.)
-    const instructions = sortConfigs.map((cfg, i) =>
-        cfg.desc
-            ? { desc: (d: { keys: any[] }) => d.keys[i] }
-            : { asc: (d: { keys: any[] }) => d.keys[i] }
-    );
+    const instructions = sortConfigs
+        .filter(cfg => cfg.direction !== "intermediate") // Ignore intermediate state for sorting
+        .map((cfg, i) =>
+            cfg.direction === "desc"
+                ? { desc: (d: { keys: any[] }) => d.keys[i] }
+                : { asc: (d: { keys: any[] }) => d.keys[i] }
+        );
 
     datagrid.processors.data.metrics.measure("Sorting", () => {
         // Use fast-sort to sort the decorated array.

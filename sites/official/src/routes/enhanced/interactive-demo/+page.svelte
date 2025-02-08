@@ -11,10 +11,10 @@
 	class CustomSortingFeature extends SortingFeature {
 		sortConfigs: Sorting[] = $state([
 			{
-				columnId: 'id',
-				desc: true
+				columnId: 'name',
+				direction: 'desc'
 			}
-		]);
+		]) as Sorting[];
 	}
 
 	let datagrid = new Grid.EnhancedCore<InventoryItem, Grid.EnhancedMeta<InventoryItem>>({

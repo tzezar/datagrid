@@ -5,6 +5,7 @@ import type { PerformanceMetrics } from "../helpers/performance-metrics.svelte";
 import type { AccessorColumn, ComputedColumn } from "../types";
 import { aggregationFunctions } from "../helpers/aggregation-functions";
 import { applySorting } from "./apply-sorting";
+// import { applySorting } from "./apply-sorting-fast-sort";
 
 
 

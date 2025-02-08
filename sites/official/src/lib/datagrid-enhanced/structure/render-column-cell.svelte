@@ -73,7 +73,7 @@
 					if (datagrid.features.sorting.allowMultiSort) {
 						multisort = e.shiftKey;
 					}
-					datagrid.handlers.sorting.toggleSort(column, multisort);
+					datagrid.handlers.sorting.toggleColumnSort(column, multisort);
 				}}
 			>
 				<span class="font-semibold">{column.header}</span>

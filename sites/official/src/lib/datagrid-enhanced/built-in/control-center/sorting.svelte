@@ -30,7 +30,7 @@
 				closeOnSelect={false}
 				onclick={(e) => {
 					const multisort = !e.shiftKey;
-					datagrid.handlers.sorting.toggleSort(column, multisort);
+					datagrid.handlers.sorting.toggleColumnSort(column, multisort);
 				}}
 			>
 				{#if column.options.sortable}

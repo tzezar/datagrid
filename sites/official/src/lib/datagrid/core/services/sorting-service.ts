@@ -2,7 +2,7 @@ import type { LeafColumn } from "../types";
 import { BaseService } from "./base-service";
 
 export class SortingService extends BaseService {
-    toggleSort(column: LeafColumn<any>, multisort: boolean) {
+    toggleColumnSort(column: LeafColumn<any>, multisort: boolean) {
         this.events.emit('toggleSort', { column, multisort });
 
         const datagrid = this.datagrid;
@@ -12,22 +12,22 @@ export class SortingService extends BaseService {
 
 
         const isColumnSorted = datagrid.features.sorting.isColumnSorted(columnId);
-        const isColumnSortedAscending = datagrid.features.sorting.isColumnSorted(columnId, false);
+        const isColumnSortedAscending = datagrid.features.sorting.isColumnSorted(columnId, 'asc');
 
-        const singleColumnSort = () => {
+        const applySingleColumnSort = () => {
             if (!isColumnSorted) {
                 this.datagrid.features.sorting.clearSortConfigs();
-                this.datagrid.features.sorting.addSortConfig(columnId, false)
+                this.datagrid.features.sorting.addSortConfig(columnId, 'asc')
             }
             else if (isColumnSortedAscending) {
                 this.datagrid.features.sorting.clearSortConfigs();
-                datagrid.features.sorting.addSortConfig(columnId, true);
+                datagrid.features.sorting.addSortConfig(columnId, 'desc');
             }
             else this.datagrid.features.sorting.clearSortConfigs();
 
         }
 
-        const multipleColumnSort = () => {
+        const applyMultiColumnSort = () => {
             if (!isColumnSorted) {
                 const isOverMaxColCount = datagrid.features.sorting.sortConfigs.length >= datagrid.features.sorting.maxMultiSortColumns;
                 if (isOverMaxColCount) {
@@ -36,7 +36,7 @@ export class SortingService extends BaseService {
                     datagrid.features.sorting.removeSortConfig(datagrid.features.sorting.sortConfigs[0].columnId);
                 }
 
-                datagrid.features.sorting.addSortConfig(columnId, false);
+                datagrid.features.sorting.addSortConfig(columnId, 'asc');
             } else if (isColumnSortedAscending) {
                 datagrid.features.sorting.changeSortConfigDirection(columnId, true);
             } else {
@@ -45,8 +45,8 @@ export class SortingService extends BaseService {
             }
         }
 
-        if (multisort) multipleColumnSort();
-        else singleColumnSort();
+        if (multisort) applyMultiColumnSort();
+        else applySingleColumnSort();
 
         datagrid.cacheManager.invalidate('sortedData');
         datagrid.processors.data.executeFullDataTransformation();
@@ -54,39 +54,24 @@ export class SortingService extends BaseService {
         datagrid.features.sorting.onSortingChange(datagrid.features.sorting);
     }
 
-    sortColumnAscending(column: LeafColumn<any>) {
+    applyAscendingSort(column: LeafColumn<any>) {
         const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
         if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, false);
-        else this.datagrid.features.sorting.addSortConfig(column.columnId, true);
+        else this.datagrid.features.sorting.addSortConfig(column.columnId, 'asc');
 
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 
 
-    sortColumnDescending(column: LeafColumn<any>) {
+    applyDescendingSort(column: LeafColumn<any>) {
         const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
         if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, true);
-        else this.datagrid.features.sorting.addSortConfig(column.columnId, false);
+        else this.datagrid.features.sorting.addSortConfig(column.columnId, 'desc');
 
         this.datagrid.processors.data.executeFullDataTransformation();
     }
 
-
-    sortColumn(column: LeafColumn<any>, desc: boolean) {
-        if (desc) {
-            const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
-            if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, true);
-            else this.datagrid.features.sorting.addSortConfig(column.columnId, true);
-        } else {
-            const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
-            if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, false);
-            else this.datagrid.features.sorting.addSortConfig(column.columnId, false);
-        }
-        this.datagrid.processors.data.executeFullDataTransformation();
-    }
-
-
-    unSortColumn(column: LeafColumn<any>) {
+    clearColumnSort(column: LeafColumn<any>) {
         this.datagrid.features.sorting.removeSortConfig(column.columnId);
         this.datagrid.processors.data.executeFullDataTransformation();
     }

@@ -257,18 +257,18 @@
 				<DropdownMenu.Separator />
 
 				{#if datagrid.customization.headerCellDropdownMenu.displayColumnSortingControls === true}
-					<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.unSortColumn(column)}>
+					<DropdownMenu.Item onclick={() => datagrid.handlers.sorting.clearColumnSort(column)}>
 						<ArrowsSort class="mr-2 size-4" />
 						<span>Clear sort</span>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item
-						onclick={() => datagrid.handlers.sorting.sortColumnAscending(column)}
+						onclick={() => datagrid.handlers.sorting.applyAscendingSort(column)}
 					>
 						<SortAscending class="mr-2 size-4" />
 						<span>Sort ascending </span>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item
-						onclick={() => datagrid.handlers.sorting.sortColumnDescending(column)}
+						onclick={() => datagrid.handlers.sorting.applyDescendingSort(column)}
 					>
 						<SortDescending class="mr-2 size-4" />
 						<span>Sort descending </span>

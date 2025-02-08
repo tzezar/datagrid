@@ -1,5 +1,5 @@
 import type { DatagridCore } from "../index.svelte";
-import type { ColumnId, Sorting } from "../types";
+import type { ColumnId, Sorting, SortingDirection } from "../types";
 
 export type SortingFeatureState = {
     sortConfigs: Sorting[];
@@ -13,8 +13,8 @@ export type ISortingFeature = {
     clearSortConfigs(): void;
     removeSortConfig(columnId: ColumnId): void;
     changeSortConfigDirection(columnId: ColumnId, desc: boolean): void;
-    addSortConfig(columnId: ColumnId, desc: boolean): void;
-    isColumnSorted(columnId: ColumnId, desc?: boolean): boolean;
+    addSortConfig(columnId: ColumnId, direction: SortingDirection): void;
+    isColumnSorted(columnId: ColumnId, direction?: SortingDirection): boolean;
 } & SortingFeatureState
 
 export type SortingFeatureConfig = Partial<SortingFeatureState>
@@ -46,7 +46,7 @@ export class SortingFeature implements ISortingFeature {
         if (!column) throw new Error(`Column ${columnId} not found`);
         const sortConfig = this.datagrid.features.sorting.sortConfigs.find((config) => config.columnId === column.columnId);
         if (!sortConfig) return 'intermediate';
-        return sortConfig.desc ? 'desc' : 'asc';
+        return sortConfig.direction === 'desc' ? 'desc' : 'asc';
     };
 
     clearSortConfigs() {
@@ -71,21 +71,18 @@ export class SortingFeature implements ISortingFeature {
         );
     }
 
-    addSortConfig(columnId: ColumnId, desc: boolean) {
+    addSortConfig(columnId: ColumnId, direction: SortingDirection) {
         if (this.sortConfigs.length >= this.maxMultiSortColumns) return;
         this.sortConfigs = [
             ...this.sortConfigs,
-            { columnId, desc }
+            { columnId, direction }
         ];
     }
 
-    isColumnSorted(columnId: ColumnId, desc?: boolean): boolean {
-        if (desc === undefined) {
-            // Return true if the column is sorted in any direction
-            return this.sortConfigs.some((config) => config.columnId === columnId);
-        }
+    isColumnSorted(columnId: ColumnId, direction?: SortingDirection): boolean {
+        if (!direction) return this.sortConfigs.some((config) => config.columnId === columnId);
 
         // Return true if the column is sorted with the specified direction
-        return this.sortConfigs.some((config) => config.columnId === columnId && config.desc === desc);
+        return this.sortConfigs.some((config) => config.columnId === columnId && config.direction === direction);
     }
 }

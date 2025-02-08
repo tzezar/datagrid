@@ -34,7 +34,7 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
     cacheManager = new DatagridCacheManager(this);
 
     config = {
-        measurePerformance: false,
+        measurePerformance: true,
         createBasicRowIdentifier: (row: TOriginalRow) => (row as any).id,
         createBasicRowIndex: (row: TOriginalRow, parentIndex: string | null, index: number) =>
             parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1),
