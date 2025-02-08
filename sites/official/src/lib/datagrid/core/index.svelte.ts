@@ -196,11 +196,6 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
         return this.datagrid._columns;
     }
 
-
-    get leafColumns(): LeafColumn<TOriginalRow>[] {
-        return this.getLeafColumns();
-    }
-
     /**
      * Retrieves a list of all leaf columns.
      * Leaf columns are those that are not group columns.

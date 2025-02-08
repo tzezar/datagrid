@@ -1,4 +1,4 @@
-<!-- DataGrid.svelte -->
+<!-- DataGrid.svelte
 <script lang="ts">
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory';
 	import { accessorColumn, columnGroup, DatagridCore, type ColumnDef } from '$lib/datagrid';
@@ -76,7 +76,6 @@
 
 <div class="grid-wrapper relative">
 	<div class=" !contents">
-		<!-- Headers -->
 		<div class="head">
 			{#each datagrid.columns.getHeaderRows() as row, rowIndex}
 				<div class="row" style="grid-template-columns: {datagrid.columns.getGridTemplateColumns()}">
@@ -95,7 +94,6 @@
 			{/each}
 		</div>
 
-		<!-- Body -->
 		{#each datagrid.rows.getVisibleBasicRows() as row}
 			<div class="row" style="grid-template-columns: {datagrid.columns.getGridTemplateColumns()}">
 				{#each datagrid.columns.getLeafColumns() as col}
@@ -169,4 +167,4 @@
 	.body .row:nth-child(even) {
 		background: #fafafa;
 	}
-</style>
+</style> -->

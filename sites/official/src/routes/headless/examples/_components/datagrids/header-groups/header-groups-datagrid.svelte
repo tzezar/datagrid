@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory.js';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 	import {
@@ -157,4 +157,4 @@
 		background: hsl(var(--background));
 		box-shadow: 0 0 0 1px hsl(var(--border));
 	}
-</style>
+</style> -->

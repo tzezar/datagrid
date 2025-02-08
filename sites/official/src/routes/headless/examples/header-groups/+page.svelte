@@ -5,7 +5,7 @@
 </script>
 
 <h2>Header groups datagrid implementation</h2>
-<HeaderGroupsDatagrid {data} />
+<!-- <HeaderGroupsDatagrid {data} /> -->
 <div class="prose w-full min-w-full">
 	<!-- <Readme /> -->
 </div>

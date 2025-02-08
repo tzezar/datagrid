@@ -106,15 +106,15 @@ export const columns = [
                 options: { sortable: true },
                 _meta: {
                     filterType: 'number',
-                    styles: {
-                        bodyCell(props) {
-                            const { row } = props
-                            if (row.isGroupRow()) return ""
-                            return cn(row.original.price < 400 && 'border-r-2 border-red-400', row.original.price > 1000 && 'border-r-2 border-green-400')
+                //     styles: {
+                //         bodyCell({props}) {
+                //             const { row } = props
+                //             if (row.isGroupRow()) return ""
+                //             return cn(row.original.price < 400 && 'border-r-2 border-red-400', row.original.price > 1000 && 'border-r-2 border-green-400')
         
-                        },
+                //         },
         
-                    }
+                //     }
                 }
             }),
             accessorColumn({
