@@ -118,33 +118,6 @@ export function debounce<T extends (...args: any[]) => void>(func: T, delay: num
 }
 
 
-export function flattenGridRows<TOriginalRow>(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
-    const flattened: GridRow<TOriginalRow>[] = [];
-
-    for (const row of data) {
-        flattened.push(row);
-        if (row.isGroupRow()) {
-            flattened.push(...flattenGridRows(row.children));
-        }
-    }
-    return flattened
-}
-
-
-
-
-
-export function getGroupColumns<TOriginalRow>(columns: AnyColumn<TOriginalRow>[]): GroupColumn<TOriginalRow>[] {
-    return flattenColumnStructureAndClearGroups(columns).filter(col => isGroupColumn(col));
-}
-
-
-
-export function findRowById<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>, identifier: GridRowIdentifier): GridRow<TOriginalRow> | undefined {
-    return (datagrid.cacheManager.rows || []).find(row => row.identifier === identifier);
-}
-
-
 export function getGroupRowChildrenIds<TOriginalRow>(row: GridGroupRow<TOriginalRow>): string[] {
     const ids: string[] = [];
     for (const child of row.children) {

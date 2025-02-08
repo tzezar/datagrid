@@ -35,7 +35,6 @@
 	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import type { ColumnMetaEnhanced } from '../core/types';
 	import NotContains from '$lib/datagrid/icons/filter-operators/not-contains.svelte';
-	import { getGroupColumns } from '$lib/datagrid/core/utils.svelte';
 
 	type NumberFilterOperator = {
 		label: string;
@@ -227,7 +226,7 @@
 									<span>Root level</span>
 								</div>
 							</DropdownMenu.Item>
-							{#each getGroupColumns(datagrid._columns) as groupCol}
+							{#each datagrid.columns.getGroupColumns() as groupCol}
 								<DropdownMenu.Item
 									closeOnSelect={false}
 									onclick={() =>
@@ -386,7 +385,7 @@
 									<span>Root level</span>
 								</div>
 							</DropdownMenu.Item>
-							{#each getGroupColumns(datagrid._columns) as groupCol}
+							{#each datagrid.columns.getGroupColumns() as groupCol}
 								<DropdownMenu.Item
 									closeOnSelect={false}
 									onclick={() =>

@@ -1,4 +1,4 @@
-import type { AnyColumn, DatagridCoreConfig, GridRow, LeafColumn } from "./types";
+import type { AnyColumn, DatagridCoreConfig, GridRow, GridRowIdentifier, GroupColumn, LeafColumn } from "./types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager } from "./managers";
@@ -7,6 +7,7 @@ import { DatagridFeatures } from "./features/features.svelte";
 import { HandlersManager } from "./managers/handler-manager";
 import { EventService } from "./services/event-service";
 import { flattenColumnStructureAndClearGroups } from "./utils.svelte";
+import { isGroupColumn } from "./helpers/column-guards";
 
 
 export class DatagridCore<TOriginalRow = any, TMeta = any> {
@@ -153,6 +154,24 @@ class Rows<TOriginalRow> implements IRows<TOriginalRow> {
         return this.datagrid.cacheManager.paginatedRows || [];
     }
 
+    findRowById(identifier: GridRowIdentifier): GridRow<TOriginalRow> | undefined {
+        return this.datagrid.cacheManager.rows?.find(row => row.identifier === identifier);
+    }
+
+
+    flattenGridRows<TOriginalRow>(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
+        const flattened: GridRow<TOriginalRow>[] = [];
+
+        for (const row of data) {
+            flattened.push(row);
+            if (row.isGroupRow()) {
+                flattened.push(...this.flattenGridRows(row.children));
+            }
+        }
+        return flattened
+    }
+
+
 }
 
 
@@ -163,7 +182,7 @@ type IColumns<TOriginalRow> = {
 class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
 
     constructor(private readonly datagrid: DatagridCore<TOriginalRow>) { }
-    
+
     getLeafColumns<TOriginalRow>(): LeafColumn<TOriginalRow>[] {
         return flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(col => col.type !== 'group')
     }
@@ -176,7 +195,7 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
 
     getColumnsInOrder<TOriginalRow>(datagrid: DatagridCore): AnyColumn<TOriginalRow>[] {
         const { groupByColumns } = datagrid.features.grouping;
-    
+
         const columns = flattenColumnStructureAndClearGroups(datagrid._columns).reduce(
             (acc, col) => {
                 const position = col.state.pinning.position;
@@ -191,7 +210,7 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
             },
             { left: [], right: [], none: [] } as Record<'left' | 'right' | 'none', AnyColumn<TOriginalRow>[]>
         );
-    
+
         return [
             ...columns.left,
             ...datagrid.processors.column.createColumnHierarchy(columns.none),
@@ -199,6 +218,8 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
         ];
     }
 
-   
+    getGroupColumns<TOriginalRow>(): GroupColumn<TOriginalRow>[] {
+        return flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(col => isGroupColumn(col));
+    }
 
 }

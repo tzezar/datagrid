@@ -1,7 +1,7 @@
 import { SvelteSet } from "svelte/reactivity";
 import type { DatagridCore } from "../index.svelte";
 import type { GridGroupRow, GridRow, GridRowIdentifier, RowPinningPosition } from "../types";
-import { findRowById, getGroupRowChildrenIds } from "../utils.svelte";
+import { getGroupRowChildrenIds } from "../utils.svelte";
 
 
 export type RowPinningFeatureState = {
@@ -57,13 +57,14 @@ export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature
         const unpinned: GridRow<TOriginalRow>[] = [];
 
         for (const rowIdentifier of this.pinnedTopRowIds) {
-            const row = findRowById(this.datagrid, rowIdentifier);
+            const row = this.datagrid.rows.findRowById(rowIdentifier);
             if (row) pinnedTop.push(row);
         }
 
         // Iterate through all pinned bottom rows
         for (const rowIdentifier of this.pinnedBottomRowIds) {
-            const row = findRowById(this.datagrid, rowIdentifier);
+            const row = this.datagrid.rows.findRowById(rowIdentifier);
+
             if (row) pinnedBottom.push(row);
         }
 
@@ -135,7 +136,8 @@ export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature
     }
 
     pinRowTop(rowIdentifier: GridRowIdentifier) {
-        let row = findRowById(this.datagrid, rowIdentifier);
+        let row = this.datagrid.rows.findRowById(rowIdentifier);
+
         if (!row) return;
 
         if (row.isGroupRow()) {
@@ -157,7 +159,8 @@ export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature
     }
 
     pinRowBottom(rowIdentifier: GridRowIdentifier) {
-        const row = findRowById(this.datagrid, rowIdentifier);
+        const row = this.datagrid.rows.findRowById(rowIdentifier);
+
         if (!row) return;
 
         if (row.isGroupRow()) {
@@ -177,7 +180,7 @@ export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature
     }
 
     unpinRow(rowIdentifier: GridRowIdentifier) {
-        const row = findRowById(this.datagrid, rowIdentifier);
+        const row = this.datagrid.rows.findRowById(rowIdentifier);
         if (!row) return;
 
         if (row.isGroupRow()) {
