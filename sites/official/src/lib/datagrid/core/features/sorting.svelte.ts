@@ -34,6 +34,21 @@ export class SortingFeature implements ISortingFeature {
 
     }
 
+    getSortIndex = (columnId: ColumnId): number | null => {
+        const column = this.datagrid.columns.findColumnById(columnId)
+        if (!column) throw new Error(`Column ${columnId} not found`);
+        const sortConfig = this.datagrid.features.sorting.sortConfigs.find((config) => config.columnId === column.columnId);
+        return sortConfig ? this.datagrid.features.sorting.sortConfigs.indexOf(sortConfig) + 1 : null;
+    };
+
+    getSortDirection = (columnId: ColumnId): 'desc' | 'asc' | 'intermediate' | null => {
+        const column = this.datagrid.columns.findColumnById(columnId)
+        if (!column) throw new Error(`Column ${columnId} not found`);
+        const sortConfig = this.datagrid.features.sorting.sortConfigs.find((config) => config.columnId === column.columnId);
+        if (!sortConfig) return 'intermediate';
+        return sortConfig.desc ? 'desc' : 'asc';
+    };
+
     clearSortConfigs() {
         this.sortConfigs = [];
     }
