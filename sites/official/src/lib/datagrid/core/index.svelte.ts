@@ -45,7 +45,7 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
         this.events = new EventService();
         this.handlers = new HandlersManager(this, this.events);
         this.features = new DatagridFeatures(this, config);
-        
+
         this.measurePerformance = config?.measurePerformance ?? this.measurePerformance
         this.rowIdGetter = config?.rowIdGetter ?? this.rowIdGetter
         this.rowIndexGetter = config?.rowIndexGetter ?? this.rowIndexGetter
@@ -181,15 +181,43 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
 
     constructor(private readonly datagrid: DatagridCore<TOriginalRow>) { }
 
+    /**
+     * Retrieves a list of all columns without considering column pinning.
+     * This method does not account for pinned columns and returns all columns.
+     * 
+     * @returns An array of all columns.
+     */
+    getColumns(): AnyColumn<TOriginalRow>[] {
+        return this.datagrid._columns;
+    }
+
+    /**
+     * Retrieves a list of all leaf columns.
+     * Leaf columns are those that are not group columns.
+     * 
+     * @returns An array of leaf columns.
+     */
     getLeafColumns(): LeafColumn<TOriginalRow>[] {
-        return this.flattenColumnStructure(this.datagrid._columns, false).filter(col => col.type !== 'group')
+        return this.flattenColumnStructure(this.datagrid._columns, false).filter(col => col.type !== 'group');
     }
 
+    /**
+     * Retrieves a list of all leaf columns in the correct order, taking into account column pinning.
+     * This includes left-pinned, non-pinned, and right-pinned columns.
+     * 
+     * @returns An array of leaf columns in order with pinning considered.
+     */
     getLeafColumnsInOrder(): LeafColumn<TOriginalRow>[] {
-        const cols = this.flattenColumnStructure(this.getColumnsInOrder(), false).filter(col => col.type !== 'group')
-        return cols
+        const cols = this.flattenColumnStructure(this.getColumnsInOrder(), false).filter(col => col.type !== 'group');
+        return cols;
     }
 
+    /**
+     * Retrieves a list of all columns in the correct order, considering column pinning.
+     * Columns are categorized into left-pinned, non-pinned, and right-pinned groups.
+     * 
+     * @returns An array of columns ordered by their pinning position.
+     */
     getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
         const { activeGroups: groupByColumns } = this.datagrid.features.grouping;
 
@@ -215,14 +243,35 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
         ];
     }
 
+    /**
+     * Retrieves a list of all group columns.
+     * Group columns are those that contain child columns and represent a grouping of other columns.
+     * 
+     * @returns An array of group columns.
+     */
     getGroupColumns(): GroupColumn<TOriginalRow>[] {
         return this.flattenColumnStructure(this.datagrid._columns, true).filter(col => isGroupColumn(col));
     }
 
+    /**
+     * Retrieves a flattened column structure, optionally preserving group columns.
+     * Flattening removes nested groups, and can preserve them depending on the `preserveGroups` flag.
+     * 
+     * @param preserveGroups Whether to preserve group columns in the structure.
+     * @returns An array of columns, possibly with group columns preserved.
+     */
     getFlattenedColumnStructure(preserveGroups: boolean = true): AnyColumn<TOriginalRow>[] {
         return this.flattenColumnStructure(this.datagrid._columns, preserveGroups);
     }
 
+    /**
+     * Flattens a given column structure, optionally preserving group columns.
+     * This method recursively processes nested group columns and flattens them into a single array.
+     * 
+     * @param columns The columns to flatten.
+     * @param preserveGroups Whether to preserve group columns in the output.
+     * @returns A flattened array of columns.
+     */
     flattenColumnStructure(
         columns: AnyColumn<TOriginalRow>[],
         preserveGroups: boolean = false
@@ -245,20 +294,46 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
         return flattened;
     }
 
+    /**
+     * Finds a column by its unique columnId.
+     * 
+     * @param columnId The unique identifier of the column.
+     * @returns The column if found, otherwise null.
+     */
     findColumnById(columnId: ColumnId): AnyColumn<TOriginalRow> | null {
         return this.flattenColumnStructure(this.datagrid._columns).find((col) => col.columnId === columnId) ?? null;
     }
 
+    /**
+     * Finds a leaf column (a non-group column) by its unique columnId.
+     * 
+     * @param columnId The unique identifier of the leaf column.
+     * @returns The leaf column if found, otherwise null.
+     */
     findLeafColumnById(columnId: ColumnId): LeafColumn<TOriginalRow> | null {
         return this.getLeafColumns().find((col) => col.columnId === columnId) ?? null;
     }
 
+    /**
+     * Finds a column by its unique columnId and throws an error if not found.
+     * 
+     * @param columnId The unique identifier of the column.
+     * @returns The column if found.
+     * @throws Error if the column is not found.
+     */
     findColumnByIdOrThrow(columnId: ColumnId): AnyColumn<TOriginalRow> {
         const column = this.findColumnById(columnId);
         if (!column) throw new Error(`Column ${columnId} not found`);
         return column;
     }
 
+    /**
+     * Finds a leaf column (a non-group column) by its unique columnId and throws an error if not found.
+     * 
+     * @param columnId The unique identifier of the leaf column.
+     * @returns The leaf column if found.
+     * @throws Error if the leaf column is not found.
+     */
     findLeafColumnByIdOrThrow(columnId: ColumnId): LeafColumn<TOriginalRow> {
         const column = this.findLeafColumnById(columnId);
         if (!column) throw new Error(`Column ${columnId} not found`);
