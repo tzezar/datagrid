@@ -46,7 +46,7 @@ export class SortingFeature implements ISortingFeature {
         if (!column) throw new Error(`Column ${columnId} not found`);
         const sortConfig = this.datagrid.features.sorting.sortConfigs.find((config) => config.columnId === column.columnId);
         if (!sortConfig) return 'intermediate';
-        return sortConfig.direction === 'desc' ? 'desc' : 'asc';
+        return sortConfig.direction === 'descending' ? 'desc' : 'asc';
     };
 
     clearSortConfigs() {

@@ -37,7 +37,7 @@ export function applySorting<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>,
     const instructions = sortConfigs
         .filter(cfg => cfg.direction !== "intermediate") // Ignore intermediate state for sorting
         .map((cfg, i) =>
-            cfg.direction === "desc"
+            cfg.direction === "descending"
                 ? { desc: (d: { keys: any[] }) => d.keys[i] }
                 : { asc: (d: { keys: any[] }) => d.keys[i] }
         );

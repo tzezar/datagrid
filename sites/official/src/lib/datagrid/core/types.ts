@@ -186,7 +186,7 @@ export type HeaderCell = (
  * Sorting Types
  */
 
-export type SortingDirection = "asc" | "desc" | "intermediate";
+export type SortingDirection = "ascending" | "descending" | "intermediate";
 export interface Sorting {
     columnId: ColumnId;
     direction: SortingDirection

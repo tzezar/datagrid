@@ -12,7 +12,7 @@
 		sortConfigs: Sorting[] = $state([
 			{
 				columnId: 'name',
-				direction: 'desc'
+				direction: 'descending'
 			}
 		]) as Sorting[];
 	}
@@ -23,13 +23,12 @@
 
 		features: {
 			sorting: CustomSortingFeature
-		},
+		}
 	});
 
 	datagrid.events.on('toggleSort', (data) => {
 		console.log('About to sort column:', data.column.columnId);
 	});
-
 </script>
 
 <div class="pb-20">

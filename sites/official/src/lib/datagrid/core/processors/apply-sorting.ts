@@ -41,10 +41,10 @@ export function applySorting<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>,
                 const valB = b.values[i];
 
                 if (valA === valB) continue;
-                if (valA == null) return sortConfigs[i].direction === "desc" ? 1 : -1;
-                if (valB == null) return sortConfigs[i].direction === "desc" ? -1 : 1;
+                if (valA == null) return sortConfigs[i].direction === "descending" ? 1 : -1;
+                if (valB == null) return sortConfigs[i].direction === "descending" ? -1 : 1;
 
-                return sortConfigs[i].direction === "desc" ? (valB > valA ? 1 : -1) : (valA > valB ? 1 : -1);
+                return sortConfigs[i].direction === "descending" ? (valB > valA ? 1 : -1) : (valA > valB ? 1 : -1);
             }
             return 0;
         });
