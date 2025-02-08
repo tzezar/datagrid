@@ -1,6 +1,6 @@
 
 import { type AnyColumn } from "$lib/datagrid/core/types";
-import { accessorColumn} from "$lib/datagrid/core/column-creation";
+import { accessorColumn, computedColumn } from "$lib/datagrid/core/column-creation";
 import type { InventoryItem } from "$lib/data-generators/generate/inventory";
 import { cn } from "$lib/utils";
 import type { ColumnMetaEnhanced } from "$lib/datagrid-enhanced/core/types";
@@ -37,6 +37,7 @@ export const columns = [
         accessorKey: 'id',
         _meta: {
             tooltip: true,
+            filterType: 'number',
             // styles: {
             //     bodyCell(props) {
             //         const { row, datagrid } = props
@@ -44,7 +45,7 @@ export const columns = [
             //         return cn(row.original.id === 1 && 'bg-green-400', shouldHighlightSelectedRow(datagrid, row) && 'bg-red-400')
             //     },
             // }
-        } 
+        }
     }),
 
 
@@ -54,14 +55,23 @@ export const columns = [
         accessorKey: 'name',
         _meta: {
             grow: true,
-            clickToCopy: true
-        } 
+            clickToCopy: true,
+            filterType: 'text',
+        }
+    }),
+    computedColumn({
+        header: 'Test',
+        columnId: 'test',
+        getValueFn: (row) => row.category + row.id,
+        _meta: {
+            filterType: 'text'
+        }
     }),
     accessorColumn({
         accessorKey: 'category',
         _meta: {
             clickToCopy: false
-        } 
+        }
     }),
     accessorColumn({
         header: 'Price',
@@ -79,7 +89,7 @@ export const columns = [
                 },
 
             }
-        } 
+        }
     }),
     accessorColumn({
         accessorKey: 'quantity'
