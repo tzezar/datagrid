@@ -303,7 +303,7 @@
 				{/if}
 
 				{#if datagrid.customization.headerCellDropdownMenu.displayGroupingByColumnControls === true}
-					<DropdownMenu.Item onclick={() => datagrid.handlers.grouping.toggle(column.columnId)}>
+					<DropdownMenu.Item onclick={() => datagrid.handlers.grouping.toggleGrouping(column.columnId)}>
 						{#if datagrid.features.grouping.isColumnWithinGroup(column.columnId)}
 							<AdGroupOffOutlineSharp class="mr-2 size-4" />
 							<span>Ungroup by {column.header}</span>

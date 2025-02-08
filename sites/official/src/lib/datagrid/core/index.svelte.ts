@@ -196,7 +196,7 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
     }
 
     getColumnsInOrder(): AnyColumn<TOriginalRow>[] {
-        const { groupByColumns } = this.datagrid.features.grouping;
+        const { activeGroups : groupByColumns } = this.datagrid.features.grouping;
 
         const columns = this.flattenColumnStructure(this.datagrid._columns, false).reduce(
             (acc, col) => {

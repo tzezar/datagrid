@@ -25,7 +25,7 @@ export class DataDataProcessor<TOriginalRow> {
        * Executes the entire data transformation pipeline: search, filter, sort, and group.
        */
     executeFullDataTransformation(): void {
-        const shouldRunGrouping = this.datagrid.features.grouping.groupByColumns.length > 0 || this.datagrid.features.grouping.manual;
+        const shouldRunGrouping = this.datagrid.features.grouping.activeGroups .length > 0 || this.datagrid.features.grouping.manual;
 
         this.metrics.clear();
 
@@ -235,7 +235,7 @@ export class DataDataProcessor<TOriginalRow> {
     }
 
     createHierarchicalData(data: TOriginalRow[]): GridRow<TOriginalRow>[] {
-        const groupCols = this.datagrid.features.grouping.groupByColumns;
+        const groupCols = this.datagrid.features.grouping.activeGroups ;
         if (!groupCols.length) return this.createBasicRows(data);
 
         const groupByLevel = (

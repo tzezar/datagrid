@@ -20,15 +20,15 @@
 <Select.Root
 	type="multiple"
 	name="groupByColumn"
-	value={datagrid.features.grouping.groupByColumns}
-	onValueChange={(values) => datagrid.handlers.grouping.change(values)}
+	value={datagrid.features.grouping.activeGroups }
+	onValueChange={(values) => datagrid.handlers.grouping.updateGrouping(values)}
 >
 	<Select.Trigger class="flex h-full w-full gap-x-2 gap-y-2 rounded-none border-0">
-		{#if datagrid.features.grouping.groupByColumns.length === 0}
+		{#if datagrid.features.grouping.activeGroups .length === 0}
 			<span>Select columns</span>
 		{:else}
 			<div class="flex h-full w-full flex-wrap gap-2">
-				{#each datagrid.features.grouping.groupByColumns as columnId}
+				{#each datagrid.features.grouping.activeGroups  as columnId}
 					<Badge class="flex  items-center justify-center self-center text-center"
 						>
 						{datagrid.columns.findColumnById(columnId)?.header}</Badge

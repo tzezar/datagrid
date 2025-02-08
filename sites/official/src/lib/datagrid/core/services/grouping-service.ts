@@ -2,32 +2,33 @@ import type { ColumnId } from "../types";
 import { BaseService } from "./base-service";
 
 export class GroupingService extends BaseService {
-    change(values: string[]) {
-
-        const newGroupBy: ColumnId[] = values
+    updateGrouping(values: string[]) {
+        const validGroupColumns: ColumnId[] = values
             .map((option) => {
                 const column = this.datagrid.columns.findColumnById(option);
                 if (!column) return null;
                 if (column.options.groupable === false) return null;
                 return option;
             })
-            .filter((group): group is ColumnId => group !== null); // Type guard to filter out null values
+            .filter((columnId): columnId is ColumnId => columnId !== null);
 
-        this.datagrid.features.grouping.groupByColumns = newGroupBy;
+        this.datagrid.features.grouping.activeGroups = validGroupColumns;
         this.datagrid.features.pagination.goToFirstPage();
         this.datagrid.cacheManager.invalidateGroupedRowsCache();
         this.datagrid.processors.data.executeFullDataTransformation();
     }
-    toggle(columnId: ColumnId) {
+
+    toggleGrouping(columnId: ColumnId) {
         const column = this.datagrid.columns.findColumnById(columnId);
         if (!column) return;
         if (column.options.groupable === false) return;
 
-        if (this.datagrid.features.grouping.groupByColumns.includes(columnId)) {
-            this.datagrid.features.grouping.groupByColumns = this.datagrid.features.grouping.groupByColumns.filter((id) => id !== columnId);
-        } else {
-            this.datagrid.features.grouping.groupByColumns = [...this.datagrid.features.grouping.groupByColumns, columnId];
-        }
+        const { activeGroups } = this.datagrid.features.grouping;
+
+        this.datagrid.features.grouping.activeGroups = activeGroups.includes(columnId)
+            ? activeGroups.filter((id) => id !== columnId)
+            : [...activeGroups, columnId];
+
         this.datagrid.features.pagination.goToFirstPage();
         this.datagrid.cacheManager.invalidateGroupedRowsCache();
         this.datagrid.processors.data.executeFullDataTransformation();

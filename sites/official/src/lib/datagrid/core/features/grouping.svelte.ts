@@ -18,7 +18,7 @@ export type IGroupingFeature = GroupingFeature
 export class GroupingFeature implements IGroupingFeature {
     manual: boolean = $state(false);
 
-    groupByColumns: ColumnId[] = $state([]);
+    activeGroups: ColumnId[] = $state([]);
     expandedGroups: SvelteSet<GridGroupRowIdentifier> = $state(new SvelteSet([]))
 
     onGroupingChange: (expandedGroups: string[]) => void = () => { };
@@ -28,7 +28,7 @@ export class GroupingFeature implements IGroupingFeature {
     }
 
     isColumnWithinGroup(columnId: ColumnId): boolean {
-        return this.groupByColumns.includes(columnId);
+        return this.activeGroups.includes(columnId);
     }
 
 }

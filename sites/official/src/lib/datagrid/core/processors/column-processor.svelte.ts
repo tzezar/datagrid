@@ -39,7 +39,7 @@ export class ColumnProcessor<TOriginalRow> {
     }
 
     placeGroupColumnsInFront = (columns: AnyColumn<any>[]): AnyColumn<any>[] => {
-        const groupByColumns = this.datagrid.features.grouping.groupByColumns;
+        const groupByColumns = this.datagrid.features.grouping.activeGroups ;
         const groupedColumns: AnyColumn<TOriginalRow>[] = [];
         const nonGroupedColumns: AnyColumn<TOriginalRow>[] = [];
         columns.forEach((column) => {
