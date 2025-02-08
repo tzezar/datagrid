@@ -1,7 +1,6 @@
 import { type AnyColumn, type GroupColumn } from "../types";
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
-import { flattenColumnStructurePreservingGroups, findColumnById } from "../utils.svelte";
 
 type Direction = 'left' | 'right';
 
@@ -17,7 +16,7 @@ export type ColumnOrderingFeatureState = object
 export type ColumnOrderingFeatureConfig = Partial<ColumnOrderingFeatureState>;
 export type IColumnOrderingFeature = ColumnOrderingFeatureState
 
-export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderingFeature{
+export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderingFeature {
     private readonly datagrid: DatagridCore<TOriginalRow>;
 
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: ColumnOrderingFeatureConfig) {
@@ -41,7 +40,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
         return index;
     }
 
- 
+
     private moveColumn(columnId: ColumnId, direction: Direction): void {
         const column = this.findColumnOrThrow(columnId);
         const moveOperation = this.calculateMoveOperation(column, direction);
@@ -52,17 +51,14 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
     }
 
     findColumnOrThrow(columnId: ColumnId): AnyColumn<TOriginalRow> {
-        const column = findColumnById(
-            flattenColumnStructurePreservingGroups(this.datagrid._columns),
-            columnId
-        );
+        const column = this.datagrid.columns.findColumnById(columnId);
         if (!column) {
             throw new Error(`Column ${columnId} not found`);
         }
         return column;
     }
 
-   
+
     private calculateMoveOperation(column: AnyColumn<TOriginalRow>, direction: Direction): MoveOperation {
         const isRoot = column.parentColumnId === null;
         return isRoot
@@ -99,7 +95,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
         };
     }
 
-   
+
     private calculateGroupLevelMove(column: AnyColumn<TOriginalRow>, direction: Direction): MoveOperation {
         const parentGroup = this.findParentGroupOrThrow(column.parentColumnId as string);
         const currentIndex = this.getColumnIndex(parentGroup.columns, column.columnId);
@@ -133,7 +129,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
         };
     }
 
-   
+
     private calculateGroupExitMove(
         column: AnyColumn<TOriginalRow>,
         currentGroup: GroupColumn<TOriginalRow>,
@@ -163,8 +159,8 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
         const sourceParentId = sourceColumn.parentColumnId;
 
         // Get source array (either root or parent group's columns)
-        const sourceArray = sourceParentId === null 
-            ? this.datagrid._columns 
+        const sourceArray = sourceParentId === null
+            ? this.datagrid._columns
             : this.findParentGroupOrThrow(sourceParentId).columns;
 
         // Get target array (either root or target group's columns)
@@ -187,10 +183,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
     }
 
     private findParentGroupOrThrow(groupId: string): GroupColumn<TOriginalRow> {
-        const group = findColumnById(
-            flattenColumnStructurePreservingGroups(this.datagrid._columns),
-            groupId
-        ) as GroupColumn<TOriginalRow>;
+        const group = this.datagrid.columns.findColumnById(groupId) as GroupColumn<TOriginalRow>;
 
         if (!group || group.type !== 'group') {
             throw new Error(`Group ${groupId} not found`);
@@ -206,7 +199,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
         this.datagrid.processors.column.refreshColumnPinningOffsets();
     }
 
-   
+
     private wouldCreateCircularReference(
         sourceGroup: GroupColumn<TOriginalRow>,
         targetGroup: GroupColumn<TOriginalRow>
@@ -225,7 +218,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
         return false;
     }
 
-   
+
     validateMove(operation: MoveOperation): void {
         const { sourceColumn, targetLocation } = operation;
 
@@ -237,7 +230,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
         }
     }
 
-   
+
     moveColumnToPosition(columnId: ColumnId, targetId: ColumnId): void {
         const column = this.findColumnOrThrow(columnId);
 
@@ -271,7 +264,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
         this.refreshColumnState();
     }
 
-   
+
     private moveToRoot(column: AnyColumn<TOriginalRow>): void {
         const moveOperation: MoveOperation = {
             sourceColumn: column,

@@ -1,6 +1,5 @@
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
-import { findColumnById } from "../utils.svelte";
 
 export type ColumnVisibilityFeatureState = {
     onColumnVisibilityChange: (hiddenColumns: string[]) => void
@@ -48,14 +47,14 @@ export class ColumnVisibilityFeature<TOriginalRow = any> implements IColumnVisib
     }
 
     hideColumn(columnId: ColumnId): void {
-        const column = findColumnById(this.datagrid.columns.getLeafColumns(), columnId);
+        const column = this.datagrid.columns.findColumnById(columnId);
         if (column) {
             column.state.visible = false;
         }
     }
 
     showColumn(columnId: ColumnId): void {
-        const column = findColumnById(this.datagrid.columns.getLeafColumns(), columnId);
+        const column = this.datagrid.columns.findColumnById(columnId);
         if (column) {
             column.state.visible = true;
         }

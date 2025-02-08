@@ -1,6 +1,5 @@
 import type { CreateGroupParams } from "../features/column-grouping.svelte";
 import type { ColumnId, GroupColumn, PinningPosition } from "../types";
-import { findColumnById, flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups } from "../utils.svelte";
 import { BaseService } from "./base-service";
 
 export class ColumnControlService extends BaseService {
@@ -24,7 +23,7 @@ export class ColumnControlService extends BaseService {
     }
 
     pinColumn(columnId: string, position: PinningPosition) {
-        const column = findColumnById(flattenColumnStructurePreservingGroups(this.datagrid._columns), columnId);
+        const column = this.datagrid.columns.findColumnById(columnId);
         if (!column) return;
         this.datagrid.features.columnPinning.changeColumnPinningPosition(column, position);
         this.datagrid.processors.column.refreshColumnPinningOffsets();
@@ -32,7 +31,7 @@ export class ColumnControlService extends BaseService {
     }
 
     changeColumnPinningPosition(columnId: string, position: PinningPosition) {
-        const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), columnId);
+        const column = this.datagrid.columns.findColumnById(columnId);
         if (!column) throw new Error(`Column ${columnId} not found`);
         this.datagrid.features.columnPinning.changeColumnPinningPosition(column, position);
         this.datagrid.processors.column.refreshColumnPinningOffsets();

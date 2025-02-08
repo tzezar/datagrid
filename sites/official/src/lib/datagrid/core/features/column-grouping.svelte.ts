@@ -1,7 +1,7 @@
 
 import { type GroupColumn } from "../types";
 import type { DatagridCore } from "../index.svelte";
-import { findColumnById, flattenColumnStructurePreservingGroups, generateRandomColumnId } from "../utils.svelte";
+import { generateRandomColumnId } from "../utils.svelte";
 import { createColumnGroup } from "../column-creation/group-column-creator";
 import type { MoveOperation } from "./column-ordering.svelte";
 
@@ -60,7 +60,7 @@ export class ColumnGroupingFeature<TOriginalRow = any> implements IColumnGroupin
             }
         } else {
             // Group is nested within another group
-            const parentGroup = findColumnById(flattenColumnStructurePreservingGroups(this.datagrid._columns), groupColumn.parentColumnId) as GroupColumn<TOriginalRow>;
+            const parentGroup = this.datagrid.columns.findColumnById(groupColumn.parentColumnId) as GroupColumn<TOriginalRow>;
             if (!parentGroup) throw new Error('Parent group not found');
             if (parentGroup) {
                 // Find and remove the group from its parent

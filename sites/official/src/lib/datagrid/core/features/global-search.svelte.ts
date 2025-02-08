@@ -1,5 +1,4 @@
 import Fuse, { type IFuseOptions } from "fuse.js";
-import { flattenColumnStructureAndClearGroups } from "../utils.svelte";
 import type { DatagridCore } from "../index.svelte";
 import { DEFAULT_FUSE_OPTIONS } from "../defaults";
 
@@ -59,7 +58,7 @@ export class GlobalSearchFeature implements IGlobalSearchState {
 
     getFuseSearchEngine(): Fuse<any> | null {
         if (!this.fuseSearchEngine) {
-            this.setFuseSearchEngine(this.initializeFuseInstance(this.datagrid.originalState.data || [], flattenColumnStructureAndClearGroups(this.datagrid._columns).map(col => col.columnId as string)))
+            this.setFuseSearchEngine(this.initializeFuseInstance(this.datagrid.originalState.data || [], this.datagrid.columns.getFlattenedColumnStructure().map(col => col.columnId as string)))
         }
         return this.fuseSearchEngine;
     }

@@ -3,19 +3,17 @@
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { columnsWithGetters } from '$lib/datagrid/core/constants';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import { flattenColumnStructureAndClearGroups } from '$lib/datagrid/core/utils.svelte';
+
 
 	let { datagrid }: { datagrid: DatagridCore<any> } = $props();
 
 	let columns = $derived(
-		flattenColumnStructureAndClearGroups(datagrid._columns)
+		datagrid.columns.getFlattenedColumnStructure()
 			.filter((col) => columnsWithGetters.includes(col.type as (typeof columnsWithGetters)[number]))
 			.filter((col) => col.options.groupable === true)
 	);
 
-	const getColumnById = (columnId: string) => {
-		return flattenColumnStructureAndClearGroups(datagrid._columns).find((col) => col.columnId === columnId);
-	};
+
 	const getColumnHeaders = () => {};
 </script>
 
@@ -32,7 +30,8 @@
 			<div class="flex h-full w-full flex-wrap gap-2">
 				{#each datagrid.features.grouping.groupByColumns as columnId}
 					<Badge class="flex  items-center justify-center self-center text-center"
-						>{getColumnById(columnId)?.header}</Badge
+						>
+						{datagrid.columns.findColumnById(columnId)?.header}</Badge
 					>
 				{/each}
 			</div>

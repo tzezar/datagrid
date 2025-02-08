@@ -1,5 +1,5 @@
 import type { AnyColumn, GridGroupRow, GroupColumn } from "./types";
-import type { CellValue, ColumnId, CustomCellComponentWithProps, SortableColumn } from "./types";
+import type { CellValue, CustomCellComponentWithProps, SortableColumn } from "./types";
 import type { DatagridCore } from "./index.svelte";
 
 export function generateRandomColumnId(): string {
@@ -36,40 +36,9 @@ export function getCellContent(column: AnyColumn<any>, originalRow: any): CellVa
 }
 
 
-export function flattenColumnStructure(
-    columns: AnyColumn<any>[],
-    preserveGroups: boolean = false
-): AnyColumn<any>[] {
-    const flattened: AnyColumn<any>[] = [];
 
-    const processColumns = (columns: AnyColumn<any>[], result: AnyColumn<any>[]) => {
-        for (let i = 0; i < columns.length; i++) {
-            const column = columns[i];
-            if (column.type === 'group') {
-                processColumns(column.columns, result);
-                result.push(preserveGroups ? column : { ...column, columns: [] });
-            } else {
-                result.push(column);
-            }
-        }
-    };
-
-    processColumns(columns, flattened);
-    return flattened;
-}
-
-export function flattenColumnStructureAndClearGroups(columns: AnyColumn<any>[]): AnyColumn<any>[] {
-    return flattenColumnStructure(columns, false);
-}
-
-export function flattenColumnStructurePreservingGroups(columns: AnyColumn<any>[]): AnyColumn<any>[] {
-    return flattenColumnStructure(columns, true);
-}
 
 // Find column by ID in nested structure
-export function findColumnById<TOriginalRow>(flatColumns: AnyColumn<TOriginalRow>[], id: ColumnId): AnyColumn<TOriginalRow> | null {
-    return flatColumns.find((col) => col.columnId === id) ?? null;
-}
 
 export function isInGroupTree(possibleDescendant: GroupColumn<any>, ancestor: GroupColumn<any>): boolean {
     if (!possibleDescendant) return false;

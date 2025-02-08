@@ -1,6 +1,5 @@
 import type { AnyColumn, ColumnId, DatagridCoreConfig } from "$lib/datagrid/core/types";
 import { LifecycleHooks } from "$lib/datagrid/core/managers/lifecycle-hooks-manager.svelte";
-import { flattenColumnStructureAndClearGroups } from "$lib/datagrid/core/utils.svelte";
 
 import {
     CredentialsPlugin,
@@ -246,7 +245,7 @@ export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends DatagridC
     }
 
     private processColumnsWithExtras(columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
-        const flattenedColumns = flattenColumnStructureAndClearGroups([...columns]);
+        const flattenedColumns = this.columns.flattenColumnStructureAndClearGroups([...columns]);
         const additionalColumns = createAdditionalColumns(this);
         const allColumns = [
             ...additionalColumns.leftCols,
@@ -257,7 +256,7 @@ export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends DatagridC
     }
 
     private processColumns(columns: AnyColumn<TOriginalRow>[]): AnyColumn<TOriginalRow>[] {
-        const flattenedColumns = flattenColumnStructureAndClearGroups([...columns]);
+        const flattenedColumns = this.columns.flattenColumnStructureAndClearGroups([...columns]);
         return this.createHierarchicalColumns(flattenedColumns);
     }
 

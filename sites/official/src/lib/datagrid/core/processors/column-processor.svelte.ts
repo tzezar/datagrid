@@ -1,7 +1,6 @@
 import { isGroupColumn } from "../helpers/column-guards";
 import type { AnyColumn, GroupColumn } from "../types";
 import type { DatagridCore } from "../index.svelte";
-import { flattenColumnStructureAndClearGroups } from "../utils.svelte";
 import type { ColumnId } from "../types";
 
 
@@ -56,7 +55,7 @@ export class ColumnProcessor<TOriginalRow> {
     }
 
     refreshColumnPinningOffsets(columns?: AnyColumn<any>[]) {
-        if (!columns) columns = flattenColumnStructureAndClearGroups(this.datagrid._columns);
+        if (!columns) columns = this.datagrid.columns.getFlattenedColumnStructure();
 
         const newColumns: AnyColumn<any>[] = [];
         for (let i = 0; i < columns.length; i++) {

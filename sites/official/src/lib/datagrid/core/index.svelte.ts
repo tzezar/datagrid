@@ -1,4 +1,4 @@
-import type { AnyColumn, DatagridCoreConfig, GridRow, GridRowIdentifier, GroupColumn, LeafColumn } from "./types";
+import type { AnyColumn, ColumnId, DatagridCoreConfig, GridRow, GridRowIdentifier, GroupColumn, LeafColumn } from "./types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager } from "./managers";
@@ -6,7 +6,6 @@ import { LifecycleHooks } from "./managers/lifecycle-hooks-manager.svelte";
 import { DatagridFeatures } from "./features/features.svelte";
 import { HandlersManager } from "./managers/handler-manager";
 import { EventService } from "./services/event-service";
-import { flattenColumnStructureAndClearGroups } from "./utils.svelte";
 import { isGroupColumn } from "./helpers/column-guards";
 
 
@@ -184,19 +183,18 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
     constructor(private readonly datagrid: DatagridCore<TOriginalRow>) { }
 
     getLeafColumns<TOriginalRow>(): LeafColumn<TOriginalRow>[] {
-        return flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(col => col.type !== 'group')
+        return this.flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(col => col.type !== 'group')
     }
 
     getLeafColumnsInOrder(): LeafColumn<TOriginalRow>[] {
-        const cols = flattenColumnStructureAndClearGroups(this.getColumnsInOrder(this.datagrid)).filter(col => col.type !== 'group')
+        const cols = this.flattenColumnStructureAndClearGroups(this.getColumnsInOrder(this.datagrid)).filter(col => col.type !== 'group')
         return cols
     }
-
 
     getColumnsInOrder<TOriginalRow>(datagrid: DatagridCore): AnyColumn<TOriginalRow>[] {
         const { groupByColumns } = datagrid.features.grouping;
 
-        const columns = flattenColumnStructureAndClearGroups(datagrid._columns).reduce(
+        const columns = this.flattenColumnStructureAndClearGroups(datagrid._columns).reduce(
             (acc, col) => {
                 const position = col.state.pinning.position;
                 if (position === 'left' || groupByColumns.includes(col.columnId)) {
@@ -218,8 +216,48 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
         ];
     }
 
-    getGroupColumns<TOriginalRow>(): GroupColumn<TOriginalRow>[] {
-        return flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(col => isGroupColumn(col));
+    getGroupColumns(): GroupColumn<TOriginalRow>[] {
+        return this.flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(col => isGroupColumn(col));
     }
 
+
+    getFlattenedColumnStructure(preserveGroups: boolean = true): AnyColumn<TOriginalRow>[] {
+        return this.flattenColumnStructure(this.datagrid._columns, preserveGroups);
+    }
+
+    flattenColumnStructure(
+        columns: AnyColumn<TOriginalRow>[],
+        preserveGroups: boolean = false
+    ): AnyColumn<TOriginalRow>[] {
+        const flattened: AnyColumn<TOriginalRow>[] = [];
+
+        const processColumns = (columns: AnyColumn<any>[], result: AnyColumn<any>[]) => {
+            for (let i = 0; i < columns.length; i++) {
+                const column = columns[i];
+                if (column.type === 'group') {
+                    processColumns(column.columns, result);
+                    result.push(preserveGroups ? column : { ...column, columns: [] });
+                } else {
+                    result.push(column);
+                }
+            }
+        };
+
+        processColumns(columns, flattened);
+        return flattened;
+    }
+
+
+    flattenColumnStructureAndClearGroups(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+        return this.flattenColumnStructure(columns, false);
+    }
+
+    flattenColumnStructurePreservingGroups(columns: AnyColumn<any>[]): AnyColumn<any>[] {
+        return this.flattenColumnStructure(columns, true);
+    }
+
+   findColumnById<TOriginalRow>( id: ColumnId): AnyColumn<TOriginalRow> | null {
+        return this.flattenColumnStructureAndClearGroups(this.datagrid._columns).find((col) => col.columnId === id) ?? null;
+    }
+    
 }

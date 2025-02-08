@@ -1,7 +1,6 @@
 import { isGroupColumn } from "../helpers/column-guards";
 import type { DatagridCore } from "../index.svelte";
 import type { Aggregation, AggregationFn, FilterCondition, GridGroupRow, GridRow } from "../types";
-import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 import type { PerformanceMetrics } from "../helpers/performance-metrics.svelte";
 import type { AccessorColumn, ComputedColumn } from "../types";
 import { aggregationFunctions } from "../helpers/aggregation-functions";
@@ -65,7 +64,7 @@ export class DataDataProcessor<TOriginalRow> {
 
         }
         const applySimpleSearch = (data: TOriginalRow[]) => {
-            const searchableColumns = flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>)[];
+            const searchableColumns = this.datagrid.columns.getFlattenedColumnStructure().filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>)[];
             return data.filter(item =>
                 searchableColumns.some(column =>
                     String(column.getValueFn(item))
@@ -239,7 +238,7 @@ export class DataDataProcessor<TOriginalRow> {
 
             if (depth >= groupCols.length) return this.createBasicRows(rows, parentPath);
 
-            const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), groupCols[depth]);
+            const column = this.datagrid.columns.findColumnById(groupCols[depth]);
 
             if (!column) throw new Error(`Invalid group column: ${groupCols[depth]}`);
             if (isGroupColumn(column)) throw new Error(`Cannot group by group column: ${groupCols[depth]}`);
@@ -259,7 +258,7 @@ export class DataDataProcessor<TOriginalRow> {
 
             // Create group rows with aggregation
             return Array.from(groups.entries()).map(([key, groupRows], index) => {
-                const aggregations = flattenColumnStructureAndClearGroups(this.datagrid._columns)
+                const aggregations = this.datagrid.columns.getFlattenedColumnStructure()
                     .filter(col =>
                         (col.type === 'accessor' || col.type === 'computed') &&
                         col.aggregate
