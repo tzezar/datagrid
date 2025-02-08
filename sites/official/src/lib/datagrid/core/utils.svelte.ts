@@ -35,7 +35,7 @@ export function getCellContent(column: AnyColumn<any>, originalRow: any): CellVa
 }
 
 // Find column by ID in nested structure
-export function isInGroupTree(possibleDescendant: GroupColumn<any>, ancestor: GroupColumn<any>): boolean {
+export function isColumnInGroupTree(possibleDescendant: GroupColumn<any>, ancestor: GroupColumn<any>): boolean {
     if (!possibleDescendant) return false;
 
     // Check if the possible descendant is a direct child of the ancestor
@@ -44,10 +44,8 @@ export function isInGroupTree(possibleDescendant: GroupColumn<any>, ancestor: Gr
     // Recursively check if the possible descendant is a descendant of any group columns
     return ancestor.columns
         .filter((col): col is GroupColumn<any> => col.type === 'group') // Type guard to ensure we only check GroupColumn types
-        .some(childGroup => isInGroupTree(possibleDescendant, childGroup)); // Recursive call for group columns
+        .some(childGroup => isColumnInGroupTree(possibleDescendant, childGroup)); // Recursive call for group columns
 }
-
-
 
 export function isCellComponent(value: any): value is CustomCellComponentWithProps {
     return value && typeof value === 'object' && 'component' in value
