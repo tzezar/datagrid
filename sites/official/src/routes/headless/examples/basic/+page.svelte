@@ -34,6 +34,22 @@
 
 	let { data } = $props();
 
-
+	const datagrid = new DatagridCore({
+		columns,
+		data: data.inventory
+	});
 
 </script>
+
+<div>
+	<div>
+		<div>
+			{#each datagrid.columns.getLeafColumns() as column}
+				<div>
+					{column.header}
+				</div>
+			{/each}
+		</div>
+	</div>
+	<div id="body"></div>
+</div>

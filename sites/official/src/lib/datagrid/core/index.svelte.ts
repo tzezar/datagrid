@@ -41,7 +41,7 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
 
     lifecycleHooks = new LifecycleHooks<TOriginalRow>();
 
-    constructor(config: DatagridCoreConfig<TOriginalRow>, lazyInitialization: boolean = true) {
+    constructor(config: DatagridCoreConfig<TOriginalRow>, lazyInitialization: boolean = false) {
         this.events = new EventService();
         this.handlers = new HandlersManager(this, this.events);
         this.features = new DatagridFeatures(this, config);
@@ -189,6 +189,11 @@ class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
      */
     getColumns(): AnyColumn<TOriginalRow>[] {
         return this.datagrid._columns;
+    }
+
+
+    get leafColumns(): LeafColumn<TOriginalRow>[] {
+        return this.getLeafColumns();
     }
 
     /**
