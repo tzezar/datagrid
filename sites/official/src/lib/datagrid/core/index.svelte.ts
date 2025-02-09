@@ -1,4 +1,4 @@
-import type { ColumnDef, ColumnId, DatagridCoreConfig, GridBasicRow, GridRow, GridRowIdentifier, GroupColumn, LeafColumn } from "./types";
+import type { ColumnDef, DatagridCoreConfig, GridBasicRow, GridRow, GridRowIdentifier, GroupColumn, LeafColumn } from "./types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager } from "./managers";
@@ -173,15 +173,15 @@ class Rows<TOriginalRow> implements IRows<TOriginalRow> {
 }
 
 
-type IColumns<TOriginalRow> = {
-    getLeafColumns: () => LeafColumn<TOriginalRow>[];
-    getLeafColumnsInOrder: () => LeafColumn<TOriginalRow>[];
-    getColumnsInOrder: () => ColumnDef<TOriginalRow>[];
-    getGroupColumns: () => GroupColumn<TOriginalRow>[]
-    getFlattenedColumnStructure: (preserveGroups: boolean) => ColumnDef<TOriginalRow>[]
-    flattenColumnStructure: (columns: ColumnDef<TOriginalRow>[], preserveGroups: boolean) => ColumnDef<TOriginalRow>[]
-    findColumnById: (columnId: ColumnId) => ColumnDef<TOriginalRow> | null
-}
+// type IColumns<TOriginalRow> = {
+//     getLeafColumns: () => LeafColumn<TOriginalRow>[];
+//     getLeafColumnsInOrder: () => LeafColumn<TOriginalRow>[];
+//     getColumnsInOrder: () => ColumnDef<TOriginalRow>[];
+//     getGroupColumns: () => GroupColumn<TOriginalRow>[]
+//     getFlattenedColumnStructure: (preserveGroups: boolean) => ColumnDef<TOriginalRow>[]
+//     flattenColumnStructure: (columns: ColumnDef<TOriginalRow>[], preserveGroups: boolean) => ColumnDef<TOriginalRow>[]
+//     findColumnById: (columnId: ColumnId) => ColumnDef<TOriginalRow> | null
+// }
 
 // class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
 class Columns<TOriginalRow> {
