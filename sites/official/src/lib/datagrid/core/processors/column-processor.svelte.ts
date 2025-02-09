@@ -40,7 +40,7 @@ export class ColumnProcessor<TOriginalRow> {
     }
 
     placeGroupColumnsInFront = (columns: ColumnDef<any>[]): ColumnDef<any>[] => {
-        const groupByColumns = this.datagrid.features.grouping.activeGroups ;
+        const groupByColumns = this.datagrid.features.grouping.activeGroups;
         const groupedColumns: ColumnDef<TOriginalRow>[] = [];
         const nonGroupedColumns: ColumnDef<TOriginalRow>[] = [];
         columns.forEach((column) => {
@@ -121,4 +121,60 @@ export class ColumnProcessor<TOriginalRow> {
         return results
     }
 
+
+    // Calculate column span for a given column
+    calculateColSpan(col: ColumnDef<TOriginalRow>): number {
+        if (!isGroupColumn(col)) return 1;
+        return col.columns.reduce((sum, child) => sum + this.calculateColSpan(child), 0);
+    }
+
+    getMaxDepth(cols: ColumnDef<TOriginalRow>[]): number {
+        return cols.reduce((max, col) => {
+            if (isGroupColumn(col)) {
+                return Math.max(max, this.getMaxDepth(col.columns) + 1);
+            }
+            return max;
+        }, 0);
+    }
+    generateHeaderRows(cols: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[][] {
+        const depth = this.getMaxDepth(cols);
+        const rows: (ColumnDef<TOriginalRow> & { colSpan?: number; colStart?: number })[][] = Array(depth + 1)
+            .fill(null)
+            .map(() => []);
+
+        const processColumn = (col: ColumnDef<TOriginalRow>, level: number, colStart: number): number => {
+            const colSpan = this.calculateColSpan(col);
+
+            if (isGroupColumn(col)) {
+                // Add group header at current level
+                rows[level].push({
+                    ...col,
+                    colSpan,
+                    colStart
+                });
+
+                // Process children at next level
+                let currentStart = colStart;
+                col.columns.forEach((child) => {
+                    currentStart = processColumn(child, level + 1, currentStart);
+                });
+                return colStart + colSpan;
+            } else {
+                // Add leaf column to bottom row
+                rows[depth].push({
+                    ...col,
+                    colSpan: 1,
+                    colStart
+                });
+                return colStart + 1;
+            }
+        }
+
+        let currentStart = 0;
+        cols.forEach((col) => {
+            currentStart = processColumn(col, 0, currentStart);
+        });
+
+        return rows;
+    }
 }

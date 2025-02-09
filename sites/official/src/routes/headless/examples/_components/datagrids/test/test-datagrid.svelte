@@ -1,7 +1,7 @@
 <!-- DataGrid.svelte -->
 <script lang="ts">
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory';
-	import { accessorColumn, columnGroup, type ColumnDef } from '$lib/datagrid';
+	import { accessorColumn, columnGroup, DatagridCore, type ColumnDef } from '$lib/datagrid';
 
 	type Column = {
 		header?: string;
@@ -53,78 +53,21 @@
 
 	let { data }: { data: { inventory: InventoryItem[] } } = $props();
 
+	const datagrid = new DatagridCore({
+		columns,
+		data: data.inventory
+	})
+
 	// Get maximum depth of column nesting
-	function getMaxDepth(cols: Column[]): number {
-		return cols.reduce((max, col) => {
-			if (col.columns) {
-				return Math.max(max, getMaxDepth(col.columns) + 1);
-			}
-			return max;
-		}, 0);
-	}
 
-	// Calculate column span for a given column
-	function calculateColSpan(col: Column): number {
-		if (!col.columns) return 1;
-		return col.columns.reduce((sum, child) => sum + calculateColSpan(child), 0);
-	}
 
-	// Get flat list of leaf columns while preserving hierarchy
-	function getLeafColumns(cols: Column[]): Column[] {
-		return cols.flatMap((col) => {
-			if (col.columns) {
-				return getLeafColumns(col.columns);
-			}
-			return col;
-		});
-	}
 
-	// Generate header structure with correct positioning and spans
-	function generateHeaderRows(cols: Column[]): Column[][] {
-		const depth = getMaxDepth(cols);
-		const rows: (Column & { colSpan?: number; colStart?: number })[][] = Array(depth + 1)
-			.fill(null)
-			.map(() => []);
 
-		function processColumn(col: Column, level: number, colStart: number): number {
-			const colSpan = calculateColSpan(col);
 
-			if (col.columns) {
-				// Add group header at current level
-				rows[level].push({
-					...col,
-					colSpan,
-					colStart
-				});
+	
 
-				// Process children at next level
-				let currentStart = colStart;
-				col.columns.forEach((child) => {
-					currentStart = processColumn(child, level + 1, currentStart);
-				});
-				return colStart + colSpan;
-			} else {
-				// Add leaf column to bottom row
-				rows[depth].push({
-					...col,
-					colSpan: 1,
-					colStart
-				});
-				return colStart + 1;
-			}
-		}
-
-		let currentStart = 0;
-		cols.forEach((col) => {
-			currentStart = processColumn(col, 0, currentStart);
-		});
-
-		return rows;
-	}
-
-	const maxDepth = getMaxDepth(columns);
-	const headerRows = generateHeaderRows(columns);
-	const leafColumns = getLeafColumns(columns);
+	const maxDepth = datagrid.processors.column.getMaxDepth(columns);
+	const leafColumns = datagrid.columns.getLeafColumns();
 	const totalColumns = leafColumns.length;
 
 	// Generate grid template columns with flexible column support
@@ -137,7 +80,7 @@
 	<div class="grid">
 		<!-- Headers -->
 		<div class="header-group">
-			{#each headerRows as row, rowIndex}
+			{#each datagrid.processors.column.generateHeaderRows(columns) as row, rowIndex}
 				<div class="row" style="grid-template-columns: {gridTemplateColumns}">
 					{#each row as cell}
 						{#if cell}
