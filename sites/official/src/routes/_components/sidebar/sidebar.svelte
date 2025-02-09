@@ -19,8 +19,16 @@
 		<Group>
 			<GroupTitle title="Examples" />
 			<GroupItem title="Basic" href={hrefs.headless.examples.basic} />
+			<GroupItem title="Header groups" href={hrefs.headless.examples.headerGroups} />
+			<GroupItem title="Column filters" href={hrefs.headless.examples.columnFilters} />
+			<GroupItem
+				title="Column filters faceted"
+				href={hrefs.headless.examples.columnFiltersFaceted}
+			/>
+			<GroupItem title="Column ordering" href={hrefs.headless.examples.columnOrdering} />
+			<GroupItem title="Column pinning" href={hrefs.headless.examples.columnPinning} />
+			<GroupItem title="Column pinning detached" href={hrefs.headless.examples.columnPinningDetached} />
 		</Group>
-
 
 		<GroupTitle
 			title="Enhanced"

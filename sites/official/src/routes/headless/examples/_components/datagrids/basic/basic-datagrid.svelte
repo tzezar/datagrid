@@ -57,7 +57,7 @@
 
 <style lang="postcss">
 	.wrapper {
-		@apply max-h-96 overflow-auto;
+		@apply max-h-[400px] overflow-auto;
 	}
 	.tr {
 		@apply flex;

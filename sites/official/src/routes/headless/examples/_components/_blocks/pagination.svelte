@@ -4,7 +4,7 @@
 	let { datagrid }: { datagrid: DatagridCore<any> } = $props();
 </script>
 
-<div class="flex flex-row items-center gap-4 outline-1 outline outline-border p-2">
+<div class="flex flex-col sm:flex-row items-center gap-4 outline-1 outline outline-border p-2">
 	<div class="flex flex-row items-center gap-2">
 		<span class="text-nowrap">Per page:</span>
 		<select

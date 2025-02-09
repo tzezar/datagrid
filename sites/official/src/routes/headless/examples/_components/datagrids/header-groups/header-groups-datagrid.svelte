@@ -1,6 +1,7 @@
-<!-- <script lang="ts">
+<script lang="ts">
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory.js';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
+	import type { LeafColumn, GroupColumn } from '$lib/datagrid/core/types';
 	import {
 		accessorColumn,
 		columnGroup,
@@ -8,92 +9,97 @@
 		getCellContent,
 		type ColumnDef
 	} from '$lib/datagrid/index.js';
+	import { cn } from '$lib/utils';
 
 	export const columns = [
 		columnGroup({
-			header: 'Inventory',
-			columnId: 'inventory',
+			header: 'Product',
 			columns: [
 				accessorColumn({
-					accessorKey: 'id',
-					width: 160 // Fixed width
+					accessorKey: 'id'
 				}),
 				accessorColumn({
 					accessorKey: 'name',
+					_meta: {
+						grow: true
+					}
 				}),
 				accessorColumn({
-					accessorKey: 'category',
-					width: 160 // Fixed width
+					accessorKey: 'category'
+				})
+			]
+		}),
+		columnGroup({
+			header: 'Inventory',
+			columns: [
+				accessorColumn({
+					accessorKey: 'id'
+				}),
+				accessorColumn({
+					accessorKey: 'name',
+					_meta: {
+					}
+				}),
+				columnGroup({
+					header: 'Informations',
+					columns: [
+						accessorColumn({
+							accessorKey: 'id'
+						}),
+						accessorColumn({
+							accessorKey: 'name',
+							_meta: {
+							}
+						}),
+						accessorColumn({
+							accessorKey: 'category'
+						})
+					]
+				}),
+				columnGroup({
+					header: 'Something else',
+					columns: [
+						accessorColumn({
+							accessorKey: 'id'
+						}),
+						accessorColumn({
+							accessorKey: 'name',
+							_meta: {
+							}
+						}),
+						accessorColumn({
+							accessorKey: 'category'
+						})
+					]
+				}),
+				accessorColumn({
+					accessorKey: 'category'
 				})
 			]
 		}),
 		accessorColumn({
-			accessorKey: 'price',
-			width: 160 // Fixed width
+			accessorKey: 'price'
 		})
 	] satisfies ColumnDef<InventoryItem>[];
 
 	let { data }: { data: { inventory: InventoryItem[] } } = $props();
 
-	function normalizeColumnWidths(columns: ColumnDef[], totalWidth: number): ColumnDef[] {
-		let remainingWidth = totalWidth;
-		let fillColumns = 0;
-
-		// First, determine how much space is occupied
-		columns.forEach((col) => {
-			if (!isGroupColumn(col)) {
-				if (col.fillWidth) {
-					fillColumns++;
-				} else {
-					remainingWidth -= col.width || 160;
-				}
-			}
-		});
-
-		// Assign width to "fillWidth" columns
-		const fillColumnWidth = fillColumns > 0 ? remainingWidth / fillColumns : 160;
-
-		return columns.map((column) => {
-			if (isGroupColumn(column)) {
-				const childColumns = normalizeColumnWidths(column.columns, totalWidth);
-				const totalChildWidth = childColumns.reduce((sum, col) => sum + (col.width || 160), 0);
-				return { ...column, width: totalChildWidth, columns: childColumns };
-			}
-			return { ...column, width: column.fillWidth ? fillColumnWidth : column.width || 160 };
-		});
-	}
-
 	const datagrid = new DatagridCore({
-		columns: normalizeColumnWidths(columns),
+		columns: columns,
 		data: data.inventory
 	});
-
-	$effect(() => {
-		console.log($state.snapshot(datagrid._columns));
-	});
 </script>
-{#snippet TH(column)}
-	<div class="flex flex-col h-full grow" style="width: {column.width}px">
-		<div class=" bg-red-400 h-full min-h-full flex grow">{column.header}</div>
-
-		{#if isGroupColumn(column)}
-			<div class="flex w-full">
-				{#each column.columns as subColumn}
-					<div style="width: {subColumn.width}px">
-						{@render TH(subColumn)}
-					</div>
-				{/each}
-			</div>
-		{/if}
-	</div>
-{/snippet}
 
 <div class="wrapper">
 	<div class="table">
-		<div class="thead w-fit  h-full grow flex flex-col">
-			<div class="flex flex-row items-end h-full grow">
+		<div class="thead">
+			<div class="flex items-end">
 				{#each datagrid.columns.getColumns() as column}
-					{@render TH(column)}
+					{#if column.type === 'group'}
+						{@render GroupHeader(column)}
+					{:else}
+						{@render LeafHeader(column)}
+					{/if}
 				{/each}
 			</div>
 		</div>
@@ -111,12 +117,32 @@
 	</div>
 </div>
 
+{#snippet GroupHeader(column: GroupColumn<any>)}
+	<div class="th flex flex-col w-full">
+		<div class="px-4 py-2 font-bold">
+			{column.header}
+		</div>
+		<div class="flex">
+			{#each column.columns ?? [] as subColumn (subColumn.columnId)}
+				{#if isGroupColumn(subColumn)}
+					{@render GroupHeader(subColumn)}
+				{:else if subColumn.state.visible === true}
+					{@render LeafHeader(subColumn)}
+				{/if}
+			{/each}
+		</div>
+	</div>
+{/snippet}
+
+{#snippet LeafHeader(column: LeafColumn<any>)}
+	<div class={cn('th min-w-40 self-end px-4 py-2 ', column._meta.grow && '!grow')}>
+		{column.header}
+	</div>
+{/snippet}
+
 <style lang="postcss">
-	.spacer {
-	flex-grow: 1; /* Takes up remaining space */
-}
 	.wrapper {
-		@apply max-h-96 overflow-auto;
+		@apply max-h-[600px] overflow-auto;
 	}
 	.tr {
 		@apply flex;
@@ -129,32 +155,20 @@
 		@apply w-full;
 	}
 	.th {
-		@apply bg-red-400 px-4 py-2 text-left;
 	}
-
 	.td {
 		@apply w-full max-w-40 overflow-hidden text-ellipsis text-nowrap px-4 py-1 align-top;
 	}
-
-	/* Column groups take full width */
-	.tr {
-		@apply flex w-full;
-	} /* Ensure sub-columns have correct width constraints */
-	.tr > .flex-1 {
-		@apply min-w-40 max-w-40;
-	}
-	/* .td,
+	.td,
 	.th {
 		&:nth-child(2) {
 			@apply max-w-full;
 		}
-	} */
+	}
 	.wrapper,
 	.th,
 	.td {
-		/* margin: -1px; */
-		/* border: 1px solid hsl(var(--border)); */
 		background: hsl(var(--background));
 		box-shadow: 0 0 0 1px hsl(var(--border));
 	}
-</style> -->
+</style>

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import HeaderGroupsDatagrid from '../_components/datagrids/header-groups/header-groups-datagrid.svelte';
+	import ColumnOrderingDatagrid from '../_components/datagrids/column-ordering/column-ordering-datagrid.svelte';
 
 	let { data } = $props();
 </script>
 
 <h2>Header groups datagrid implementation</h2>
-<HeaderGroupsDatagrid {data} />
+<ColumnOrderingDatagrid {data} />
 <div class="prose w-full min-w-full">
 	<!-- <Readme /> -->
 </div>

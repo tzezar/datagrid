@@ -5,7 +5,7 @@ export type ColumnMetaEnhanced<TOriginalRow = any> = {
     grow?: boolean;
     // TODO implement more types
     // filterType?: 'text' | 'number' | 'select' | 'date' | 'dateRange' | 'range';
-    filterType?: 'text' | 'number' | 'select' | 'date'
+    filterType?: 'text' | 'number' | 'select' | 'date' | 'range'
     filterOptions?: { label: string, value: string }[];
     showColumnManagerDropdownMenu?: boolean;
     clickToCopy?: boolean;

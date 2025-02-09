@@ -10,6 +10,14 @@ export const hrefs = {
         },
         examples: {
             basic: "/headless/examples/basic",
+            headerGroups: "/headless/examples/header-groups",
+            columnFilters: "/headless/examples/column-filters",
+            columnFiltersFaceted: "/headless/examples/column-filters-faceted",
+            columnOrdering: "/headless/examples/column-ordering",
+            columnPinning: "/headless/examples/column-pinning",
+            columnPinningDetached: "/headless/examples/column-pinning-detached",
+            columnSizing: "/headless/examples/column-sizing",
+
         }
     },
 
@@ -42,7 +50,7 @@ export const hrefs = {
     //         basic: "/headless/examples/basic",
     //         columnFilters: "/headless/examples/column-filters",
     //         columnFiltersFaceted: "/headless/examples/column-filters-faceted",
-    //         columnOrdering: "/headless/examples/column-ordering",
+    //         columnOrdering: "/headless/examples/column-ordering",min-w-full 
     //         columnPinning: "/headless/examples/column-pinning",
     //         columnSizing: "/headless/examples/column-sizing",
     //         columnVisibility: "/headless/examples/column-visibility",

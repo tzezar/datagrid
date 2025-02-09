@@ -250,6 +250,46 @@ class Columns<TOriginalRow> {
         ];
     }
 
+
+    /**
+     * Categorizes columns into left-pinned, right-pinned, and center (unpinned) groups.
+     * 
+     * This function processes the datagrid's column structure, determining which columns
+     * should be pinned to the left or right, and which should remain in the center. 
+     * Grouped columns are treated as left-pinned.
+     * 
+     * @returns An object containing categorized columns:
+     *   - `left`: Columns pinned to the left or part of active groups.
+     *   - `center`: Unpinned columns, structured into a hierarchy.
+     *   - `right`: Columns pinned to the right (excluding group columns).
+     */
+    getPinnedAndCenterColumns(): { left: ColumnDef<TOriginalRow>[], center: ColumnDef<TOriginalRow>[], right: ColumnDef<TOriginalRow>[] } {
+        const { activeGroups: groupByColumns } = this.datagrid.features.grouping;
+
+        const columns = flattenColumnStructureAndClearGroups(this.datagrid._columns).reduce(
+            (acc, col) => {
+                const position = col.state.pinning.position;
+                if (position === 'left' || groupByColumns.includes(col.columnId)) {
+                    acc.left.push(col);
+                } else if (position === 'right' && col.type !== 'group') {
+                    acc.right.push(col);
+                } else {
+                    acc.none.push(col);
+                }
+                return acc;
+            },
+            { left: [], right: [], none: [] } as Record<'left' | 'right' | 'none', ColumnDef<TOriginalRow>[]>
+        );
+
+        return {
+            left: columns.left,
+            center: this.datagrid.processors.column.createColumnHierarchy(columns.none),
+            right: columns.right
+        };
+    }
+
+
+
     /**
      * Retrieves a list of all group columns.
      * Group columns are those that contain child columns and represent a grouping of other columns.

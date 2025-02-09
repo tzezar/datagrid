@@ -40,6 +40,11 @@ export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilter
         return condition ? condition.value : null;
     }
 
+    getConditionValueTo(columnId: string): any {
+        const condition = this.filterConditions.find(c => c.columnId === columnId);
+        return condition ? condition.valueTo : null;
+    }
+
     /**
      * Retrieves the filter operator for a given column.
      * @param columnId - The ID of the column.

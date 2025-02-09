@@ -1,7 +1,7 @@
 import type { DatagridCore } from "../index.svelte";
 import { ColumnControlService } from "../services/column-control-service";
 import { EventService } from "../services/event-service";
-import { FilteringService } from "../services/filtering-service";
+import { FilteringService } from "../services/filtering-service.svelte";
 import { SearchService } from "../services/global-search-service";
 import { GroupingService } from "../services/grouping-service";
 import { PaginationService } from "../services/pagination-service";
