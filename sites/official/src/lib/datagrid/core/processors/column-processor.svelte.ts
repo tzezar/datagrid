@@ -122,21 +122,16 @@ export class ColumnProcessor<TOriginalRow> {
     }
 
 
-    // Calculate column span for a given column
-    calculateColSpan(col: ColumnDef<TOriginalRow>): number {
-        // If the column itself is hidden, return 0
+     calculateColSpan(col: ColumnDef<TOriginalRow>): number {
         if (col.state.visible === false) return 0;
 
-        // For group columns, sum up visible children
         if (isGroupColumn(col)) {
             const visibleChildrenSpan = col.columns.reduce((sum, child) => 
                 sum + this.calculateColSpan(child), 0);
             
-            // If no visible children, return 0
             return visibleChildrenSpan === 0 ? 0 : visibleChildrenSpan;
         }
 
-        // For leaf columns, return 1 if visible
         return 1;
     }
 
@@ -151,46 +146,55 @@ export class ColumnProcessor<TOriginalRow> {
 
     generateHeaderRows(cols: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[][] {
         const depth = this.getMaxDepth(cols);
-        const rows: (ColumnDef<TOriginalRow> & { colSpan?: number; colStart?: number })[][] = 
-            Array(depth + 1).fill(null).map(() => []);
-
+        const rows: (ColumnDef<TOriginalRow> & { 
+            colSpan?: number; 
+            colStart?: number; 
+            rowSpan?: number;
+            rowStart?: number; // Add rowStart property
+        })[][] = Array(depth + 1).fill(null).map(() => []);
+    
         const processColumn = (col: ColumnDef<TOriginalRow>, level: number, colStart: number): number => {
             const colSpan = this.calculateColSpan(col);
-            
-            // Skip processing if column or all its children are hidden
             if (colSpan === 0) return colStart;
+    
+            let rowSpan = 1;
+            let rowStart = level;
 
+            if (!isGroupColumn(col)) {
+                if (col.state.pinning?.position) {
+                    rowSpan = depth + 1;
+                    rowStart = 0; // Always start from the top for pinned columns
+                } else {
+                    rowSpan = depth - level + 1;
+                }
+            }
+    
+            rows[level].push({
+                ...col,
+                colSpan,
+                colStart,
+                rowSpan,
+                rowStart
+            });
+    
             if (isGroupColumn(col)) {
-                // Add group header only if it has visible children
-                rows[level].push({
-                    ...col,
-                    colSpan,
-                    colStart
-                });
-
-                // Process visible children
                 let currentStart = colStart;
                 col.columns.forEach((child) => {
                     currentStart = processColumn(child, level + 1, currentStart);
                 });
                 return colStart + colSpan;
-            } else {
-                // Add leaf column if visible
-
-                rows[depth].push({
-                    ...col,
-                    colSpan: 1,
-                    colStart
-                });
-                return colStart + 1;
             }
+    
+            return colStart + 1;
         };
-
+    
         let currentStart = 0;
         cols.forEach((col) => {
             currentStart = processColumn(col, 0, currentStart);
         });
-
+    
         return rows;
     }
+    
+    
 }
