@@ -22,6 +22,8 @@
 		left: number;
 		depth: number;
 		pinned?: 'left' | 'right';
+		parentId: string | null;
+		columnId: string;
 	};
 
 	export const columns = [
@@ -29,6 +31,8 @@
 			type: 'accessor',
 			header: 'Id',
 			accessorKey: 'id',
+			columnId: 'id',
+			parentId: null,
 			width: 100,
 			left: 0,
 			depth: 0,
@@ -37,6 +41,8 @@
 		{
 			type: 'group',
 			header: 'Product',
+			columnId: 'product',
+			parentId: null,
 			width: 500,
 			left: 100,
 			depth: 1,
@@ -44,6 +50,8 @@
 				{
 					type: 'group',
 					header: 'Details',
+					columnId: 'details',
+					parentId: 'product',
 					width: 200,
 					left: 100,
 					depth: 2,
@@ -52,6 +60,8 @@
 							type: 'accessor',
 							header: 'Name',
 							accessorKey: 'name',
+							columnId: 'name',
+							parentId: 'details',
 							width: 100,
 							left: 0,
 							depth: 2,
@@ -61,6 +71,8 @@
 							type: 'accessor',
 							header: 'Category',
 							accessorKey: 'category',
+							columnId: 'category',
+							parentId: 'details',
 							width: 100,
 							left: 0,
 							depth: 2
@@ -70,6 +82,8 @@
 				{
 					type: 'group',
 					header: 'Informations',
+					columnId: 'informations',
+					parentId: 'product',
 					width: 300,
 					left: 0,
 					depth: 2,
@@ -78,6 +92,8 @@
 							type: 'accessor',
 							header: 'Price',
 							accessorKey: 'price',
+							columnId: 'price',
+							parentId: 'informations',
 							width: 100,
 							left: 0,
 							depth: 3
@@ -86,6 +102,8 @@
 							type: 'accessor',
 							header: 'Quantity',
 							accessorKey: 'quantity',
+							columnId: 'quantity',
+							parentId: 'informations',
 							width: 100,
 							left: 0,
 							depth: 3
@@ -94,6 +112,8 @@
 							type: 'accessor',
 							header: 'Status',
 							accessorKey: 'status',
+							columnId: 'status',
+							parentId: 'informations',
 							width: 100,
 							left: 0,
 							depth: 3
@@ -106,6 +126,8 @@
 			type: 'accessor',
 			header: 'Supplier',
 			accessorKey: 'supplier',
+			columnId: 'supplier',
+			parentId: null,
 			width: 100,
 			left: 0,
 			depth: 1
@@ -113,6 +135,8 @@
 		{
 			type: 'group',
 			header: 'Restock',
+			columnId: 'restock',
+			parentId: null,
 			width: 100,
 			left: 100,
 			depth: 1,
@@ -121,6 +145,8 @@
 					type: 'accessor',
 					header: 'Date',
 					accessorKey: 'restockDate',
+					columnId: 'restockDate',
+					parentId: 'restock',
 					width: 100,
 					left: 0,
 					depth: 2
@@ -133,19 +159,52 @@
 
 	let { data }: { data: { inventory: InventoryItem[] } } = $props();
 
-	function calculateColSpan<TOriginalRow>(col: Column<TOriginalRow>): number {
-		// if (col.state.visible === false) return 0;
+	function transformColumns(columns: Column[]) {
+		console.log(columns);
 
-		if (col.type === 'group') {
-			const visibleChildrenSpan = col.columns.reduce(
-				(sum, child) => sum + calculateColSpan(child),
-				0
-			);
+		// It will calculate width, left, and depth for each flat column
+		const flattened: Column[] = [];
+		let left = 0;
 
-			return visibleChildrenSpan === 0 ? 0 : visibleChildrenSpan;
+		function traverse(cols: Column[], depth = 0, parentId: string | null = null) {
+			cols.forEach((col) => {
+				const isLeaf = col.type !== 'group';
+
+				let width = 100;
+
+				// If not a leaf, sum up children's width
+				if (col.type === 'group') {
+					left = 100;
+					// width = col.columns.reduce((sum, child) => sum + child.width, 0);
+				}
+
+				// Add the column's left offset and width
+				const transformedCol = {
+					...col,
+					parentId,
+					width,
+					left: 0,
+					depth
+				};
+
+				flattened.push(transformedCol);
+
+				left = 0;
+				// Increment the leftOffset for the next column at the same depth level
+				if (col.type !== 'group') {
+					left = 0;
+				}
+
+				// Recursively process children for group columns, but don't update leftOffset for groups
+				if (col.type === 'group') {
+					traverse(col.columns, depth + 1, col.columnId);
+				}
+			});
 		}
 
-		return 1;
+		traverse(columns);
+
+		return flattened;
 	}
 
 	function getMaxDepth<TOriginalRow>(cols: Column<TOriginalRow>[]): number {
@@ -189,42 +248,156 @@
 
 		return rows;
 	}
+
+	function flattenColumns(columns: Column[]): Column[] {
+		const flattened: Column[] = [];
+
+		columns.forEach((col) => {
+			if (col.type === 'group') {
+				// Flatten the group column with its inner columns
+				flattened.push(...flattenColumns(col.columns));
+				flattened.push({ ...col, columns: [] });
+				// Recursively flatten the inner columns and add them
+			} else {
+				// Directly add the regular column
+				flattened.push(col);
+			}
+		});
+
+		console.log('flattened', flattened);
+
+		return flattened;
+	}
+
+	function restoreHierarchy(columns: Column[]): Column[] {
+		const columnMap = new Map<string, Column>(); // Map columnId to column
+		const rootColumns: Column[] = [];
+
+		// Populate the column map
+		columns.forEach((col) => {
+			columnMap.set(col.columnId, { ...col, columns: col.type === 'group' ? [] : undefined });
+		});
+
+		// Rebuild hierarchy
+		columns.forEach((col) => {
+			if (col.parentId && columnMap.has(col.parentId)) {
+				const parent = columnMap.get(col.parentId);
+				if (parent && isGroupColumn(parent)) {
+					parent.columns.push(columnMap.get(col.columnId)!);
+				}
+			} else {
+				rootColumns.push(columnMap.get(col.columnId)!);
+			}
+		});
+
+		return rootColumns;
+	}
+
+	function getPinnedColumns(columns: Column[], pinnedSide: 'left' | 'right'): Column[] {
+		const pinnedSet = new Set<string>(); // To store columnIds of pinned and required parent columns
+		const flattened = flattenColumns(columns);
+
+		// Step 1: Find all pinned columns
+		flattened.forEach((col) => {
+			if (col.pinned === pinnedSide) {
+				pinnedSet.add(col.columnId);
+				let parentId = col.parentId;
+				// Step 2: Add all its parents to the pinned set
+				while (parentId) {
+					pinnedSet.add(parentId);
+					parentId = flattened.find((c) => c.columnId === parentId)?.parentId || null;
+				}
+			}
+		});
+
+		// Step 3: Restore hierarchy only for pinned columns
+		let pinnedColumns = flattened.filter((col) => pinnedSet.has(col.columnId));
+
+		return restoreHierarchy(transformColumns(restoreHierarchy(pinnedColumns)));
+	}
+
+	let columnsPinnedLeft = $state(getPinnedColumns([...columns], 'left'));
+	let columnsPinnedRight = getPinnedColumns([...columns], 'right');
+
+	let columnsNotPinned = transformColumns(
+		flattenColumns([...columns]).filter((col) => col.pinned !== 'left')
+	);
+
+	console.log(getHeaderRows(columnsNotPinned));
+
+	function getLeafColumns(columns: Column[]) {
+		return columns.filter((col) => col.type !== 'group');
+	}
 </script>
 
 <div class="table-wrapper">
 	<div class="table">
-		<div class="thead">
-			{#each getHeaderRows(columns) as row}
-				<div
-					class="tr flex min-w-full max-w-fit bg-white"
-					style="
-						max-width: fit-content;
-						overflow-hidden;
+		<div class="thead flex sticky top-0">
+			<div>
+				{#each getHeaderRows(columnsPinnedLeft) as row}
+					<div
+						class="tr flex min-w-full max-w-fit bg-white"
+						style="
+				max-width: fit-content;
+				overflow-hidden;
+			"
+					>
+						{#each row as cell}
+							<div
+								class="th bg-white"
+								data-pinned={cell.pinned}
+								style="
+						margin-left: {cell.left}px;
+						width: {cell.width}px;
+						max-width: {cell.width}px;
 					"
-				>
-					{#each row as cell}
-						<div
-							class="th  bg-white "
-							data-pinned={cell.pinned}
-							style="
-								margin-left: {cell.left}px;
-								width: {cell.width}px;
-								max-width: {cell.width}px;
-							"
-						>
-							<span class="sticky px-2">
-								{cell.header}
-							</span>
-						</div>
-					{/each}
-				</div>
-			{/each}
+							>
+								<span class="sticky px-2">
+									{cell.header}
+								</span>
+							</div>
+						{/each}
+					</div>
+				{/each}
+			</div>
+			<div>
+				{#each getHeaderRows(columnsNotPinned) as row}
+					<div
+						class="tr flex min-w-full max-w-fit bg-white"
+						style="
+					max-width: fit-content;
+					overflow-hidden;
+				"
+					>
+						{#each row as cell}
+							<div
+								class="th bg-white"
+								data-pinned={cell.pinned}
+								style="
+							margin-left: {cell.left}px;
+							width: {cell.width}px;
+							max-width: {cell.width}px;
+						"
+							>
+								<span class="sticky px-2">
+									{cell.header}
+								</span>
+							</div>
+						{/each}
+					</div>
+				{/each}
+			</div>
 		</div>
-		<div class="tbody">
-			{#each Array(30) as _, i}
+		<div class="tbody flex flex-col">
+			{#each data.inventory.splice(0, 10) as row}
 				<div class="tr flex">
-					{#each Array(30) as _, i}
-						<div class="td w-[100px] px-2 py-1">{i + 1}</div>
+					<div class="sticky left-0 flex">
+						{#each getLeafColumns(flattenColumns(columnsPinnedLeft)) as col}
+							<div class="td w-[100px] px-2 py-1">{row[col.accessorKey]}</div>
+						{/each}
+					</div>
+					{#each getLeafColumns(flattenColumns(columnsNotPinned)) as col}
+						<div class="td w-[100px] px-2 py-1">{row[col.accessorKey]}</div>
 					{/each}
 				</div>
 			{/each}
