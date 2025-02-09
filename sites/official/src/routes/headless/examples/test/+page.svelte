@@ -6,7 +6,7 @@
 
 
 <h2>Basic datagrid implementation</h2>
-<!-- <TestDatagrid {data} /> -->
+<TestDatagrid {data} />
 
 <div class="prose w-full min-w-full">
 	<!-- <Readme /> -->

@@ -1,9 +1,7 @@
-<!-- DataGrid.svelte
+<!-- DataGrid.svelte -->
 <script lang="ts">
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory';
-	import { accessorColumn, columnGroup, DatagridCore, type ColumnDef } from '$lib/datagrid';
-	import { ColumnGroupingFeature } from '$lib/datagrid/core/features';
-	import { SvelteSet } from 'svelte/reactivity';
+	import { accessorColumn, columnGroup, type ColumnDef } from '$lib/datagrid';
 
 	type Column = {
 		header?: string;
@@ -23,11 +21,7 @@
 				}),
 				accessorColumn({
 					accessorKey: 'name',
-					state: {
-						size: {
-							grow: true
-						}
-					}
+					grow: true // Make this column flexible
 				}),
 				accessorColumn({
 					accessorKey: 'category'
@@ -59,61 +53,121 @@
 
 	let { data }: { data: { inventory: InventoryItem[] } } = $props();
 
-	const datagrid = new DatagridCore({
-		columns,
-		data: data.inventory
-	});
+	// Get maximum depth of column nesting
+	function getMaxDepth(cols: Column[]): number {
+		return cols.reduce((max, col) => {
+			if (col.columns) {
+				return Math.max(max, getMaxDepth(col.columns) + 1);
+			}
+			return max;
+		}, 0);
+	}
 
-	let expandedRows: SvelteSet<string> = new SvelteSet([]);
-	const toggle = (id: string) => {
-		if (expandedRows.has(id)) {
-			expandedRows.delete(id);
-		} else {
-			expandedRows.add(id);
+	// Calculate column span for a given column
+	function calculateColSpan(col: Column): number {
+		if (!col.columns) return 1;
+		return col.columns.reduce((sum, child) => sum + calculateColSpan(child), 0);
+	}
+
+	// Get flat list of leaf columns while preserving hierarchy
+	function getLeafColumns(cols: Column[]): Column[] {
+		return cols.flatMap((col) => {
+			if (col.columns) {
+				return getLeafColumns(col.columns);
+			}
+			return col;
+		});
+	}
+
+	// Generate header structure with correct positioning and spans
+	function generateHeaderRows(cols: Column[]): Column[][] {
+		const depth = getMaxDepth(cols);
+		const rows: (Column & { colSpan?: number; colStart?: number })[][] = Array(depth + 1)
+			.fill(null)
+			.map(() => []);
+
+		function processColumn(col: Column, level: number, colStart: number): number {
+			const colSpan = calculateColSpan(col);
+
+			if (col.columns) {
+				// Add group header at current level
+				rows[level].push({
+					...col,
+					colSpan,
+					colStart
+				});
+
+				// Process children at next level
+				let currentStart = colStart;
+				col.columns.forEach((child) => {
+					currentStart = processColumn(child, level + 1, currentStart);
+				});
+				return colStart + colSpan;
+			} else {
+				// Add leaf column to bottom row
+				rows[depth].push({
+					...col,
+					colSpan: 1,
+					colStart
+				});
+				return colStart + 1;
+			}
 		}
-	};
+
+		let currentStart = 0;
+		cols.forEach((col) => {
+			currentStart = processColumn(col, 0, currentStart);
+		});
+
+		return rows;
+	}
+
+	const maxDepth = getMaxDepth(columns);
+	const headerRows = generateHeaderRows(columns);
+	const leafColumns = getLeafColumns(columns);
+	const totalColumns = leafColumns.length;
+
+	// Generate grid template columns with flexible column support
+	const gridTemplateColumns = leafColumns
+		.map(col => col.grow ? 'minmax(var(--col-width), 1fr)' : 'var(--col-width)')
+		.join(' ');
 </script>
 
-<div class="grid-wrapper relative">
-	<div class=" !contents">
-		<div class="head">
-			{#each datagrid.columns.getHeaderRows() as row, rowIndex}
-				<div class="row" style="grid-template-columns: {datagrid.columns.getGridTemplateColumns()}">
-					{#each row as column}
-						<div
-							class="header-cell"
-							style="
-									grid-column: {column.colStart + 1} / span {column.colSpan};
-									{column.type === 'group' ? 'text-align: center;' : ''}
+<div class="grid-wrapper">
+	<div class="grid">
+		<!-- Headers -->
+		<div class="header-group">
+			{#each headerRows as row, rowIndex}
+				<div class="row" style="grid-template-columns: {gridTemplateColumns}">
+					{#each row as cell}
+						{#if cell}
+							<div
+								class="header-cell"
+								style="
+									grid-column: {cell.colStart + 1} / span {cell.colSpan};
+									{cell.columns ? 'text-align: center;' : ''}
 								"
-						>
-							{column.header || column.accessorKey || ''}
-						</div>
+							>
+								{cell.header || cell.accessorKey || ''}
+							</div>
+						{/if}
 					{/each}
 				</div>
 			{/each}
 		</div>
 
-		{#each datagrid.rows.getVisibleBasicRows() as row}
-			<div class="row" style="grid-template-columns: {datagrid.columns.getGridTemplateColumns()}">
-				{#each datagrid.columns.getLeafColumns() as col}
-					<div class="cell">
-						{#if col.columnId === 'id'}
-							<button onclick={() => toggle(row.index)}>3212</button>
-						{:else}
-							{row.original[col.accessorKey as keyof typeof row.original]}
-						{/if}
-					</div>
-				{/each}
-			</div>
-			{#if expandedRows.has(row.index)}
-				<div class="row sticky left-0" style="grid-template-columns: 100">
-					<div class="cell !bg-red-400">
-						{row.index}
-					</div>
+		<!-- Body -->
+		<div class="body">
+			{#each data.inventory as row}
+				<div class="row" style="grid-template-columns: {gridTemplateColumns}">
+					{#each leafColumns as col}
+						<div class="cell">
+							{row[col.accessorKey || '']}
+						</div>
+					{/each}
 				</div>
-			{/if}
-		{/each}
+			{/each}
+		</div>
 	</div>
 </div>
 
@@ -125,7 +179,6 @@
 	.grid-wrapper {
 		width: 100%;
 		overflow-x: auto;
-		border: 1px solid #ddd;
 	}
 
 	.grid {
@@ -135,7 +188,7 @@
 		border: 1px solid #ddd;
 	}
 
-	.head {
+	.header-group {
 		position: sticky;
 		top: 0;
 		background: white;
@@ -167,4 +220,4 @@
 	.body .row:nth-child(even) {
 		background: #fafafa;
 	}
-</style> -->
+</style>
