@@ -36,6 +36,7 @@ import { CustomizationFeature, type CustomizationPluginConfig } from "./customiz
 import { VirtualizationPlugin, type VirtualizationPluginConfig } from "../../datagrid/plugins/virtualization.svelte";
 import { ExportingPlugin, type ExportingPluginConfig } from "$lib/datagrid/plugins/exporting.svelte";
 import { DatagridCore } from "$lib/datagrid/core/index.svelte";
+import { flattenColumnStructureAndClearGroups } from "$lib/datagrid/core/utils.svelte";
 
 
 
@@ -245,7 +246,7 @@ export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends DatagridC
     }
 
     private processColumnsWithExtras(columns: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[] {
-        const flattenedColumns = this.columns.flattenColumnStructure([...columns], false);
+        const flattenedColumns = flattenColumnStructureAndClearGroups([...columns]);
         const additionalColumns = createAdditionalColumns(this);
         const allColumns = [
             ...additionalColumns.leftCols,
@@ -256,7 +257,7 @@ export class EnhancedDatagrid<TOriginalRow = any, TMeta = any> extends DatagridC
     }
 
     private processColumns(columns: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[] {
-        const flattenedColumns = this.columns.flattenColumnStructure([...columns], false);
+        const flattenedColumns = flattenColumnStructureAndClearGroups([...columns]);
         return this.createHierarchicalColumns(flattenedColumns);
     }
 

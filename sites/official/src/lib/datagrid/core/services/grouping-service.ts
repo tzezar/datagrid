@@ -1,11 +1,12 @@
 import type { ColumnId } from "../types";
+import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 import { BaseService } from "./base-service";
 
 export class GroupingService extends BaseService {
     updateGrouping(values: string[]) {
         const validGroupColumns: ColumnId[] = values
             .map((option) => {
-                const column = this.datagrid.columns.findColumnById(option);
+                const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), option);
                 if (!column) return null;
                 if (column.options.groupable === false) return null;
                 return option;
@@ -21,7 +22,7 @@ export class GroupingService extends BaseService {
     }
 
     toggleGrouping(columnId: ColumnId) {
-        const column = this.datagrid.columns.findColumnById(columnId);
+        const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), columnId);
         if (!column) return;
         if (column.options.groupable === false) return;
 

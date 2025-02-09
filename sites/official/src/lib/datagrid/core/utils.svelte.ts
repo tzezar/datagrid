@@ -1,4 +1,4 @@
-import type { ColumnDef, GroupColumn } from "./types";
+import type { ColumnDef, ColumnId, GroupColumn } from "./types";
 import type { CellValue, CustomCellComponentWithProps, } from "./types";
 
 export function generateRandomColumnId(): string {
@@ -60,5 +60,42 @@ export function debounce<T extends (...args: any[]) => void>(func: T, delay: num
     }) as T;
 }
 
+
+
+
+export function flattenColumnStructure(
+    columns: ColumnDef<any>[],
+    preserveGroups: boolean = false
+): ColumnDef<any>[] {
+    const flattened: ColumnDef<any>[] = [];
+
+    const processColumns = (columns: ColumnDef<any>[], result: ColumnDef<any>[]) => {
+        for (let i = 0; i < columns.length; i++) {
+            const column = columns[i];
+            if (column.type === 'group') {
+                processColumns(column.columns, result);
+                result.push(preserveGroups ? column : { ...column, columns: [] });
+            } else {
+                result.push(column);
+            }
+        }
+    };
+
+    processColumns(columns, flattened);
+    return flattened;
+}
+
+export function flattenColumnStructureAndClearGroups(columns: ColumnDef<any>[]): ColumnDef<any>[] {
+    return flattenColumnStructure(columns, false);
+}
+
+export function flattenColumnStructurePreservingGroups(columns: ColumnDef<any>[]): ColumnDef<any>[] {
+    return flattenColumnStructure(columns, true);
+}
+
+// Find column by ID in nested structure
+export function findColumnById<TOriginalRow>(flatColumns: ColumnDef<TOriginalRow>[], id: ColumnId): ColumnDef<TOriginalRow> | null {
+    return flatColumns.find((col) => col.columnId === id) ?? null;
+}
 
 

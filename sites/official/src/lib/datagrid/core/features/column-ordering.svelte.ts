@@ -1,6 +1,7 @@
 import { type ColumnDef, type GroupColumn } from "../types";
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
+import { findColumnById, flattenColumnStructurePreservingGroups } from "../utils.svelte";
 
 export type ColumnMovementDirection = 'left' | 'right';
 
@@ -56,7 +57,10 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
     }
 
     findColumnOrThrow(columnId: ColumnId): ColumnDef<TOriginalRow> {
-        const column = this.datagrid.columns.findColumnById(columnId);
+        const column = findColumnById(
+            flattenColumnStructurePreservingGroups(this.datagrid._columns),
+            columnId
+        );
         if (!column) {
             throw new Error(`Column ${columnId} not found`);
         }
@@ -188,7 +192,10 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
     }
 
     private findParentGroupOrThrow(groupId: string): GroupColumn<TOriginalRow> {
-        const group = this.datagrid.columns.findColumnById(groupId) as GroupColumn<TOriginalRow>;
+        const group = findColumnById(
+            flattenColumnStructurePreservingGroups(this.datagrid._columns),
+            groupId
+        ) as GroupColumn<TOriginalRow>;
 
         if (!group || group.type !== 'group') {
             throw new Error(`Group ${groupId} not found`);

@@ -1,6 +1,7 @@
 import { isGroupColumn } from "../helpers/column-guards";
 import type { DatagridCore } from "../index.svelte";
 import type { FilterCondition, FilterOperator } from "../types";
+import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 
 
 
@@ -59,7 +60,7 @@ export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilter
         if (!condition) {
             // If no condition exists, create a new one
 
-            const column = this.datagrid.columns.findColumnById( columnId);
+            const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), columnId);
             if (!column) throw new Error(`Column ${columnId} not found`);
             if (isGroupColumn(column)) throw new Error(`Cannot filter group column: ${columnId}`);
             if (column.type === 'display') throw new Error(`Cannot filter display column: ${columnId}`);

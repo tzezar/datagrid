@@ -2,6 +2,7 @@ import { isGroupColumn } from "../helpers/column-guards";
 import type { DatagridCore } from "../index.svelte";
 import type { AccessorColumn, ComputedColumn } from "../types";
 import type { SortingDirection } from "../types";
+import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 
 export function applySorting<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>, data: TOriginalRow[]): TOriginalRow[] {
     data = datagrid.lifecycleHooks.executePreSort(data);
@@ -12,7 +13,10 @@ export function applySorting<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>,
 
     const sortConfigs = datagrid.features.sorting.sortConfigs
         .map(config => {
-            const column = datagrid.columns.findColumnById(config.columnId) as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>;
+            const column = findColumnById(
+                flattenColumnStructureAndClearGroups(datagrid._columns),
+                config.columnId
+            ) as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>;
 
             if (!column || isGroupColumn(column) || !column.isSortable()) {
                 return null;
@@ -23,9 +27,9 @@ export function applySorting<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>,
                 direction: config.direction
             };
         })
-        .filter(cfg => cfg !== null && cfg.direction !== "intermediate") as { 
-            getValue: (row: TOriginalRow) => any; 
-            direction: SortingDirection 
+        .filter(cfg => cfg !== null && cfg.direction !== "intermediate") as {
+            getValue: (row: TOriginalRow) => any;
+            direction: SortingDirection
         }[];
 
     // Schwartzian Transform: Precompute sort values

@@ -2,6 +2,7 @@ import { inPlaceSort } from "fast-sort";
 import { isGroupColumn } from "../helpers/column-guards";
 import type { DatagridCore } from "../index.svelte";
 import type { AccessorColumn, ComputedColumn, SortingDirection } from "../types";
+import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 
 
 
@@ -15,7 +16,10 @@ export function applySorting<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>,
     // Build sortConfigs and precompute keys.
     const sortConfigs = datagrid.features.sorting.sortConfigs
         .map(config => {
-            const column = datagrid.columns.findColumnById(config.columnId) as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>;
+            const column = findColumnById(
+                flattenColumnStructureAndClearGroups(datagrid._columns),
+                config.columnId
+            ) as AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>;
             if (!column || isGroupColumn(column) || !column.isSortable()) {
                 return null;
             }

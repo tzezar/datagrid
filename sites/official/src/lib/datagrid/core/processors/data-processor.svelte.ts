@@ -5,6 +5,7 @@ import type { PerformanceMetrics } from "../helpers/performance-metrics.svelte";
 import type { AccessorColumn, ComputedColumn } from "../types";
 import { aggregationFunctions } from "../helpers/aggregation-functions";
 import { applySorting } from "./apply-sorting";
+import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 // import { applySorting } from "./apply-sorting-fast-sort";
 
 
@@ -38,7 +39,7 @@ export class DataDataProcessor<TOriginalRow> {
             data = this.applyColumnFilters(data);
 
             this.datagrid.cacheManager.filteredData = data;
-            
+
             if (this.datagrid.features.columnFaceting.recalculateFacetsAfterFiltering) {
                 if (this.datagrid.features.columnFaceting.facetsSource === 'originalData') {
                     this.metrics.measure('Column faceting from original data', () => {
@@ -55,7 +56,7 @@ export class DataDataProcessor<TOriginalRow> {
                         );
                     })
                 }
-            } 
+            }
 
         } else {
             data = this.datagrid.cacheManager.filteredData;
@@ -97,7 +98,9 @@ export class DataDataProcessor<TOriginalRow> {
 
         }
         const applySimpleSearch = (data: TOriginalRow[]) => {
-            const searchableColumns = this.datagrid.columns.getFlattenedColumnStructure().filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>)[];
+
+            const searchableColumns = flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>)[];
+            // const searchableColumns = this.datagrid.columns.getFlattenedColumnStructure().filter(c => ['accessor', 'computed'].includes(c.type)).filter(col => col.options.searchable !== false) as (AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>)[];
             return data.filter(item =>
                 searchableColumns.some(column =>
                     String(column.getValueFn(item))
@@ -272,7 +275,7 @@ export class DataDataProcessor<TOriginalRow> {
 
             if (depth >= groupCols.length) return this.createBasicRows(rows, parentPath);
 
-            const column = this.datagrid.columns.findColumnById(groupCols[depth]);
+            const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), groupCols[depth]);
 
             if (!column) throw new Error(`Invalid group column: ${groupCols[depth]}`);
             if (isGroupColumn(column)) throw new Error(`Cannot group by group column: ${groupCols[depth]}`);
@@ -292,7 +295,7 @@ export class DataDataProcessor<TOriginalRow> {
 
             // Create group rows with aggregation
             return Array.from(groups.entries()).map(([key, groupRows], index) => {
-                const aggregations = this.datagrid.columns.getFlattenedColumnStructure()
+                const aggregations = flattenColumnStructureAndClearGroups(this.datagrid._columns)
                     .filter(col =>
                         (col.type === 'accessor' || col.type === 'computed') &&
                         col.aggregate
