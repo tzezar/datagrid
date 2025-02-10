@@ -465,7 +465,7 @@ export type InitialState = {
 export type DatagridCoreConfig<TOriginalRow, C extends ColumnDef<TOriginalRow> = ColumnDef<TOriginalRow>> = {
     columns: C[];
     data: TOriginalRow[];
-    lifecycleHooks?: LifecycleHooks<TOriginalRow>; 
+    lifecycleHooks?: LifecycleHooks<TOriginalRow>;
 
     initialState?: InitialState
 
@@ -501,13 +501,13 @@ export type CommandPayload = {
     payload: any;
 }
 
-export type GridEventCallback<T= any> = (data: T) => void;
+export type GridEventCallback<T = any> = (data: T) => void;
 
 export type OnPageChangePayload = { prevPage: number; newPage: number };
 
 export type EventPayloadMap = {
     'onColumnSort': { column: LeafColumn<any>, multisort?: boolean };
-    
+
     'onRowPin': { rowId: GridRowIdentifier };
     'onRowUnpin': { rowIdentifier: GridRowIdentifier };
 
@@ -539,6 +539,8 @@ export type EventPayloadMap = {
     'onColumnGroupDeletion': { columnGroup: GroupColumn<any> };
     'onColumnPinningChange': { column: LeafColumn<any> };
     'onColumnReorder': { columnId: ColumnId, direction: ColumnMovementDirection };
+
+    'onCellEdit': { prevOriginalRow: any, newOriginalRow: any, prevValue: any, newValue: any };
 
 };
 
