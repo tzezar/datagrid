@@ -317,6 +317,7 @@ export interface AccessorColumn<TOriginalRow, TMeta = any> {
         pinnable: boolean;
         moveable: boolean;
         hideable: boolean;
+        resizable: boolean
     };
     state: {
         size: ColumnSizeState
@@ -353,6 +354,7 @@ export interface ComputedColumn<TOriginalRow, TMeta = any> {
         pinnable: boolean;
         moveable: boolean;
         hideable: boolean;
+        resizable: boolean
     };
     state: {
         size: ColumnSizeState
@@ -384,6 +386,7 @@ export interface DisplayColumn<TOriginalRow, TMeta = any> {
         pinnable: boolean;
         moveable: boolean;
         hideable: boolean;
+        resizable: boolean
     };
     state: {
         size: ColumnSizeState
@@ -412,6 +415,7 @@ export interface GroupColumn<TOriginalRow, TMeta = any> {
         filterable: null;
         pinnable: null;
         moveable: boolean;
+        resizable: boolean
     };
     state: {
         size: ColumnSizeState

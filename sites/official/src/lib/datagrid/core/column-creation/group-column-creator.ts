@@ -28,6 +28,7 @@ export function createColumnGroup<TOriginalRow, TMeta>(
       filterable: null,
       pinnable: null,
       moveable: true,
+      resizable: false
     },
     state: {
       size: DEFAULT_COLUMN_SIZE,

@@ -27,7 +27,11 @@
 			/>
 			<GroupItem title="Column ordering" href={hrefs.headless.examples.columnOrdering} />
 			<GroupItem title="Column pinning" href={hrefs.headless.examples.columnPinning} />
-			<GroupItem title="Column pinning detached" href={hrefs.headless.examples.columnPinningDetached} />
+			<GroupItem
+				title="Column pinning detached"
+				href={hrefs.headless.examples.columnPinningDetached}
+			/>
+			<GroupItem title="Column sizing" href={hrefs.headless.examples.columnSizing} />
 		</Group>
 
 		<GroupTitle

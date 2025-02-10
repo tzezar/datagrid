@@ -27,6 +27,7 @@ export type CreateAccessorColumnProps<TOriginalRow, TKey extends DotNestedKeys<T
     pinnable?: boolean;
     moveable?: boolean;
     hideable?: boolean;
+    resizable?: boolean
   };
   align?: ColumnAlign
   state?: ColumnCreationStateProps
@@ -53,6 +54,7 @@ export type CreateComputeColumnProps<TOriginalRow, TMeta> = {
     pinnable?: boolean;
     moveable?: boolean;
     hideable?: boolean;
+    resizable?: boolean
   };
   align?: ColumnAlign
   header: string;
@@ -72,6 +74,7 @@ export type CreateDisplayColumnProps<TOriginalRow, TMeta> = {
     pinnable?: boolean;
     moveable?: boolean;
     hideable?: boolean;
+    resizable?: boolean
   };
   header: string;
   align?: ColumnAlign

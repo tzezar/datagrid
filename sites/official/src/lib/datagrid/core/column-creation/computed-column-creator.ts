@@ -31,6 +31,7 @@ export function createComputedColumn<TOriginalRow extends Record<string, any>, T
       pinnable: options?.pinnable ?? true,
       moveable: options?.moveable ?? true,
       hideable: options?.hideable ?? true,
+      resizable: options?.resizable ?? true
     },
     state: {
       size: state?.size ?? DEFAULT_COLUMN_SIZE,

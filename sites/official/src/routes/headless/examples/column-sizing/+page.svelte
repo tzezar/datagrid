@@ -1,11 +1,11 @@
 <script lang="ts">
-	import HeaderGroupsDatagrid from '../_components/datagrids/header-groups/header-groups-datagrid.svelte';
+	import ColumnSizingDatagrid from '../_components/datagrids/column-sizing/column-sizing-datagrid.svelte';
 
 	let { data } = $props();
 </script>
 
 <h2>Header groups datagrid implementation</h2>
-<HeaderGroupsDatagrid {data} />
+<ColumnSizingDatagrid {data} />
 <div class="prose w-full min-w-full">
 	<!-- <Readme /> -->
 </div>
