@@ -1,22 +1,30 @@
 <script lang="ts">
-	import type { LeafColumn } from '$lib/datagrid/core/types';
-	import type { EnhancedDatagrid } from '../core/index.svelte';
-	import type { ColumnMetaEnhanced } from '../core/types';
+	import type { DatagridCore } from '$lib/datagrid';
+	import type { EnhancedMeta } from '$lib/datagrid-enhanced';
+	import type { FilterOperator, LeafColumn } from '$lib/datagrid/core/types';
 
 	type Props = {
-		datagrid: EnhancedDatagrid<any>;
-		column: LeafColumn<any, ColumnMetaEnhanced>;
+		datagrid: DatagridCore<any>;
+		column: LeafColumn<any>;
 	};
 	let { datagrid, column }: Props = $props();
 
-	const handleColumnFilterChange = (column: LeafColumn<any>, value: any) => {
+	const handleColumnFilterChange = (
+		column: LeafColumn<any, EnhancedMeta>,
+		value: any,
+		valueTo?: any,
+		operator?: FilterOperator
+	) => {
 		datagrid.handlers.filtering.updateFilterCondition({
 			column,
-			value
+			value,
+			operator: operator || 'contains',
+			valueTo: valueTo
 		});
-	
 	};
 </script>
+
+<!-- TODO - Rewrite this, I dont have time right now; this is ugly -->
 
 {#snippet FilterOperator()}
 	<span class="text-[0.5rem] text-muted-foreground">
@@ -52,27 +60,111 @@
 					let maxValue = datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max;
 
 					let value = e.currentTarget.value === '' ? null : +e.currentTarget.value;
-					if (value !== null && value < minValue) {
-						value = minValue;
-						e.currentTarget.value = String(value);
-					}
-					if (value !== null && value > maxValue) {
-						value = maxValue;
-						e.currentTarget.value = String(value);
-					}
+					// if (value !== null && value < minValue) {
+					// 	value = minValue;
+					// 	e.currentTarget.value = String(value);
+					// }
+					// if (value !== null && value > maxValue) {
+					// 	value = maxValue;
+					// 	e.currentTarget.value = String(value);
+					// }
 
-					handleColumnFilterChange(column, value);
+					handleColumnFilterChange(column, value, null, 'contains');
 				}}
 			/>
-			<div class="flex justify-between">
+			<div class="flex flex-col justify-between">
 				{@render FilterOperator()}
 				<span class="text-[0.5rem] text-muted-foreground">
-					Max: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max}
 					Min: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.min}
+					Max: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max}
 				</span>
 			</div>
 		{/if}
 	{/if}
+	{#if column?._meta?.filterType === 'range'}
+		{#if column.options.calculateFacets === false}
+			<div class="flex gap-1">
+				<input
+					type="number"
+					class="grid-head-row-leaf-column-filter-input"
+					value={datagrid.features.filtering.getConditionValue(column.columnId)}
+					onchange={(e) => {
+						let value = e.currentTarget.value === '' ? null : +e.currentTarget.value;
+
+						const valueTo =
+							datagrid.features.filtering.getConditionValueTo(column.columnId) ?? Infinity;
+
+						handleColumnFilterChange(column, value, valueTo, 'between');
+					}}
+				/>
+
+				<input
+					type="number"
+					class="grid-head-row-leaf-column-filter-input"
+					min={datagrid.features.filtering.getConditionValue(column.columnId)}
+					value={datagrid.features.filtering.getConditionValueTo(column.columnId)}
+					onchange={(e) => {
+						let valueTo = e.currentTarget.value === '' ? null : +e.currentTarget.value;
+						const value = datagrid.features.filtering.getConditionValue(column.columnId) ?? 0;
+
+						if (valueTo !== null && valueTo < value) {
+							valueTo = value;
+						}
+
+						handleColumnFilterChange(column, value, valueTo, 'between');
+					}}
+				/>
+			</div>
+			<div class="flex justify-between">
+				{@render FilterOperator()}
+			</div>
+		{:else}
+			<div class="flex gap-1">
+				<input
+					type="number"
+					class="grid-head-row-leaf-column-filter-input"
+					min={datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.min}
+					value={datagrid.features.filtering.getConditionValue(column.columnId)}
+					onchange={(e) => {
+						let value = e.currentTarget.value === '' ? null : +e.currentTarget.value;
+
+						const valueTo =
+							datagrid.features.filtering.getConditionValueTo(column.columnId) ?? Infinity;
+
+						handleColumnFilterChange(column, value, valueTo, 'between');
+					}}
+				/>
+
+				<input
+					type="number"
+					class="grid-head-row-leaf-column-filter-input"
+					max={datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max}
+					value={datagrid.features.filtering.getConditionValueTo(column.columnId)}
+					onchange={(e) => {
+						let minValue = datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.min;
+						let maxValue = datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max;
+
+						let valueTo = e.currentTarget.value === '' ? null : +e.currentTarget.value;
+						const value = datagrid.features.filtering.getConditionValue(column.columnId) ?? 0;
+
+						if (valueTo !== null && valueTo < value) {
+							valueTo = value;
+						}
+
+						handleColumnFilterChange(column, value, valueTo, 'between');
+					}}
+				/>
+			</div>
+			<div class="flex flex-col justify-between">
+				{@render FilterOperator()}
+				<span class="text-[0.5rem] text-muted-foreground">
+					Min: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.min}
+					Max: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max}
+				</span>
+			</div>
+		{/if}
+	{/if}
+
 	{#if column?._meta?.filterType === 'text'}
 		{#if column.options.calculateFacets === false}
 			<input
@@ -135,3 +227,10 @@
 		{/if}
 	{/if}
 {/if}
+
+<style class="post-css">
+	.grid-head-row-leaf-column-filter-input {
+		@apply h-6 w-full rounded-sm px-0 py-1 text-xs;
+		color: hsl(var(--muted-foreground));
+	}
+</style>

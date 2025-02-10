@@ -40,7 +40,6 @@
 			<GroupItem title="Row pinning" href={hrefs.headless.examples.rowPinning} />
 			<GroupItem title="Row selection" href={hrefs.headless.examples.rowSelection} />
 			<GroupItem title="Sorting" href={hrefs.headless.examples.sorting} />
-			<GroupItem title="Sub components" href={hrefs.headless.examples.subComponents} />
 			<GroupItem title="Virtualized" href={hrefs.headless.examples.virtualized} />
 		</Group>
 		<GroupTitle
