@@ -4,8 +4,13 @@
 export const hrefs = {
     default: "/",
 
+    supporters: {
+        default: "/supporters",
+    },
+
     headless: {
         quickStart: {
+            installation: "/headless/quick-start/installation",
             gettingStarted: "/headless/quick-start/getting-started",
         },
         examples: {
