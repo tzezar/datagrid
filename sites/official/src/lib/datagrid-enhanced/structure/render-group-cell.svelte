@@ -52,7 +52,7 @@
 {/snippet}
 
 {#snippet GroupCellAggregationSnippet(row: GridGroupRow<any>, column: LeafColumn<any>)}
-	<div class="text-muted-foreground text-xs">
+	<div class="text-muted-foreground text-xs px-4 py-2 h-full">
 		{#each row.aggregations.filter((agg) => agg.columnId === column.columnId) as aggregation}
 			<p>
 				{aggregation.type}: {#if aggregation.type === 'percentChange'}

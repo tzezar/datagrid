@@ -20,6 +20,11 @@
 	let datagrid = new Grid.EnhancedCore<InventoryItem, Grid.EnhancedMeta<InventoryItem>>({
 		columns,
 		data: data.inventory,
+		initialState: {
+			grouping: {
+				activeGroups: ['category']
+			}
+		},
 
 		// measurePerformance: true,
 

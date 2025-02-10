@@ -14,7 +14,7 @@
 </script>
 
 <div
-	class={cn('cell bg-datagrid-bodyGroupCell !p-0 shrink-0')}
+	class="cell"
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
 	style:--width={column.state.size.width + 'px'}
 	style:--min-width={column.state.size.minWidth + 'px'}
@@ -24,3 +24,11 @@
 >
 	{@render children()}
 </div>
+
+<style>
+	.cell {
+		width: var(--width);
+		min-width: var(--min-width);
+		max-width: var(--max-width);
+	}
+</style>
