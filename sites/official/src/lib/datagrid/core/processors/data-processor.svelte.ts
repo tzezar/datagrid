@@ -305,16 +305,18 @@ export class DataDataProcessor<TOriginalRow> {
                         return this.calculateAggregations(col, groupRows);
                     });
 
+                const identifier = depth === 0 ? key : `${parentPath}|${key}`;
+
                 return {
                     index: parentPath ? `${parentPath}-${index + 1}` : String(index + 1),
-                    identifier: depth === 0 ? key : `${parentPath}|${key}`,
+                    identifier,
                     groupKey: groupCols[depth],
                     groupValue: [key],
                     depth,
                     // isExpanded: false,
                     children: groupByLevel(groupRows, depth + 1, `${parentPath}${index + 1}`),
                     aggregations: aggregations,
-                    isExpanded: () => this.datagrid.features.grouping.expandedGroups.has(key),
+                    isExpanded: () => this.datagrid.features.grouping.isGroupExpanded(identifier),
                     isGroupRow: function (): this is GridGroupRow<TOriginalRow> {
                         return true;
                     },

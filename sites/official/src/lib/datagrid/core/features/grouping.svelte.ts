@@ -6,7 +6,7 @@ import type { DatagridCore } from "../index.svelte";
 
 export type GroupingFeatureState = {
     manual: boolean;
-    groupByColumns: ColumnId[];
+    activeGroups: ColumnId[];
     expandedGroups: SvelteSet<GridGroupRowIdentifier>;
     maxExpandedGroups: number
     onGroupingChange: (expandedGroups: string[]) => void
@@ -14,10 +14,9 @@ export type GroupingFeatureState = {
 
 
 export type GroupingFeatureConfig = Partial<GroupingFeatureState>
-export type IGroupingFeature = GroupingFeature
 
 
-export class GroupingFeature implements IGroupingFeature {
+export class GroupingFeature implements GroupingFeatureState {
     private readonly datagrid: DatagridCore
     manual: boolean = $state(false);
 
@@ -34,6 +33,10 @@ export class GroupingFeature implements IGroupingFeature {
 
     isColumnWithinGroup(columnId: ColumnId): boolean {
         return this.activeGroups.includes(columnId);
+    }
+    
+    isGroupExpanded(groupIdentifier: GridGroupRowIdentifier): boolean {
+        return this.expandedGroups.has(groupIdentifier);
     }
 
     expandGroup(groupIdentifier: GridGroupRowIdentifier) {

@@ -5,7 +5,7 @@ import { FilteringService } from "../services/filtering-service.svelte";
 import { SearchService } from "../services/global-search-service";
 import { GroupingService } from "../services/grouping-service";
 import { PaginationService } from "../services/pagination-service";
-import { RowService } from "../services/row-service";
+import { RowService } from "../services/row-service.svelte";
 import { SortingService } from "../services/sorting-service";
 
 export class HandlersManager {
