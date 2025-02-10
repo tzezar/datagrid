@@ -41,6 +41,7 @@
 			<GroupItem title="Row selection" href={hrefs.headless.examples.rowSelection} />
 			<GroupItem title="Sorting" href={hrefs.headless.examples.sorting} />
 			<GroupItem title="Virtualized" href={hrefs.headless.examples.virtualized} />
+			<GroupItem title="Editable data" href={hrefs.headless.examples.editableData} />
 		</Group>
 		<GroupTitle
 			title="Enhanced"
