@@ -98,4 +98,8 @@ export function findColumnById<TOriginalRow>(flatColumns: ColumnDef<TOriginalRow
     return flatColumns.find((col) => col.columnId === id) ?? null;
 }
 
-
+export function convertSelectedOptionsToArray(event: any) {
+    return Array.from(event.currentTarget.selectedOptions).map(
+        (option: any) => option.value
+    );
+}

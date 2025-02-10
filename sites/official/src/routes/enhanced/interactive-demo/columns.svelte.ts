@@ -81,7 +81,8 @@ export const columns = [
                 header: 'Stock',
                 columns: [
                     accessorColumn({
-                        accessorKey: 'quantity'
+                        accessorKey: 'quantity',
+                        aggregate: 'sum'
                     }),
                     computedColumn({
                         header: 'Test',

@@ -17,6 +17,17 @@ export const hrefs = {
             columnPinning: "/headless/examples/column-pinning",
             columnPinningDetached: "/headless/examples/column-pinning-detached",
             columnSizing: "/headless/examples/column-sizing",
+            columnVisibility: "/headless/examples/column-visibility",
+            grouping: "/headless/examples/grouping",
+            pagination: "/headless/examples/pagination",
+            paginationControlled: "/headless/examples/pagination-controlled",
+            rowExpanding: "/headless/examples/row-expanding",
+            rowPinning: "/headless/examples/row-pinning",
+            rowSelection: "/headless/examples/row-selection",
+            sorting: "/headless/examples/sorting",
+            subComponents: "/headless/examples/sub-components",
+            virtualized: "/headless/examples/virtualized",
+            editableData: "/headless/examples/editable-data",
 
         }
     },

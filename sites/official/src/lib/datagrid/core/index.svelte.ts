@@ -1,4 +1,4 @@
-import type { ColumnDef, DatagridCoreConfig, GridBasicRow, GridRow, GridRowIdentifier, GroupColumn, LeafColumn } from "./types";
+import type { ColumnDef, ColumnId, DatagridCoreConfig, GridBasicRow, GridRow, GridRowIdentifier, GroupColumn, LeafColumn } from "./types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager } from "./managers";
@@ -7,7 +7,7 @@ import { DatagridFeatures } from "./features/features.svelte";
 import { HandlersManager } from "./managers/handler-manager";
 import { EventService } from "./services/event-service";
 import { isGroupColumn } from "./helpers/column-guards";
-import { flattenColumnStructureAndClearGroups } from "./utils.svelte";
+import { flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups } from "./utils.svelte";
 
 
 export class DatagridCore<TOriginalRow = any, TMeta = any> {
@@ -299,6 +299,38 @@ class Columns<TOriginalRow> {
     getGroupColumns<TOriginalRow>(): GroupColumn<TOriginalRow>[] {
         return flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(col => isGroupColumn(col));
     }
+
+
+
+    /**
+     * Finds a column by its unique columnId.
+     * 
+     * @param columnId The unique identifier of the column.
+     * @returns The column if found, otherwise null.
+     */
+
+
+    findColumnById(columnId: ColumnId): ColumnDef<TOriginalRow> | null {
+        return flattenColumnStructurePreservingGroups(this.datagrid._columns).find((col) => col.columnId === columnId) ?? null;
+    }
+
+
+    /**
+     * Finds a column by its unique columnId and throws an error if not found.
+     * 
+     * @param columnId The unique identifier of the column.
+     * @returns The column if found.
+     * @throws Error if the column is not found.
+     */
+    findColumnByIdOrThrow(columnId: ColumnId): ColumnDef<TOriginalRow> {
+        const column = this.findColumnById(columnId);
+        if (!column) throw new Error(`Column ${columnId} not found`);
+        return column;
+    }
+
+
+
+
     // /**
     //  * Retrieves a flattened column structure, optionally preserving group columns.
     //  * Flattening removes nested groups, and can preserve them depending on the `preserveGroups` flag.
@@ -340,15 +372,6 @@ class Columns<TOriginalRow> {
     //     return flattened;
     // }
 
-    /**
-     * Finds a column by its unique columnId.
-     * 
-     * @param columnId The unique identifier of the column.
-     * @returns The column if found, otherwise null.
-     */
-    // findColumnById(columnId: ColumnId): ColumnDef<TOriginalRow> | null {
-    //     return this.flattenColumnStructure(this.datagrid._columns).find((col) => col.columnId === columnId) ?? null;
-    // }
 
     /**
      * Finds a leaf column (a non-group column) by its unique columnId.
@@ -360,18 +383,7 @@ class Columns<TOriginalRow> {
     //     return this.getLeafColumns().find((col) => col.columnId === columnId) ?? null;
     // }
 
-    /**
-     * Finds a column by its unique columnId and throws an error if not found.
-     * 
-     * @param columnId The unique identifier of the column.
-     * @returns The column if found.
-     * @throws Error if the column is not found.
-     */
-    // findColumnByIdOrThrow(columnId: ColumnId): ColumnDef<TOriginalRow> {
-    //     const column = this.findColumnById(columnId);
-    //     if (!column) throw new Error(`Column ${columnId} not found`);
-    //     return column;
-    // }
+
 
     /**
      * Finds a leaf column (a non-group column) by its unique columnId and throws an error if not found.

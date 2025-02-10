@@ -32,8 +32,17 @@
 				href={hrefs.headless.examples.columnPinningDetached}
 			/>
 			<GroupItem title="Column sizing" href={hrefs.headless.examples.columnSizing} />
+			<GroupItem title="Column visibility" href={hrefs.headless.examples.columnVisibility} />
+			<GroupItem title="Grouping" href={hrefs.headless.examples.grouping} />
+			<GroupItem title="Pagination" href={hrefs.headless.examples.pagination} />
+			<GroupItem title="Pagination controlled" href={hrefs.headless.examples.paginationControlled} />
+			<GroupItem title="Row expanding" href={hrefs.headless.examples.rowExpanding} />
+			<GroupItem title="Row pinning" href={hrefs.headless.examples.rowPinning} />
+			<GroupItem title="Row selection" href={hrefs.headless.examples.rowSelection} />
+			<GroupItem title="Sorting" href={hrefs.headless.examples.sorting} />
+			<GroupItem title="Sub components" href={hrefs.headless.examples.subComponents} />
+			<GroupItem title="Virtualized" href={hrefs.headless.examples.virtualized} />
 		</Group>
-
 		<GroupTitle
 			title="Enhanced"
 			class="border-b-2 border-orange-400 pb-1 text-lg text-orange-400"
