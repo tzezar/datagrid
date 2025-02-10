@@ -5,10 +5,8 @@ export const isColumnVisible = (column: ColumnDef<any>): boolean => {
 }
 
 export const isColumnSortable = (column: ColumnDef<any>): boolean => {
-    if (column.options.sortable !== null || column.options.sortable !== false) {
-        return true
-    }
-    return false
+    if (column.options.sortable === false || column.options.sortable === null) return false
+    return true
 }
 
 export const isColumnFilterable = (column: ColumnDef<any>): boolean => {
