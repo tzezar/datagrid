@@ -76,6 +76,11 @@
 		datagrid.extra.features.overlay.isEntireDatagridOverlayEnabled()
 	);
 	const shouldAnimateHeaders = $derived(datagrid.extra.features.animations.shouldAnimateHeaders());
+
+	$effect(() => {
+		console.log($state.snapshot(datagrid.features.grouping.activeGroups))
+	})
+
 </script>
 
 <Portal disabled={!isFullscreenEnabled}>

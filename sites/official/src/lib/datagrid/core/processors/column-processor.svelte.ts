@@ -41,18 +41,16 @@ export class ColumnProcessor<TOriginalRow> {
 
     placeGroupColumnsInFront = (columns: ColumnDef<any>[]): ColumnDef<any>[] => {
         const groupByColumns = this.datagrid.features.grouping.activeGroups;
-        const groupedColumns: ColumnDef<TOriginalRow>[] = [];
-        const nonGroupedColumns: ColumnDef<TOriginalRow>[] = [];
-        columns.forEach((column) => {
-            if (groupByColumns.includes(column.columnId)) {
-                groupedColumns.push(column);
-            } else {
-                nonGroupedColumns.push(column);
-            }
-        });
 
-        // Return grouped columns first, followed by non-grouped columns
-        return [...groupedColumns, ...nonGroupedColumns];
+        const orderedGroupColumns = groupByColumns
+            .map(groupCol => columns.find(col => col.columnId === groupCol))
+            .filter(Boolean);
+
+        const nonGroupColumns = columns.filter(col =>
+            !groupByColumns.includes(col.columnId)
+        );
+
+        return [...orderedGroupColumns, ...nonGroupColumns].filter(e=> e !== undefined);
     }
 
     refreshColumnPinningOffsets(columns?: ColumnDef<any>[]) {
@@ -122,13 +120,13 @@ export class ColumnProcessor<TOriginalRow> {
     }
 
 
-     calculateColSpan(col: ColumnDef<TOriginalRow>): number {
+    calculateColSpan(col: ColumnDef<TOriginalRow>): number {
         if (col.state.visible === false) return 0;
 
         if (isGroupColumn(col)) {
-            const visibleChildrenSpan = col.columns.reduce((sum, child) => 
+            const visibleChildrenSpan = col.columns.reduce((sum, child) =>
                 sum + this.calculateColSpan(child), 0);
-            
+
             return visibleChildrenSpan === 0 ? 0 : visibleChildrenSpan;
         }
 
@@ -146,17 +144,17 @@ export class ColumnProcessor<TOriginalRow> {
 
     generateHeaderRows(cols: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[][] {
         const depth = this.getMaxDepth(cols);
-        const rows: (ColumnDef<TOriginalRow> & { 
-            colSpan?: number; 
-            colStart?: number; 
+        const rows: (ColumnDef<TOriginalRow> & {
+            colSpan?: number;
+            colStart?: number;
             rowSpan?: number;
             rowStart?: number; // Add rowStart property
         })[][] = Array(depth + 1).fill(null).map(() => []);
-    
+
         const processColumn = (col: ColumnDef<TOriginalRow>, level: number, colStart: number): number => {
             const colSpan = this.calculateColSpan(col);
             if (colSpan === 0) return colStart;
-    
+
             let rowSpan = 1;
             let rowStart = level;
 
@@ -168,7 +166,7 @@ export class ColumnProcessor<TOriginalRow> {
                     rowSpan = depth - level + 1;
                 }
             }
-    
+
             rows[level].push({
                 ...col,
                 colSpan,
@@ -176,7 +174,7 @@ export class ColumnProcessor<TOriginalRow> {
                 rowSpan,
                 rowStart
             });
-    
+
             if (isGroupColumn(col)) {
                 let currentStart = colStart;
                 col.columns.forEach((child) => {
@@ -184,17 +182,17 @@ export class ColumnProcessor<TOriginalRow> {
                 });
                 return colStart + colSpan;
             }
-    
+
             return colStart + 1;
         };
-    
+
         let currentStart = 0;
         cols.forEach((col) => {
             currentStart = processColumn(col, 0, currentStart);
         });
-    
+
         return rows;
     }
-    
-    
+
+
 }

@@ -22,7 +22,7 @@
 		data: data.inventory,
 		initialState: {
 			grouping: {
-				activeGroups: ['category']
+				activeGroups: ['category', 'status']
 			}
 		},
 

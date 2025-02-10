@@ -208,27 +208,29 @@ class Columns<TOriginalRow> {
         return flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(col => col.type !== 'group')
     }
 
-    // /**
-    //  * Retrieves a list of all leaf columns in the correct order, taking into account column pinning.
-    //  * This includes left-pinned, non-pinned, and right-pinned columns.
-    //  * 
-    //  * @returns An array of leaf columns in order with pinning considered.
-    //  */
+    /**
+    * Retrieves a list of all leaf columns in the correct order, taking into account column pinning, and grouping.
+    * This includes left-pinned, non-pinned, and right-pinned columns.
+    * 
+    * @returns An array of leaf columns in order with pinning considered.
+    */
     getLeafColumnsInOrder(): LeafColumn<TOriginalRow>[] {
         const cols = flattenColumnStructureAndClearGroups(this.getColumnsInOrder()).filter(col => col.type !== 'group')
         return cols
     }
 
     /**
-     * Retrieves a list of all columns in the correct order, considering column pinning.
+     * Retrieves a list of all columns in the correct order, considering column pinning and grouping.
      * Columns are categorized into left-pinned, non-pinned, and right-pinned groups.
      * 
-     * @returns An array of columns ordered by their pinning position.
+     * @returns An array of columns ordered by their pinning position and grouping.
      */
     getColumnsInOrder(): ColumnDef<TOriginalRow>[] {
         const { activeGroups: groupByColumns } = this.datagrid.features.grouping;
 
-        const columns = flattenColumnStructureAndClearGroups(this.datagrid._columns).reduce(
+        const flatCols = this.datagrid.processors.column.placeGroupColumnsInFront(flattenColumnStructureAndClearGroups(this.datagrid._columns));
+
+        const columns = flatCols.reduce(
             (acc, col) => {
                 const position = col.state.pinning.position;
                 if (position === 'left' || groupByColumns.includes(col.columnId)) {

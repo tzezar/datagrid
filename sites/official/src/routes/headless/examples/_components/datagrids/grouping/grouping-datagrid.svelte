@@ -74,7 +74,7 @@
 		<div class="table">
 			<div class="thead">
 				<div class="flex">
-					{#each datagrid.columns.getLeafColumns() as column}
+					{#each datagrid.columns.getLeafColumnsInOrder() as column}
 						{@render LeafHeader(column)}
 					{/each}
 				</div>
@@ -83,11 +83,11 @@
 				{#each datagrid.rows.getPaginatedRows() as row}
 					<div class="tr">
 						{#if !row.isGroupRow()}
-							{#each datagrid.columns.getLeafColumns() as column}
+							{#each datagrid.columns.getLeafColumnsInOrder() as column}
 								{@render RenderBodyCell(column, row)}
 							{/each}
 						{:else}
-							{#each datagrid.columns.getLeafColumns() as column, columnIndex (column.columnId)}
+							{#each datagrid.columns.getLeafColumnsInOrder() as column, columnIndex (column.columnId)}
 								{@render RenderGroupCell(column, row)}
 							{/each}
 						{/if}

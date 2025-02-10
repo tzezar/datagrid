@@ -15,11 +15,11 @@ export class GroupingService extends BaseService {
 
         const err = this.datagrid.features.grouping.updateActiveGroups(validGroupColumns);
         if (err) return;
+        // this.datagrid._columns = this.datagrid.processors.column.placeGroupColumnsInFront(this.datagrid._columns);
 
         this.datagrid.features.pagination.goToFirstPage();
         this.datagrid.cacheManager.invalidateGroupedRowsCache();
         this.datagrid.processors.data.executeFullDataTransformation();
-        this.datagrid._columns = this.datagrid.processors.column.placeGroupColumnsInFront(this.datagrid._columns);
 
         this.datagrid.events.emit('onGroupingChange', { activeGroups: validGroupColumns });
     }
@@ -30,7 +30,6 @@ export class GroupingService extends BaseService {
         if (column.options.groupable === false) return;
 
         this.datagrid.features.grouping.toggleGrouping(columnId);
-
         this.datagrid.features.pagination.goToFirstPage();
         this.datagrid.cacheManager.invalidateGroupedRowsCache();
         this.datagrid.processors.data.executeFullDataTransformation();
