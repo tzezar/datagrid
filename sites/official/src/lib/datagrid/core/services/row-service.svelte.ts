@@ -74,14 +74,20 @@ export class RowService extends BaseService implements RowOperations {
     }
 
     toggleGroupExpansion<TOriginalRow>(row: GridGroupRow<TOriginalRow>) {
+        console.log(row.identifier)
+        console.log(row.isExpanded())
+        
         if (row.isExpanded()) this.datagrid.features.grouping.collapseGroup(row.identifier);
         else this.datagrid.features.grouping.expandGroup(row.identifier);
-
+        
         // Only invalidate the flattened view cache
         this.datagrid.cacheManager.invalidateGroupedRowsCache();
-
+        
         // Use the new optimized method instead of full transformation
         this.datagrid.processors.data.handleGroupExpansion();
+        console.log(row.isExpanded())
+
+        console.log($state.snapshot(this.datagrid.features.grouping.expandedGroups))
     }
 
 }
