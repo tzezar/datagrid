@@ -78,8 +78,8 @@
 	<span class="text-muted-foreground hidden text-xs md:block md:w-1/3">
 		Showing {datagrid.features.pagination.pageSize * (datagrid.features.pagination.page - 1) + 1} : {Math.min(
 			datagrid.features.pagination.pageSize * datagrid.features.pagination.page,
-			datagrid.features.pagination.visibleRowsCount
-		)} of {datagrid.features.pagination.visibleRowsCount} rows
+			datagrid.features.pagination.totalCount
+		)} of {datagrid.features.pagination.totalCount} rows
 	</span>
 {/snippet}
 

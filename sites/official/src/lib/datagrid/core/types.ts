@@ -136,7 +136,7 @@ export type AggregationConfig =
  */
 export type CustomCellComponentWithProps = {
     component: Component<any>;
-    props?: object;
+    props?: any;
 };
 
 

@@ -58,7 +58,7 @@ export class RowSelectionFeature<TOriginalRow = any> implements IRowSelectionFea
             this.datagrid.events.emit('onRowSelectionLimitExceeded', { rowIdentifier: identifier });
             return
         }; 
-        
+
         this.selectedRowIds.add(identifier);
     }
 

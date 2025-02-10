@@ -1,40 +1,54 @@
 <script lang="ts">
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory.js';
 	import type { EnhancedMeta } from '$lib/datagrid-enhanced';
-	import type { LeafColumn } from '$lib/datagrid/core/types';
-	import ArrowMoveLeft from '$lib/datagrid/icons/tabler/arrow-move-left.svelte';
-	import ArrowMoveRight from '$lib/datagrid/icons/tabler/arrow-move-right.svelte';
+	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
+	import { isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import {
 		accessorColumn,
 		DatagridCore,
+		displayColumn,
 		getCellContent,
 		type ColumnDef
 	} from '$lib/datagrid/index.js';
 	import { cn } from '$lib/utils';
 	import Pagination from '../../_blocks/pagination.svelte';
+	import RowPinningCell from './row-pinning-cell.svelte';
 
 	export const columns = [
-		accessorColumn({
-			accessorKey: 'id',
+		displayColumn({
+			columnId: 'expansion',
+			header: '',
 			state: {
 				size: {
-					width: 100,
-					maxWidth: 200,
-					minWidth: 50
+					width: 120,
+					maxWidth: 120,
+					minWidth: 120
 				}
+			},
+			cell: (props) => {
+				return {
+					component: RowPinningCell,
+					props
+				};
 			}
 		}),
 		accessorColumn({
-			accessorKey: 'name'
+			accessorKey: 'id'
+		}),
+		accessorColumn({
+			accessorKey: 'name',
+			_meta: {
+				grow: true
+			}
 		}),
 		accessorColumn({
 			accessorKey: 'category'
 		}),
 		accessorColumn({
-			accessorKey: 'price',
-			options: {
-				resizable: false
-			}
+			accessorKey: 'price'
+		}),
+		accessorColumn({
+			accessorKey: 'status'
 		})
 	] satisfies ColumnDef<InventoryItem, EnhancedMeta>[];
 
@@ -44,58 +58,35 @@
 		columns: columns,
 		data: data.inventory
 	});
-
-	let columnResizeMode: 'standard' | 'fluid' = $state('fluid');
 </script>
 
-<div class="flex gap-4">
-	<label>
-		<input
-			type="checkbox"
-			checked={columnResizeMode === 'fluid'}
-			onchange={() => (columnResizeMode = 'fluid')}
-		/>
-		Fluid (resize on drag)
-	</label>
-
-	<label>
-		<input
-			type="checkbox"
-			checked={columnResizeMode === 'standard'}
-			onchange={() => (columnResizeMode = 'standard')}
-		/>
-		Standard (resize on end)
-	</label>
-</div>
 <div>
 	<div class="wrapper">
-		<div class="table">
+		<div class="table relative">
 			<div class="thead">
 				<div class="flex">
-					{#each datagrid.columns.getLeafColumns() as column}
+					{#each datagrid.columns.getLeafColumnsInOrder() as column}
 						{@render LeafHeader(column)}
 					{/each}
 				</div>
 			</div>
-			<div class="tbody">
-				{#each datagrid.rows.getPaginatedRows() as row}
-					<div class="tr">
-						{#each datagrid.columns.getLeafColumns() as column}
-							{#if !row.isGroupRow()}
-								<div
-									style:--width={column.state.size.width + 'px'}
-									style:--min-width={column.state.size.minWidth + 'px'}
-									style:--max-width={column.state.size.maxWidth + 'px'}
-									class={cn(
-										'td  min-w-40 max-w-40  gap-2 px-4 py-2',
-										column._meta.grow && '!max-w-full !grow'
-									)}
-								>
-									{getCellContent(column, row.original)}
-								</div>
-							{:else}{/if}
-						{/each}
+			<div class="tbody contents">
+				{#each datagrid.rows.getVisibleRows() as row}
+					<div class={cn('tr')}>
+						{#if !row.isGroupRow()}
+							{#each datagrid.columns.getLeafColumnsInOrder() as column}
+								{@render RenderBodyCell(column, row)}
+							{/each}
+						{:else}{/if}
 					</div>
+					{#if row.isExpanded()}
+					<div class='flex h-full flex-row border-b '>
+						<div class="tr px-4 py-2 sticky left-0">
+							Evil cannot create anything new, they can only corrupt and ruin what good forces have
+							invented or made.
+						</div>
+					</div>
+					{/if}
 				{/each}
 			</div>
 		</div>
@@ -103,78 +94,60 @@
 	<Pagination {datagrid} />
 </div>
 
-<pre>
-	{JSON.stringify(
-		datagrid.columns.getLeafColumns().map((c) => {
-			return {
-				columnId: c.columnId,
-				resizable: c.options.resizable,
-				size: c.state.size
-			};
-		}),
-		null,
-		2
-	)}
-</pre>
+{#snippet RenderBodyCell(column: LeafColumn<any>, row: GridBasicRow<any>)}
+	{@const cellContent = column.cell ? column.cell({ datagrid, column, row }) : null}
+	{#if cellContent}
+		{#if typeof cellContent === 'string'}
+			{@html cellContent}
+		{:else if isCellComponent(cellContent)}
+			<cellContent.component {datagrid} {row} {column} />
+		{/if}
+	{:else}
+		<div
+			style:--width={column.state.size.width + 'px'}
+			style:--min-width={column.state.size.minWidth + 'px'}
+			style:--max-width={column.state.size.maxWidth + 'px'}
+			class={cn(
+				'td  min-w-40 max-w-40  gap-2 px-4 py-2 ',
+				column._meta.grow && '!max-w-full !grow',
+				datagrid.features.rowPinning.isPinned(row.identifier) && '!bg-green-500/20'
+			)}
+		>
+			{getCellContent(column, row.original)}
+		</div>
+	{/if}
+{/snippet}
 
 {#snippet LeafHeader(column: LeafColumn<any>)}
-	<div
-		class={cn('th  min-w-40 max-w-40  gap-2 px-4 py-2', column._meta.grow && '!max-w-full !grow')}
-		style:--width={column.state.size.width + 'px'}
-		style:--min-width={column.state.size.minWidth + 'px'}
-		style:--max-width={column.state.size.maxWidth + 'px'}
-	>
-		<div class="flex justify-between self-center">
-			{column.header}
-		</div>
-		{#if column.options.moveable}
-			<div class="flex flex-row gap-2">
-				<input
-					disabled={column.options.resizable === false}
-					type="range"
-					min={column.state.size.minWidth}
-					max={column.state.size.maxWidth}
-					value={column.state.size.width}
-					oninput={(e) => {
-						if (columnResizeMode !== 'fluid') return;
-						datagrid.handlers.column.updateColumnSize(
-							column.columnId,
-							Number(e.currentTarget.value)
-						);
-					}}
-					onchange={(e) => {
-						if (columnResizeMode !== 'standard') return;
-						datagrid.handlers.column.updateColumnSize(
-							column.columnId,
-							Number(e.currentTarget.value)
-						);
-					}}
-				/>
+	{#if column.isVisible()}
+		<div
+			class={cn('th min-w-40 max-w-40  gap-2 px-4 py-2', column._meta.grow && '!max-w-full !grow')}
+			style:--width={column.state.size.width + 'px'}
+			style:--min-width={column.state.size.minWidth + 'px'}
+			style:--max-width={column.state.size.maxWidth + 'px'}
+		>
+			<div class="flex justify-between self-center">
+				{column.header}
 			</div>
-		{/if}
-	</div>
+		</div>
+	{/if}
 {/snippet}
 
 <style lang="postcss">
-	.th,
-	.td {
+	.group-row-cell {
 		width: var(--width);
 		min-width: var(--min-width);
 		max-width: var(--max-width);
+		background: hsl(var(--background));
+		box-shadow: 0 0 0 1px hsl(var(--border));
+	}
 
-		&[data-pinned] {
-			@apply border-grid-border bg-grid-primary;
-		}
-
-		&[data-pinned='right'] {
-			@apply border-l border-r-0;
-			right: var(--pin-right-offset, 0);
-		}
-
-		&[data-pinned='left'] {
-			@apply border-l-0 border-r;
-			left: var(--pin-left-offset, 0);
-		}
+	.th,
+	.td {
+		@apply leading-relaxed;
+		width: var(--width);
+		min-width: var(--min-width);
+		max-width: var(--max-width);
 	}
 
 	.wrapper {
@@ -201,5 +174,21 @@
 	.td {
 		background: hsl(var(--background));
 		box-shadow: 0 0 0 1px hsl(var(--border));
+	}
+
+	.pagination-controls {
+		@apply flex flex-col items-center gap-4 border border-border p-2 sm:flex-row;
+	}
+
+	.page-size-selector select {
+		@apply h-10 w-full max-w-[150px] border bg-background px-2 py-2;
+	}
+
+	.pagination-navigation button {
+		@apply h-10 border p-1 px-3 disabled:opacity-50;
+	}
+
+	.page-indicator {
+		@apply border p-2;
 	}
 </style>

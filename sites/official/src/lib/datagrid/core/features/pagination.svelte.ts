@@ -6,7 +6,7 @@ export type PaginationFeatureState = {
     pageSize: number;
     pageSizes: number[];
     pageCount: number;
-    visibleRowsCount: number;
+    totalCount: number;
     autoResetPage: boolean;
     onPaginationChange(config: PaginationFeature<any>): void;
 
@@ -40,7 +40,7 @@ export class PaginationFeature<TOriginalRow = any> implements IRowPinningFeature
 
     // Total number of pages in the current data set
     pageCount: number = $state(0);
-    visibleRowsCount: number = $state(0);
+    totalCount: number = $state(0);
 
 
     constructor(datagrid: DatagridCore<TOriginalRow>, config?: PaginationFeatureConfig) {

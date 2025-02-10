@@ -33,6 +33,25 @@ export class DataDataProcessor<TOriginalRow> {
         // Create a copy of the data to avoid mutating the original data
         let data = [...this.datagrid.originalState.data];
 
+        
+        data = this.applyFilters(data);
+        data = applySorting(this.datagrid, data);
+
+        // Cache sorted or sortend and filtered results
+        this.datagrid.cacheManager.sortedData = data;
+
+        // Clear hierarchical cache when data changes
+        this.datagrid.cacheManager.invalidate('hierarchicalRows');
+
+        // Process grouped or regular data
+        if (shouldRunGrouping) this.processGroupedData(data);
+        else this.processRegularData(data);
+
+
+        if (this.datagrid.measurePerformance) this.datagrid.performanceMetrics.print();
+    }
+
+    applyFilters(data: TOriginalRow[]): TOriginalRow[] {
         if (this.datagrid.cacheManager.filteredData === null) {
             // Apply global search if value is set
             data = this.applyGlobalSearch(data);
@@ -61,22 +80,9 @@ export class DataDataProcessor<TOriginalRow> {
         } else {
             data = this.datagrid.cacheManager.filteredData;
         }
-
-        data = applySorting(this.datagrid, data);
-
-        // Cache sorted or sortend and filtered results
-        this.datagrid.cacheManager.sortedData = data;
-
-        // Clear hierarchical cache when data changes
-        this.datagrid.cacheManager.invalidate('hierarchicalRows');
-
-        // Process grouped or regular data
-        if (shouldRunGrouping) this.processGroupedData(data);
-        else this.processRegularData(data);
-
-
-        if (this.datagrid.measurePerformance) this.datagrid.performanceMetrics.print();
+        return data
     }
+
 
     applyGlobalSearch(data: TOriginalRow[]): TOriginalRow[] {
         data = this.datagrid.lifecycleHooks.executePreGlobalSearch(data);
@@ -198,8 +204,12 @@ export class DataDataProcessor<TOriginalRow> {
             this.datagrid.features.rowPinning.updatePinnedRows();
         });
 
+        if (this.datagrid.features.pagination.manual) {
+            this.datagrid.cacheManager.paginatedRows = basicRows!;
+            return
+        }
 
-        this.datagrid.features.pagination.visibleRowsCount = data!.length;
+        this.datagrid.features.pagination.totalCount = data!.length;
         this.datagrid.features.pagination.pageCount = this.datagrid.features.pagination.getPageCount(data);
         // Apply pagination
         this.datagrid.cacheManager.paginatedRows = this.paginateRows(basicRows!);

@@ -20,7 +20,7 @@ export const hrefs = {
             columnVisibility: "/headless/examples/column-visibility",
             grouping: "/headless/examples/grouping",
             pagination: "/headless/examples/pagination",
-            paginationControlled: "/headless/examples/pagination-controlled",
+            paginationOnBackend: "/headless/examples/pagination-on-backend",
             rowExpanding: "/headless/examples/row-expanding",
             rowPinning: "/headless/examples/row-pinning",
             rowSelection: "/headless/examples/row-selection",

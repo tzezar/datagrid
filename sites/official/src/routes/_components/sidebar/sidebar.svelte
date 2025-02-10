@@ -35,7 +35,7 @@
 			<GroupItem title="Column visibility" href={hrefs.headless.examples.columnVisibility} />
 			<GroupItem title="Grouping" href={hrefs.headless.examples.grouping} />
 			<GroupItem title="Pagination" href={hrefs.headless.examples.pagination} />
-			<GroupItem title="Pagination controlled" href={hrefs.headless.examples.paginationControlled} />
+			<GroupItem title="Pagination on backend" href={hrefs.headless.examples.paginationOnBackend} />
 			<GroupItem title="Row expanding" href={hrefs.headless.examples.rowExpanding} />
 			<GroupItem title="Row pinning" href={hrefs.headless.examples.rowPinning} />
 			<GroupItem title="Row selection" href={hrefs.headless.examples.rowSelection} />
