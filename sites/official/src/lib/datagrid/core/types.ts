@@ -525,6 +525,7 @@ export type EventPayloadMap = {
     'onGroupExpand': { groupIdentifier: GridGroupRowIdentifier };
     'onGroupCollapse': { groupIdentifier: GridGroupRowIdentifier };
     'onGroupExpansionLimitExceeded': { maxExpandedGroups: number };
+    'onActiveGroupsLimitExceeded': { maxActiveGroups: number };
 
     'onGroupingChange': { activeGroups: ColumnId[] };
 

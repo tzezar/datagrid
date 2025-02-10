@@ -13,7 +13,9 @@ export class GroupingService extends BaseService {
             })
             .filter((columnId): columnId is ColumnId => columnId !== null);
 
-        this.datagrid.features.grouping.activeGroups = validGroupColumns;
+        const err = this.datagrid.features.grouping.updateActiveGroups(validGroupColumns);
+        if (err) return;
+
         this.datagrid.features.pagination.goToFirstPage();
         this.datagrid.cacheManager.invalidateGroupedRowsCache();
         this.datagrid.processors.data.executeFullDataTransformation();
@@ -27,11 +29,7 @@ export class GroupingService extends BaseService {
         if (!column) return;
         if (column.options.groupable === false) return;
 
-        const { activeGroups } = this.datagrid.features.grouping;
-
-        this.datagrid.features.grouping.activeGroups = activeGroups.includes(columnId)
-            ? activeGroups.filter((id) => id !== columnId)
-            : [...activeGroups, columnId];
+        this.datagrid.features.grouping.toggleGrouping(columnId);
 
         this.datagrid.features.pagination.goToFirstPage();
         this.datagrid.cacheManager.invalidateGroupedRowsCache();

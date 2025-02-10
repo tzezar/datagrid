@@ -23,6 +23,7 @@ export class GroupingFeature implements GroupingFeatureState {
     activeGroups: ColumnId[] = $state([]);
     expandedGroups: SvelteSet<GridGroupRowIdentifier> = $state(new SvelteSet([]))
     maxExpandedGroups: number = $state(Infinity)
+    maxActiveGroups: number = $state(2)
 
     onGroupingChange: (expandedGroups: string[]) => void = () => { };
 
@@ -34,15 +35,15 @@ export class GroupingFeature implements GroupingFeatureState {
     isColumnWithinGroup(columnId: ColumnId): boolean {
         return this.activeGroups.includes(columnId);
     }
-    
+
     isGroupExpanded(groupIdentifier: GridGroupRowIdentifier): boolean {
         return this.expandedGroups.has(groupIdentifier);
     }
 
     expandGroup(groupIdentifier: GridGroupRowIdentifier) {
-        if (this.expandedGroups.size >= this.maxExpandedGroups) {
+        if (this.maxExpandedGroups < this.expandedGroups.size) {
             this.datagrid.events.emit('onGroupExpansionLimitExceeded', { maxExpandedGroups: this.maxExpandedGroups });
-            return 
+            return
         }
         this.datagrid.events.emit('onGroupExpand', { groupIdentifier });
         this.expandedGroups.add(groupIdentifier);
@@ -51,6 +52,24 @@ export class GroupingFeature implements GroupingFeatureState {
     collapseGroup(groupIdentifier: GridGroupRowIdentifier) {
         this.datagrid.events.emit('onGroupCollapse', { groupIdentifier });
         this.expandedGroups.delete(groupIdentifier);
+    }
+
+    toggleGrouping(columnId: ColumnId) {
+        if (this.activeGroups.includes(columnId)) {
+            this.collapseGroup(columnId);
+        } else {
+            this.expandGroup(columnId);
+        }
+    }
+
+    updateActiveGroups(activeGroups: ColumnId[]): Error | void {
+        if (activeGroups.length > this.maxActiveGroups) {
+            this.datagrid.events.emit('onActiveGroupsLimitExceeded', { maxActiveGroups: this.maxActiveGroups });
+            throw new Error('Too many active groups');            
+        }
+
+        this.activeGroups = activeGroups;
+        this.datagrid.events.emit('onGroupingChange', { activeGroups });
     }
 
 

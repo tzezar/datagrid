@@ -11,6 +11,7 @@
 		type ColumnDef
 	} from '$lib/datagrid/index.js';
 	import { cn } from '$lib/utils';
+	import { toast } from 'svelte-sonner';
 	import Pagination from '../../_blocks/pagination.svelte';
 
 	export const columns = [
@@ -29,7 +30,11 @@
 		}),
 		accessorColumn({
 			accessorKey: 'price',
-			aggregate: 'sum'
+			aggregate: 'median'
+		}),
+		accessorColumn({
+			accessorKey: 'status',
+			aggregate: 'uniqueCount'
 		})
 	] satisfies ColumnDef<InventoryItem, EnhancedMeta>[];
 
@@ -40,12 +45,18 @@
 		data: data.inventory,
 		initialState: {
 			grouping: {
+				maxExpandedGroups: 1
 			}
 		}
+	});
+
+	datagrid.events.on('onActiveGroupsLimitExceeded', () => {
+		toast.error('Maximum number of expanded groups exceeded');
 	});
 </script>
 
 <select
+	class="h-40 border p-4 bg-background"
 	multiple
 	onchange={(event) =>
 		datagrid.handlers.grouping.updateGrouping(convertSelectedOptionsToArray(event))}
