@@ -3,28 +3,30 @@ import type { DatagridCore } from "../index.svelte";
 import type { FilterCondition, FilterOperator } from "../types";
 import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 
-
-
 export type ColumnFilteringState = {
-    conditions: FilterCondition<any>[];
-    isManual: boolean;
+    conditions: FilterCondition<any>[]; // List of filter conditions for columns
+    isManual: boolean; // Indicates if filters are applied manually
 }
 
-export type ColumnFilteringFeatureConfig = Partial<ColumnFilteringState>
-export type IColumnFilteringFeature = ColumnFilteringFeature
-
+export type ColumnFilteringFeatureConfig = Partial<ColumnFilteringState>;
+export type IColumnFilteringFeature = ColumnFilteringFeature;
 
 /**
  * Manages column filtering functionality for a data grid.
  * Provides utilities for evaluating filter conditions and toggling the visibility of filters.
  */
 export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilteringFeature {
-    datagrid: DatagridCore
+    datagrid: DatagridCore; // Reference to the parent DataGrid
 
     // Stores all filter conditions for the columns
     filterConditions: FilterCondition<TOriginalRow>[] = $state([]);
     isManual: boolean = $state(false);
 
+    /**
+     * Creates an instance of ColumnFilteringFeature.
+     * @param datagrid - The DataGrid instance to manage filters for.
+     * @param config - Optional configuration to initialize the feature with.
+     */
     constructor(datagrid: DatagridCore, config: ColumnFilteringFeatureConfig) {
         this.datagrid = datagrid;
         Object.assign(this, config);
@@ -32,14 +34,19 @@ export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilter
 
     /**
      * Retrieves the filter condition value for a given column.
-     * @param columnId - The ID of the column.
-     * @returns The filter condition value or `null` if no condition exists.
+     * @param columnId - The ID of the column to get the filter condition value for.
+     * @returns The filter condition value or `null` if no condition exists for the column.
      */
     getConditionValue(columnId: string): any {
         const condition = this.filterConditions.find(c => c.columnId === columnId);
         return condition ? condition.value : null;
     }
 
+    /**
+     * Retrieves the 'to' value for a range filter condition for a given column.
+     * @param columnId - The ID of the column to get the range filter 'to' value for.
+     * @returns The 'to' filter condition value or `null` if no condition exists for the column.
+     */
     getConditionValueTo(columnId: string): any {
         const condition = this.filterConditions.find(c => c.columnId === columnId);
         return condition ? condition.valueTo : null;
@@ -47,8 +54,8 @@ export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilter
 
     /**
      * Retrieves the filter operator for a given column.
-     * @param columnId - The ID of the column.
-     * @returns The filter operator or `undefined` if no condition exists.
+     * @param columnId - The ID of the column to get the filter operator for.
+     * @returns The filter operator or `undefined` if no condition exists for the column.
      */
     getConditionOperator(columnId: string): FilterOperator | undefined {
         const condition = this.filterConditions.find(c => c.columnId === columnId);
@@ -57,14 +64,14 @@ export class ColumnFilteringFeature<TOriginalRow = any> implements IColumnFilter
 
     /**
      * Updates the filter operator for a given column.
-     * @param columnId - The ID of the column.
+     * If no condition exists, a new one is created.
+     * @param columnId - The ID of the column to update the filter operator for.
      * @param operator - The new filter operator to set.
      */
     changeConditionOperator(columnId: string, operator: FilterOperator) {
         let condition = this.filterConditions.find(c => c.columnId === columnId);
         if (!condition) {
             // If no condition exists, create a new one
-
             const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), columnId);
             if (!column) throw new Error(`Column ${columnId} not found`);
             if (isGroupColumn(column)) throw new Error(`Cannot filter group column: ${columnId}`);
