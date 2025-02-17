@@ -5,5 +5,6 @@ export const ssr = false;
 
 export const load = async () => {
     const inventory = generateData(generateInventoryItem, 100);
+    
     return { inventory };
   };

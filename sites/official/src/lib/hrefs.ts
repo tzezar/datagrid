@@ -3,15 +3,16 @@
 
 export const hrefs = {
     default: "/",
-
     supporters: {
         default: "/supporters",
     },
-
     headless: {
         quickStart: {
             installation: "/headless/quick-start/installation",
             gettingStarted: "/headless/quick-start/getting-started",
+        },
+        apiReference: {
+            default: "/headless/api-reference",
         },
         examples: {
             basic: "/headless/examples/basic",
@@ -33,7 +34,6 @@ export const hrefs = {
             subComponents: "/headless/examples/sub-components",
             virtualized: "/headless/examples/virtualized",
             editableData: "/headless/examples/editable-data",
-
         }
     },
 

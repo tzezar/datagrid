@@ -22,6 +22,8 @@
 			<GroupItem disabled title="Installation" href={''} />
 			<GroupItem title="Getting started" href={hrefs.headless.quickStart.gettingStarted} />
 		</Group>
+		<GroupItem title="API reference" href={hrefs.headless.apiReference.default} />
+
 		<Group>
 			<GroupTitle title="Examples" />
 			<GroupItem title="Basic" href={hrefs.headless.examples.basic} />
@@ -49,7 +51,6 @@
 			<GroupItem title="Virtualized" href={hrefs.headless.examples.virtualized} />
 			<GroupItem title="Editable data" href={hrefs.headless.examples.editableData} />
 		</Group>
-
 
 		<GroupTitle
 			title="Enhanced"

@@ -41,7 +41,7 @@
 
 <Toaster richColors/>
 <ModeWatcher />
-<div class="flex h-screen w-full">
+<div class="flex h-screen w-full" >
 	<div class="flex h-full w-full">
 		<!-- Desktop Sidebar -->
 		<div class="hidden h-full w-64 shrink-0 flex-col overflow-auto border-r lg:flex">

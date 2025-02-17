@@ -122,7 +122,7 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
         if (!Array.isArray(data)) throw new Error('Data must be an array');
         if (!Array.isArray(columns)) throw new Error('Columns must be an array');
         if (columns.length === 0) throw new Error('Columns array must not be empty');
-        if (data.length === 0) throw new Error('Data array must not be empty');
+        // if (data.length === 0) throw new Error('Data array must not be empty');
     }
 
 

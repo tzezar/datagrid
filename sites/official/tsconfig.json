@@ -11,7 +11,6 @@
 		"strict": true,
 		"moduleResolution": "bundler",
 	},
-	// "include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte"],
 	"include": ["src", "global.d.ts"]
 	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
 	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files
