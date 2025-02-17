@@ -1,0 +1,2 @@
+Acknowledgments
+The original implementation of virtualization was done by https://github.com/orefalo/svelte-virtuallists, the code was modified to meet the needs of the datagrid.
