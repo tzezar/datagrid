@@ -1,1 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...$$props}><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 10h-4V6m6-2l-6 6m-8 4h4v4m0-4l-6 6"/></svg>
