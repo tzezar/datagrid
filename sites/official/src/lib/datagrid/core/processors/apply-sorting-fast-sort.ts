@@ -5,7 +5,24 @@ import type { AccessorColumn, ComputedColumn, SortingDirection } from "../types"
 import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
 
 
-
+/**
+ * Applies sorting to the given data based on the sort configurations in the datagrid using the fast-sort library.
+ * It supports both manual sorting and sorting as defined by the datagrid's sorting feature.
+ * This implementation also optimizes sorting performance by using precomputed sort keys and a Schwartzian transform.
+ *
+ * @template TOriginalRow - The type of the rows in the data array.
+ *
+ * @param {DatagridCore<TOriginalRow>} datagrid - The datagrid instance containing the sorting configuration, lifecycle hooks, and feature flags.
+ * @param {TOriginalRow[]} data - The data array to be sorted.
+ * 
+ * @returns {TOriginalRow[]} - The sorted data array.
+ *
+ * @remarks
+ * - If manual sorting is enabled or if there are no sorting configurations, the data is returned without any changes.
+ * - Sorting is applied based on the direction specified in the `sortConfigs`, handling ascending or descending order.
+ * - The Schwartzian Transform is used to precompute the sort keys, which improves performance when sorting large datasets.
+ * - The sorting operation uses the fast-sort library's in-place sort mechanism, which efficiently sorts the data by comparing precomputed keys.
+ */
 export function applySorting<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>, data: TOriginalRow[]): TOriginalRow[] {
     data = datagrid.lifecycleHooks.executePreSort(data);
 
