@@ -4,30 +4,54 @@ import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 import { flattenColumnStructureAndClearGroups } from "../utils.svelte";
 
-
+/**
+ * A class responsible for processing and managing columns in a datagrid.
+ * It handles operations like initialization, assigning parent column IDs, 
+ * grouping, pinning, and generating column hierarchies.
+ */
 export class ColumnProcessor<TOriginalRow> {
     datagrid: DatagridCore<TOriginalRow>;
+
+    /**
+     * Initializes a new ColumnProcessor instance.
+     * 
+     * @param {DatagridCore<TOriginalRow>} datagrid - The datagrid instance this processor will operate on.
+     */
     constructor(datagrid: DatagridCore<TOriginalRow>) {
         this.datagrid = datagrid;
     }
 
+    /**
+     * Initializes the columns by executing pre- and post-processing hooks, 
+     * placing group columns at the front, and enhancing column definitions with `isGroupColumn` flag.
+     * 
+     * @param {ColumnDef<any>[]} columns - An array of column definitions to initialize.
+     * @returns {ColumnDef<any>[]} The processed column definitions.
+     */
     initializeColumns = (columns: ColumnDef<any>[]): ColumnDef<any>[] => {
         columns = this.datagrid.lifecycleHooks.executePreProcessColumns(columns);
 
         columns = this.placeGroupColumnsInFront(columns);
-        // ? Might be better to move this to column creation fns
+
         columns.forEach(col => {
             return {
                 isGroupColumn: () => col.type === 'group',
                 ...col,
             }
-        })
+        });
 
         columns = this.datagrid.lifecycleHooks.executePostProcessColumns(columns);
 
-        return columns
+        return columns;
     };
 
+    /**
+     * Recursively assigns parent column IDs to each column in the provided list.
+     * 
+     * @param {ColumnDef<TOriginalRow>[]} columns - The columns to process.
+     * @param {ColumnId | null} parentColumnId - The parent column ID to assign to child columns.
+     * @returns {ColumnDef<TOriginalRow>[]} The columns with assigned parent column IDs.
+     */
     assignParentColumnIds(columns: ColumnDef<TOriginalRow>[], parentColumnId: ColumnId | null = null) {
         columns.forEach(column => {
             if (isGroupColumn(column)) {
@@ -35,10 +59,16 @@ export class ColumnProcessor<TOriginalRow> {
                 this.assignParentColumnIds(groupColumn.columns, groupColumn.columnId);
             }
             column.parentColumnId = parentColumnId;
-        })
+        });
         return columns;
     }
 
+    /**
+     * Places the group columns at the front of the column list based on the active grouping.
+     * 
+     * @param {ColumnDef<any>[]} columns - The columns to reorder.
+     * @returns {ColumnDef<any>[]} The columns with group columns placed at the front.
+     */
     placeGroupColumnsInFront = (columns: ColumnDef<any>[]): ColumnDef<any>[] => {
         const groupByColumns = this.datagrid.features.grouping.activeGroups;
 
@@ -50,9 +80,14 @@ export class ColumnProcessor<TOriginalRow> {
             !groupByColumns.includes(col.columnId)
         );
 
-        return [...orderedGroupColumns, ...nonGroupColumns].filter(e=> e !== undefined);
+        return [...orderedGroupColumns, ...nonGroupColumns].filter(e => e !== undefined);
     }
 
+    /**
+     * Refreshes the column pinning offsets based on the given or default columns.
+     * 
+     * @param {ColumnDef<any>[]} [columns] - The columns to update pinning offsets for (defaults to all columns).
+     */
     refreshColumnPinningOffsets(columns?: ColumnDef<any>[]) {
         if (!columns) columns = flattenColumnStructureAndClearGroups(this.datagrid._columns);
 
@@ -70,12 +105,17 @@ export class ColumnProcessor<TOriginalRow> {
 
         const hierarchicalColumns = this.datagrid.processors.column.createColumnHierarchy(newColumns);
 
-        this.datagrid._columns = hierarchicalColumns
+        this.datagrid._columns = hierarchicalColumns;
     };
 
-
-
-
+    /**
+     * Creates a column hierarchy from the given flat column definitions.
+     * This function organizes the columns into a tree structure where group columns are parents 
+     * and regular columns are their children.
+     * 
+     * @param {ColumnDef<TOriginalRow>[]} partialFlatColumns - The flat list of columns to structure into a hierarchy.
+     * @returns {ColumnDef<TOriginalRow>[]} A hierarchical column structure.
+     */
     createColumnHierarchy<TOriginalRow>(partialFlatColumns: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[] {
         const results: ColumnDef<TOriginalRow>[] = [];
 
@@ -85,8 +125,7 @@ export class ColumnProcessor<TOriginalRow> {
                 results.push(col);
             }
         });
-        partialFlatColumns = partialFlatColumns.filter(col => col.parentColumnId !== null)
-
+        partialFlatColumns = partialFlatColumns.filter(col => col.parentColumnId !== null);
 
         const findGroupColumnInResults = (columns: ColumnDef<TOriginalRow>[], column: ColumnDef<TOriginalRow>): GroupColumn<TOriginalRow> | null => {
             for (const col of columns) {
@@ -116,10 +155,16 @@ export class ColumnProcessor<TOriginalRow> {
             }
         }
 
-        return results
+        return results;
     }
 
-
+    /**
+     * Calculates the column span for a given column.
+     * If the column is a group column, the span is calculated based on its visible children.
+     * 
+     * @param {ColumnDef<TOriginalRow>} col - The column to calculate the span for.
+     * @returns {number} The calculated column span.
+     */
     calculateColSpan(col: ColumnDef<TOriginalRow>): number {
         if (col.state.visible === false) return 0;
 
@@ -133,6 +178,12 @@ export class ColumnProcessor<TOriginalRow> {
         return 1;
     }
 
+    /**
+     * Determines the maximum depth of a column hierarchy.
+     * 
+     * @param {ColumnDef<TOriginalRow>[]} cols - The columns to calculate the depth for.
+     * @returns {number} The maximum depth of the column hierarchy.
+     */
     getMaxDepth(cols: ColumnDef<TOriginalRow>[]): number {
         return cols.reduce((max, col) => {
             if (isGroupColumn(col)) {
@@ -142,6 +193,13 @@ export class ColumnProcessor<TOriginalRow> {
         }, 0);
     }
 
+    /**
+     * Generates the header rows for the datagrid based on the column hierarchy.
+     * Each header row contains columns that span across the grid, depending on their position in the hierarchy.
+     * 
+     * @param {ColumnDef<TOriginalRow>[]} cols - The columns to generate header rows for.
+     * @returns {ColumnDef<TOriginalRow>[][]} A 2D array representing the rows of the header.
+     */
     generateHeaderRows(cols: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[][] {
         const depth = this.getMaxDepth(cols);
         const rows: (ColumnDef<TOriginalRow> & {
@@ -193,6 +251,4 @@ export class ColumnProcessor<TOriginalRow> {
 
         return rows;
     }
-
-
 }
