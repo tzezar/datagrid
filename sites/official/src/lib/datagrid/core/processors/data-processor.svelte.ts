@@ -9,22 +9,34 @@ import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.s
 // import { applySorting } from "./apply-sorting-fast-sort";
 
 
-
 /**
- * Handles data processing tasks such as filtering, sorting, grouping, and pagination for a datagrid component.
+ * Class responsible for processing and transforming data for a datagrid component.
+ * It handles various operations such as filtering, sorting, grouping, and pagination,
+ * providing an efficient way to transform raw data into a format suitable for the grid.
+ * 
+ * @template TOriginalRow - The type of the original row data in the datagrid.
  */
 export class DataDataProcessor<TOriginalRow> {
     readonly metrics: PerformanceMetrics;
     private customAggregationFns: Map<string, AggregationFn>;
 
+    /**
+    * Constructs an instance of the DataDataProcessor.
+    * 
+    * @param {DatagridCore<TOriginalRow>} datagrid - The core datagrid instance to which this processor belongs.
+    */
     constructor(private readonly datagrid: DatagridCore<TOriginalRow>) {
         this.metrics = datagrid.performanceMetrics;
         this.customAggregationFns = new Map();
     }
 
+
     /**
-       * Executes the entire data transformation pipeline: search, filter, sort, and group.
-       */
+     * Executes the full data transformation pipeline including filtering, sorting, and grouping,
+     * preparing the data for display in the datagrid.
+     * This function processes the data, stores intermediate results in cache, 
+     * and manages pagination.
+     */
     executeFullDataTransformation(): void {
         const shouldRunGrouping = this.datagrid.features.grouping.activeGroups.length > 0 || this.datagrid.features.grouping.manual;
 
@@ -33,7 +45,7 @@ export class DataDataProcessor<TOriginalRow> {
         // Create a copy of the data to avoid mutating the original data
         let data = [...this.datagrid.originalState.data];
 
-        
+
         data = this.applyFilters(data);
         data = applySorting(this.datagrid, data);
 
@@ -51,6 +63,13 @@ export class DataDataProcessor<TOriginalRow> {
         if (this.datagrid.measurePerformance) this.datagrid.performanceMetrics.print();
     }
 
+
+    /**
+     * Applies filters to the dataset. This includes both global search and column filters.
+     * 
+     * @param {TOriginalRow[]} data - The raw data to be filtered.
+     * @returns {TOriginalRow[]} The filtered data.
+     */
     applyFilters(data: TOriginalRow[]): TOriginalRow[] {
         if (this.datagrid.cacheManager.filteredData === null) {
             // Apply global search if value is set
@@ -83,7 +102,12 @@ export class DataDataProcessor<TOriginalRow> {
         return data
     }
 
-
+    /**
+     * Applies global search to the data, using either fuzzy search or a simple substring match.
+     * 
+     * @param {TOriginalRow[]} data - The raw data to be searched.
+     * @returns {TOriginalRow[]} The data after applying global search.
+     */
     applyGlobalSearch(data: TOriginalRow[]): TOriginalRow[] {
         data = this.datagrid.lifecycleHooks.executePreGlobalSearch(data);
 
@@ -130,6 +154,13 @@ export class DataDataProcessor<TOriginalRow> {
         return this.datagrid.lifecycleHooks.executePostGlobalSearch(data);
     }
 
+
+    /**
+    * Applies column filters to the data. Filters are evaluated on a per-column basis.
+    * 
+    * @param {TOriginalRow[]} data - The raw data to be filtered.
+    * @returns {TOriginalRow[]} The data after applying column filters.
+    */
     applyColumnFilters(data: TOriginalRow[]): TOriginalRow[] {
         data = this.datagrid.lifecycleHooks.executePreFilter(data);
 
@@ -161,6 +192,13 @@ export class DataDataProcessor<TOriginalRow> {
         return this.datagrid.lifecycleHooks.executePostFilter(data);
     }
 
+
+    /**
+     * Processes grouped data by organizing it into hierarchical structures based on grouping columns,
+     * applying any necessary aggregations and handling visibility based on group expansion state.
+     * 
+     * @param {TOriginalRow[]} data - The raw data to be processed into groups.
+     */
     processGroupedData(data: TOriginalRow[]): void {
         // Create grouped structure only if not already cached
         let groupedRows = this.datagrid.cacheManager.hierarchicalRows;
@@ -188,6 +226,12 @@ export class DataDataProcessor<TOriginalRow> {
 
     }
 
+
+    /**
+     * Processes regular (non-grouped) data, transforming it into basic rows and handling pagination.
+     * 
+     * @param {TOriginalRow[]} data - The raw data to be processed into basic rows.
+     */
     private processRegularData(data: TOriginalRow[]): void {
 
         // Transform into basic rows
@@ -215,12 +259,22 @@ export class DataDataProcessor<TOriginalRow> {
         this.datagrid.cacheManager.paginatedRows = this.paginateRows(basicRows!);
     }
 
-    // Register custom aggregation function
+    /**
+    * Registers a custom aggregation function for use in the datagrid.
+    * 
+    * @param {string} name - The name of the aggregation function.
+    * @param {AggregationFn} fn - The aggregation function to register.
+    */
     registerAggregationFn(name: string, fn: AggregationFn): void {
         this.customAggregationFns.set(name, fn);
     }
 
-    // Get aggregation function
+    /**
+     * Retrieves the aggregation function for a given aggregate type.
+     * 
+     * @param {string | { type: string, fn?: AggregationFn }} aggregateType - The type or configuration of the aggregation.
+     * @returns {AggregationFn | null} The corresponding aggregation function, or null if not found.
+     */
     private getAggregationFn(aggregateType: string | { type: string, fn?: AggregationFn }): AggregationFn | null {
         if (typeof aggregateType === 'string') {
             return aggregationFunctions[aggregateType] || this.customAggregationFns.get(aggregateType) || null;
@@ -235,7 +289,13 @@ export class DataDataProcessor<TOriginalRow> {
             null;
     }
 
-
+    /**
+     * Calculates the aggregations for a given column and a set of grouped rows.
+     * 
+     * @param {AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>} column - The column for which aggregations are calculated.
+     * @param {TOriginalRow[]} groupRows - The rows belonging to a group.
+     * @returns {Aggregation[]} The list of calculated aggregations.
+     */
     private calculateAggregations(
         column: AccessorColumn<TOriginalRow> | ComputedColumn<TOriginalRow>,
         groupRows: TOriginalRow[]
@@ -271,7 +331,13 @@ export class DataDataProcessor<TOriginalRow> {
             columnId: column.columnId
         }];
     }
-
+    /**
+     * Creates hierarchical data by recursively grouping rows based on the defined grouping columns.
+     * Each group can contain child groups, and aggregation functions are applied to each group.
+     * 
+     * @param {TOriginalRow[]} data - The raw data to be grouped.
+     * @returns {GridRow<TOriginalRow>[]} The hierarchical structure of grouped rows.
+     */
     createHierarchicalData(data: TOriginalRow[]): GridRow<TOriginalRow>[] {
         const groupCols = this.datagrid.features.grouping.activeGroups;
         if (!groupCols.length) return this.createBasicRows(data);
@@ -341,6 +407,14 @@ export class DataDataProcessor<TOriginalRow> {
         return 'groupKey' in row && 'children' in row;
     }
 
+
+
+    /**
+     * Flattens expanded groups into a single list of rows, recursively expanding group rows.
+     * 
+     * @param {GridRow<TOriginalRow>[]} rows - The rows to flatten, which may include expanded group rows.
+     * @returns {GridRow<TOriginalRow>[]} The flattened list of rows, with expanded groups fully included.
+     */
     private flattenExpandedGroups(rows: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
         const flattened: GridRow<TOriginalRow>[] = [];
 
@@ -355,6 +429,13 @@ export class DataDataProcessor<TOriginalRow> {
         return flattened;
     }
 
+    /**
+     * Creates basic rows from the original data, without applying grouping or aggregation.
+     * 
+     * @param {TOriginalRow[]} rows - The raw data to be transformed into basic rows.
+     * @param {string} [parentIndex] - An optional parent index to manage hierarchical row identifiers.
+     * @returns {GridRow<TOriginalRow>[]} The basic rows created from the data.
+     */
     private createBasicRows(rows: TOriginalRow[], parentIndex?: string): GridRow<TOriginalRow>[] {
         return rows.map((row, i) => {
             const identifier = this.datagrid.rowIdGetter(row);
@@ -369,15 +450,24 @@ export class DataDataProcessor<TOriginalRow> {
         });
     }
 
+    /**
+  * Paginates the given rows based on the current page and page size.
+  * 
+  * @param {GridRow<TOriginalRow>[]} rows - The rows to paginate.
+  * @returns {GridRow<TOriginalRow>[]} A subset of rows based on the pagination settings (page and pageSize).
+  */
     private paginateRows(rows: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
         const { page, pageSize } = this.datagrid.features.pagination;
         const start = (page - 1) * pageSize;
         return rows.slice(start, start + pageSize);
     }
 
-
-    // Handlers
-
+    /**
+     * Handles group expansion and updates the visible rows, pagination, and cached rows accordingly.
+     * 
+     * If hierarchical rows exist, the visible rows are determined by the expanded group state, 
+     * otherwise the sorted data is processed. Afterward, the rows are paginated and cached.
+     */
     handleGroupExpansion(): void {
         const hierarchicalRows = this.datagrid.cacheManager.hierarchicalRows;
         if (!hierarchicalRows) {
@@ -393,6 +483,12 @@ export class DataDataProcessor<TOriginalRow> {
         });
     }
 
+    /**
+     * Handles the change in pagination and updates the cached paginated rows accordingly.
+     * 
+     * This method gets the visible rows based on the current state and then updates 
+     * the cached paginated rows for the current page.
+     */
     handlePaginationChange(): void {
         const visibleRows = this.getVisibleRows();
         this.metrics.measure('Pagination', () => {
@@ -400,7 +496,15 @@ export class DataDataProcessor<TOriginalRow> {
         });
     }
 
-    // New method to get only the visible rows based on group expansion state
+    /**
+     * Retrieves only the visible rows based on the group expansion state.
+     * 
+     * If hierarchical rows are available, it flattens the expanded groups, otherwise 
+     * returns the regular rows. This helps in showing the correct rows based on 
+     * whether groups are expanded or collapsed.
+     * 
+     * @returns {GridRow<TOriginalRow>[]} The visible rows to display.
+     */
     private getVisibleRows(): GridRow<TOriginalRow>[] {
         if (!this.datagrid.cacheManager.hierarchicalRows) {
             return this.datagrid.cacheManager.rows;
@@ -408,6 +512,7 @@ export class DataDataProcessor<TOriginalRow> {
 
         return this.flattenExpandedGroups(this.datagrid.cacheManager.hierarchicalRows);
     }
+
 
 
 }
