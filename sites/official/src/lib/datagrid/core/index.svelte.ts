@@ -9,78 +9,160 @@ import { EventService } from "./services/event-service";
 import { isGroupColumn } from "./helpers/column-guards";
 import { flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups } from "./utils.svelte";
 
-
+/**
+ * Core class for managing the datagrid, handling state, events, processing, and features.
+ * 
+ * @template TOriginalRow The type of the original data row.
+ * @template TMeta Additional metadata type for columns.
+ * 
+ * @example
+ * const datagrid = new DatagridCore({ columns: myColumns, data: myData });
+ */
 export class DatagridCore<TOriginalRow = any, TMeta = any> {
+    /**
+     * Event service for managing event subscriptions and emissions.
+     */
     readonly events: EventService;
+
+    /**
+     * Performance metrics tracker.
+     */
     readonly performanceMetrics = new PerformanceMetrics();
-    readonly handlers: HandlersManager
 
-    gridIdentifier = $state('tzezars-datagrid')
+    /**
+     * Manages event handlers for the grid.
+     */
+    readonly handlers: HandlersManager;
 
+    /**
+     * Unique identifier for the grid instance.
+     */
+    gridIdentifier = $state('tzezars-datagrid');
+
+    /**
+     * Stores the original state of the datagrid, including columns and data.
+     */
     originalState = $state.raw({
         columns: [] as ColumnDef<TOriginalRow, TMeta>[],
         data: [] as TOriginalRow[]
     });
 
+    /**
+     * Processed columns for internal use.
+     */
     _columns: ColumnDef<TOriginalRow, TMeta>[] = $state([]);
 
+    /**
+     * Column management instance.
+     */
     columns: Columns<TOriginalRow> = new Columns(this);
+
+    /**
+     * Row management instance.
+     */
     rows: Rows<TOriginalRow> = new Rows(this);
 
+    /**
+     * Data and column processing managers.
+     */
     processors = {
         data: new DataProcessor(this),
         column: new ColumnProcessor(this)
-    }
+    };
 
+    /**
+     * Cache management for the datagrid.
+     */
     cacheManager = new DatagridCacheManager(this);
 
-    measurePerformance: boolean = $state(false)
-    rowIdGetter: (row: TOriginalRow) => GridRowIdentifier = (row: TOriginalRow) => (row as any).id
-    rowIndexGetter: (row: TOriginalRow, parentIndex: string | null, index: number) => string = (row: TOriginalRow, parentIndex: string | null, index: number) => parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1)
+    /**
+     * Whether to measure performance metrics for grid operations.
+     */
+    measurePerformance: boolean = $state(false);
 
+    /**
+     * Function to retrieve the row identifier.
+     * @param row - The row data.
+     * @returns The unique identifier for the row.
+     */
+    rowIdGetter: (row: TOriginalRow) => GridRowIdentifier = (row: TOriginalRow) => (row as any).id;
+
+    /**
+     * Function to retrieve the row index.
+     * @param row - The row data.
+     * @param parentIndex - The parent index (if applicable).
+     * @param index - The row index.
+     * @returns The computed row index.
+     */
+    rowIndexGetter: (row: TOriginalRow, parentIndex: string | null, index: number) => string =
+        (row: TOriginalRow, parentIndex: string | null, index: number) => parentIndex ? `${parentIndex}-${index + 1}` : String(index + 1);
+
+    /**
+     * Feature manager for enabling/disabling specific datagrid features.
+     */
     features: DatagridFeatures<TOriginalRow> = new DatagridFeatures(this);
 
+    /**
+     * Lifecycle hooks for pre/post processing operations.
+     */
     lifecycleHooks = new LifecycleHooks<TOriginalRow>();
 
+    /**
+     * Creates an instance of DatagridCore.
+     * @param config - The datagrid configuration.
+     * @param lazyInitialization - Whether to delay initialization.
+     * @example
+     * ```typescript
+     * const grid = new DatagridCore({ columns: [...], data: [...] });
+     * ```
+     */
     constructor(config: DatagridCoreConfig<TOriginalRow>, lazyInitialization: boolean = false) {
         this.events = new EventService();
         this.handlers = new HandlersManager(this, this.events);
         this.features = new DatagridFeatures(this, config);
 
-        this.measurePerformance = config?.measurePerformance ?? this.measurePerformance
-        this.rowIdGetter = config?.rowIdGetter ?? this.rowIdGetter
-        this.rowIndexGetter = config?.rowIndexGetter ?? this.rowIndexGetter
+        this.measurePerformance = config?.measurePerformance ?? this.measurePerformance;
+        this.rowIdGetter = config?.rowIdGetter ?? this.rowIdGetter;
+        this.rowIndexGetter = config?.rowIndexGetter ?? this.rowIndexGetter;
 
         if (config.lifecycleHooks) this.lifecycleHooks = config.lifecycleHooks;
         if (lazyInitialization) return;
         this.initializeGridState(config);
     }
 
+    /**
+     * Initializes the grid state based on the provided configuration.
+     * @param config - The datagrid configuration.
+     */
     initializeGridState(config: DatagridCoreConfig<TOriginalRow>) {
         this.validateConfiguration(config);
 
         // !!! IMPORTANT !!!
         // This has to run in this order, otherwise the datagrid will not be initialized properly
-        // * Features has to be initialized first to prevent some bugs eg. not updating pagination
-        // * when there is wrapper around the datagrid that implements its own features
-        // * it might be worked around by processing data after extra features are initialized
-        // * but it involves extra processing which is not needed, maybe some refactoring is needed
+        // * Features have to be initialized first to prevent issues such as pagination updates failing
 
         this.initializeSourceColumns(config.columns);
-        this.initializeSourceData(config.data)
+        this.initializeSourceData(config.data);
 
-        this._columns = this.processors.column.initializeColumns(this.originalState.columns)
+        this._columns = this.processors.column.initializeColumns(this.originalState.columns);
         this.features = new DatagridFeatures(this, config);
         this.processors.data.executeFullDataTransformation();
     }
 
+    /**
+     * Initializes the source columns.
+     * @param columns - The column definitions.
+     */
     private initializeSourceColumns(columns: ColumnDef<TOriginalRow>[]) {
-        // * Parent column Ids must be assigned before the columns are processed to ensure correct grouping
         columns = this.lifecycleHooks.executePreProcessOriginalColumns(this.processors.column.assignParentColumnIds(columns));
         this.originalState.columns = columns;
         this.originalState.columns = this.lifecycleHooks.executePostProcessOriginalColumns(this.originalState.columns);
     }
 
+    /**
+     * Initializes the source data.
+     * @param data - The row data.
+     */
     private initializeSourceData(data: TOriginalRow[]) {
         data = this.lifecycleHooks.executePreProcessData(data);
         this.originalState.data = data;
@@ -88,8 +170,16 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
     }
 
     /**
-       * Performs a refresh with different levels of data recalculation
-       */
+     * Refreshes the datagrid with optional recalculations.
+     * @param updateOperation - The update function.
+     * @param options - The recalculation options.
+     * @example
+     * ```typescript
+     * grid.refresh(() => {
+     *     grid.rows.updateSomeData();
+     * }, { recalculateAll: true });
+     * ```
+     */
     refresh(updateOperation: () => void, options: {
         recalculateAll?: boolean;
         recalculateGroups?: boolean;
@@ -116,33 +206,71 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
         if (this.measurePerformance) console.log(`Operation took ${performance.now() - timeStart}ms`);
     }
 
+    /**
+     * Validates the datagrid configuration.
+     * @param config - The datagrid configuration.
+     * @throws Will throw an error if the configuration is invalid.
+     */
     private validateConfiguration({ columns, data }: DatagridCoreConfig<TOriginalRow>) {
         if (!columns) throw new Error('Columns are required');
         if (!data) throw new Error('Data is required');
         if (!Array.isArray(data)) throw new Error('Data must be an array');
         if (!Array.isArray(columns)) throw new Error('Columns must be an array');
         if (columns.length === 0) throw new Error('Columns array must not be empty');
-        // if (data.length === 0) throw new Error('Data array must not be empty');
     }
-
-
 }
 
 
 
+
+/**
+ * Interface representing row operations in a data grid.
+ * 
+ * @template TOriginalRow The type of the original row data.
+ */
 type IRows<TOriginalRow> = {
-    getVisibleRows: () => GridRow<TOriginalRow>[]
-    getPaginatedRows: () => GridRow<TOriginalRow>[]
+    /**
+     * Retrieves the visible rows of the data grid.
+     * 
+     * @returns {GridRow<TOriginalRow>[]} A list of visible rows.
+     */
+    getVisibleRows: () => GridRow<TOriginalRow>[];
+
+    /**
+     * Retrieves the paginated rows of the data grid.
+     * 
+     * @returns {GridRow<TOriginalRow>[]} A list of rows according to pagination.
+     */
+    getPaginatedRows: () => GridRow<TOriginalRow>[];
 }
 
+/**
+ * Class for handling and manipulating rows in a data grid.
+ * 
+ * @template TOriginalRow The type of the original row data.
+ */
 class Rows<TOriginalRow> implements IRows<TOriginalRow> {
+    /**
+     * Creates an instance of the Rows class.
+     * 
+     * @param {DatagridCore<TOriginalRow>} datagrid The datagrid instance to manage rows for.
+     */
     constructor(private readonly datagrid: DatagridCore<TOriginalRow>) { }
 
-
+    /**
+     * Retrieves the basic visible rows of the data grid, excluding group rows.
+     * 
+     * @returns {GridBasicRow<TOriginalRow>[]} A list of visible basic rows.
+     */
     getVisibleBasicRows(): GridBasicRow<TOriginalRow>[] {
-        return this.datagrid.cacheManager.rows.filter(row => !row.isGroupRow()) as GridBasicRow<TOriginalRow>[] || [] as GridBasicRow<TOriginalRow>[]
+        return this.datagrid.cacheManager.rows.filter(row => !row.isGroupRow()) as GridBasicRow<TOriginalRow>[] || [] as GridBasicRow<TOriginalRow>[];
     }
 
+    /**
+     * Retrieves all visible rows in the data grid, including pinned rows (top, center, and bottom).
+     * 
+     * @returns {GridRow<TOriginalRow>[]} A list of all visible rows.
+     */
     getVisibleRows(): GridRow<TOriginalRow>[] {
         const topRows = this.datagrid.features.rowPinning.getTopRows();
         const bottomRows = this.datagrid.features.rowPinning.getBottomRows();
@@ -150,14 +278,31 @@ class Rows<TOriginalRow> implements IRows<TOriginalRow> {
         return [...topRows, ...centerRows, ...bottomRows];
     }
 
+    /**
+     * Retrieves the rows that are currently paginated.
+     * 
+     * @returns {GridRow<TOriginalRow>[]} A list of paginated rows.
+     */
     getPaginatedRows(): GridRow<TOriginalRow>[] {
         return this.datagrid.cacheManager.paginatedRows || [];
     }
 
+    /**
+     * Finds a row in the data grid by its unique identifier.
+     * 
+     * @param {GridRowIdentifier} identifier The identifier of the row to find.
+     * @returns {GridRow<TOriginalRow> | undefined} The row with the given identifier, or undefined if not found.
+     */
     findRowById(identifier: GridRowIdentifier): GridRow<TOriginalRow> | undefined {
         return this.datagrid.cacheManager.rows?.find(row => row.identifier === identifier);
     }
 
+    /**
+     * Flattens a set of grid rows, including nested group rows.
+     * 
+     * @param {GridRow<TOriginalRow>[]} data The list of grid rows to flatten.
+     * @returns {GridRow<TOriginalRow>[]} A flattened list of grid rows, with all group rows expanded.
+     */
     flattenGridRows<TOriginalRow>(data: GridRow<TOriginalRow>[]): GridRow<TOriginalRow>[] {
         const flattened: GridRow<TOriginalRow>[] = [];
 
@@ -167,25 +312,22 @@ class Rows<TOriginalRow> implements IRows<TOriginalRow> {
                 flattened.push(...this.flattenGridRows(row.children));
             }
         }
-        return flattened
+        return flattened;
     }
-
 }
 
-
-// type IColumns<TOriginalRow> = {
-//     getLeafColumns: () => LeafColumn<TOriginalRow>[];
-//     getLeafColumnsInOrder: () => LeafColumn<TOriginalRow>[];
-//     getColumnsInOrder: () => ColumnDef<TOriginalRow>[];
-//     getGroupColumns: () => GroupColumn<TOriginalRow>[]
-//     getFlattenedColumnStructure: (preserveGroups: boolean) => ColumnDef<TOriginalRow>[]
-//     flattenColumnStructure: (columns: ColumnDef<TOriginalRow>[], preserveGroups: boolean) => ColumnDef<TOriginalRow>[]
-//     findColumnById: (columnId: ColumnId) => ColumnDef<TOriginalRow> | null
-// }
-
-// class Columns<TOriginalRow> implements IColumns<TOriginalRow> {
+/**
+ * Class for handling and manipulating columns in a data grid.
+ * 
+ * @template TOriginalRow The type of the original row data.
+ */
 class Columns<TOriginalRow> {
 
+    /**
+     * Creates an instance of the Columns class.
+     * 
+     * @param {DatagridCore<TOriginalRow>} datagrid The datagrid instance to manage columns for.
+     */
     constructor(private readonly datagrid: DatagridCore<TOriginalRow>) { }
 
     /**
@@ -252,7 +394,6 @@ class Columns<TOriginalRow> {
         ];
     }
 
-
     /**
      * Categorizes columns into left-pinned, right-pinned, and center (unpinned) groups.
      * 
@@ -290,8 +431,6 @@ class Columns<TOriginalRow> {
         };
     }
 
-
-
     /**
      * Retrieves a list of all group columns.
      * Group columns are those that contain child columns and represent a grouping of other columns.
@@ -302,8 +441,6 @@ class Columns<TOriginalRow> {
         return flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(col => isGroupColumn(col));
     }
 
-
-
     /**
      * Finds a column by its unique columnId.
      * 
@@ -311,11 +448,9 @@ class Columns<TOriginalRow> {
      * @returns The column if found, otherwise null.
      */
 
-
     findColumnById(columnId: ColumnId): ColumnDef<TOriginalRow> | null {
         return flattenColumnStructurePreservingGroups(this.datagrid._columns).find((col) => col.columnId === columnId) ?? null;
     }
-
 
     /**
      * Finds a column by its unique columnId and throws an error if not found.
@@ -329,75 +464,5 @@ class Columns<TOriginalRow> {
         if (!column) throw new Error(`Column ${columnId} not found`);
         return column;
     }
-
-
-
-
-    // /**
-    //  * Retrieves a flattened column structure, optionally preserving group columns.
-    //  * Flattening removes nested groups, and can preserve them depending on the `preserveGroups` flag.
-    //  * 
-    //  * @param preserveGroups Whether to preserve group columns in the structure.
-    //  * @returns An array of columns, possibly with group columns preserved.
-    //  */
-    // getFlattenedColumnStructure(preserveGroups: boolean = true): ColumnDef<TOriginalRow>[] {
-    //     return this.flattenColumnStructure(this.datagrid._columns, preserveGroups);
-    // }
-
-    // /**
-    //  * Flattens a given column structure, optionally preserving group columns.
-    //  * This method recursively processes nested group columns and flattens them into a single array.
-    //  * 
-    //  * @param columns The columns to flatten.
-    //  * @param preserveGroups Whether to preserve group columns in the output.
-    //  * @returns A flattened array of columns.
-    //  */
-    // flattenColumnStructure(
-    //     columns: ColumnDef<TOriginalRow>[],
-    //     preserveGroups: boolean = false
-    // ): ColumnDef<TOriginalRow>[] {
-    //     const flattened: ColumnDef<TOriginalRow>[] = [];
-
-    //     const processColumns = (columns: ColumnDef<any>[], result: ColumnDef<any>[]) => {
-    //         for (let i = 0; i < columns.length; i++) {
-    //             const column = columns[i];
-    //             if (column.type === 'group') {
-    //                 processColumns(column.columns, result);
-    //                 result.push(preserveGroups ? column : { ...column, columns: [] });
-    //             } else {
-    //                 result.push(column);
-    //             }
-    //         }
-    //     };
-
-    //     processColumns(columns, flattened);
-    //     return flattened;
-    // }
-
-
-    /**
-     * Finds a leaf column (a non-group column) by its unique columnId.
-     * 
-     * @param columnId The unique identifier of the leaf column.
-     * @returns The leaf column if found, otherwise null.
-     */
-    // findLeafColumnById(columnId: ColumnId): LeafColumn<TOriginalRow> | null {
-    //     return this.getLeafColumns().find((col) => col.columnId === columnId) ?? null;
-    // }
-
-
-
-    /**
-     * Finds a leaf column (a non-group column) by its unique columnId and throws an error if not found.
-     * 
-     * @param columnId The unique identifier of the leaf column.
-     * @returns The leaf column if found.
-     * @throws Error if the leaf column is not found.
-     */
-    // findLeafColumnByIdOrThrow(columnId: ColumnId): LeafColumn<TOriginalRow> {
-    //     const column = this.findLeafColumnById(columnId);
-    //     if (!column) throw new Error(`Column ${columnId} not found`);
-    //     return column;
-    // }
 
 }
