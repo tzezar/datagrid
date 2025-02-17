@@ -92,23 +92,57 @@
 	}
 }
 
-.prose :is(mark) {
-	@apply rounded-sm bg-orange-400 p-[0.08rem] px-1;
+.markdown {
+	@apply mx-auto max-w-2xl px-5 text-base;
 }
 
-.prose :is(code) {
-	@apply text-orange-500
-}
-.prose :is(mark) {
-	@apply bg-orange-500 text-primary rounded-none font-semibold
-}
-.prose :is(blockquote) {
-	quotes: none;
-}
-.prose :is(blockquote) {
-	@apply border-l-orange-500
+.markdown :is(h1) {
+	@apply mb-8 mt-12 text-5xl font-extrabold leading-tight tracking-tight text-foreground;
 }
 
+.markdown :is(h2) {
+	@apply mb-6 mt-10 text-3xl font-bold leading-tight text-foreground;
+}
+
+.markdown :is(h3) {
+	@apply mb-4 mt-8 text-2xl font-bold leading-tight text-foreground;
+}
+
+.markdown :is(p) {
+	@apply mb-6 text-lg leading-7 text-secondary-foreground/80;
+}
+
+.markdown :is(pre) {
+	@apply my-6 overflow-x-auto rounded-md bg-gray-50 p-4 font-mono text-sm;
+}
+
+.markdown :is(code) {
+	@apply rounded px-1.5 py-0.5 font-mono text-sm;
+}
+
+.markdown :is(ul, ol) {
+	@apply mb-6 space-y-2 pl-6;
+}
+
+.markdown :is(li) {
+	@apply text-lg leading-7;
+}
+
+.markdown :is(blockquote) {
+	@apply my-8 border-l-4 border-gray-300 py-2 pl-5 text-xl italic text-gray-600;
+}
+
+.markdown :is(img) {
+	@apply my-8 h-auto max-w-full rounded-lg;
+}
+
+.markdown :is(table) {
+	@apply my-8 w-full border-collapse;
+}
+
+.markdown :is(th, td) {
+	@apply p-3;
+}
 
 @layer components {
 	.grid-body-overlay {
@@ -122,24 +156,24 @@
 	.grid-wrapper {
 		/* Whole content inside */
 		/* max-h is required for virtualized container */
-		@apply relative flex  flex-col bg-grid-background max-h-[600px];
+		@apply relative flex max-h-[600px] flex-col bg-grid-background;
 
 		&[data-fullscreen='true'] {
-			@apply absolute inset-0 z-20  max-h-screen p-4;
+			@apply absolute inset-0 z-20 max-h-screen p-4;
 		}
 	}
 
 	.grid-container-wrapper {
 		/* If virtualized this is inner container */
-		@apply inline-block  w-full overflow-auto border border-grid-border;
+		@apply inline-block w-full overflow-auto border border-grid-border;
 
 		&[data-fullscreen='true'] {
-			@apply  overflow-auto;
+			@apply overflow-auto;
 		}
 	}
 
 	.grid-container {
-		@apply inline-block min-w-full grow-0 h-full;
+		@apply inline-block h-full min-w-full grow-0;
 
 		&.grid-container-shadcn {
 			@apply bg-background;
@@ -170,14 +204,13 @@
 		min-width: var(--min-width);
 		max-width: var(--max-width);
 
-
 		/* ! does not work for some reason */
 		/* &:not([data-pinned]):last-of-type {
 			@apply !bg-red-400;
 		} */
 
 		&[data-pinned] {
-			@apply bg-grid-primary border-grid-border;
+			@apply border-grid-border bg-grid-primary;
 		}
 
 		&[data-pinned='right'] {
@@ -249,31 +282,32 @@
 	}
 
 	.grid-body-row-cell {
-		@apply flex items-center px-1 py-2 transition-all duration-300 relative shrink-0;
+		@apply relative flex shrink-0 items-center px-1 py-2 transition-all duration-300;
 		width: var(--width);
 		min-width: var(--min-width);
 		max-width: var(--max-width);
-		
+
 		&[data-pinned] {
-			@apply bg-grid-primary border-grid-border;
+			@apply border-grid-border bg-grid-primary;
 		}
-		
+
 		&[data-pinned='right'] {
 			right: var(--pin-right-offset, 0);
 			@apply border-l;
 		}
-		
+
 		&[data-pinned='left'] {
 			left: var(--pin-left-offset, 0);
 			@apply border-r;
 		}
 	}
-	
+
 	.grid-body-row-cell-highlighted {
 		/* Remove position: relative since it's now in the parent */
 		z-index: 1;
-		
-		&::before {  /* Changed from ::after to ::before */
+
+		&::before {
+			/* Changed from ::after to ::before */
 			content: '';
 			position: absolute;
 			top: 0;
@@ -284,7 +318,7 @@
 			pointer-events: none;
 		}
 	}
-	
+
 	/* Add specific styling for cells with copy button */
 	.grid-body-row-cell:has(button) {
 		.grid-body-row-cell-highlighted::before {
@@ -294,7 +328,7 @@
 	}
 
 	.grid-body-row-cell-content {
-		@apply w-full overflow-hidden text-ellipsis whitespace-nowrap   flex ;
+		@apply flex w-full overflow-hidden text-ellipsis whitespace-nowrap;
 	}
 
 	.grid-body-group-row {
@@ -318,7 +352,7 @@
 	/* Toolbar */
 
 	.grid-toolbar-container {
-		@apply flex items-end justify-end border-l border-t border-grid-border border-r;
+		@apply flex items-end justify-end border-l border-r border-t border-grid-border;
 	}
 
 	/* Column Filtering */
@@ -328,7 +362,7 @@
 	}
 
 	.grid-head-row-leaf-column-filter-input {
-		@apply h-6 rounded-sm border border-grid-border px-0 py-1 text-xs w-full;
+		@apply h-6 w-full rounded-sm border border-grid-border px-0 py-1 text-xs;
 		color: hsl(var(--muted-foreground));
 	}
 
@@ -366,8 +400,4 @@
 			background: hsl(var(--muted-foreground) / 50);
 		}
 	}
-
-	
-	
-
 }
