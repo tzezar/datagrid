@@ -1,4 +1,4 @@
-import type { ColumnDef, GroupColumn } from "../types";
+import type { ColumnDef, ColumnGroup } from "../types";
 
 export const isColumnVisible = (column: ColumnDef<any>): boolean => {
     return column.state.visible === true;
@@ -16,7 +16,7 @@ export const isColumnFilterable = (column: ColumnDef<any>): boolean => {
     return false
 }
 
-export function isDescendantOf(possibleDescendant: GroupColumn<any>, ancestor: GroupColumn<any>): boolean {
+export function isDescendantOf(possibleDescendant: ColumnGroup<any>, ancestor: ColumnGroup<any>): boolean {
     if (!possibleDescendant) return false;
 
     // Check if the possible descendant is a direct child of the ancestor
@@ -24,6 +24,6 @@ export function isDescendantOf(possibleDescendant: GroupColumn<any>, ancestor: G
 
     // Recursively check if the possible descendant is a descendant of any group columns
     return ancestor.columns
-        .filter((col): col is GroupColumn<any> => col.type === 'group') // Type guard to ensure we only check GroupColumn types
+        .filter((col): col is ColumnGroup<any> => col.type === 'group') // Type guard to ensure we only check GroupColumn types
         .some(childGroup => isDescendantOf(possibleDescendant, childGroup)); // Recursive call for group columns
 }

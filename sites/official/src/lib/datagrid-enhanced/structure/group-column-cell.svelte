@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { GroupColumn } from '$lib/datagrid/core/types';
+	import type { ColumnGroup } from '$lib/datagrid/core/types';
 	import type { Snippet } from 'svelte';
 	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import { cn } from '$lib/utils';
 
 	type Props = {
 		datagrid: EnhancedDatagrid;
-		column: GroupColumn<any>;
+		column: ColumnGroup<any>;
 		children: Snippet;
 		class?: string;
 	};

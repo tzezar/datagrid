@@ -1,4 +1,4 @@
-import type { ColumnDef, ColumnId, GroupColumn } from "./types";
+import type { ColumnDef, ColumnId, ColumnGroup } from "./types";
 import type { CellValue, CustomCellComponentWithProps, } from "./types";
 
 /**
@@ -53,7 +53,7 @@ export function getCellContent(column: ColumnDef<any>, originalRow: any): CellVa
  * @param ancestor The ancestor column.
  * @returns True if the column is a descendant, false otherwise.
  */
-export function isColumnInGroupTree(possibleDescendant: GroupColumn<any>, ancestor: GroupColumn<any>): boolean {
+export function isColumnInGroupTree(possibleDescendant: ColumnGroup<any>, ancestor: ColumnGroup<any>): boolean {
     if (!possibleDescendant) return false;
 
     // Check if the possible descendant is a direct child of the ancestor
@@ -61,7 +61,7 @@ export function isColumnInGroupTree(possibleDescendant: GroupColumn<any>, ancest
 
     // Recursively check if the possible descendant is a descendant of any group columns
     return ancestor.columns
-        .filter((col): col is GroupColumn<any> => col.type === 'group') // Type guard to ensure we only check GroupColumn types
+        .filter((col): col is ColumnGroup<any> => col.type === 'group') // Type guard to ensure we only check GroupColumn types
         .some(childGroup => isColumnInGroupTree(possibleDescendant, childGroup)); // Recursive call for group columns
 }
 

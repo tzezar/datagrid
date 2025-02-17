@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { GroupColumn, LeafColumn } from '$lib/datagrid/core/types';
+	import type { ColumnGroup, LeafColumn } from '$lib/datagrid/core/types';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import LeafColumnCell from './leaf-column-cell.svelte';
@@ -13,7 +13,7 @@
 
 	type Props = {
 		datagrid: EnhancedDatagrid;
-		column: GroupColumn<any, ColumnMetaEnhanced> | LeafColumn<any, ColumnMetaEnhanced>;
+		column: ColumnGroup<any, ColumnMetaEnhanced> | LeafColumn<any, ColumnMetaEnhanced>;
 	};
 
 	let { datagrid, column }: Props = $props();
@@ -25,7 +25,7 @@
 	{@render ColumnHeaderSnippet(column)}
 {/if}
 
-{#snippet ColumnGroupHeaderSnippet(column: GroupColumn<any>)}
+{#snippet ColumnGroupHeaderSnippet(column: ColumnGroup<any>)}
 	<GroupColumnCell {column} {datagrid}>
 		<div class={datagrid.customization.styling.getHeadRowGroupColumnCellContentClasses()}>
 			<span class={datagrid.customization.styling.getHeadRowGroupColumnCellHeaderClasses()}>

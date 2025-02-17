@@ -1,5 +1,5 @@
 import type { CreateGroupParams } from "../features/column-grouping.svelte";
-import type { ColumnId, GroupColumn, LeafColumn, PinningPosition } from "../types";
+import type { ColumnId, ColumnGroup, LeafColumn, PinningPosition } from "../types";
 import { findColumnById, flattenColumnStructurePreservingGroups } from "../utils.svelte";
 import { BaseService } from "./base-service";
 
@@ -42,9 +42,9 @@ export class ColumnControlService extends BaseService {
     /**
      * Deletes a group column.
      * 
-     * @param {GroupColumn<any>} groupColumn The group column to delete.
+     * @param {ColumnGroup<any>} groupColumn The group column to delete.
      */
-    deleteGroupColumn(groupColumn: GroupColumn<any>) {
+    deleteGroupColumn(groupColumn: ColumnGroup<any>) {
         this.datagrid.features.columnGrouping.deleteGroupColumn(groupColumn);
     }
 

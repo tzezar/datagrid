@@ -1,6 +1,6 @@
-import type { AccessorColumn, ColumnDef, ComputedColumn, DisplayColumn, GroupColumn } from "../types";
+import type { AccessorColumn, ColumnDef, ComputedColumn, DisplayColumn, ColumnGroup } from "../types";
 
-export function isGroupColumn<TData>(column: ColumnDef<TData>): column is GroupColumn<TData> {
+export function isGroupColumn<TData>(column: ColumnDef<TData>): column is ColumnGroup<TData> {
     return column.type === 'group'
 }
 

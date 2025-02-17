@@ -1,5 +1,5 @@
 import { isGroupColumn } from "../helpers/column-guards";
-import type { ColumnDef, GroupColumn } from "../types";
+import type { ColumnDef, ColumnGroup } from "../types";
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 import { flattenColumnStructureAndClearGroups } from "../utils.svelte";
@@ -55,7 +55,7 @@ export class ColumnProcessor<TOriginalRow> {
     assignParentColumnIds(columns: ColumnDef<TOriginalRow>[], parentColumnId: ColumnId | null = null) {
         columns.forEach(column => {
             if (isGroupColumn(column)) {
-                const groupColumn = column as GroupColumn<TOriginalRow>;
+                const groupColumn = column as ColumnGroup<TOriginalRow>;
                 this.assignParentColumnIds(groupColumn.columns, groupColumn.columnId);
             }
             column.parentColumnId = parentColumnId;
@@ -127,9 +127,9 @@ export class ColumnProcessor<TOriginalRow> {
         });
         partialFlatColumns = partialFlatColumns.filter(col => col.parentColumnId !== null);
 
-        const findGroupColumnInResults = (columns: ColumnDef<TOriginalRow>[], column: ColumnDef<TOriginalRow>): GroupColumn<TOriginalRow> | null => {
+        const findGroupColumnInResults = (columns: ColumnDef<TOriginalRow>[], column: ColumnDef<TOriginalRow>): ColumnGroup<TOriginalRow> | null => {
             for (const col of columns) {
-                if (col.columnId === column.parentColumnId) return col as GroupColumn<TOriginalRow>;
+                if (col.columnId === column.parentColumnId) return col as ColumnGroup<TOriginalRow>;
                 if (col.type === 'group' && col.columns) {
                     const found = findGroupColumnInResults(col.columns, column);
                     if (found) return found;
@@ -150,7 +150,7 @@ export class ColumnProcessor<TOriginalRow> {
                 partialFlatColumns.push(column);
                 continue;
             } else {
-                parentColumn = parentColumn as GroupColumn<TOriginalRow>;
+                parentColumn = parentColumn as ColumnGroup<TOriginalRow>;
                 parentColumn.columns.push(column);
             }
         }

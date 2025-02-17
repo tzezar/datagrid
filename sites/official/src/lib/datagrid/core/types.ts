@@ -401,7 +401,7 @@ export interface DisplayColumn<TOriginalRow, TMeta = any> {
     isFilterable(): boolean
 }
 
-export interface GroupColumn<TOriginalRow, TMeta = any> {
+export interface ColumnGroup<TOriginalRow, TMeta = any> {
     type: 'group';
     header: string;
     headerCell?: HeaderCell;
@@ -433,7 +433,7 @@ export type ColumnDef<TOriginalRow, TMeta = any> =
     AccessorColumn<TOriginalRow, TMeta> |
     ComputedColumn<TOriginalRow, TMeta> |
     DisplayColumn<TOriginalRow, TMeta> |
-    GroupColumn<TOriginalRow, TMeta>;
+    ColumnGroup<TOriginalRow, TMeta>;
 
 
 export type ParentColumnId = string | null;
@@ -535,8 +535,8 @@ export type EventPayloadMap = {
     'onColumnResize': { column: LeafColumn<any> };
     'onColumnVisibilityChange': { column: LeafColumn<any> };
 
-    'onColumnGroupCreation': { columnGroup: GroupColumn<any> };
-    'onColumnGroupDeletion': { columnGroup: GroupColumn<any> };
+    'onColumnGroupCreation': { columnGroup: ColumnGroup<any> };
+    'onColumnGroupDeletion': { columnGroup: ColumnGroup<any> };
     'onColumnPinningChange': { column: LeafColumn<any> };
     'onColumnReorder': { columnId: ColumnId, direction: ColumnMovementDirection };
 

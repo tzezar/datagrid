@@ -9,17 +9,76 @@ import { PaginationService } from "../services/pagination-service";
 import { RowService } from "../services/row-service.svelte";
 import { SortingService } from "../services/sorting-service";
 
+/**
+ * Manages handlers for various services within the datagrid.
+ * Provides access to services for column control, filtering, global search,
+ * grouping, pagination, row operations, sorting, and editing.
+ * 
+ * @class HandlersManager
+ */
 export class HandlersManager {
+    /**
+     * Service to manage column controls such as visibility, ordering, etc.
+     * @readonly
+     * @type {ColumnControlService}
+     */
     readonly column: ColumnControlService;
-    readonly filtering: FilteringService
-    readonly globalSearch: SearchService
-    readonly grouping: GroupingService
-    readonly pagination: PaginationService
-    readonly rows: RowService
+
+    /**
+     * Service to manage filtering functionality within the datagrid.
+     * @readonly
+     * @type {FilteringService}
+     */
+    readonly filtering: FilteringService;
+
+    /**
+     * Service to manage global search functionality.
+     * @readonly
+     * @type {SearchService}
+     */
+    readonly globalSearch: SearchService;
+
+    /**
+     * Service to manage grouping functionality within the datagrid.
+     * @readonly
+     * @type {GroupingService}
+     */
+    readonly grouping: GroupingService;
+
+    /**
+     * Service to manage pagination functionality within the datagrid.
+     * @readonly
+     * @type {PaginationService}
+     */
+    readonly pagination: PaginationService;
+
+    /**
+     * Service to manage row operations such as selection, expansion, etc.
+     * @readonly
+     * @type {RowService}
+     */
+    readonly rows: RowService;
+
+    /**
+     * Service to manage sorting functionality within the datagrid.
+     * @readonly
+     * @type {SortingService}
+     */
     readonly sorting: SortingService;
-    readonly editing: EditingService
 
+    /**
+     * Service to manage editing functionality for rows within the datagrid.
+     * @readonly
+     * @type {EditingService}
+     */
+    readonly editing: EditingService;
 
+    /**
+     * Creates an instance of the HandlersManager, initializing all the necessary services.
+     * 
+     * @param {DatagridCore} datagrid - The core datagrid instance to which services will be bound.
+     * @param {EventService} eventService - The event service used for event-driven interactions between services.
+     */
     constructor(datagrid: DatagridCore<any>, eventService: EventService) {
         this.sorting = new SortingService(datagrid, eventService);
         this.column = new ColumnControlService(datagrid, eventService);

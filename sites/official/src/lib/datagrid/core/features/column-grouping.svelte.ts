@@ -1,8 +1,8 @@
 
-import { type GroupColumn } from "../types";
+import { type ColumnGroup } from "../types";
 import type { DatagridCore } from "../index.svelte";
 import { findColumnById, flattenColumnStructurePreservingGroups, generateRandomColumnId } from "../utils.svelte";
-import { createColumnGroup } from "../column-creation/group-column-creator";
+import { createColumnGroup } from "../column-creation/column-group-creator";
 import type { MoveOperation } from "./column-ordering.svelte";
 
 
@@ -42,7 +42,7 @@ export class ColumnGroupingFeature<TOriginalRow = any> implements IColumnGroupin
         * Deletes a group column and reassigns its children to the appropriate level.
         * @param columnGroup - The group column to delete.
         */
-    deleteGroupColumn(columnGroup: GroupColumn<TOriginalRow>): void {
+    deleteGroupColumn(columnGroup: ColumnGroup<TOriginalRow>): void {
         this.datagrid.events.emit('onColumnGroupDeletion', { columnGroup });
         const childColumns = [...columnGroup.columns];
 
@@ -61,7 +61,7 @@ export class ColumnGroupingFeature<TOriginalRow = any> implements IColumnGroupin
             }
         } else {
             // Group is nested within another group
-            const parentGroup = findColumnById(flattenColumnStructurePreservingGroups(this.datagrid._columns), columnGroup.parentColumnId) as GroupColumn<TOriginalRow>;
+            const parentGroup = findColumnById(flattenColumnStructurePreservingGroups(this.datagrid._columns), columnGroup.parentColumnId) as ColumnGroup<TOriginalRow>;
 
             if (!parentGroup) throw new Error('Parent group not found');
             if (parentGroup) {

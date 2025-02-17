@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ColumnDef, GroupColumn } from "$lib/datagrid/core/types";
+	import type { ColumnDef, ColumnGroup } from "$lib/datagrid/core/types";
 	import {  isColumnInGroupTree } from "$lib/datagrid/core/utils.svelte";
 	import MoveDown from "$lib/datagrid/icons/material-symbols/move-down.svelte";
 	import MoveUp from "$lib/datagrid/icons/material-symbols/move-up.svelte";
@@ -32,7 +32,7 @@
 
             if (column.type === 'group') {
                 const targetGroup = datagrid.columns.getGroupColumns()
-                    .find((group: GroupColumn<any>) => group.columnId === targetGroupId);
+                    .find((group: ColumnGroup<any>) => group.columnId === targetGroupId);
 
                 if (targetGroup && isColumnInGroupTree(targetGroup, column)) {
                     console.warn('Cannot move a group into its own descendant');
@@ -49,7 +49,7 @@
     >
         <option value="">Root Level</option>
         {#each datagrid.columns.getGroupColumns()
-            .filter((groupCol: GroupColumn<any>) => column.type !== 'group' || (groupCol !== column && !isColumnInGroupTree(groupCol, column))) as groupColumn (groupColumn.columnId)}
+            .filter((groupCol: ColumnGroup<any>) => column.type !== 'group' || (groupCol !== column && !isColumnInGroupTree(groupCol, column))) as groupColumn (groupColumn.columnId)}
             <option value={groupColumn.columnId} disabled={groupColumn === column}>
                 {groupColumn.header}
             </option>

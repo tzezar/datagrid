@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory.js';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
-	import type { LeafColumn, GroupColumn } from '$lib/datagrid/core/types';
+	import type { LeafColumn, ColumnGroup } from '$lib/datagrid/core/types';
 	import {
 		accessorColumn,
 		columnGroup,
@@ -114,7 +114,7 @@
 	</div>
 </div>
 
-{#snippet GroupHeader(column: GroupColumn<any>)}
+{#snippet GroupHeader(column: ColumnGroup<any>)}
 	<div class="th flex w-full flex-col">
 		<div class="px-4 py-2 font-bold">
 			{column.header}

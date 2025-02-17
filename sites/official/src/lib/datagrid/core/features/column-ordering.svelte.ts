@@ -1,4 +1,4 @@
-import { type ColumnDef, type GroupColumn } from "../types";
+import { type ColumnDef, type ColumnGroup } from "../types";
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 import { findColumnById, flattenColumnStructurePreservingGroups } from "../utils.svelte";
@@ -90,7 +90,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
                 sourceColumn: column,
                 targetLocation: {
                     parentId: targetColumn.columnId,
-                    index: direction === 'right' ? 0 : (targetColumn as GroupColumn<TOriginalRow>).columns.length
+                    index: direction === 'right' ? 0 : (targetColumn as ColumnGroup<TOriginalRow>).columns.length
                 }
             };
         }
@@ -123,7 +123,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
                 sourceColumn: column,
                 targetLocation: {
                     parentId: targetColumn.columnId,
-                    index: direction === 'right' ? 0 : (targetColumn as GroupColumn<TOriginalRow>).columns.length
+                    index: direction === 'right' ? 0 : (targetColumn as ColumnGroup<TOriginalRow>).columns.length
                 }
             };
         }
@@ -141,7 +141,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
 
     private calculateGroupExitMove(
         column: ColumnDef<TOriginalRow>,
-        currentGroup: GroupColumn<TOriginalRow>,
+        currentGroup: ColumnGroup<TOriginalRow>,
         direction: ColumnMovementDirection
     ): MoveOperation {
         const parentGroup = currentGroup.parentColumnId
@@ -191,11 +191,11 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
         targetArray.splice(targetLocation.index, 0, sourceColumn);
     }
 
-    private findParentGroupOrThrow(groupId: string): GroupColumn<TOriginalRow> {
+    private findParentGroupOrThrow(groupId: string): ColumnGroup<TOriginalRow> {
         const group = findColumnById(
             flattenColumnStructurePreservingGroups(this.datagrid._columns),
             groupId
-        ) as GroupColumn<TOriginalRow>;
+        ) as ColumnGroup<TOriginalRow>;
 
         if (!group || group.type !== 'group') {
             throw new Error(`Group ${groupId} not found`);
@@ -213,10 +213,10 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
 
 
     private wouldCreateCircularReference(
-        sourceGroup: GroupColumn<TOriginalRow>,
-        targetGroup: GroupColumn<TOriginalRow>
+        sourceGroup: ColumnGroup<TOriginalRow>,
+        targetGroup: ColumnGroup<TOriginalRow>
     ): boolean {
-        let current: GroupColumn<TOriginalRow> | null = targetGroup;
+        let current: ColumnGroup<TOriginalRow> | null = targetGroup;
 
         while (current) {
             if (current.columnId === sourceGroup.columnId) {

@@ -1,4 +1,4 @@
-import type { ColumnDef, ColumnId, DatagridCoreConfig, GridBasicRow, GridRow, GridRowIdentifier, GroupColumn, LeafColumn } from "./types";
+import type { ColumnDef, ColumnId, DatagridCoreConfig, GridBasicRow, GridRow, GridRowIdentifier, ColumnGroup, LeafColumn } from "./types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager } from "./managers";
@@ -437,7 +437,7 @@ class Columns<TOriginalRow> {
      * 
      * @returns An array of group columns.
      */
-    getGroupColumns<TOriginalRow>(): GroupColumn<TOriginalRow>[] {
+    getGroupColumns<TOriginalRow>(): ColumnGroup<TOriginalRow>[] {
         return flattenColumnStructureAndClearGroups(this.datagrid._columns).filter(col => isGroupColumn(col));
     }
 
