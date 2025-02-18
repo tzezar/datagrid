@@ -1,0 +1,20 @@
+{
+    "name": "tzezars-datagrid",
+    "version": "2.0.1",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": ["cli", "svelte", "headless", "datagrid", "core"],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+      "commander": "^12.1.0",
+      "fs-extra": "^11.2.0",
+      "prompts": "^2.4.2"
+    },
+    "bin": {
+      "tzezars-datagrid": "./index.ts"
+    }
+  }

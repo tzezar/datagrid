@@ -7,6 +7,10 @@ title: Installation
 
 # {title}
 
+## Prerequisites
+Ensure that you have the following set up before proceeding:
+- A working [Svelte](https://svelte.dev/) project
+
 ## Automatic installation
 
 The easiest way to install is using our CLI tool.
