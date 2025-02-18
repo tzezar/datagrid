@@ -1,0 +1,25 @@
+{
+  "name": "absolute-azimuth",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/node": "^9.1.0",
+    "@astrojs/starlight": "^0.32.0",
+    "@astrojs/starlight-tailwind": "^3.0.0",
+    "@astrojs/tailwind": "^5.1.4",
+    "astro": "^5.1.5",
+    "sharp": "^0.32.5",
+    "starlight-typedoc": "^0.19.0",
+    "tailwindcss": "^3.4.4",
+    "typedoc": "^0.27.7",
+    "typedoc-plugin-markdown": "^4.4.2",
+    "typedoc-plugin-merge-modules": "^6.1.0"
+  }
+}

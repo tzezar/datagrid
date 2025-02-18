@@ -1,18 +1,26 @@
 {
   "name": "tzezars-datagrid",
-  "version": "1.1.2",
+  "version": "2.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "cli",
+    "svelte",
+    "headless",
+    "datagrid",
+    "core"
+  ],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
     "commander": "^12.1.0",
-    "fs-extra": "^11.2.0",
-    "prompts": "^2.4.2"
+    "execa": "^9.5.2",
+    "fs-extra": "^11.3.0",
+    "inquirer": "^12.4.2"
   },
   "bin": {
     "tzezars-datagrid": "./index.js"

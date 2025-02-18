@@ -1,0 +1,27 @@
+{
+	"plugin": ["typedoc-plugin-markdown", "typedoc-plugin-merge-modules"],
+	"entryPoints": ["./src/lib/datagrid/**/*.ts"],
+	"out": "./api-reference",
+	"cleanOutputDir": true,
+	"fileExtension": ".md",
+	"skipErrorChecking": true,
+	"compilerOptions": {
+		"skipLibCheck": true,
+		"strictNullChecks": false
+	},
+	"propertyMembersFormat": "table",
+	"classPropertiesFormat": "table",
+	"enumMembersFormat": "table",
+	"interfacePropertiesFormat": "table",
+	"typeDeclarationFormat": "table",
+	"formatWithPrettier": true,
+
+	"excludeInternal": true,
+	"excludePrivate": true,
+	"excludeProtected": true,
+	"githubPages": false,
+	"readme": "none",
+
+	// "useCodeBlocks": true,
+	"useHTMLEncodedBrackets": false,
+}
