@@ -58,7 +58,7 @@
 		{@render MobileNav()}
 
 		<!-- Main Content (scrollable) -->
-		<main class="flex-1 overflow-y-auto p-4">
+		<main class="flex-1 overflow-y-auto p-4" bind:this={scrollFix}> 
 			{@render children()}
 		</main>
 	</div>

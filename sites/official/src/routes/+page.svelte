@@ -7,17 +7,15 @@
 
 <section class="pb-12 lg:py-24">
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-	  <div class="mb-14 text-center">
-		<h2 class="py-5 text-center text-4xl font-bold">Powerfull Datagrid with Advanced Features</h2>
-		<p class="text-secondary-foreground mx-auto max-w-md text-lg font-normal md:max-w-2xl">
-		  Powerful. Flexible. Developer-friendly.
-		</p>
-	  </div>
-	  <!-- Updated grid layout -->
-	  <div class="grid w-full grid-cols-1 lg:grid-cols-4 gap-x-8 gap-8 justify-items-center">
-			<div
-				class="group relative w-full text-center max-w-sm  "
-			>
+		<div class="mb-14 text-center">
+			<h2 class="py-5 text-center text-4xl font-bold">Powerfull Datagrid with Advanced Features</h2>
+			<p class="text-secondary-foreground mx-auto max-w-md text-lg font-normal md:max-w-2xl">
+				Powerful. Flexible. Developer-friendly.
+			</p>
+		</div>
+		<!-- Updated grid layout -->
+		<div class="grid w-full grid-cols-1 justify-items-center gap-8 gap-x-8 lg:grid-cols-4">
+			<div class="group relative w-full max-w-sm text-center">
 				<div
 					class="mx-auto mb-5 flex h-20 w-20 cursor-pointer items-center justify-center rounded-lg bg-orange-50 transition-all duration-500 group-hover:bg-orange-600"
 				>
@@ -44,10 +42,7 @@
 					complex operations.
 				</p>
 			</div>
-			<div
-			class="group relative w-full text-center max-w-sm "
-
-			>
+			<div class="group relative w-full max-w-sm text-center">
 				<div
 					class="mx-auto mb-5 flex h-20 w-20 cursor-pointer items-center justify-center rounded-lg bg-pink-50 transition-all duration-500 group-hover:bg-pink-600"
 				>
@@ -87,10 +82,7 @@
 					documentation and starter templates get you up and running in minutes.
 				</p>
 			</div>
-			<div
-			class="group relative w-full text-center max-w-sm "
-
-			>
+			<div class="group relative w-full max-w-sm text-center">
 				<div
 					class="mx-auto mb-5 flex h-20 w-20 cursor-pointer items-center justify-center rounded-lg bg-teal-50 transition-all duration-500 group-hover:bg-teal-600"
 				>
@@ -117,10 +109,7 @@
 				</p>
 			</div>
 			<!-- class="group relative w-full text-center max-md:mx-auto max-md:max-w-sm md:w-2/5 lg:w-1/4" -->
-			<div
-				class="group relative w-full text-center max-w-sm "
-
-			>
+			<div class="group relative w-full max-w-sm text-center">
 				<div
 					class="mx-auto mb-5 flex h-20 w-20 cursor-pointer items-center justify-center rounded-lg bg-orange-50 transition-all duration-500 group-hover:bg-orange-600"
 				>
@@ -151,9 +140,8 @@
 	</div>
 </section>
 
-<div class='max-w-[90rem] mx-auto'>
-<ShowcaseDatagrid />
-
+<div class="mx-auto max-w-[90rem]">
+	<ShowcaseDatagrid />
 </div>
 
 <section class="body-font">
@@ -166,7 +154,10 @@
 				Are you looking for a powerful datagrid packed with functionality, yet easy to customize,
 				and as a plug-and-play component? Well, you couldn't have come to a better place!
 			</p>
-			<a class="mt-4 inline-flex items-center text-orange-500" href={'/headless/quick-start/getting-started'}>
+			<a
+				class="mt-4 inline-flex items-center text-orange-500"
+				href={'/headless/quick-start/getting-started'}
+			>
 				Learn More
 				<svg
 					fill="none"
@@ -181,30 +172,13 @@
 				</svg>
 			</a>
 		</div>
-		<div class="flex flex-col md:w-1/2 md:pl-12">
+		<div class="flex flex-col md:w-1/2 md:pl-12 w-full">
 			<h2 class="title-font mb-3 text-sm font-semibold tracking-wider">QUICK START</h2>
-			<nav class="-mb-1 flex list-none flex-wrap">
-				<li class="mb-1 w-1/2 lg:w-1/3">
-					<a class="" href={'/'}>About</a>
-				</li>
-				<li class="mb-1 w-1/2 lg:w-1/3">
-					<!-- <a href={hrefs.features}>Features</a> -->
-				</li>
-				<li class="mb-1 w-1/2 lg:w-1/3">
-					<!-- <a class="" href={hrefs.quickStart.installation}>Installation</a> -->
-				</li>
-				<li class="mb-1 w-1/2 lg:w-1/3">
-					<!-- <a class="" href={hrefs.quickStart.gettingStarted}>Getting started</a> -->
-				</li>
-				<li class="mb-1 w-1/2 lg:w-1/3">
-					<!-- <a class="" href={hrefs.examples.minimal}>Minimal example</a> -->
-				</li>
-				<li class="mb-1 w-1/2 lg:w-1/3">
-					<!-- <a class="" href={hrefs.fundamentals.overview}>Overview</a> -->
-				</li>
-				<li class="mb-1 w-1/2 lg:w-1/3">
-					<!-- <a class="" href={hrefs.guides.featureGuides.default}>Features guides</a> -->
-				</li>
+			<nav class="-mb-1 grid grid-cols-1 list-none gap-y-2 text-sm ">
+				<a href="">Installation</a>
+				<a href="">Getting started</a>
+				<br/>
+				<a href="">Enhanced datagrid</a>
 			</nav>
 		</div>
 	</div>

@@ -24,9 +24,15 @@ export const links: INavigationItem[] = [
     {
         title: 'Headless',
         children: [
+
             {
+
                 title: 'Quick Start',
                 children: [
+                    {
+                        title: 'Overview',
+                        href: '/headless/quick-start/overview'
+                    },
                     {
                         title: 'Installation',
                         href: '/headless/quick-start/installation'
@@ -126,6 +132,10 @@ export const links: INavigationItem[] = [
     {
         title: 'Enhanced',
         children: [
+            {
+                title: 'Overview',
+                href: '/enhanced/overview'
+            },
             {
                 title: 'Interactive Demo',
                 href: '/enhanced/interactive-demo'

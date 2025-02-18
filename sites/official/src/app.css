@@ -144,6 +144,11 @@
 	@apply p-3;
 }
 
+.markdown :is(a) {
+	@apply underline text-orange-400;
+}
+
+
 @layer components {
 	.grid-body-overlay {
 		@apply pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-[5] h-full w-full bg-grid-overlay opacity-50;
