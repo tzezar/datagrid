@@ -1,6 +1,8 @@
 # Tzezar's Datagrid
 Headless Core & Enhanced component made with [shadcn-svelte](https://next.shadcn-svelte.com/)
 
+![image](https://github.com/user-attachments/assets/3aef0878-0c9c-402b-aca1-99da79548f47)
+
 ### Complete Control
 Embracing the ShadCN philosophy, you hold full authority over your code. Customize and modify every aspect to suit your needs—nothing is off-limits!
 
