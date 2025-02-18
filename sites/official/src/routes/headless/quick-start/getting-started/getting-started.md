@@ -114,7 +114,7 @@ const datagrid = new DatagridCore({
 });
 ```
 
-## Customizing Your Datagrid
+### Customizing Your Datagrid
 
 For basic needs, this configuration is sufficient. For more control, you can:
 
@@ -135,9 +135,13 @@ const datagrid = new DatagridCore({
 
 ```ts
 class MySortingFeature extends SortingFeature {
-	// Override methods or add new functionality
-	isColumnSorted(columnId, direction) {
-		console.log('Custom sorting logic');
+	// You can set initial state here or define additional state
+	isManual = $state(true);
+	extraState = $state('');
+
+	// You can override method to include your custom logic or extend feature with own methods
+	isColumnSorted(columnId: string, direction: 'asc' | 'desc'): boolean {
+		console.debug(`[Sorting] Checking if column "${columnId}" is sorted in "${direction}" order.`);
 		return super.isColumnSorted(columnId, direction);
 	}
 }
