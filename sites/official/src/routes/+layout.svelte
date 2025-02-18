@@ -6,6 +6,7 @@
 	import '../app.css'; // Assuming your Tailwind CSS is imported here
 	import { onMount, type Snippet } from 'svelte';
 	import { links } from '$lib/hrefs';
+	import { afterNavigate } from '$app/navigation';
 
 	let { children }: { children: Snippet } = $props();
 
@@ -37,6 +38,22 @@
 		return () => {
 			document.removeEventListener('click', handleClickOutside);
 		};
+	});
+	let scrollFix;
+
+	afterNavigate(() => {
+		if (browser) {
+			// if path # anchor then scroll to anchor
+
+			if (window.location.hash) {
+				const anchor = document.querySelector(window.location.hash);
+				if (anchor) {
+					scrollFix.scrollTo({ top: anchor.offsetTop, behavior: 'smooth' });
+				}
+			} else {
+				scrollFix.scrollTo({ top: 0, behavior: 'instant' });
+			}
+		}
 	});
 
 	import logoBlack from '$lib/assets/img/tzezar-logo-black.png';
