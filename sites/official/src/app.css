@@ -129,7 +129,7 @@
 }
 
 .markdown :is(blockquote) {
-	@apply my-8 border-l-4 border-gray-300 py-2 pl-5 text-xl italic text-gray-600;
+	@apply my-8  pb-0 border-l-4 border-gray-300 py-2 pl-5 text-xl italic text-gray-600;
 }
 
 .markdown :is(img) {

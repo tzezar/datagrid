@@ -1,5 +1,5 @@
 ---
-title: Getting started
+title: Getting Started with Tzezar's Datagrid
 ---
 
 <script>
@@ -10,14 +10,25 @@ import { inventoryData as data } from '$lib/data/data-storage.svelte';
 
 # {title}
 
-Na tej stronie znajdziesz wprowadzenie, które umożliwi Ci zaczęcie w trybie ekspresowym pracy z Tzezar's Datagrid w wersji core (headless). Jeżeli potrzebujesz przykładów z dokładniejszą implementacją to zapraszam do examples lub do przejrzenia API.
+Welcome to the quick start guide for Tzezar's Datagrid Core! This guide will help you rapidly implement the headless version of the datagrid in your project.
 
-## Nie ma datagridu bez danych
+## Quick Overview
 
-W tym przykładzie niech to będą nasze dane:
+Tzezar's Datagrid Core provides a flexible, headless implementation that lets you build powerful data tables without being constrained by specific UI frameworks. This guide covers:
+
+1. Setting up your data
+2. Defining columns
+3. Creating a datagrid instance
+4. Rendering your datagrid
+
+Let's get started!
+
+## 1. Setting Up Your Data
+
+Every datagrid needs data to display. Here's a simple example:
 
 ```ts
-export const data = [
+const data = [
 	{
 		id: 1,
 		name: 'Product',
@@ -27,22 +38,21 @@ export const data = [
 		}
 	}
 ];
-```
 
-Stworzymy sobie do nich typ, który potem użyjemy by ułatwić sobie pracę:
-
-```ts
+// Define a type for better TypeScript support
 type InventoryItem = {
 	id: number;
 	name: string;
 	price: {
-		retail: string;
+		retail: number;
 		currency: string;
 	};
 };
 ```
 
-## Czas na kolumny
+## 2. Defining Columns
+
+Columns define how your data is structured and displayed:
 
 ```ts
 import {
@@ -54,9 +64,12 @@ import {
 } from '$lib/datagrid/index.js';
 
 export const columns = [
+	// Simple column using direct data access
 	accessorColumn({
 		accessorKey: 'id'
 	}),
+
+	// Group of related columns
 	columnGroup({
 		header: 'Product',
 		columns: [
@@ -65,10 +78,12 @@ export const columns = [
 			}),
 			computedColumn({
 				header: 'Price',
-				getValueFn: (row) => row.price.retail + row.price.currency
+				getValueFn: (row) => `${row.price.retail} ${row.price.currency}`
 			})
 		]
 	}),
+
+	// Custom display column (e.g., for expansion controls)
 	displayColumn({
 		columnId: 'expansion',
 		header: '',
@@ -77,52 +92,18 @@ export const columns = [
 ] satisfies ColumnDef<InventoryItem>[];
 ```
 
-Jak mogłeś zauważyć istnieją cztery creatory kolumn:
+### Column Types Explained
 
-`accessorColumn` - pozwala wyświetlić komórki używając danych
+1. `accessorColumn`: Displays data directly from your objects
+2. `computedColumn`: Combines or transforms data from multiple fields
+3. `displayColumn`: Shows custom content not tied to your data
+4. `columnGroup`: Organizes columns into logical groups
 
-`computedColumn` - pozwala wyświetlić komórki, które łączą kilka accessor columns
+> Tip: Add `satisfies ColumnDef<InventoryItem>[]` to get TypeScript IntelliSense support.
 
-`displayColumn` - umożliwia wyświetlanie dodatkowych komórki, które nie opierają się na danych
+## 3. Creating a Datagrid Instance
 
-`columnGroup` - pozwala zgrupować kolumny
-
-> Aby uzyskać intelisense przy definiowaniu accessor/display columns należy dodać
->
-> ```ts
-> satisfies ColumnDef<InventoryItem>[]
-> ```
-
-Jak spojrzymy na definicję `ColumnDef`
-
-```ts
-export type ColumnDef<TOriginalRow, TMeta = any>
-```
-
-to zobaczymy, że przyjmuje ona drugi generyczny typ `TMeta`. Dodając go mamy ładnie otypowane wartości `_meta` kolumn.
-
-na przykład:
-
-```ts
-type MyColumnMeta {
-	youAreAwesome: boolean
-}
-
-export const columns = [
-	accessorColumn({
-		accessorKey: 'id',
-		_meta: {
-			youAreAwesome: true
-		}
-	}),
-] satisfies ColumnDef<InventoryItem, MyColumnMeta>[];
-```
-
-na teraz w zasadzie to tyle o kolumnach, stwórzmy datagrid!
-
-## Datagrid instance
-
-Zaczniemy prosto:
+Now that you have data and columns, create your datagrid:
 
 ```ts
 import { DatagridCore } from '$lib/datagrid/index.js';
@@ -133,140 +114,67 @@ const datagrid = new DatagridCore({
 });
 ```
 
-Aby stworzyć datagrid potrzebujemy kolumn i danych, jest to minimum konfiguracji. Wspomnę na samych początki, że DatagridCore przyjmuje `initialState`, który pozwoli Ci zdefiniować stan początkowy datagridu.
+## Customizing Your Datagrid
+
+For basic needs, this configuration is sufficient. For more control, you can:
+
+1. Set an initial state:
 
 ```ts
 const datagrid = new DatagridCore({
 	columns,
 	data,
 	initialState: {
-		// Configure initial state here
+		sorting: { sortBy: 'id', sortDirection: 'asc' },
+		pagination: { page: 1, pageSize: 25 }
 	}
 });
 ```
 
-Wierzę, że pokryje to 90% zastosowań.
-
-Jeżeli jednak potrzebujesz skonfigurować / dostosować datagrid do swoich potrzeb, możesz to w łatwy sposób zrobić:
+2. Extend built-in features:
 
 ```ts
 class MySortingFeature extends SortingFeature {
-	isManual = false;
-	someExtra: string = 'Hello';
-
-	whoIsTheBoss() {
-		return 'You are!`
-	}
-
-	// ovverride
-	isColumnSorted(columnId: ColumnId, direction?: SortingDirection): boolean {
-		console.log('How awesome!');
+	// Override methods or add new functionality
+	isColumnSorted(columnId, direction) {
+		console.log('Custom sorting logic');
 		return super.isColumnSorted(columnId, direction);
-	}
-
-	constructor(datagrid: DatagridCore) {
-		super(datagrid);
 	}
 }
 
-let datagrid = new Grid.EnhancedCore<InventoryItem, Grid.EnhancedMeta<InventoryItem>>({
+const datagrid = new Grid.EnhancedCore({
 	columns,
-	data: data.inventory,
+	data,
 	features: {
 		sorting: MySortingFeature
-	},
-	initialState: {
-		grouping: {
-			activeGroups: ['category']
-		}
 	}
 });
 ```
 
-datagrid jest naprawdę elastyczny, w powyższym przykładzie stworzyłem customowy SortingFeature, gdzie mogłem zdefiniować stan (zamiast w `initialState`), dodać swoje wartości, nadpisać metody `SortingFeature`, dodać swoje metody itp.
+## 4. Rendering Your Datagrid
 
-### Dodatkowe informacje o DatagridCore
-
-Po przeczytaniu wprowadzenia moim zdaniem logicznym krokiem byłoby pobieżne przejrzenie > API do DatagridCore.
-
-Jeżeli chcesz to zrobić później to chciałbym abyś teraz wiedział, ze tworzenie wrappera wokół `DatagridCore` jest całkiem proste i totalnie masz wolną rękę jak to zaimplementujesz. Mało rzeczy będzie Cię ograniczać. Po pierwsze masz dostęp do pełnego kodu, starałem się go napisać tak aby był przystępny nawet dla początkujych developerów. Wszystkie klasy, funkcje itp. są opisane. Dostępne są do Twojej dyspozycji `LifecycleHooks`, które pozwalają na relatywnie łatwe dostosowanie transformacji danych / kolumn z poziomu wrappera. np: `PRE_PROCESS_DATA`. Masz dostęp do wielu eventu, na które możesz nasłuchiwać np.
-
-```ts
-datagrid.events.on('onColumnSort', ({ column }) => {
-	console.log('onColumnSort', column);
-});
-```
-
-Zaimplementowany został `cacheManager`, istnieją dwa główne procesory:
-
-```ts
-processors = {
-	data: new DataProcessor(this),
-	column: new ColumnProcessor(this)
-};
-```
-
-Zawierają logikę do transofmorwania kolumn i danych.
-Dwa "menagery" `datagrid.columns` i `datagrid.rows` zawierające utils.
-no i również są `datagrid.handlers`, które pełnią rolę controllera łączącego logikę róznych features i całego datagridu.
-
-## Wyświetlanie datagridu
-
-Wprowadznie te odnosi sie do Tzezar's Datagrid Core tj. headless wersji datagridu. Znaczy to mniej więcej tyle, że dostajesz helpery i zbudowaną wewnętrzną logikę na fundamentach których możesz wyrenderować wedle własnych potrzeb datagrid.
-
-Możesz użyć `<table>`, możesz stworzyć wersję mobile datagridu, ja w tym przykładzie zbuduję podstawowy datagrid z `divs`.
-
-### Dlaczego nie `<table>`?
-
-Using `<div>`-based tables instead of `<table>` elements can offer several advantages, especially in modern web applications. Here’s why:
-
-1. More Flexible Styling with CSS
-   `<div>` tables provide greater control over layout using Flexbox or CSS Grid, allowing for more dynamic and responsive designs.
-   Traditional `<table>` elements can be rigid and difficult to style, especially when it comes to complex layouts like pinned headers, sticky columns, or dynamic row heights.
-2. Better Performance for Large Datasets
-   `<table>` elements can become slow when handling large datasets because the browser enforces row-by-row rendering and recalculates layout constraints.
-   `<div>` tables allow for virtual scrolling, where only visible rows are rendered, improving performance significantly.
-3. Custom Scroll Behavior
-   Native `<table>` elements tie scrolling behavior to the entire table structure, making features like independent body scrolling or sticky headers harder to implement.
-   With a `<div>`-based table, you can fully control overflow, sticky positioning, and smooth scrolling.
-4. Better Accessibility Control
-   While `<table>` elements have built-in semantics for accessibility, they can sometimes be restrictive.
-   `<div>` tables let you manually define ARIA roles and tailor accessibility for screen readers based on your specific needs.
-5. More Control Over Column Resizing & Reordering
-   In an `<html>` table, columns and rows are inherently tied together, making resizing and drag-and-drop reordering complex.
-   With `<div>` tables, columns can be resized independently, and row structures can be rearranged dynamically.
-6. Easier Integration with JavaScript Frameworks
-   Many modern frameworks (like Svelte, React, or Vue) work better with component-based approaches.
-   A `<div>`-based grid structure allows for more reusable components and better state management.
-7. More Customizable Interaction Handling
-   Features like cell selection, copy-paste support, keyboard navigation, and custom tooltips are easier to implement without being constrained by the browser's built-in `<table>` behavior.
-   When to Use `<table`>`Instead?
-
-If the data is purely tabular and needs to be read by screen readers without extra customization, an`html`table might be preferable.
-For simpler, static datasets where the built-in browser features (like thead, tbody, and tr elements) provide sufficient structure.
-For modern, highly interactive data tables,`<div>`-based approaches generally offer better performance, flexibility, and user experience. 🚀
-
-### Pokażesz w końcu ten datagrid? 🤔
-
-No pewnie! Stwórzmy więc strukturę datagridu. Użyłem klas nawaznych podobnie do struktury `<table>`, by pokazać podobieństwo (style dostępne w repozytorium na githubie).
+Since this is a headless library, you have complete freedom over rendering. Here's a basic implementation using `<div>` elements:
 
 ```svelte
-<div class="wrapper">
-	<div class="table">
-		<div class="thead">
-			<div class="tr">
+<div class="datagrid-wrapper">
+	<div class="datagrid">
+		<!-- Header -->
+		<div class="datagrid-header">
+			<div class="datagrid-row">
 				{#each datagrid.columns.getLeafColumns() as column}
-					<div class="th">
+					<div class="datagrid-cell header-cell">
 						{column.header}
 					</div>
 				{/each}
 			</div>
 		</div>
-		<div class="tbody">
+
+		<!-- Body -->
+		<div class="datagrid-body">
 			{#each datagrid.rows.getVisibleBasicRows() as row}
-				<div class="tr">
+				<div class="datagrid-row">
 					{#each datagrid.columns.getLeafColumns() as column}
-						<div class="td">
+						<div class="datagrid-cell">
 							{getCellContent(column, row.original)}
 						</div>
 					{/each}
@@ -277,72 +185,88 @@ No pewnie! Stwórzmy więc strukturę datagridu. Użyłem klas nawaznych podobni
 </div>
 ```
 
-<BasicDatagrid {data} />
+### Using Custom Cell Rendering
 
-ale, chwila, chwila... co to za `<div>+</div>`?
-
-> Jak już wspomiałem datagrid został zbudowany by być elastycznym (obiecuję, ostatni raz o tym wspominam).
-
-```ts
-export type CustomCell<TOriginalRow> = (
-	props: CustomCellProps<TOriginalRow>
-) => string | HTMLElement | CustomCellComponentWithProps;
-```
-
-Definiując więc komórki mamy do wyboru kilka opcji takich jak:
-
-1. `string` - tj. tu wpisz cos
-2. `HTMLElement` - ....
-3. `CustomElement` - svelte komponent
-
-Svelte 5 wprowadza zarąbiste snippets, więc użyjemy ich aby to zobrazować. Dla Twojej wygody w `datagrid/prebuilt` do dyspozycji masz gotowe komponenty jak `<RenderCell />`.
+For more complex cell content, you can use Svelte 5 snippets: 
 
 ```svelte
-<div class="tbody">
+{#snippet CellRenderer(column: LeafColumn<any>, row: GridBasicRow<any>)}
+	{@const cellContent = column.cell ? column.cell({ datagrid, column, row }) : null}
+	<div class="td">
+		{#if cellContent}
+			{#if typeof cellContent === 'string'}
+				{@html cellContent}
+			{:else if isCellComponent(cellContent)}
+				<cellContent.component {datagrid} {row} {column} />
+			{/if}
+		{:else}
+			<span>
+				{@html getCellContent(column, row.original)}
+			</span>
+		{/if}
+	</div>
+{/snippet}
+```
+
+or prebuilt component:
+
+```svelte
+<script lang='ts'>
+	import RenderCell from '$lib/datagrid/prebuilt/render-cell'
+</script>
+
+<div class="datagrid-body">
 	{#each datagrid.rows.getVisibleBasicRows() as row}
-		<div class="tr">
+		<div class="datagrid-row">
 			{#each datagrid.columns.getLeafColumns() as column}
-				<div class="td">
-					{@render CellRenderer(column, row)}
+				<div class="datagrid-cell">
+					<RenderCell {datagrid} {row} {column} />
 				</div>
 			{/each}
 		</div>
 	{/each}
 </div>
-
-{#snippet CellRenderer(column: LeafColumn<any>, row: GridBasicRow<any>)}
-	{@const cellContent = column.cell ? column.cell({ datagrid, column, row }) : null}
-	{#if cellContent}
-		{#if typeof cellContent === 'string'}
-			{@html cellContent}
-		{:else if isCellComponent(cellContent)}
-			<cellContent.component {datagrid} {row} {column} />
-		{/if}
-	{:else}
-		<span>
-			{@html getCellContent(column, row.original)}
-		</span>
-	{/if}
-{/snippet}
 ```
 
-albo
+Built-in `<RenderCell />` component makes rendering custom cell content straightforward.
 
-```svelte
-<div class="tbody">
-	{#each datagrid.rows.getVisibleBasicRows() as row}
-		<div class="tr">
-			{#each datagrid.columns.getLeafColumns() as column}
-				<RenderCell {datagrid} {row} {column} />
-			{/each}
-		</div>
-	{/each}
-</div>
+### Why Use `<div>` Instead of `<table>`?
+
+While traditional HTML tables work for simple cases, `<div>`-based structures offer significant advantages:
+
+1. Better styling flexibility with CSS Grid and Flexbox
+2. Improved performance for large datasets through virtual scrolling
+3. Custom scroll behavior for features like sticky headers
+4. More control over column resizing and reordering
+5. Better integration with modern JavaScript frameworks
+
+## Next Steps
+
+Congratulations on setting up your first Tzezar's Datagrid! From here, you can:
+
+1. Explore the API reference for detailed documentation
+2. Check out examples for common patterns and advanced usage.
+3. Try the Enhanced Datagrid if you need a ready-made component with built-in UI and some abstraction layer
+
+## Advanced Features
+
+Tzezar's Datagrid Core comes with powerful features you can tap into:
+
+```ts
+// Listen to events
+datagrid.events.on('onColumnSort', ({ column }) => {
+	console.log(`Column ${column.id} was sorted`);
+});
+
+// Use lifecycle hooks for custom processing
+datagrid.hooks.registerHook('PRE_PROCESS_DATA', (data) => {
+	// Modify or filter data before processing
+	return data.filter((item) => item.active);
+});
 ```
 
-<BasicDatagridFixed {data} />
+---
 
+<br/>
 
-## Brawo! Dotarłeś do końca!
-
-Przejdź teraz do przykładów lub do API reference. Jeżeli szukasz gotowego komponentu z warstwą abstrakcji - to zapraszam do sekcji enhanced datagrid.
+Ready to build powerful, flexible data grids? Dive deeper into the documentation or check out the examples to see what Tzezar's Datagrid can do for your project!
