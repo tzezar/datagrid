@@ -6,6 +6,9 @@ import type { AccessorColumn, ComputedColumn } from "../types";
 import { aggregationFunctions } from "../helpers/aggregation-functions";
 import { applySorting } from "./apply-sorting";
 import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
+
+
+// Use this if you want to use fast-sort
 // import { applySorting } from "./apply-sorting-fast-sort";
 
 
