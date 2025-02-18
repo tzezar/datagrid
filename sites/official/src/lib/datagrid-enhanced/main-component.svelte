@@ -34,7 +34,7 @@
 		pagination?: Snippet;
 		statusIndicator?: Snippet;
 		expandedRow?: Snippet<[row: GridBasicRow<any>]>;
-		expandedRowContent?: Snippet;
+		expandedRowContent?: Snippet<[row: GridBasicRow<any>]>
 	};
 
 	let {
@@ -76,10 +76,6 @@
 		datagrid.extra.features.overlay.isEntireDatagridOverlayEnabled()
 	);
 	const shouldAnimateHeaders = $derived(datagrid.extra.features.animations.shouldAnimateHeaders());
-
-	$effect(() => {
-		console.log($state.snapshot(datagrid.features.grouping.activeGroups))
-	})
 
 </script>
 
@@ -186,7 +182,7 @@
 				<div class={datagrid.customization.styling.getBodyRowExpandedClasses()}>
 					<div class="cell sticky left-0">
 						{#if expandedRowContent}
-							{@render expandedRowContent()}
+							{@render expandedRowContent(row)}
 						{:else}
 							Place your content in the `expandedRowContent` snippet
 						{/if}
@@ -291,7 +287,7 @@
 							<div class={datagrid.customization.styling.getBodyRowExpandedClasses()}>
 								<div class="cell sticky left-0">
 									{#if expandedRowContent}
-										{@render expandedRowContent()}
+										{@render expandedRowContent(row)}
 									{:else}
 										Place your content in the `expandedRowContent` snippet
 									{/if}
