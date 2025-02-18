@@ -8,7 +8,7 @@
 <li>
 	<a
 		href={entry.href}
-		class={cn('hover:bg-primary-foreground block rounded py-1 text-sm font-normal px-2', entry.title === 'API Reference' && 'my-4')}
+		class={cn('hover:bg-primary-foreground block rounded py-1 text-sm font-normal px-2', entry.title === 'API Reference' && 'mt-4')}
 	>
 		{entry.title}
 	</a>

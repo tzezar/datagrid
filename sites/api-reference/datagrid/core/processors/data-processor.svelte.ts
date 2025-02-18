@@ -6,6 +6,9 @@ import type { AccessorColumn, ComputedColumn } from "../types";
 import { aggregationFunctions } from "../helpers/aggregation-functions";
 import { applySorting } from "./apply-sorting";
 import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.svelte";
+
+
+// Use this if you want to use fast-sort
 // import { applySorting } from "./apply-sorting-fast-sort";
 
 
@@ -83,14 +86,14 @@ export class DataDataProcessor<TOriginalRow> {
                     this.metrics.measure('Column faceting from original data', () => {
                         this.datagrid.features.columnFaceting.calculateFacets(
                             this.datagrid.originalState.data || [],
-                            this.datagrid._columns
+                            this.datagrid.columns.getLeafColumns()
                         );
                     })
                 } else if (this.datagrid.features.columnFaceting.facetsSource === 'filteredData') {
                     this.metrics.measure('Column faceting from filtered data', () => {
                         this.datagrid.features.columnFaceting.calculateFacets(
                             data,
-                            this.datagrid._columns
+                            this.datagrid.columns.getLeafColumns()
                         );
                     })
                 }

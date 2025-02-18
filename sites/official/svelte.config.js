@@ -1,5 +1,6 @@
 import { mdsvex, escapeSvelte } from 'mdsvex'
-import adapter from '@sveltejs/adapter-auto';
+// import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-node';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { getSingletonHighlighter } from 'shiki'
 

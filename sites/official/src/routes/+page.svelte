@@ -175,10 +175,10 @@
 		<div class="flex flex-col md:w-1/2 md:pl-12 w-full">
 			<h2 class="title-font mb-3 text-sm font-semibold tracking-wider">QUICK START</h2>
 			<nav class="-mb-1 grid grid-cols-1 list-none gap-y-2 text-sm ">
-				<a href="">Installation</a>
-				<a href="">Getting started</a>
+				<a href="/headless/quick-start/overview">Overview</a>
+				<a href="/headless/quick-start/getting-started">Getting started</a>
 				<br/>
-				<a href="">Enhanced datagrid</a>
+				<a href="/enhanced/overview">Enhanced datagrid overview</a>
 			</nav>
 		</div>
 	</div>

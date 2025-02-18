@@ -125,7 +125,7 @@ export const links: INavigationItem[] = [
             },
             {
                 title: 'API Reference',
-                href: '/headless/api-reference'
+                href: 'https://datagrid-api-reference.tzezar.pl/'
             },
         ]
     },

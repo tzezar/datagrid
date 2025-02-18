@@ -11,9 +11,9 @@
 	<div>
 		<p
 			class={cn(
-				'w-full px-2 p-2 text-sm font-semibold',
-				['Headless', 'Enhanced'].includes(group.title) &&
-					'text-foreground border-b border-t pb-2 text-lg font-semibold'
+				'w-full px-2  text-sm font-semibold',
+				['Headless', 'Enhanced'].includes(group.title) ?
+					'text-foreground border-b border-t pb-2 text-lg font-semibold my-4 py-2' : 'text-xs text-muted-foreground pt-4'
 			)}
 		>
 			{group.title}
