@@ -1,23 +1,22 @@
 <script>
-	import ShowcaseDatagrid from "./_components/showcase-datagrid/showcase-datagrid.svelte";
-
+	import { links } from '$lib/hrefs';
+	import ShowcaseDatagrid from './_components/showcase-datagrid/showcase-datagrid.svelte';
 </script>
 
 <div></div>
 
 <section class="pb-12 lg:py-24">
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="mb-14 text-center">
-			<h2 class="py-5 text-center text-4xl font-bold">Powerfull datagrid with all features</h2>
-			<p class="text-secondary-foreground mx-auto max-w-md text-lg font-normal md:max-w-2xl">
-				Easy to use. Easy to customize. Easy to maintain.
-			</p>
-		</div>
-		<div
-			class="flex flex-wrap items-center justify-center gap-x-5 gap-y-8 md:flex-wrap lg:flex-row lg:flex-nowrap lg:justify-between lg:gap-x-8 lg:gap-y-0"
-		>
+	  <div class="mb-14 text-center">
+		<h2 class="py-5 text-center text-4xl font-bold">Powerfull Datagrid with Advanced Features</h2>
+		<p class="text-secondary-foreground mx-auto max-w-md text-lg font-normal md:max-w-2xl">
+		  Powerful. Flexible. Developer-friendly.
+		</p>
+	  </div>
+	  <!-- Updated grid layout -->
+	  <div class="grid w-full grid-cols-1 lg:grid-cols-4 gap-x-8 gap-8 justify-items-center">
 			<div
-				class="group relative w-full text-center max-md:mx-auto max-md:max-w-sm md:w-2/5 lg:w-1/4"
+				class="group relative w-full text-center max-w-sm  "
 			>
 				<div
 					class="mx-auto mb-5 flex h-20 w-20 cursor-pointer items-center justify-center rounded-lg bg-orange-50 transition-all duration-500 group-hover:bg-orange-600"
@@ -39,13 +38,15 @@
 						></path>
 					</svg>
 				</div>
-				<h4 class="mb-3 text-lg font-medium capitalize">Performant</h4>
+				<h4 class="mb-3 text-lg font-medium capitalize">Blazing-Fast Performance</h4>
 				<p class="text-secondary-foreground text-sm font-normal">
-					Huge data is not the problem. The datagrid is designed to be performant.
+					Handles hundreds of thousands of rows effortlessly. Never compromise on speed, even with
+					complex operations.
 				</p>
 			</div>
 			<div
-				class="group relative w-full text-center max-md:mx-auto max-md:max-w-sm md:w-2/5 lg:w-1/4"
+			class="group relative w-full text-center max-w-sm "
+
 			>
 				<div
 					class="mx-auto mb-5 flex h-20 w-20 cursor-pointer items-center justify-center rounded-lg bg-pink-50 transition-all duration-500 group-hover:bg-pink-600"
@@ -80,13 +81,15 @@
 						></path>
 					</svg>
 				</div>
-				<h4 class="mb-3 text-lg font-medium capitalize">Easy to use</h4>
+				<h4 class="mb-3 text-lg font-medium capitalize">Developer-Friendly API</h4>
 				<p class="text-secondary-foreground text-sm font-normal">
-					Written in typescript. Use and maintain with ease.
+					Built with TypeScript for superior type safety and autocompletion. Comprehensive
+					documentation and starter templates get you up and running in minutes.
 				</p>
 			</div>
 			<div
-				class="group relative w-full text-center max-md:mx-auto max-md:max-w-sm md:w-2/5 lg:w-1/4"
+			class="group relative w-full text-center max-w-sm "
+
 			>
 				<div
 					class="mx-auto mb-5 flex h-20 w-20 cursor-pointer items-center justify-center rounded-lg bg-teal-50 transition-all duration-500 group-hover:bg-teal-600"
@@ -107,13 +110,16 @@
 						></path>
 					</svg>
 				</div>
-				<h4 class="mb-3 text-lg font-medium capitalize">Easy to customize</h4>
+				<h4 class="mb-3 text-lg font-medium capitalize">Endless Customization</h4>
 				<p class="text-secondary-foreground text-sm font-normal">
-					Design your own datagrid with ease. Customize as you see fit.
+					Fully themeable with built-in design system integration. Create custom cell renderers,
+					editors, and formatters with an extensible plugin architecture.
 				</p>
 			</div>
+			<!-- class="group relative w-full text-center max-md:mx-auto max-md:max-w-sm md:w-2/5 lg:w-1/4" -->
 			<div
-				class="group relative w-full text-center max-md:mx-auto max-md:max-w-sm md:w-2/5 lg:w-1/4"
+				class="group relative w-full text-center max-w-sm "
+
 			>
 				<div
 					class="mx-auto mb-5 flex h-20 w-20 cursor-pointer items-center justify-center rounded-lg bg-orange-50 transition-all duration-500 group-hover:bg-orange-600"
@@ -134,16 +140,21 @@
 						></path>
 					</svg>
 				</div>
-				<h4 class="mb-3 text-lg font-medium capitalize">Support</h4>
+				<h4 class="mb-3 text-lg font-medium capitalize">Complete Control</h4>
 				<p class="text-secondary-foreground text-sm font-normal">
-					I am here to help. Reach out if you have any questions.
+					Get the code and make it yours. Our MIT-licensed datagrid can be customized down to the
+					core - modify rendering logic, create custom plugins, or completely overhaul the UI to
+					match your brand identity.
 				</p>
 			</div>
 		</div>
 	</div>
 </section>
 
+<div class='max-w-[90rem] mx-auto'>
 <ShowcaseDatagrid />
+
+</div>
 
 <section class="body-font">
 	<div class="container mx-auto flex flex-wrap items-center px-5 py-12 lg:py-24">
@@ -155,7 +166,7 @@
 				Are you looking for a powerful datagrid packed with functionality, yet easy to customize,
 				and as a plug-and-play component? Well, you couldn't have come to a better place!
 			</p>
-			<a class="mt-4 inline-flex items-center text-orange-500" href={'/'}>
+			<a class="mt-4 inline-flex items-center text-orange-500" href={'/headless/quick-start/getting-started'}>
 				Learn More
 				<svg
 					fill="none"
