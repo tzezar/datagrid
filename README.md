@@ -1,32 +1,57 @@
-# Tzezar's datagrid
-Easy to use. Easy to customize. Made in svelte 5.
+# Tzezar's Datagrid
+Headless Core & Enhanced component made with [shadcn-svelte](https://next.shadcn-svelte.com/)
 
+### Complete Control
+Embracing the ShadCN philosophy, you hold full authority over your code. Customize and modify every aspect to suit your needs—nothing is off-limits!
 
-## WORK IN PROGRESS
+### Blazing-Fast Performance
+Effortlessly handles hundreds of thousands of rows. Enjoy lightning-fast speed, even with complex operations.
+
+### Developer-Friendly API
+Built with TypeScript for top-notch type safety and autocompletion. Comprehensive documentation and starter templates make setup a breeze.
+
+### Headless Core & Prebuilt Enhanced Wrapper
+The Headless Core offers complete flexibility for building a custom data grid from scratch, while the Prebuilt Enhanced Wrapper provides a feature-rich, styled solution with built-in sorting, pagination, and more, ready for quick deployment.
+
+## Features & Plugins
 
 ### Headless
-- [x] Column ordering
-- [x] Column pinning
-- [x] Column sizing
-- [x] Column visibility
-- [x] Column filtering
-- [x] Global filtering
-- [x] Fuzzy filtering
-- [x] Column faceting
+- [x] Column Faceting
+- [x] Column Filtering
+- [x] Column Grouping
+- [x] Columng Ordering
+- [x] Column Pinning
+- [x] Column Sizing
+- [x] Column Visibility
+- [x] Global Search
 - [x] Grouping
-- [x] Expanding
 - [x] Pagination
-- [x] Row pinning
-- [x] Row selection
+- [x] Row Expanding
+- [x] Row Pinning
+- [x] Row Selection
 - [x] Sorting
+- [x] Lifecycle Hooks
+- [x] Event Emitter
+- [x] Services Layer
+- [x] Cache Manager  
+
+
+### Enhanced
+- [x] Animations
+- [x] Click Cell To Copy
+- [x] Column Groups Visibility
+- [x] Exporting
+- [x] Fullscreen
+- [x] Overlay
+- [x] Paginationg Customization
+- [x] Status Indicator
+- [x] Stripped Rows
 - [x] Virtualization
 
-### Components
-- [ ] Native
-- [ ] Shadcn-svelte
+### [Documentation](https://datagrid.tzezar.pl/)
 
-### Documentation
+### [Core Installation](https://datagrid.tzezar.pl/headless/quick-start/installation)
 
-- [ ] Headless core
-- [ ] Native components
-- [ ] Shadcn-svelte components
+### [Enhanced Component Installation](https://datagrid.tzezar.pl/enhanced/installation)
+
+### [API](https://datagrid-api-reference.tzezar.pl/)
