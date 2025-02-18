@@ -61,9 +61,10 @@ export const columns = [
                         }
                     }),
                     accessorColumn({
+                        columnId: 'category',
                         accessorKey: 'category',
                         options: {
-                            calculateFacets: true,
+                            calculateFacets: true
                         },
                         _meta: {
                             filterType: 'select',
@@ -189,7 +190,6 @@ export const columns = [
                 props
             };
         },
-
         options: {
             calculateFacets: true,
         },

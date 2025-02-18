@@ -32,6 +32,11 @@
 			}
 		}
 	});
+
+    $effect(() => {
+        console.log($state.snapshot(datagrid.features.columnFaceting.getAllCategoricalFacets()))
+    })
+
 </script>
 <Grid.Component {datagrid}>
 	{#snippet expandedRowContent(row)}
