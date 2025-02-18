@@ -11,14 +11,14 @@
 	<div>
 		<p
 			class={cn(
-				'w-full px-2 pt-2 text-sm font-semibold',
+				'w-full px-2 p-2 text-sm font-semibold',
 				['Headless', 'Enhanced'].includes(group.title) &&
 					'text-foreground border-b border-t pb-2 text-lg font-semibold'
 			)}
 		>
 			{group.title}
 		</p>
-		<div class="flex flex-col ">
+		<div class="flex flex-col">
 			{#each group.children as item}
 				<NavigationItem {item} depth={depth + 1} />
 			{/each}

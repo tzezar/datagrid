@@ -37,10 +37,7 @@ export const links: INavigationItem[] = [
                     }
                 ]
             },
-            {
-                title: 'API Reference',
-                href: '/headless/api-reference'
-            },
+
             {
                 title: 'Examples',
                 children: [
@@ -119,7 +116,11 @@ export const links: INavigationItem[] = [
                     },
 
                 ]
-            }
+            },
+            {
+                title: 'API Reference',
+                href: '/headless/api-reference'
+            },
         ]
     },
     {
