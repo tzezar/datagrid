@@ -30,22 +30,22 @@ Engage with us on social media, write blog posts, or simply tell others about Tz
 
 A huge thank you to our sponsors for supporting Tzezar DataGrid!
 
-| Name             | Contribution   | Website           |
-| ---------------- | -------------- | ----------------- |
-| Zaores           | Gold Sponsor   | zaores.pl         |
-| Cudne Te Kwiatki | Silver Sponsor | cudnetekwiatki.pl |
-| Anna D.          | Bronze Sponsor |                   |
-| J. S.          | Bronze Sponsor |                   |
+| Name             | Contribution   | Website                                                   |
+| ---------------- | -------------- | --------------------------------------------------------- |
+| Zaores           | Gold Sponsor   | [zaores.pl](https://zaores.pl/)                           |
+| J. S.            | Silver Sponsor |                                                           |
+| Cudne Te Kwiatki | Bronze Sponsor | [cudnetekwiatki](https://www.facebook.com/cudnetekwiatki) |
+| Anna D.          | Bronze Sponsor |                                                           |
 
 Interested in becoming a sponsor? Get in touch!
 
-## Contributors 🎉
+## 🎉 Contributors
 
 We want to take a moment to thank the individuals who have contributed their time, knowledge, and expertise to make Tzezar DataGrid the project it is today. These contributors help ensure the project remains high-quality and feature-rich.
 
-### Special Thanks to Our Contributors 🙏
+### 🙏 Special Thanks to Our Contributors
 
-**@tzezar** – Major feature development
+**[@tzezar](https://tzezar.pl/)** – Major feature development
 
 <!-- @Contributor2 – Enhancing the user experience & documentation
 

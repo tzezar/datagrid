@@ -137,6 +137,10 @@ export const links: INavigationItem[] = [
                 href: '/enhanced/overview'
             },
             {
+                title: 'Installation',
+                href: '/enhanced/installation'
+            },
+            {
                 title: 'Interactive Demo',
                 href: '/enhanced/interactive-demo'
             }
