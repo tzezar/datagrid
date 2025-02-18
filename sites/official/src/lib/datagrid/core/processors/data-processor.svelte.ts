@@ -83,14 +83,14 @@ export class DataDataProcessor<TOriginalRow> {
                     this.metrics.measure('Column faceting from original data', () => {
                         this.datagrid.features.columnFaceting.calculateFacets(
                             this.datagrid.originalState.data || [],
-                            this.datagrid._columns
+                            this.datagrid.columns.getLeafColumns()
                         );
                     })
                 } else if (this.datagrid.features.columnFaceting.facetsSource === 'filteredData') {
                     this.metrics.measure('Column faceting from filtered data', () => {
                         this.datagrid.features.columnFaceting.calculateFacets(
                             data,
-                            this.datagrid._columns
+                            this.datagrid.columns.getLeafColumns()
                         );
                     })
                 }
