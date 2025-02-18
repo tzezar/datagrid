@@ -120,12 +120,12 @@
 	{#if showMobileNav}
 		<div
 			id="mobile-nav"
-			class="absolute right-0 top-0 z-50 h-screen w-64 transform bg-background transition-transform duration-300 ease-in-out"
+			class="absolute md:hidden right-0 top-0 z-50 h-screen w-64 transform bg-background transition-transform duration-300 ease-in-out"
 			class:translate-x-0={showMobileNav}
 			class:translate-x-[-100%]={!showMobileNav}
 		>
-			<div class="flex flex-col">
-				<div class="flex items-center justify-between p-4">
+			<div class="flex flex-col h-full overflow-auto">
+				<div class="flex items-center justify-between h-[64.67px] min-h-[64.67px] border-b sticky top-0 bg-primary-foreground p-4">
 					<h1 class="text-xl font-bold">Menu</h1>
 					<button class="text-gray-500 focus:outline-none" onclick={() => (showMobileNav = false)} aria-label="Close">
 						<svg
@@ -144,10 +144,10 @@
 						</svg>
 					</button>
 				</div>
-				<nav class=" p-4">
+				<nav class=" p-4 border-l">
 					{@render Navigation()}
 				</nav>
-				<div class="bg-primary-foreground sticky bottom-0 mt-auto p-4">
+				<div class="bg-primary-foreground sticky bottom-0 mt-auto p-4 border-l">
 					<ThemeSwitcher />
 				</div>
 			</div>

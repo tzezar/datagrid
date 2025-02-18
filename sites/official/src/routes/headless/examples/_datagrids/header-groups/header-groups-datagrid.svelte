@@ -2,10 +2,13 @@
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory.js';
 	import { isGroupColumn } from '$lib/datagrid/core/helpers/column-guards';
 	import type { LeafColumn, ColumnGroup } from '$lib/datagrid/core/types';
+	import { isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import {
 		accessorColumn,
 		columnGroup,
+		computedColumn,
 		DatagridCore,
+		displayColumn,
 		getCellContent,
 		type ColumnDef
 	} from '$lib/datagrid/index.js';
@@ -104,8 +107,19 @@
 			{#each datagrid.rows.getVisibleBasicRows() as row}
 				<div class="tr">
 					{#each datagrid.columns.getLeafColumns() as column}
+						{@const cellContent = column.cell ? column.cell({ datagrid, column, row }) : null}
 						<div class="td">
-							{getCellContent(column, row.original)}
+							{#if cellContent}
+								{#if typeof cellContent === 'string'}
+									{@html cellContent}
+								{:else if isCellComponent(cellContent)}
+									<cellContent.component {datagrid} {row} {column} />
+								{/if}
+							{:else}
+								<span>
+									{@html getCellContent(column, row.original)}
+								</span>
+							{/if}
 						</div>
 					{/each}
 				</div>

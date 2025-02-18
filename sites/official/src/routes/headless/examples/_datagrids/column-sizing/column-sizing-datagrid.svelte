@@ -2,8 +2,7 @@
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory.js';
 	import type { EnhancedMeta } from '$lib/datagrid-enhanced';
 	import type { LeafColumn } from '$lib/datagrid/core/types';
-	import ArrowMoveLeft from '$lib/datagrid/icons/tabler/arrow-move-left.svelte';
-	import ArrowMoveRight from '$lib/datagrid/icons/tabler/arrow-move-right.svelte';
+
 	import {
 		accessorColumn,
 		DatagridCore,
@@ -11,6 +10,7 @@
 		type ColumnDef
 	} from '$lib/datagrid/index.js';
 	import { cn } from '$lib/utils';
+	import { codeToHtml } from 'shiki';
 	import Pagination from '../../_blocks/pagination.svelte';
 
 	export const columns = [
@@ -46,6 +46,27 @@
 	});
 
 	let columnResizeMode: 'standard' | 'fluid' = $state('fluid');
+
+	let html = $state('');
+
+	// @ts-ignore
+	$effect(async () => {
+		html = await codeToHtml(
+			JSON.stringify(
+				datagrid.columns.getLeafColumns().map((c) => {
+					return {
+						columnId: c.columnId,
+						resizable: c.options.resizable,
+						size: c.state.size
+					};
+				}),
+				null,
+				2
+			),
+			{ lang: 'json', theme: 'poimandres' }
+		);
+	});
+
 </script>
 
 <div class="flex gap-4">
@@ -103,19 +124,7 @@
 	<Pagination {datagrid} />
 </div>
 
-<pre>
-	{JSON.stringify(
-		datagrid.columns.getLeafColumns().map((c) => {
-			return {
-				columnId: c.columnId,
-				resizable: c.options.resizable,
-				size: c.state.size
-			};
-		}),
-		null,
-		2
-	)}
-</pre>
+{@html html}
 
 {#snippet LeafHeader(column: LeafColumn<any>)}
 	<div
