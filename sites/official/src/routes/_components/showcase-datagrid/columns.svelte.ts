@@ -15,7 +15,7 @@ import type { EnhancedDatagrid } from "$lib/datagrid-enhanced/core/index.svelte"
 export const columns = [
     accessorColumn({
         accessorKey: 'id',
-        align: 'right',
+        align: 'left',
         state: {
             pinning: {
                 position: 'left'

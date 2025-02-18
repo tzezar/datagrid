@@ -102,10 +102,9 @@
 						></path>
 					</svg>
 				</div>
-				<h4 class="mb-3 text-lg font-medium capitalize">Endless Customization</h4>
+				<h4 class="mb-3 text-lg font-medium capitalize">Headless Core & Prebuilt Enhanced Wrapper</h4>
 				<p class="text-secondary-foreground text-sm font-normal">
-					Fully themeable with built-in design system integration. Create custom cell renderers,
-					editors, and formatters with an extensible plugin architecture.
+					The Headless Core offers complete flexibility for building a custom data grid from scratch, while the Prebuilt Enhanced Wrapper provides a feature-rich, styled solution with built-in sorting, pagination, and more, ready for quick deployment.
 				</p>
 			</div>
 			<!-- class="group relative w-full text-center max-md:mx-auto max-md:max-w-sm md:w-2/5 lg:w-1/4" -->
@@ -131,9 +130,7 @@
 				</div>
 				<h4 class="mb-3 text-lg font-medium capitalize">Complete Control</h4>
 				<p class="text-secondary-foreground text-sm font-normal">
-					Get the code and make it yours. Our MIT-licensed datagrid can be customized down to the
-					core - modify rendering logic, create custom plugins, or completely overhaul the UI to
-					match your brand identity.
+					Embracing the ShadCN philosophy, you hold full authority over your code. Customize and modify every aspect to suit your needs—nothing is off-limits!
 				</p>
 			</div>
 		</div>
