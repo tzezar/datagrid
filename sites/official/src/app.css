@@ -121,7 +121,7 @@
 }
 
 .markdown :is(ul, ol) {
-	@apply mb-6 space-y-2 pl-6;
+	@apply mb-6 space-y-2 pl-6 list-disc;
 }
 
 .markdown :is(li) {
@@ -137,7 +137,7 @@
 }
 
 .markdown :is(table) {
-	@apply my-8 w-full border-collapse;
+	@apply my-8 w-full border-collapse text-left;
 }
 
 .markdown :is(th, td) {
