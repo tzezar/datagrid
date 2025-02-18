@@ -17,17 +17,17 @@ The easiest way to install is using our CLI tool.
 
 ### Using the CLI
 
-```cmd
+```bash
 npx tzezars-datagrid@latest init
 ```
 
-During installation, you'll be prompted to answer two configuration questions:
+During installation, you'll be prompted to answer few configuration questions:
 
-```cmd
-
-1 Where do you want to install the component? ... ./src/lib/datagrid
-2 Do you want to install dependencies? ... yes
-
+```bash
+npx tzezars-datagrid init
+✔ Which project would you like to work with? core
+✔ Where do you want to install the component? ./src/lib/datagrid
+✔ Do you want to install dependencies? Yes
 ```
 
 ### Installation Complete
@@ -44,13 +44,13 @@ Get the datagrid component by copying the code from our [GitHub repository](http
 
 For global search functionality:
 
-```cmd
+```bash
 npm i fuse.js
 ```
 
 For data export features:
 
-```cmd
+```bash
 npm i papaparse xlsx fast-xml-parser
 ```
 1. `papaparse` - CSV export
@@ -62,12 +62,12 @@ npm i papaparse xlsx fast-xml-parser
 
 The fast-sort package provides better sorting algorithms compared to our default implementation which uses the Schwartzian Transform. Choose this if you need enhanced sorting performance.
 
-```cmd
+```bash
 npm i fast-sort
 ```
 
 For virtual scrolling support my recommendation is:
 
-```cmd
+```bash
 npm i svelte-virtuallists
 ```
