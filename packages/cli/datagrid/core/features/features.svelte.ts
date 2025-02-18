@@ -3,7 +3,7 @@ import {
     ColumnPinningFeature, ColumnSizingFeature, ColumnVisibilityFeature, GlobalSearchFeature,
     GroupingFeature, RowExpandingFeature, RowPinningFeature, RowSelectionFeature, SortingFeature,
     PaginationFeature
-} from ".";
+} from "../features";
 import type { DatagridCore } from "../index.svelte";
 import type { DatagridCoreConfig } from "../types";
 

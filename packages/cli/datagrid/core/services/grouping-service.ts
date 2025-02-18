@@ -36,24 +36,32 @@ export class GroupingService extends BaseService {
 
         this.datagrid.events.emit('onGroupingChange', { activeGroups: validGroupColumns });
     }
-
     /**
-     * Toggles the grouping for a specific column.
-     * If the column is groupable, it will either add or remove the column from the active groups.
-     * 
-     * @param {ColumnId} columnId The identifier of the column to toggle grouping for.
-     * Refreshes the data grid, recalculating the groups and resetting pagination.
-     */
+         * Toggles the grouping for a specific column.
+         * If the column is groupable, it will either add or remove the column from the active groups.
+         * 
+         * @param {ColumnId} columnId The identifier of the column to toggle grouping for.
+         * Refreshes the data grid, recalculating the groups and resetting pagination.
+         */
     toggleGrouping(columnId: ColumnId) {
         const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), columnId);
-        if (!column) return;
-        if (column.options.groupable === false) return;
+        if (!column || column.options.groupable === false) return;
 
-        this.datagrid.features.grouping.toggleGrouping(columnId);
+        const activeGroups = [...this.datagrid.features.grouping.activeGroups];
+        const isGrouped = activeGroups.includes(columnId);
+
+        // Toggle grouping
+        const updatedGroups = isGrouped
+            ? activeGroups.filter(id => id !== columnId)  // Remove column
+            : [...activeGroups, columnId];               // Add column
+
+        const err = this.datagrid.features.grouping.updateActiveGroups(updatedGroups);
+        if (err) return;
+
         this.datagrid.features.pagination.goToFirstPage();
         this.datagrid.cacheManager.invalidateGroupedRowsCache();
         this.datagrid.processors.data.executeFullDataTransformation();
 
-        this.datagrid.events.emit('onGroupingChange', { activeGroups: this.datagrid.features.grouping.activeGroups });
+        this.datagrid.events.emit('onGroupingChange', { activeGroups: updatedGroups });
     }
 }
