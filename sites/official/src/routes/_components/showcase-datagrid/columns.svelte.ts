@@ -51,7 +51,7 @@ export const columns = [
                         accessorKey: 'name',
                         state: {
                             pinning: {
-                                position: 'left'
+                                // position: 'left'
                             },
                         },
                         _meta: {

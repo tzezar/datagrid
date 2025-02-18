@@ -24,7 +24,6 @@ npx tzezars-datagrid@latest init
 During installation, you'll be prompted to answer few configuration questions:
 
 ```bash
-npx tzezars-datagrid init
 ✔ Which project would you like to work with? core
 ✔ Where do you want to install the component? ./src/lib/datagrid
 ✔ Do you want to install dependencies? Yes

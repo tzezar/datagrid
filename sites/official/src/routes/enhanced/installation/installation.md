@@ -24,16 +24,17 @@ The easiest way to install is using our CLI tool.
 ### Using the CLI
 
 ```cmd
-npx tzezars-datagrid@latest init
+npx tzezars-datagrid init
 ```
 
 During installation, you'll be prompted to answer two configuration questions:
 
 ```cmd
-
-1 Where do you want to install the component? ... ./src/lib/datagrid
-2 Do you want to install dependencies? ... yes
-
+✔ Which project would you like to work with? enhanced
+✔ Where do you want to install the component? ./src/lib/datagrid-enhanced
+✔ Where is your global CSS file? ./src/app.css
+✔ Where is your tailwind.config.[cjs|js|ts] located? ./tailwind.config.ts
+✔ Do you want to install dependencies? Yes
 ```
 
 ### Installation Complete
