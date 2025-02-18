@@ -1,18 +1,18 @@
 
-export type NavigationEntry = {
+export type INavigationEntry = {
     title: string,
     href: string,
 }
 
-export type NavigationGroup = {
+export type INavigationGroup = {
     title: string,
     href?: string,
-    children: NavigationItem[]
+    children: INavigationItem[]
 }
 
-export type NavigationItem = NavigationEntry | NavigationGroup
+export type INavigationItem = INavigationEntry | INavigationGroup
 
-export const links: NavigationItem[] = [
+export const links: INavigationItem[] = [
     {
         title: 'Homepage',
         href: '/'
@@ -48,10 +48,7 @@ export const links: NavigationItem[] = [
                         title: 'Basic',
                         href: '/headless/examples/basic'
                     },
-                    {
-                        title: 'Header Groups',
-                        href: '/headless/examples/header-groups'
-                    },
+
                     {
                         title: 'Column Filters',
                         href: '/headless/examples/column-filters'
@@ -85,6 +82,10 @@ export const links: NavigationItem[] = [
                         href: '/headless/examples/grouping'
                     },
                     {
+                        title: 'Header Groups',
+                        href: '/headless/examples/header-groups'
+                    },
+                    {
                         title: 'Pagination',
                         href: '/headless/examples/pagination'
                     },
@@ -115,7 +116,8 @@ export const links: NavigationItem[] = [
                     {
                         title: 'Editable Data',
                         href: '/headless/examples/editable-data'
-                    }
+                    },
+
                 ]
             }
         ]

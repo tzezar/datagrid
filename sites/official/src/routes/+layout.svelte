@@ -6,7 +6,6 @@
 	import '../app.css'; // Assuming your Tailwind CSS is imported here
 	import { onMount, type Snippet } from 'svelte';
 	import { links } from '$lib/hrefs';
-	import type { NavigationGroup, NavigationEntry, NavigationItem } from '$lib/hrefs';
 
 	let { children }: { children: Snippet } = $props();
 
@@ -42,6 +41,7 @@
 
 	import logoBlack from '$lib/assets/img/tzezar-logo-black.png';
 	import logoWhite from '$lib/assets/img/tzezar-logo-white.png';
+	import Navigation from './_components/navigation.svelte';
 </script>
 
 <Toaster richColors />
@@ -66,7 +66,7 @@
 {#snippet DesktopSidebar()}
 	<aside id="desktop-nav" class="hidden h-screen w-64 max-w-sm overflow-y-auto border-r md:block">
 		<div class="flex h-full flex-col">
-			<a href="/" class="sticky top-0 flex gap-2 p-4 text-xl font-bold bg-primary-foreground">
+			<a href="/" class="bg-primary-foreground sticky top-0 flex gap-2 p-4 text-xl font-bold">
 				{#if schema == 'dark'}
 					<img src={logoWhite} alt="Logo" class="h-[32px] w-[32px]" />
 				{:else}
@@ -75,7 +75,7 @@
 				Tzezar's Datagrid
 			</a>
 			<nav class=" p-4">
-				{@render Navigation()}
+				<Navigation {links}/>
 			</nav>
 			<div class="bg-primary-foreground sticky bottom-0 mt-auto p-4">
 				<ThemeSwitcher />
@@ -85,7 +85,7 @@
 {/snippet}
 
 {#snippet MobileHeader()}
-	<header class="flex items-center justify-between border-b bg-primary-foreground p-4 md:hidden">
+	<header class="bg-primary-foreground flex items-center justify-between border-b p-4 md:hidden">
 		<div class="flex w-full items-center justify-between">
 			<a href="/" class="sticky top-0 flex gap-2 text-xl font-bold">
 				{#if schema == 'dark'}
@@ -96,7 +96,12 @@
 				Tzezar's Datagrid
 			</a>
 
-			<button id="toggle-nav" class="text-gray-500 focus:outline-none" onclick={toggleMobileNav} aria-label="Toggle Navigation">
+			<button
+				id="toggle-nav"
+				class="text-gray-500 focus:outline-none"
+				onclick={toggleMobileNav}
+				aria-label="Toggle Navigation"
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					class="h-6 w-6"
@@ -120,14 +125,20 @@
 	{#if showMobileNav}
 		<div
 			id="mobile-nav"
-			class="absolute md:hidden right-0 top-0 z-50 h-screen w-64 transform bg-background transition-transform duration-300 ease-in-out"
+			class="bg-background absolute right-0 top-0 z-50 h-screen w-64 transform transition-transform duration-300 ease-in-out md:hidden"
 			class:translate-x-0={showMobileNav}
 			class:translate-x-[-100%]={!showMobileNav}
 		>
-			<div class="flex flex-col h-full overflow-auto">
-				<div class="flex items-center justify-between h-[64.67px] min-h-[64.67px] border-b sticky top-0 bg-primary-foreground p-4">
+			<div class="flex h-full flex-col overflow-auto">
+				<div
+					class="bg-primary-foreground sticky top-0 flex h-[64.67px] min-h-[64.67px] items-center justify-between border-b p-4"
+				>
 					<h1 class="text-xl font-bold">Menu</h1>
-					<button class="text-gray-500 focus:outline-none" onclick={() => (showMobileNav = false)} aria-label="Close">
+					<button
+						class="text-gray-500 focus:outline-none"
+						onclick={() => (showMobileNav = false)}
+						aria-label="Close"
+					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							class="h-6 w-6"
@@ -144,10 +155,10 @@
 						</svg>
 					</button>
 				</div>
-				<nav class=" p-4 border-l">
-					{@render Navigation()}
+				<nav class=" border-l p-4">
+					<Navigation {links}/>
 				</nav>
-				<div class="bg-primary-foreground sticky bottom-0 mt-auto p-4 border-l">
+				<div class="bg-primary-foreground sticky bottom-0 mt-auto border-l p-4">
 					<ThemeSwitcher />
 				</div>
 			</div>
@@ -155,42 +166,6 @@
 	{/if}
 {/snippet}
 
-{#snippet Navigation()}
-	<ul class="space-y-2">
-		{#each links as item}
-			{@render NavigationItem(item, 0)}
-		{/each}
-	</ul>
-
-	{#snippet NavigationItem(item: NavigationItem, depth: number)}
-		{#if 'children' in item}
-			{@render NavigationGroup(item as NavigationGroup, depth + 1)}
-		{:else}
-			{@render NavigationEntry(item as NavigationEntry, depth)}
-		{/if}
-	{/snippet}
-
-	{#snippet NavigationEntry(entry: NavigationEntry, depth: number)}
-		<li>
-			<a href={entry.href} class="block rounded p-2 hover:bg-primary-foreground">
-				{entry.title}
-			</a>
-		</li>
-	{/snippet}
-
-	{#snippet NavigationGroup(group: NavigationGroup, depth: number)}
-		<div class="flex flex-col gap-2 pt-2">
-			<p class=" font-semibold">
-				{group.title}
-			</p>
-			<div class="flex flex-col">
-				{#each group.children as child}
-					{@render NavigationItem(child, depth + 1)}
-				{/each}
-			</div>
-		</div>
-	{/snippet}
-{/snippet}
 
 <style>
 	.custom-scrollbar {
