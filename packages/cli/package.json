@@ -1,6 +1,6 @@
 {
   "name": "tzezars-datagrid",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "datagrid",
     "core"
   ],
-  "author": "",
+  "author": "Sebastian Drozd",
   "license": "ISC",
   "description": "",
   "dependencies": {
