@@ -32,7 +32,15 @@
 					</div>
 					<div class="grid flex-1 text-left text-sm leading-tight">
 						<span class="truncate font-semibold">Tzezar's</span>
-						<span class="truncate text-xs">Headless Datagrid</span>
+						<span class="truncate text-xs">
+							{#if activeTab.state === 'headless-core'}
+							Headless Datagrid
+							{/if}
+							{#if activeTab.state === 'enhanced'}
+							Enhanced Datagrid with Shadcn Svelte
+							{/if}
+
+						</span>
 					</div>
 				</a>
 			{/snippet}
