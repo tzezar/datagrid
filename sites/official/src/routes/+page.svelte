@@ -14,7 +14,9 @@
 			</p>
 		</div>
 		<!-- Updated grid layout -->
-		<div class="grid w-full grid-cols-1 justify-items-center gap-8 gap-x-8 lg:grid-cols-4">
+		<div
+			class="grid w-full grid-cols-1 justify-items-center gap-8 gap-x-8 sm:grid-cols-2 lg:grid-cols-4"
+		>
 			<div class="group relative w-full max-w-sm text-center">
 				<div
 					class="mx-auto mb-5 flex h-20 w-20 cursor-pointer items-center justify-center rounded-lg bg-orange-50 transition-all duration-500 group-hover:bg-orange-600"
@@ -36,10 +38,10 @@
 						></path>
 					</svg>
 				</div>
-				<h4 class="mb-3 text-lg font-medium capitalize">Blazing-Fast Performance</h4>
+				<h4 class="mb-3 text-lg font-medium capitalize">Complete Control</h4>
 				<p class="text-secondary-foreground text-sm font-normal">
-					Handles hundreds of thousands of rows effortlessly. Never compromise on speed, even with
-					complex operations.
+					Embracing the ShadCN philosophy, you hold full authority over your code. Customize and
+					modify every aspect to suit your needs—nothing is off-limits!
 				</p>
 			</div>
 			<div class="group relative w-full max-w-sm text-center">
@@ -76,10 +78,10 @@
 						></path>
 					</svg>
 				</div>
-				<h4 class="mb-3 text-lg font-medium capitalize">Developer-Friendly API</h4>
+				<h4 class="mb-3 text-lg font-medium capitalize">Blazing-Fast Performance</h4>
 				<p class="text-secondary-foreground text-sm font-normal">
-					Built with TypeScript for superior type safety and autocompletion. Comprehensive
-					documentation and starter templates get you up and running in minutes.
+					Effortlessly handles hundreds of thousands of rows. Enjoy lightning-fast speed, even with
+					complex operations.
 				</p>
 			</div>
 			<div class="group relative w-full max-w-sm text-center">
@@ -102,9 +104,10 @@
 						></path>
 					</svg>
 				</div>
-				<h4 class="mb-3 text-lg font-medium capitalize">Headless Core & Prebuilt Enhanced Wrapper</h4>
+				<h4 class="mb-3 text-lg font-medium capitalize">Developer-Friendly API</h4>
 				<p class="text-secondary-foreground text-sm font-normal">
-					The Headless Core offers complete flexibility for building a custom data grid from scratch, while the Prebuilt Enhanced Wrapper provides a feature-rich, styled solution with built-in sorting, pagination, and more, ready for quick deployment.
+					Built with TypeScript for top-notch type safety and autocompletion. Comprehensive
+					documentation and starter templates make setup a breeze.
 				</p>
 			</div>
 			<!-- class="group relative w-full text-center max-md:mx-auto max-md:max-w-sm md:w-2/5 lg:w-1/4" -->
@@ -128,9 +131,13 @@
 						></path>
 					</svg>
 				</div>
-				<h4 class="mb-3 text-lg font-medium capitalize">Complete Control</h4>
+				<h4 class="mb-3 text-lg font-medium capitalize">
+					Headless Core & Prebuilt Enhanced Wrapper
+				</h4>
 				<p class="text-secondary-foreground text-sm font-normal">
-					Embracing the ShadCN philosophy, you hold full authority over your code. Customize and modify every aspect to suit your needs—nothing is off-limits!
+					The Headless Core offers complete flexibility for building a custom data grid from
+					scratch, while the Prebuilt Enhanced Wrapper provides a feature-rich, styled solution with
+					built-in sorting, pagination, and more, ready for quick deployment.
 				</p>
 			</div>
 		</div>
@@ -169,12 +176,12 @@
 				</svg>
 			</a>
 		</div>
-		<div class="flex flex-col md:w-1/2 md:pl-12 w-full">
+		<div class="flex w-full flex-col md:w-1/2 md:pl-12">
 			<h2 class="title-font mb-3 text-sm font-semibold tracking-wider">QUICK START</h2>
-			<nav class="-mb-1 grid grid-cols-1 list-none gap-y-2 text-sm ">
+			<nav class="-mb-1 grid list-none grid-cols-1 gap-y-2 text-sm">
 				<a href="/headless/quick-start/overview">Overview</a>
 				<a href="/headless/quick-start/getting-started">Getting started</a>
-				<br/>
+				<br />
 				<a href="/enhanced/overview">Enhanced datagrid overview</a>
 			</nav>
 		</div>
