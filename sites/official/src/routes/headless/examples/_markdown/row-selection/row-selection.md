@@ -1,6 +1,6 @@
 ---
 title: Row selection
-description:
+description: Select rows in a table for actions like editing, deleting, or multi-row operations.
 ---
 
 <script>

@@ -1,6 +1,6 @@
 ---
 title: Sorting
-description:
+description: Sort table data by column to organize and prioritize information.
 ---
 
 <script>
