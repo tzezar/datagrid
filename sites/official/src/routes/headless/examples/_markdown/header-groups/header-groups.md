@@ -1,6 +1,6 @@
 ---
 title: Header groups
-description:
+description: Organize columns under grouped headers to improve table structure and clarity.
 ---
 
 <script>
