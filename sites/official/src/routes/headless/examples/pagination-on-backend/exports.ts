@@ -1,4 +1,11 @@
-import { inventoryData } from "$lib/data/data-storage.svelte.js";
+import PaginationOnBackendDatagrid from "../_datagrids/pagination-on-backend/pagination-on-backend-datagrid.svelte";
+import PaginationOnBackendDatagridCode from "../_datagrids/pagination-on-backend/pagination-on-backend-datagrid.svelte?raw";
+
+import CodeBlock from "$lib/components/tzezars-enhancements/code-block/code-block.svelte";
+import CodePreview from "$lib/components/tzezars-enhancements/code-preview/code-preview.svelte";
+
+
+const pageTs = `import { inventoryData } from "$lib/data/data-storage.svelte.js";
 import { error } from '@sveltejs/kit';
 
 // Helper function to add sleep (delay)
@@ -16,19 +23,33 @@ export const load = async ({ url, params }) => {
         const startIndex = (page - 1) * pageSize;
         const endIndex = startIndex + pageSize;
 
-        // Fetch content based on params
-        const post = await import(`./pagination-on-backend.md`);
-
         return {
             inventory: totalInventory.slice(startIndex, endIndex),
             totalCount: totalInventory.length,
             currentPage: page,
             pageSize: pageSize,
-            content: post.default,
-            meta: post.metadata
         };
     } catch (e) {
         console.error(e);
-        error(404, `Could not find pagination-on-backend`);
+        error(404, 'something went wrong');
     }
-};
+};`
+
+
+const exports = {
+    datagrid: {
+        component: PaginationOnBackendDatagrid,
+        code: PaginationOnBackendDatagridCode
+    },
+
+    components: {
+        codeBlock: CodeBlock,
+        codePreview: CodePreview
+    },
+
+    code: {
+        pageTs
+    }
+}
+
+export { exports }

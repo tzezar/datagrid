@@ -1,16 +1,17 @@
 <script lang="ts">
-	import PaginationOnBackendDatagrid from '../_datagrids/pagination-on-backend/pagination-on-backend-datagrid.svelte';
-
-
 	let { data } = $props();
 </script>
 
-{#if !data.inventory}
-	<p>Loading...</p>
-{/if}
+<svelte:head>
+	<title>{data.meta.title}</title>
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content={data.meta.title} />
+</svelte:head>
 
-<h2>Pagination implementation</h2>
-<PaginationOnBackendDatagrid {data} />
-<div class="prose w-full min-w-full">
-	<!-- <Readme /> -->
-</div>
+{#await data}
+	<p>Loading...</p>
+{:then value}
+	<div class="markdown">
+		<data.content {data} />
+	</div>
+{/await}
