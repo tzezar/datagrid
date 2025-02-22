@@ -45,23 +45,22 @@
 	});
 </script>
 
-<div>
-	{#each datagrid.columns.getLeafColumns() as column}
-		<div>
-			<input
-				disabled={column.options.hideable === false}
-				type="checkbox"
-				checked={datagrid.columns.findColumnByIdOrThrow(column.columnId).state.visible}
-				onchange={() => {
-					datagrid.handlers.column.toggleColumnVisibility(column.columnId);
-				}}
-			/>
-			{column.header}
-		</div>
-	{/each}
-</div>
-
-<div>
+<div class="flex w-full flex-col">
+	<div>
+		{#each datagrid.columns.getLeafColumns() as column}
+			<div>
+				<input
+					disabled={column.options.hideable === false}
+					type="checkbox"
+					checked={datagrid.columns.findColumnByIdOrThrow(column.columnId).state.visible}
+					onchange={() => {
+						datagrid.handlers.column.toggleColumnVisibility(column.columnId);
+					}}
+				/>
+				{column.header}
+			</div>
+		{/each}
+	</div>
 	<div class="wrapper">
 		<div class="table">
 			<div class="thead">
@@ -97,21 +96,19 @@
 		</div>
 	</div>
 	<Pagination {datagrid} />
-</div>
 
-<pre>
-	{JSON.stringify(
-		datagrid.columns.getLeafColumns().map((c) => {
-			return {
-				columnId: c.columnId,
-				visible: c.state.visible,
-				hideable: c.options.hideable
-			};
-		}),
-		null,
-		2
-	)}
-</pre>
+	<pre>{JSON.stringify(
+			datagrid.columns.getLeafColumns().map((c) => {
+				return {
+					columnId: c.columnId,
+					visible: c.state.visible,
+					hideable: c.options.hideable
+				};
+			}),
+			null,
+			2
+		)}</pre>
+</div>
 
 {#snippet LeafHeader(column: LeafColumn<any>)}
 	{#if column.isVisible()}

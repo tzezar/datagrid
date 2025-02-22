@@ -78,6 +78,17 @@
 		</div>
 	</div>
 	<Pagination {datagrid} />
+
+	<pre class="max-h-[400px] overflow-auto">{JSON.stringify(
+			{
+				data: datagrid.rows.getPaginatedRows().map((r) => {
+					if (r.isGroupRow()) return;
+					return r.original;
+				})
+			},
+			null,
+			2
+		)}</pre>
 </div>
 
 {#snippet RenderBodyCell(column: LeafColumn<any>, row: GridBasicRow<any>)}
@@ -138,17 +149,6 @@
 		</div>
 	{/if}
 {/snippet}
-
-<pre class="max-h-[400px] overflow-auto">{JSON.stringify(
-		{
-			data: datagrid.rows.getPaginatedRows().map((r) => {
-				if (r.isGroupRow()) return;
-				return r.original;
-			})
-		},
-		null,
-		2
-	)}</pre>
 
 <style lang="postcss">
 	.group-row-cell {

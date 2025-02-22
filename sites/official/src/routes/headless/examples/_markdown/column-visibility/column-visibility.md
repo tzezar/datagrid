@@ -1,6 +1,6 @@
 ---
-title: Column visibility example
-description:
+title: Column visibility
+description: Control and toggle the visibility of table columns for a more flexible user experience.
 ---
 
 <script>

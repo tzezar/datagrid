@@ -1,6 +1,6 @@
 ---
 title: Editable data
-description:
+description: Allow users to edit your data
 ---
 
 <script>
