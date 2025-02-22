@@ -6,9 +6,7 @@
 	import {
 		accessorColumn,
 		columnGroup,
-		computedColumn,
 		DatagridCore,
-		displayColumn,
 		getCellContent,
 		type ColumnDef
 	} from '$lib/datagrid/index.js';
@@ -86,7 +84,7 @@
 
 	const datagrid = new DatagridCore({
 		columns,
-		data
+		data: data.slice(0, 50)
 	});
 </script>
 
