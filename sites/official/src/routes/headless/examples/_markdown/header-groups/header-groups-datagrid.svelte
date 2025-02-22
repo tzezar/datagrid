@@ -11,6 +11,7 @@
 		type ColumnDef
 	} from '$lib/datagrid/index.js';
 	import { cn } from '$lib/utils';
+	import { inventoryData as data } from '$lib/data/data-storage.svelte';
 
 	export const columns = [
 		columnGroup({
@@ -80,48 +81,48 @@
 		})
 	] satisfies ColumnDef<InventoryItem>[];
 
-	let { data }: { data: InventoryItem[] } = $props();
-
 	const datagrid = new DatagridCore({
 		columns,
 		data: data.slice(0, 50)
 	});
 </script>
 
-<div class="wrapper">
-	<div class="table">
-		<div class="thead">
-			<div class="flex items-end">
-				{#each datagrid.columns.getColumns() as column}
-					{#if column.type === 'group'}
-						{@render GroupHeader(column)}
-					{:else}
-						{@render LeafHeader(column)}
-					{/if}
-				{/each}
-			</div>
-		</div>
-		<div class="tbody">
-			{#each datagrid.rows.getVisibleBasicRows() as row}
-				<div class="tr">
-					{#each datagrid.columns.getLeafColumns() as column}
-						{@const cellContent = column.cell ? column.cell({ datagrid, column, row }) : null}
-						<div class="td">
-							{#if cellContent}
-								{#if typeof cellContent === 'string'}
-									{@html cellContent}
-								{:else if isCellComponent(cellContent)}
-									<cellContent.component {datagrid} {row} {column} />
-								{/if}
-							{:else}
-								<span>
-									{@html getCellContent(column, row.original)}
-								</span>
-							{/if}
-						</div>
+<div class="flex w-full flex-col">
+	<div class="wrapper">
+		<div class="table">
+			<div class="thead">
+				<div class="flex items-end">
+					{#each datagrid.columns.getColumns() as column}
+						{#if column.type === 'group'}
+							{@render GroupHeader(column)}
+						{:else}
+							{@render LeafHeader(column)}
+						{/if}
 					{/each}
 				</div>
-			{/each}
+			</div>
+			<div class="tbody">
+				{#each datagrid.rows.getVisibleBasicRows() as row}
+					<div class="tr">
+						{#each datagrid.columns.getLeafColumns() as column}
+							{@const cellContent = column.cell ? column.cell({ datagrid, column, row }) : null}
+							<div class="td">
+								{#if cellContent}
+									{#if typeof cellContent === 'string'}
+										{@html cellContent}
+									{:else if isCellComponent(cellContent)}
+										<cellContent.component {datagrid} {row} {column} />
+									{/if}
+								{:else}
+									<span>
+										{@html getCellContent(column, row.original)}
+									</span>
+								{/if}
+							</div>
+						{/each}
+					</div>
+				{/each}
+			</div>
 		</div>
 	</div>
 </div>

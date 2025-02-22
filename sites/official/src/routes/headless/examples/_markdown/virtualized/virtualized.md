@@ -1,11 +1,20 @@
 ---
 title: Virtualized
+description:
 ---
 
 <script>
-import VirtualizedDatagrid from './virtualized-datagrid.svelte';
+	import {exports} from './exports.ts'
 </script>
 
 # {title}
 
-<VirtualizedDatagrid />
+{description}
+
+## Example
+
+<exports.components.codePreview code={exports.datagrid.code} class="">
+	<exports.datagrid.component />
+</exports.components.codePreview> 
+
+## Key Points

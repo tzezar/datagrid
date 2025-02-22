@@ -12,6 +12,7 @@
 	} from '$lib/datagrid/index.js';
 	import { cn } from '$lib/utils';
 	import Pagination from '../../_blocks/pagination.svelte';
+	import { inventoryData as data } from '$lib/data/data-storage.svelte';
 
 	export const columns = [
 		accessorColumn({
@@ -34,8 +35,6 @@
 		})
 	] satisfies ColumnDef<InventoryItem, EnhancedMeta>[];
 
-	let { data }: { data: InventoryItem[] } = $props();
-
 	const datagrid = new DatagridCore({
 		columns,
 		data
@@ -44,7 +43,7 @@
 	const cols = $derived(datagrid.columns.getPinnedAndCenterColumns());
 </script>
 
-<div class="w-fit max-w-full">
+<div class="flex w-full flex-col">
 	<div class="wrapper w-fit max-w-full">
 		<div class="table">
 			<div class="thead">

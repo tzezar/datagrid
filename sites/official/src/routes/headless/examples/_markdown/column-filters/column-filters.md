@@ -1,5 +1,5 @@
 ---
-title: Column filters example
+title: Column filters
 description: 
 ---
 
@@ -36,8 +36,6 @@ description:
 
 	`datagrid` does not enforce a specific way to determine which filters to render.  
 	For example, you can use the `_meta` field like this:  
-	
-	<br/>
 
 	```ts
 	_meta: {
@@ -45,15 +43,11 @@ description:
 	}
 	```
 
-	<br/>
-
 	This is just an example—you can use any structure that suits your needs.
 
 5.	**Passing Options For Select**:
 
 	I found it easy to pass options in this way, again it's up to you.
-
-	<br/>
 
 	```ts
 	filterOptions: [

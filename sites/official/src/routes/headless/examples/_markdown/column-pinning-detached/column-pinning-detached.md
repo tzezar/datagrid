@@ -1,13 +1,20 @@
 ---
 title: Column pinning detached example
+description:
 ---
 
 <script>
-import ColumnPinningDetachedDatagrid from './column-pinning-detached-datagrid.svelte';
-import { inventoryData as data } from '$lib/data/data-storage.svelte';
+	import {exports} from './exports.ts'
 </script>
 
 # {title}
 
-<ColumnPinningDetachedDatagrid {data} />
+{description}
 
+## Example
+
+<exports.components.codePreview code={exports.datagrid.code} class="">
+	<exports.datagrid.component />
+</exports.components.codePreview> 
+
+## Key Points

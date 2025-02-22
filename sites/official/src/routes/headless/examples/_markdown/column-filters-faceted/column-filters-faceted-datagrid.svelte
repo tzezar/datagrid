@@ -11,6 +11,8 @@
 	import { cn } from '$lib/utils';
 	import ColumnFiltersInput from '../../_blocks/column-filters-input.svelte';
 	import Pagination from '../../_blocks/pagination.svelte';
+	import { inventoryData as data } from '$lib/data/data-storage.svelte';
+
 
 	export const columns = [
 		accessorColumn({
@@ -63,15 +65,13 @@
 		})
 	] satisfies ColumnDef<InventoryItem, EnhancedMeta>[];
 
-	let { data }: { data: InventoryItem[] } = $props();
-
 	const datagrid = new DatagridCore({
 		columns,
 		data
 	});
 </script>
 
-<div>
+<div class="flex w-full flex-col">
 	<div class="wrapper">
 		<div class="table">
 			<div class="thead">

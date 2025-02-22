@@ -13,6 +13,7 @@
 	import { cn } from '$lib/utils';
 	import { toast } from 'svelte-sonner';
 	import Pagination from '../../_blocks/pagination.svelte';
+	import { inventoryData as data } from '$lib/data/data-storage.svelte';
 
 	export const columns = [
 		accessorColumn({
@@ -38,7 +39,6 @@
 		})
 	] satisfies ColumnDef<InventoryItem, EnhancedMeta>[];
 
-	let { data }: { data: InventoryItem[] } = $props();
 
 	const datagrid = new DatagridCore({
 		columns,
@@ -69,7 +69,7 @@
 	{/each}
 </select>
 
-<div>
+<div class="flex w-full flex-col">
 	<div class="wrapper">
 		<div class="table">
 			<div class="thead">

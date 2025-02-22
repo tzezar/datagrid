@@ -1,21 +1,20 @@
 ---
 title: Row pinning
+description:
 ---
 
 <script>
-import RowPinningDatagrid from './row-pinning-datagrid.svelte';
-
-
-
-
-import { inventoryData as data } from '$lib/data/data-storage.svelte';
+	import {exports} from './exports.ts'
 </script>
 
 # {title}
 
-<RowPinningDatagrid {data} />
+{description}
 
+## Example
 
+<exports.components.codePreview code={exports.datagrid.code} class="">
+	<exports.datagrid.component />
+</exports.components.codePreview> 
 
-
-
+## Key Points

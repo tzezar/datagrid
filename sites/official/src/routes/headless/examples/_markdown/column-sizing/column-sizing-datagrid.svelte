@@ -12,6 +12,7 @@
 	import { cn } from '$lib/utils';
 	import { codeToHtml } from 'shiki';
 	import Pagination from '../../_blocks/pagination.svelte';
+	import { inventoryData as data } from '$lib/data/data-storage.svelte';
 
 	export const columns = [
 		accessorColumn({
@@ -37,8 +38,6 @@
 			}
 		})
 	] satisfies ColumnDef<InventoryItem, EnhancedMeta>[];
-
-	let { data }: { data: InventoryItem[] } = $props();
 
 	const datagrid = new DatagridCore({
 		columns,

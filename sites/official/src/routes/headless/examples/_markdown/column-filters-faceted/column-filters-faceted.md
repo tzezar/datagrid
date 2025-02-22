@@ -1,12 +1,36 @@
 ---
-title: Column filters faceted example
+title: Faceted column filters
+description: 
 ---
 
 <script>
-import ColumnFiltersFacetedDatagrid from './column-filters-faceted-datagrid.svelte';
-import { inventoryData as data } from '$lib/data/data-storage.svelte';
+	import {exports} from './exports.ts'
 </script>
 
 # {title}
 
-<ColumnFiltersFacetedDatagrid {data} />
+{description}
+
+## Example
+
+<exports.components.codePreview code={exports.datagrid.code} class="">
+	<exports.datagrid.component />
+</exports.components.codePreview> 
+
+## Key Points
+
+1. **Calculating Facets**:  
+
+	Facets can be calculated per column by setting
+
+    ```ts
+    options: {
+        calculateFacets: true
+    },
+    ```
+
+2. **How To Use Facets**:
+
+    Check `<ColumnFiltersInput />` for example implementation
+
+    

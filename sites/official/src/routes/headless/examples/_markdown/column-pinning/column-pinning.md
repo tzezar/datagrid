@@ -1,15 +1,20 @@
 ---
-title: Column pinning example
+title: Column pinning
+description: Example implementation of column pinning feature
 ---
 
 <script>
-import ColumnPinningDatagrid from './column-pinning-datagrid.svelte';
-
-import { inventoryData as data } from '$lib/data/data-storage.svelte';
+	import {exports} from './exports.ts'
 </script>
 
 # {title}
 
-<ColumnPinningDatagrid {data} />
+{description}
 
+## Example
 
+<exports.components.codePreview code={exports.datagrid.code} class="">
+	<exports.datagrid.component />
+</exports.components.codePreview> 
+
+## Key Points

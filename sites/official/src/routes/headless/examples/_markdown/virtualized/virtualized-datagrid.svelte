@@ -95,7 +95,6 @@
 	});
 
 	let counter = 1;
-	
 
 	test.subscribe((data) => {
 		counter += 1;
@@ -108,31 +107,33 @@
 	});
 </script>
 
-<div class="wrapper w-full overflow-auto">
-	<VirtualList
-		items={datagrid.rows.getPaginatedRows()}
-		style="height:600px; position:relative; overflow:auto;"
-	>
-		{#snippet header()}
-			<div class="thead">
-				<div class="flex">
-					{#each datagrid.columns.getLeafColumnsInOrder() as column}
-						{@render LeafHeader(column)}
-					{/each}
+<div class="flex w-full flex-col">
+	<div class="wrapper w-full overflow-auto">
+		<VirtualList
+			items={datagrid.rows.getPaginatedRows()}
+			style="height:600px; position:relative; overflow:auto;"
+		>
+			{#snippet header()}
+				<div class="thead">
+					<div class="flex">
+						{#each datagrid.columns.getLeafColumnsInOrder() as column}
+							{@render LeafHeader(column)}
+						{/each}
+					</div>
 				</div>
-			</div>
-		{/snippet}
-		{#snippet vl_slot({ index, item })}
-			<div class="tr">
-				{#if !item.isGroupRow()}
-					{#each datagrid.columns.getLeafColumnsInOrder() as column}
-						{@render RenderBodyCell(column, item)}
-					{/each}
-				{:else}{/if}
-			</div>
-		{/snippet}
-	</VirtualList>
-	<Pagination {datagrid} />
+			{/snippet}
+			{#snippet vl_slot({ index, item })}
+				<div class="tr">
+					{#if !item.isGroupRow()}
+						{#each datagrid.columns.getLeafColumnsInOrder() as column}
+							{@render RenderBodyCell(column, item)}
+						{/each}
+					{:else}{/if}
+				</div>
+			{/snippet}
+		</VirtualList>
+		<Pagination {datagrid} />
+	</div>
 </div>
 
 {#snippet RenderBodyCell(column: LeafColumn<any>, row: GridBasicRow<any>)}

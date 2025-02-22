@@ -1,12 +1,20 @@
 ---
-title: Column ordering example
+title: Column ordering
+description: Example implmentation of column ordering feature
 ---
 
 <script>
-import ColumnOrderingDatagrid from './column-ordering-datagrid.svelte';
-import { inventoryData as data } from '$lib/data/data-storage.svelte';
+	import {exports} from './exports.ts'
 </script>
 
 # {title}
 
-<ColumnOrderingDatagrid {data} />
+{description}
+
+## Example
+
+<exports.components.codePreview code={exports.datagrid.code} class="">
+	<exports.datagrid.component />
+</exports.components.codePreview> 
+
+## Key Points

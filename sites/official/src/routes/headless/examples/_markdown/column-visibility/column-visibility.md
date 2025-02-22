@@ -1,15 +1,20 @@
 ---
 title: Column visibility example
+description:
 ---
 
 <script>
-import ColumnVisibilityDatagrid from './column-visibility-datagrid.svelte';
-import { inventoryData as data } from '$lib/data/data-storage.svelte';
+	import {exports} from './exports.ts'
 </script>
 
 # {title}
 
-<ColumnVisibilityDatagrid {data} />
+{description}
 
+## Example
 
+<exports.components.codePreview code={exports.datagrid.code} class="">
+	<exports.datagrid.component />
+</exports.components.codePreview> 
 
+## Key Points

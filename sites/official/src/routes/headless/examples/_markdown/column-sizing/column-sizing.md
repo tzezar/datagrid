@@ -1,15 +1,20 @@
 ---
 title: Column sizing example
+description:
 ---
 
 <script>
-import ColumnSizingDatagrid from './column-sizing-datagrid.svelte';
-import { inventoryData as data } from '$lib/data/data-storage.svelte';
+	import {exports} from './exports.ts'
 </script>
 
 # {title}
 
-<ColumnSizingDatagrid {data} />
+{description}
 
+## Example
 
+<exports.components.codePreview code={exports.datagrid.code} class="">
+	<exports.datagrid.component />
+</exports.components.codePreview> 
 
+## Key Points
