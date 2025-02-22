@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { generateData } from '$lib/data-generators/generate-data';
-	import { generateInventoryItem, type InventoryItem } from '$lib/data-generators/generate/inventory.js';
-	import { inventoryData } from '$lib/data/data-storage.svelte';
+	import {
+		generateInventoryItem,
+		type InventoryItem
+	} from '$lib/data-generators/generate/inventory.js';
+	import { generateSimpleUser, type SimpleUser } from '$lib/data-generators/generate/simple-user';
+	import { generateUser, type User } from '$lib/data-generators/generate/user';
 	import type { EnhancedMeta } from '$lib/datagrid-enhanced';
 	import type { GridBasicRow, LeafColumn } from '$lib/datagrid/core/types';
-	import { isCellComponent } from '$lib/datagrid/core/utils.svelte';
 	import {
 		accessorColumn,
 		DatagridCore,
@@ -12,6 +15,7 @@
 		type ColumnDef
 	} from '$lib/datagrid/index.js';
 	import { cn } from '$lib/utils';
+	import { onMount } from 'svelte';
 	import Pagination from '../../_blocks/pagination.svelte';
 	import SortingIndicator from '../../_blocks/sorting-indicator.svelte';
 
@@ -22,7 +26,7 @@
 			accessorKey: 'id'
 		}),
 		accessorColumn({
-			accessorKey: 'name',
+			accessorKey: 'firstName',
 			_meta: {
 				grow: true
 			},
@@ -31,26 +35,76 @@
 			}
 		}),
 		accessorColumn({
-			accessorKey: 'category'
+			accessorKey: 'lastName'
 		}),
 		accessorColumn({
-			accessorKey: 'price.retail'
+			accessorKey: 'age'
 		}),
 		accessorColumn({
-			accessorKey: 'status'
+			accessorKey: 'email'
+		}),
+		accessorColumn({
+			accessorKey: 'country'
 		})
-	] satisfies ColumnDef<InventoryItem, EnhancedMeta>[];
+	] satisfies ColumnDef<SimpleUser, EnhancedMeta>[];
 
+	import { tick } from 'svelte';
+	import { writable } from 'svelte/store';
+
+	let test = writable<SimpleUser[]>([]);
+
+	const generateDataInBatches = (
+		generator: () => SimpleUser,
+		total: number,
+		batchSize: number,
+		callback: (batch: SimpleUser[]) => void
+	) => {
+		let generated = 0;
+
+		const generateBatch = () => {
+			if (generated >= total) return;
+
+			const batch = generateData(generator, batchSize);
+			callback(batch);
+			generated += batchSize;
+
+			setTimeout(generateBatch, 0); // Use setTimeout to prevent freezing
+		};
+
+		generateBatch();
+	};
+
+	onMount(async () => {
+		generateDataInBatches(generateSimpleUser, 1_000_000, 10_000, async (batch) => {
+			test.update((data) => [...data, ...batch]); // Store update for reactivity
+			await tick(); // Ensure DOM updates before continuing
+		});
+
+		let timeEnd = performance.now();
+	});
 
 	const datagrid = new DatagridCore({
 		columns,
-		data: generateData(generateInventoryItem, 100_000),
+		data: [],
 		initialState: {
 			pagination: {
 				pageSize: 1_000,
 				pageSizes: [1_000, 5_000, 10_000, 50_000, 100_000]
 			}
 		}
+	});
+
+	let counter = 1;
+	
+
+	test.subscribe((data) => {
+		counter += 1;
+		if (counter < 10) return;
+		datagrid.originalState.data = data;
+		datagrid.cacheManager.invalidate('everything');
+		datagrid.refresh(() => {}, { recalculateAll: true });
+
+		counter = 1;
 	});
 </script>
 
