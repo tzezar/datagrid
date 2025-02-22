@@ -1,6 +1,6 @@
 ---
 title: Row expanding
-description:
+description: Expand rows to display additional details or nested content within a table.
 ---
 
 <script>
