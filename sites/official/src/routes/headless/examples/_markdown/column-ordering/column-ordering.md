@@ -1,6 +1,6 @@
 ---
 title: Column ordering
-description: Example implmentation of column ordering feature
+description: Control column positions by enabling dynamic reordering within the table.
 ---
 
 <script>
