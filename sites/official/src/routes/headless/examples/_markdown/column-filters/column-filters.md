@@ -1,6 +1,6 @@
 ---
 title: Column filters
-description: 
+description: Implement column filtering to help users refine and sort data.
 ---
 
 <script>
