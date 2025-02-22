@@ -12,8 +12,6 @@
 	let schema = $derived($mode || 'dark');
 	import { Tabs } from 'bits-ui';
 	import { activeTab } from '$lib/state.svelte';
-
-	
 </script>
 
 <div class="flex h-full flex-col overflow-auto">
@@ -34,12 +32,11 @@
 						<span class="truncate font-semibold">Tzezar's</span>
 						<span class="truncate text-xs">
 							{#if activeTab.state === 'headless-core'}
-							Headless Datagrid
+								Headless Datagrid
 							{/if}
 							{#if activeTab.state === 'enhanced'}
-							Enhanced Datagrid with Shadcn Svelte
+								Enhanced Datagrid with Shadcn Svelte
 							{/if}
-
 						</span>
 					</div>
 				</a>
@@ -57,6 +54,7 @@
 				<NavFeatures items={navigationTree.navMain} />
 			</div>
 
+
 			<NavSecondary items={navigationTree.navSecondary} class="mt-auto p-2" />
 		</div>
 	{/if}
@@ -69,7 +67,7 @@
 		</div>
 	{/if}
 
-	<Tabs.Root class="" value={activeTab.state} onValueChange={(value) => activeTab.state = value}>
+	<Tabs.Root class="" value={activeTab.state} onValueChange={(value) => (activeTab.state = value)}>
 		<Tabs.List
 			class="  bg-background grid w-full grid-cols-2 gap-1 p-2 text-xs font-semibold leading-[0.01em] "
 		>

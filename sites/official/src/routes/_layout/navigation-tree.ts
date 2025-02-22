@@ -21,65 +21,52 @@ export const navigationTree = {
             url: '/headless/quick-start/getting-started',
         },
     ],
+
     navMain: [
-        // {
-        //     title: "Feature Guides",
-        //     url: "#",
-        //     items: [
-        //         {
-        //             title: 'Column Ordering',
-        //             url: '/headless/examples/code-block',
-        //         },
-        //         {
-        //             title: 'Column Pinning',
-        //             url: '/headless/examples/code-snippet',
-        //         },
-        //         {
-        //             title: 'Column Sizing',
-        //             url: '/headless/examples/copy-button',
-        //         },
-        //         {
-        //             title: 'Column Visibility',
-        //             url: '/headless/examples/file-dropzone',
-        //         },
-        //         {
-        //             title: 'Column Filtering',
-        //             url: '/headless/examples/link',
-        //         },
-        //         {
-        //             title: 'Global Search',
-        //             url: '/headless/examples/password-input',
-        //         },
-        //         {
-        //             title: 'Column Faceting',
-        //             url: '/headless/examples/scroll-progress-indicator',
-        //         },
-        //         {
-        //             title: 'Sorting',
-        //             url: '/headless/examples/transfer-list',
-        //         },
-        //         {
-        //             title: 'Grouping',
-        //             url: '/headless/examples/transfer-list',
-        //         },
-        //         {
-        //             title: 'Pagination',
-        //             url: '/headless/examples/transfer-list',
-        //         },
-        //         {
-        //             title: 'Virtualization',
-        //             url: '/headless/examples/transfer-list',
-        //         },
-        //         {
-        //             title: 'Row Pinning',
-        //             url: '/headless/examples/transfer-list',
-        //         },
-        //         {
-        //             title: 'Row Selection',
-        //             url: '/headless/examples/transfer-list',
-        //         }
-        //     ],
-        // },
+        {
+            title: "Guides",
+            url: "/headless/guides",
+            isActive: true,
+            items: [
+                {
+                    title: 'Features overview',
+                    url: '/headless/guides/feature-overview',
+                    disabled: true
+                },
+
+                {
+                    title: 'Column creation',
+                    url: '/headless/guides/column-creation',
+                    disabled: true
+                },
+                {
+                    title: 'Events',
+                    url: '/headless/guides/events',
+                    disabled: true
+                },
+                {
+                    title: 'Data caching',
+                    url: '/headless/guides/data-caching',
+                    disabled: true
+                },
+                {
+                    title: 'Lifecycle hooks',
+                    url: '/headless/guides/lifecycle-hooks',
+                    disabled: true
+                },
+
+                {
+                    title: 'Data flow',
+                    url: '/headless/guides/data-flow',
+                    disabled: true
+                },
+                {
+                    title: 'Controllers',
+                    url: '/headless/guides/controllers',
+                    disabled: true
+                },
+            ],
+        },
         {
             title: "Examples",
             url: "/headless/examples",

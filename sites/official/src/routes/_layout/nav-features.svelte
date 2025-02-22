@@ -15,6 +15,7 @@
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			icon?: any;
 			isActive?: boolean;
+			disabled?: boolean;
 			items?: {
 				title: string;
 				url: string;
@@ -67,10 +68,20 @@
 							{#if mainItem.items}
 								<Sidebar.MenuSub>
 									{#each mainItem.items as subItem (subItem.title)}
-										<Sidebar.MenuSubItem>
+										<Sidebar.MenuSubItem
+											data-disabled={subItem.disabled}
+											class={`
+												data-[disabled=true]:cursor-not-allowed
+												`}
+										>
 											<Sidebar.MenuSubButton
+												data-disabled={subItem.disabled}
 												isActive={subItem.url === $page.url.pathname}
-												class="data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
+												class="
+												data-[active=true]:bg-sidebar-accent
+												data-[active=true]:text-sidebar-accent-foreground
+												data-[disabled=true]:pointer-events-none 
+												data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-30"
 											>
 												{#snippet child({ props })}
 													<a href={subItem.url} {...props}>
