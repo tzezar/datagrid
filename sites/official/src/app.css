@@ -127,6 +127,7 @@
 }
 
 .markdown :is(code) {
+	@apply p-4;
 	/* @apply h-full rounded bg-muted px-2 py-1 font-mono text-sm text-foreground/100; */
 }
 

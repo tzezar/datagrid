@@ -3,7 +3,7 @@
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { ModeWatcher } from 'mode-watcher';
 	import '../app.css';
-	import { type Snippet } from 'svelte';
+	import { onMount, tick, type Snippet } from 'svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import LightSwitch from './_components/light-switch.svelte';
@@ -24,6 +24,11 @@
 				href: '/' + array.slice(0, index + 1).join('/')
 			}))
 	);
+
+	onMount(async () => {
+		await tick();
+		scrollTo(0, 0);
+	});
 </script>
 
 <Toaster richColors />
@@ -53,7 +58,7 @@
 {#snippet DesktopSidebar()}
 	<aside
 		id="desktop-nav"
-		class="md:w-[16rem] bg-sidebar text-sidebar-foreground hidden h-screen max-w-sm overflow-y-auto border-r md:block"
+		class="bg-sidebar text-sidebar-foreground hidden h-screen max-w-sm overflow-y-auto border-r md:block md:w-[16rem]"
 	>
 		<AppBarContent />
 	</aside>
