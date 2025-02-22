@@ -1,5 +1,7 @@
 import logger from '$lib/logger';
 
+export const prerender = 'auto';
+
 export async function handle({ event, resolve }) {
   const start = Date.now();
 
