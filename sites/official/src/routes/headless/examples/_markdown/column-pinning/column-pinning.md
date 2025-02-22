@@ -1,6 +1,6 @@
 ---
 title: Column pinning
-description: Example implementation of column pinning feature
+description: Pin columns to the left or right for improved data visibility while scrolling.
 ---
 
 <script>
