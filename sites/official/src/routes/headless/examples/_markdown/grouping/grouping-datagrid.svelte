@@ -97,6 +97,14 @@
 		</div>
 	</div>
 	<Pagination {datagrid} />
+
+	<pre>{JSON.stringify(
+		{
+			activeGroups: datagrid.features.grouping.activeGroups
+		},
+		null,
+		2
+	)}</pre>
 </div>
 
 {#snippet RenderBodyCell(column: LeafColumn<any>, row: GridBasicRow<any>)}
@@ -160,13 +168,7 @@
 	</div>
 {/snippet}
 
-<pre>{JSON.stringify(
-		{
-			activeGroups: datagrid.features.grouping.activeGroups
-		},
-		null,
-		2
-	)}</pre>
+
 
 {#snippet LeafHeader(column: LeafColumn<any>)}
 	{#if column.isVisible()}

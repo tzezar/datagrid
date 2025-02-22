@@ -1,6 +1,6 @@
 ---
-title: Grouping example
-description:
+title: Grouping data
+description: Organize and group data within your table for improved readability and structure.
 ---
 
 <script>

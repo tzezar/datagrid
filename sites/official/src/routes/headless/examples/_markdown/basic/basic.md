@@ -1,6 +1,6 @@
 ---
 title: Basic datagrid
-description: Most basic headless implementation
+description: Most basic headless implementation.
 ---
 
 <script>
