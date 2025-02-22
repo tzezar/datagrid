@@ -1,5 +1,4 @@
-import { generateData } from "$lib/data-generators/generate-data";
-import { generateInventoryItem } from "$lib/data-generators/generate/inventory";
+import { inventoryData } from "$lib/data/data-storage.svelte.js";
 
 // export const ssr = false;
 
@@ -8,7 +7,7 @@ export const load = async ({ url }) => {
 	const pageSize = Number(url.searchParams.get('pageSize') || 10);
 
 	// const totalInventory = inventoryData
-	const totalInventory = generateData(generateInventoryItem, 20_000);
+	const totalInventory = inventoryData
 	const startIndex = (page - 1) * pageSize;
 	const endIndex = startIndex + pageSize;
 
