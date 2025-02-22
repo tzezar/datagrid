@@ -93,51 +93,47 @@
 }
 
 .markdown {
-	@apply mx-auto flex h-full w-full max-w-4xl flex-col text-base md:px-5;
+	@apply mx-auto flex h-full w-full max-w-4xl flex-col text-base md:px-6 ;
 }
 
 .markdown > h1 {
-	@apply mb-6 mt-12 text-5xl font-extrabold leading-tight tracking-tight text-foreground;
+	@apply mb-6 mt-12 text-5xl font-extrabold leading-tight text-foreground/100;
 }
 
 .markdown > h2 {
-	@apply mb-4 mt-6 text-3xl font-bold leading-tight text-foreground;
+	@apply mb-5 mt-7 text-3xl font-semibold leading-tight text-foreground/90;
 }
 
 .markdown > h3 {
-	@apply mb-2 mt-3 text-2xl font-bold leading-tight text-foreground;
+	@apply mb-4 mt-6 text-2xl font-semibold leading-tight text-foreground/80;
 }
 
 .markdown > p {
-	@apply mb-1 text-lg leading-7 text-secondary-foreground/80;
+	@apply mb-4 mt-3 text-lg leading-7 text-foreground/70;
 }
 
-.markdown :not(::after(div)):is(pre) {
-	@apply my-6 overflow-x-auto rounded-md bg-gray-50 p-4 font-mono text-sm;
-}
-
-.markdown div:not(.not-prose):has(> pre) {
-	@apply my-6;
+.markdown :is(pre) {
+	@apply my-8 overflow-x-auto rounded-lg bg-muted p-5 font-mono text-sm text-foreground/80;
 }
 
 .markdown > code {
-	@apply rounded px-1.5 py-0.5 font-mono text-sm;
+	@apply rounded px-2 py-1 font-mono text-sm text-foreground/100 bg-muted;
 }
 
 .markdown :is(ul, ol) {
-	@apply mb-6 list-disc space-y-2 pl-6;
+	@apply my-5 list-disc space-y-4 pl-7;
 }
 
 .markdown :is(li) {
-	@apply text-lg leading-7;
+	@apply leading-7;
 }
 
 .markdown :is(blockquote) {
-	@apply my-8 border-l-4 border-gray-300 py-2 pb-0 pl-5 text-xl italic text-gray-600;
+	@apply my-8 border-l-4 border-muted/30 py-3 pl-6 text-xl italic text-foreground/60;
 }
 
 .markdown :not(::after(div)):is(img) {
-	@apply my-8 h-auto max-w-full rounded-lg;
+	@apply my-8 h-auto max-w-full rounded-lg shadow-lg;
 }
 
 .markdown :is(table) {
@@ -145,12 +141,13 @@
 }
 
 .markdown :is(th, td) {
-	@apply p-3;
+	@apply p-4 text-sm border-b border-muted/30 text-foreground/100;
 }
 
-.markdown :not(::after(div)):is(a) {
-	@apply text-orange-400 underline;
+.markdown :is(a) {
+	@apply text-foreground/80 underline hover:text-foreground/90;
 }
+
 
 
 @layer components {
