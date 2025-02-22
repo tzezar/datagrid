@@ -93,7 +93,7 @@
 }
 
 .markdown {
-	@apply mx-auto flex h-full w-full max-w-4xl flex-col text-base md:px-6 ;
+	@apply mx-auto flex h-full w-full max-w-4xl flex-col text-base md:px-6;
 }
 
 .markdown > h1 {
@@ -113,11 +113,17 @@
 }
 
 .markdown :is(pre) {
-	@apply my-8 overflow-x-auto rounded-lg bg-muted p-5 font-mono text-sm text-foreground/80;
+	/* @apply my-8 overflow-auto rounded-lg bg-muted p-5 font-mono text-sm text-foreground/80; */
+	@apply p-4 rounded-lg
 }
 
-.markdown > code {
-	@apply rounded px-2 py-1 font-mono text-sm text-foreground/100 bg-muted;
+.markdown :is(pre) > code {
+	/* TODO: overflow does not look good */
+	@apply flex flex-col overflow-auto;
+}
+
+.markdown :is(code) {
+	/* @apply h-full rounded bg-muted px-2 py-1 font-mono text-sm text-foreground/100; */
 }
 
 .markdown :is(ul, ol) {
@@ -141,14 +147,12 @@
 }
 
 .markdown :is(th, td) {
-	@apply p-4 text-sm border-b border-muted/30 text-foreground/100;
+	@apply border-b border-muted/30 p-4 text-sm text-foreground/100;
 }
 
 .markdown :is(a) {
 	@apply text-foreground/80 underline hover:text-foreground/90;
 }
-
-
 
 @layer components {
 	.grid-body-overlay {
