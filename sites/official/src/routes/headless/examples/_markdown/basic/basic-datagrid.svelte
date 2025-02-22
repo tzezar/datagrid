@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory.js';
+	import { inventoryData as data } from '$lib/data/data-storage.svelte';
+
 	import {
 		accessorColumn,
 		DatagridCore,
@@ -19,14 +21,27 @@
 		}),
 		accessorColumn({
 			accessorKey: 'price.retail'
+		}),
+		accessorColumn({
+			accessorKey: 'price.retail'
+		}),
+		accessorColumn({
+			accessorKey: 'price.retail'
+		}),
+		accessorColumn({
+			accessorKey: 'price.retail'
+		}),
+		accessorColumn({
+			accessorKey: 'price.retail'
+		}),
+		accessorColumn({
+			accessorKey: 'price.retail'
 		})
 	] satisfies ColumnDef<InventoryItem>[];
 
-	let { data }: { data: InventoryItem[] } = $props();
-
 	const datagrid = new DatagridCore({
 		columns,
-		data
+		data: data.slice(0, 50)
 	});
 </script>
 
@@ -84,8 +99,6 @@
 	.wrapper,
 	.th,
 	.td {
-		/* margin: -1px; */
-		/* border: 1px solid hsl(var(--border)); */
 		background: hsl(var(--background));
 		box-shadow: 0 0 0 1px hsl(var(--border));
 	}
