@@ -68,26 +68,27 @@
 
 </script>
 
-<div class="flex gap-4">
-	<label>
-		<input
-			type="checkbox"
-			checked={columnResizeMode === 'fluid'}
-			onchange={() => (columnResizeMode = 'fluid')}
-		/>
-		Fluid (resize on drag)
-	</label>
 
-	<label>
-		<input
-			type="checkbox"
-			checked={columnResizeMode === 'standard'}
-			onchange={() => (columnResizeMode = 'standard')}
-		/>
-		Standard (resize on end)
-	</label>
-</div>
-<div>
+<div class="flex w-full flex-col">
+	<div class="flex gap-4">
+		<label>
+			<input
+				type="checkbox"
+				checked={columnResizeMode === 'fluid'}
+				onchange={() => (columnResizeMode = 'fluid')}
+			/>
+			Fluid (resize on drag)
+		</label>
+	
+		<label>
+			<input
+				type="checkbox"
+				checked={columnResizeMode === 'standard'}
+				onchange={() => (columnResizeMode = 'standard')}
+			/>
+			Standard (resize on end)
+		</label>
+	</div>
 	<div class="wrapper">
 		<div class="table">
 			<div class="thead">
@@ -121,9 +122,9 @@
 		</div>
 	</div>
 	<Pagination {datagrid} />
-</div>
 
-{@html html}
+	{@html html}
+</div>
 
 {#snippet LeafHeader(column: LeafColumn<any>)}
 	<div
