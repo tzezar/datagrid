@@ -93,7 +93,7 @@
 }
 
 .markdown {
-	@apply mx-auto flex h-full w-full max-w-4xl flex-col text-base md:px-6;
+	@apply mx-auto flex flex-col  w-full max-w-4xl mb-8 text-base md:px-6;
 }
 
 .markdown > h1 {
