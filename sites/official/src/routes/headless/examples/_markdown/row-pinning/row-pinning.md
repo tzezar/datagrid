@@ -1,6 +1,6 @@
 ---
 title: Row pinning
-description:
+description: Pin rows to the top or bottom of the table for improved visibility while scrolling.
 ---
 
 <script>
