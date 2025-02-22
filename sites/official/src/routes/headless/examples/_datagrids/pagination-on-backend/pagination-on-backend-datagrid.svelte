@@ -4,6 +4,7 @@
 	import type { EnhancedMeta } from '$lib/datagrid-enhanced';
 	import type { LeafColumn, GridBasicRow } from '$lib/datagrid/core/types';
 	import { page } from '$app/stores';
+	import './styles.css'
 
 	import {
 		accessorColumn,
@@ -21,7 +22,7 @@
 			_meta: { grow: true }
 		}),
 		accessorColumn({ accessorKey: 'category' }),
-		accessorColumn({ accessorKey: 'price' }),
+		accessorColumn({ accessorKey: 'price.retail' }),
 		accessorColumn({ accessorKey: 'status' })
 	] satisfies ColumnDef<InventoryItem, EnhancedMeta>[];
 
@@ -91,7 +92,7 @@
 	const handlePageSizeChange = (newPageSize: number) => handlePaginationChange(1, newPageSize);
 </script>
 
-<div>
+<div class="flex w-full flex-col">
 	<div class="wrapper">
 		<!-- Table rendering remains similar to previous implementation -->
 		<div class="table">
@@ -170,17 +171,18 @@
 			of {data.totalCount} rows
 		</div>
 	</div>
+
+	<pre>{JSON.stringify(
+			{
+				page: datagrid.features.pagination.page,
+				pageSize: datagrid.features.pagination.pageSize,
+				pageSizes: datagrid.features.pagination.pageSizes,
+				pageCount: datagrid.features.pagination.pageCount
+			},
+			null,
+			2
+		)}</pre>
 </div>
-<pre>{JSON.stringify(
-	{
-		page: datagrid.features.pagination.page,
-		pageSize: datagrid.features.pagination.pageSize,
-		pageSizes: datagrid.features.pagination.pageSizes,
-		pageCount: datagrid.features.pagination.pageCount
-	},
-	null,
-	2
-)}</pre>
 
 {#snippet RenderBodyCell(column: LeafColumn<any>, row: GridBasicRow<any>)}
 	<div
@@ -208,61 +210,3 @@
 	{/if}
 {/snippet}
 
-<style lang="postcss">
-	.group-row-cell {
-		width: var(--width);
-		min-width: var(--min-width);
-		max-width: var(--max-width);
-		background: hsl(var(--background));
-		box-shadow: 0 0 0 1px hsl(var(--border));
-	}
-
-	.th,
-	.td {
-		width: var(--width);
-		min-width: var(--min-width);
-		max-width: var(--max-width);
-	}
-
-	.wrapper {
-		@apply max-h-[600px] overflow-auto;
-	}
-	.tr {
-		@apply flex;
-	}
-	.thead {
-		@apply sticky top-0 bg-background;
-	}
-
-	.table {
-		@apply w-full;
-	}
-	.th {
-	}
-	.td {
-		@apply overflow-hidden text-ellipsis text-nowrap px-4 py-1 align-top;
-	}
-
-	.wrapper,
-	.th,
-	.td {
-		background: hsl(var(--background));
-		box-shadow: 0 0 0 1px hsl(var(--border));
-	}
-
-	.pagination-controls {
-		@apply flex flex-col items-center gap-4 border border-border p-2 sm:flex-row;
-	}
-
-	.page-size-selector select {
-		@apply h-10 w-full max-w-[150px] border bg-background px-2 py-2;
-	}
-
-	.pagination-navigation button {
-		@apply h-10 border p-1 px-3 disabled:opacity-50;
-	}
-
-	.page-indicator {
-		@apply border p-2;
-	}
-</style>

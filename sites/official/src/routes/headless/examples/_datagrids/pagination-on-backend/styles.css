@@ -1,0 +1,56 @@
+.group-row-cell {
+    width: var(--width);
+    min-width: var(--min-width);
+    max-width: var(--max-width);
+    background: hsl(var(--background));
+    box-shadow: 0 0 0 1px hsl(var(--border));
+}
+
+.th,
+.td {
+    width: var(--width);
+    min-width: var(--min-width);
+    max-width: var(--max-width);
+}
+
+.wrapper {
+    @apply max-h-[600px] overflow-auto;
+}
+.tr {
+    @apply flex;
+}
+.thead {
+    @apply bg-background sticky top-0;
+}
+
+.table {
+    @apply w-full;
+}
+.th {
+}
+.td {
+    @apply overflow-hidden text-ellipsis text-nowrap px-4 py-1 align-top;
+}
+
+.wrapper,
+.th,
+.td {
+    background: hsl(var(--background));
+    box-shadow: 0 0 0 1px hsl(var(--border));
+}
+
+.pagination-controls {
+    @apply border-border flex flex-col items-center gap-4 border p-2 sm:flex-row;
+}
+
+.page-size-selector select {
+    @apply bg-background h-10 w-full max-w-[150px] border px-2 py-2;
+}
+
+.pagination-navigation button {
+    @apply h-10 border p-1 px-3 disabled:opacity-50;
+}
+
+.page-indicator {
+    @apply border p-2;
+}
