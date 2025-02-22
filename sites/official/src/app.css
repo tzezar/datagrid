@@ -93,35 +93,39 @@
 }
 
 .markdown {
-	@apply mx-auto max-w-2xl px-5 text-base;
+	@apply mx-auto flex h-full w-full max-w-4xl flex-col text-base md:px-5;
 }
 
-.markdown :is(h1) {
-	@apply mb-8 mt-12 text-5xl font-extrabold leading-tight tracking-tight text-foreground;
+.markdown > h1 {
+	@apply mb-6 mt-12 text-5xl font-extrabold leading-tight tracking-tight text-foreground;
 }
 
-.markdown :is(h2) {
-	@apply mb-6 mt-10 text-3xl font-bold leading-tight text-foreground;
+.markdown > h2 {
+	@apply mb-4 mt-6 text-3xl font-bold leading-tight text-foreground;
 }
 
-.markdown :is(h3) {
-	@apply mb-4 mt-8 text-2xl font-bold leading-tight text-foreground;
+.markdown > h3 {
+	@apply mb-2 mt-3 text-2xl font-bold leading-tight text-foreground;
 }
 
-.markdown :is(p) {
-	@apply mb-6 text-lg leading-7 text-secondary-foreground/80;
+.markdown > p {
+	@apply mb-1 text-lg leading-7 text-secondary-foreground/80;
 }
 
-.markdown :is(pre) {
+.markdown :not(::after(div)):is(pre) {
 	@apply my-6 overflow-x-auto rounded-md bg-gray-50 p-4 font-mono text-sm;
 }
 
-.markdown :is(code) {
+.markdown div:not(.not-prose):has(> pre) {
+	@apply my-6;
+}
+
+.markdown > code {
 	@apply rounded px-1.5 py-0.5 font-mono text-sm;
 }
 
 .markdown :is(ul, ol) {
-	@apply mb-6 space-y-2 pl-6 list-disc;
+	@apply mb-6 list-disc space-y-2 pl-6;
 }
 
 .markdown :is(li) {
@@ -129,10 +133,10 @@
 }
 
 .markdown :is(blockquote) {
-	@apply my-8  pb-0 border-l-4 border-gray-300 py-2 pl-5 text-xl italic text-gray-600;
+	@apply my-8 border-l-4 border-gray-300 py-2 pb-0 pl-5 text-xl italic text-gray-600;
 }
 
-.markdown :is(img) {
+.markdown :not(::after(div)):is(img) {
 	@apply my-8 h-auto max-w-full rounded-lg;
 }
 
@@ -144,8 +148,8 @@
 	@apply p-3;
 }
 
-.markdown :is(a) {
-	@apply underline text-orange-400;
+.markdown :not(::after(div)):is(a) {
+	@apply text-orange-400 underline;
 }
 
 
