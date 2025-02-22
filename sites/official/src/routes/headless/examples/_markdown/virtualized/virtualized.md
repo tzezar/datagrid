@@ -1,6 +1,6 @@
 ---
 title: Virtualized
-description:
+description: Optimize table performance by rendering only visible rows for large datasets.
 ---
 
 <script>
