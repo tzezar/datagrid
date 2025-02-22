@@ -8,9 +8,6 @@
 	<meta property="og:title" content={data.meta.title} />
 </svelte:head>
 
-<article>
-	<div class="markdown">
-		<data.content />
-	</div>
-</article>
-
+<div class="markdown">
+	<data.content />
+</div>
