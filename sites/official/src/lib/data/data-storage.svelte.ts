@@ -12,3 +12,5 @@ export const recipeData = $state(generateData(generateRecipe, 1000))
 export const solarSystemData = $state(generateData(generateSolarSystem, 1000))
 export const userData = $state(generateData(generateUser, 1000))
 export const videoGameData = $state(generateData(generateVideoGame, 1000))
+
+
