@@ -36,6 +36,8 @@ description:
 
 	`datagrid` does not enforce a specific way to determine which filters to render.  
 	For example, you can use the `_meta` field like this:  
+	
+	<br/>
 
 	```ts
 	_meta: {
@@ -43,11 +45,15 @@ description:
 	}
 	```
 
-	This is just an example—you can use any structure that suits your needs.
-
 	<br/>
 
-	Additionally, for filter dropdowns, you can define `filterOptions` like this (again, this is just suggestion):
+	This is just an example—you can use any structure that suits your needs.
+
+5.	**Passing Options For Select**:
+
+	I found it easy to pass options in this way, again it's up to you.
+
+	<br/>
 
 	```ts
 	filterOptions: [
@@ -56,6 +62,5 @@ description:
 	]
 	```
 
-	This provides selectable filter options.
 
 
