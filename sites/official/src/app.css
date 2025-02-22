@@ -112,7 +112,11 @@
 	@apply mb-4 mt-3 text-lg leading-7 text-foreground/70;
 }
 
-.markdown :is(pre) {
+.markdown :is(p) > code {
+	@apply font-semibold italic underline;
+}
+
+.markdown :not(::after(div.not-prose)):is(pre) {
 	/* @apply my-8 overflow-auto rounded-lg bg-muted p-5 font-mono text-sm text-foreground/80; */
 	@apply p-4 rounded-lg
 }
