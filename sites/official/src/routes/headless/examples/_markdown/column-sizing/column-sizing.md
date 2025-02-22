@@ -1,6 +1,6 @@
 ---
-title: Column sizing example
-description:
+title: Column sizing
+description: Enable dynamic resizing of columns for a customizable table layout.
 ---
 
 <script>
