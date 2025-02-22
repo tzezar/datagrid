@@ -1,6 +1,6 @@
 ---
 title: Faceted column filters
-description: 
+description: Calculate facets to generate dynamic filter values for columns.
 ---
 
 <script>
