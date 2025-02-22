@@ -1,6 +1,6 @@
 ---
-title: Column pinning detached example
-description:
+title: Column pinning detached
+description: Example demonstrating column pinning with detached functionality for flexible table layouts.
 ---
 
 <script>
