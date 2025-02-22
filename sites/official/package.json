@@ -62,6 +62,7 @@
 		"zod": "^3.24.2"
 	},
 	"dependencies": {
+		"escape-html": "^1.0.3",
 		"fast-sort": "^3.4.1",
 		"fast-xml-parser": "^4.5.1",
 		"fuse.js": "^7.1.0",

@@ -82,13 +82,10 @@
 			}) ?? code
 		)
 	);
-
-	onMount(() => {
-		highlighter.then((core) => (highlighterCore = core));
-	});
+	highlighter.then((core) => (highlighterCore = core));
 </script>
 
-<div class={cn(codeBlockVariants({ variant }), _class, 'flex flex-col h-fit')}>
+<div class={cn(codeBlockVariants({ variant }), _class, 'flex h-fit flex-col')}>
 	{@html highlightedCode}
 	{#if !hideCopyButton}
 		<div

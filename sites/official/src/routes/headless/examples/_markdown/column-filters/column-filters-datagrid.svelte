@@ -1,14 +1,22 @@
 <script lang="ts">
+	// Data
+	import { inventoryData as data } from '$lib/data/data-storage.svelte';
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory.js';
-	import type { EnhancedMeta } from '$lib/datagrid-enhanced';
+
+	// Datagrid
 	import type { LeafColumn } from '$lib/datagrid/core/types';
+	import type { EnhancedMeta } from '$lib/datagrid-enhanced';
 	import {
 		accessorColumn,
 		DatagridCore,
 		getCellContent,
 		type ColumnDef
 	} from '$lib/datagrid/index.js';
+
+	// Utils
 	import { cn } from '$lib/utils';
+
+	// Blocks
 	import ColumnFiltersInput from '../../_blocks/column-filters-input.svelte';
 	import Pagination from '../../_blocks/pagination.svelte';
 
@@ -53,15 +61,13 @@
 		})
 	] satisfies ColumnDef<InventoryItem, EnhancedMeta>[];
 
-	let { data }: { data: InventoryItem[] } = $props();
-
 	const datagrid = new DatagridCore({
 		columns,
-		data
+		data: data.slice(0, 50)
 	});
 </script>
 
-<div>
+<div class="flex w-full flex-col">
 	<div class="wrapper">
 		<div class="table">
 			<div class="thead">
@@ -90,7 +96,7 @@
 </div>
 
 {#snippet LeafHeader(column: LeafColumn<any>)}
-	<div class={cn('th  min-w-40 max-w-40  gap-2 px-4 py-2', column._meta.grow && '!grow')}>
+	<div class={cn('th min-w-40 max-w-40  gap-2 px-4 py-2', column._meta.grow && '!grow')}>
 		<div class="pb-2">{column.header}</div>
 
 		{#if column.options.filterable}

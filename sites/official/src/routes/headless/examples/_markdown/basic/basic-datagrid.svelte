@@ -21,21 +21,6 @@
 		}),
 		accessorColumn({
 			accessorKey: 'price.retail'
-		}),
-		accessorColumn({
-			accessorKey: 'price.retail'
-		}),
-		accessorColumn({
-			accessorKey: 'price.retail'
-		}),
-		accessorColumn({
-			accessorKey: 'price.retail'
-		}),
-		accessorColumn({
-			accessorKey: 'price.retail'
-		}),
-		accessorColumn({
-			accessorKey: 'price.retail'
 		})
 	] satisfies ColumnDef<InventoryItem>[];
 
