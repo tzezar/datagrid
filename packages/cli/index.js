@@ -269,7 +269,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const installCoreDependencies = async () => {
-  const dependencies = ['fast-sort', 'papaparse', 'xlsx', 'fast-xml-parser'];
+  const dependencies = ['fast-sort', 'papaparse', 'xlsx', 'fast-xml-parser', 'fuse.js'];
   for (const dep of dependencies) {
     try {
       await execa('npm', ['install', dep, '--force']);
