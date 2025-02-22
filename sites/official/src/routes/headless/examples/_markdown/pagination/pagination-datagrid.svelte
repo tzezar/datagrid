@@ -105,18 +105,18 @@
 			of {(datagrid.cacheManager.rows || []).length} rows
 		</div>
 	</div>
-</div>
 
-<pre>{JSON.stringify(
-		{
-			page: datagrid.features.pagination.page,
-			pageSize: datagrid.features.pagination.pageSize,
-			pageSizes: datagrid.features.pagination.pageSizes,
-			pageCount: datagrid.features.pagination.pageCount
-		},
-		null,
-		2
-	)}</pre>
+	<pre>{JSON.stringify(
+			{
+				page: datagrid.features.pagination.page,
+				pageSize: datagrid.features.pagination.pageSize,
+				pageSizes: datagrid.features.pagination.pageSizes,
+				pageCount: datagrid.features.pagination.pageCount
+			},
+			null,
+			2
+		)}</pre>
+</div>
 
 {#snippet RenderBodyCell(column: LeafColumn<any>, row: GridBasicRow<any>)}
 	<div

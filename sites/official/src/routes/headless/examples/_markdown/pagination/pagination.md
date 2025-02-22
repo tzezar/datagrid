@@ -1,6 +1,6 @@
 ---
 title: Pagination
-description:
+description: Break large datasets into manageable pages for improved navigation and performance.
 ---
 
 <script>
