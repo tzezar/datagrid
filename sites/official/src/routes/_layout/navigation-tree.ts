@@ -40,14 +40,12 @@ export const navigationTree = {
                     disabled: true
                 },
                 {
-                    title: 'Events',
-                    url: '/headless/guides/events',
-                    disabled: true
+                    title: 'Reacting to events',
+                    url: '/headless/guides/reacting-to-events',
                 },
                 {
-                    title: 'Data caching',
-                    url: '/headless/guides/data-caching',
-                    disabled: true
+                    title: 'Cache manager',
+                    url: '/headless/guides/cache-manager',
                 },
                 {
                     title: 'Lifecycle hooks',
