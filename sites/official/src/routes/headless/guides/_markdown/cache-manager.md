@@ -28,7 +28,7 @@ The following caches are maintained to optimize performance:
 
 <exports.components.codeBlock lang='ts' code={exports.code.dataCaching1} />
 
-## Usefull method
+## Usefull Method
 
 ### `invalidate(target: TargetType)`
 
