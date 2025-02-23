@@ -30,6 +30,16 @@
 			sorting: {
 				sortConfigs: [{ columnId: 'name', direction: 'ascending' }]
 			}
+		},
+
+		default: {
+			column: {
+				size: {
+					width: 1000,
+					minWidth: 1000,
+					maxWidth: 1000
+				}
+			}
 		}
 	});
 

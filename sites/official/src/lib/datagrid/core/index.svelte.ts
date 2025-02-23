@@ -1,4 +1,4 @@
-import type { ColumnDef, ColumnId, DatagridCoreConfig, GridBasicRow, GridRow, GridRowIdentifier, ColumnGroup, LeafColumn } from "./types";
+import type { ColumnDef, ColumnId, DatagridCoreConfig, GridBasicRow, GridRow, GridRowIdentifier, ColumnGroup, LeafColumn, DefaultColumnConfig } from "./types";
 import { PerformanceMetrics } from "./helpers/performance-metrics.svelte";
 import { DataProcessor, ColumnProcessor } from "./processors";
 import { DatagridCacheManager } from "./managers";
@@ -8,6 +8,7 @@ import { HandlersManager } from "./managers/handler-manager";
 import { EventService } from "./services/event-service";
 import { isGroupColumn } from "./helpers/column-guards";
 import { flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups } from "./utils.svelte";
+import { DEFAULT_COLUMN_SIZE } from "./defaults";
 
 /**
  * Core class for managing the datagrid, handling state, events, processing, and features.
@@ -141,7 +142,7 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
         // This has to run in this order, otherwise the datagrid will not be initialized properly
         // * Features have to be initialized first to prevent issues such as pagination updates failing
 
-        this.initializeSourceColumns(config.columns);
+        this.initializeSourceColumns(config.columns, config.default?.column);
         this.initializeSourceData(config.data);
 
         this._columns = this.processors.column.initializeColumns(this.originalState.columns);
@@ -153,8 +154,24 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
      * Initializes the source columns.
      * @param columns - The column definitions.
      */
-    private initializeSourceColumns(columns: ColumnDef<TOriginalRow>[]) {
-        columns = this.lifecycleHooks.executePreProcessOriginalColumns(this.processors.column.assignParentColumnIds(columns));
+    private initializeSourceColumns(columns: ColumnDef<TOriginalRow>[], config?: DefaultColumnConfig) {
+        // we assign parent columnIds first to allow flattening to work properly
+        const flattenedColumns = flattenColumnStructureAndClearGroups(
+            this.processors.column.assignParentColumnIds(columns)
+        );
+        
+        const columnsWithSizes = this.processors.column.applyDefaultColumnSizes(
+            flattenedColumns, 
+            config
+        );
+        
+        const columnHierarchy = this.processors.column.createColumnHierarchy(
+            columnsWithSizes
+        );
+        
+        columns = this.lifecycleHooks.executePreProcessOriginalColumns(
+            columnHierarchy
+        );
         this.originalState.columns = columns;
         this.originalState.columns = this.lifecycleHooks.executePostProcessOriginalColumns(this.originalState.columns);
     }

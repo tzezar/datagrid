@@ -1,8 +1,9 @@
 import { isGroupColumn } from "../helpers/column-guards";
-import type { ColumnDef, ColumnGroup } from "../types";
+import type { ColumnDef, ColumnGroup, DefaultColumnConfig } from "../types";
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 import { flattenColumnStructureAndClearGroups } from "../utils.svelte";
+import { DEFAULT_COLUMN_SIZE } from "../defaults";
 
 /**
  * A class responsible for processing and managing columns in a datagrid.
@@ -250,5 +251,24 @@ export class ColumnProcessor<TOriginalRow> {
         });
 
         return rows;
+    }
+
+    /**
+     * Applies default size constraints to columns where not explicitly set.
+     * @param columns - The list of columns to process.
+     * @param config - Default column configuration.
+     * @returns The updated columns with applied size constraints.
+    */
+    applyDefaultColumnSizes(
+        columns: ColumnDef<TOriginalRow>[],
+        config?: DefaultColumnConfig
+    ): ColumnDef<TOriginalRow>[] {
+        return columns.map(col => {
+            if (col.state.size.width === -1) col.state.size.width = config?.size?.width ?? DEFAULT_COLUMN_SIZE.width
+            if (col.state.size.minWidth === -1) col.state.size.minWidth = config?.size?.minWidth ?? DEFAULT_COLUMN_SIZE.minWidth
+            if (col.state.size.maxWidth === -1) col.state.size.maxWidth = config?.size?.maxWidth ?? DEFAULT_COLUMN_SIZE.maxWidth
+
+            return col;
+        });
     }
 }
