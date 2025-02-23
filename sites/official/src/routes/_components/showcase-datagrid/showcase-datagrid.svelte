@@ -35,17 +35,13 @@
 		default: {
 			column: {
 				size: {
-					width: 1000,
-					minWidth: 1000,
-					maxWidth: 1000
+					width: 100,
+					minWidth: 40,
+					maxWidth: 500
 				}
 			}
 		}
 	});
-
-    $effect(() => {
-        console.log($state.snapshot(datagrid.features.columnFaceting.getAllCategoricalFacets()))
-    })
 
 </script>
 <Grid.Component {datagrid}>

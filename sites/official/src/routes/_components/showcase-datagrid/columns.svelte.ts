@@ -15,7 +15,7 @@ import type { EnhancedDatagrid } from "$lib/datagrid-enhanced/core/index.svelte"
 export const columns = [
     accessorColumn({
         accessorKey: 'id',
-        align: 'left',
+        align: 'center',
         state: {
             pinning: {
                 position: 'left'
@@ -42,7 +42,7 @@ export const columns = [
 
 
     columnGroup({
-        header: "Grupa",
+        header: "Inventory",
         columns: [
             columnGroup({
                 header: 'Product',
@@ -50,6 +50,11 @@ export const columns = [
                     accessorColumn({
                         accessorKey: 'name',
                         state: {
+                            size: {
+                                width: 240,
+                                minWidth: 40,
+                                maxWidth: 500
+                            },
                             pinning: {
                                 // position: 'left'
                             },
@@ -61,8 +66,15 @@ export const columns = [
                         }
                     }),
                     accessorColumn({
-                        columnId: 'category',
+                        columnId: 'Category',
                         accessorKey: 'category',
+                        state: {
+                            size: {
+                                width: 120,
+                                minWidth: 40,
+                                maxWidth: 500
+                            }
+                        },
                         options: {
                             calculateFacets: true
                         },
@@ -81,6 +93,7 @@ export const columns = [
                 header: 'Stock',
                 columns: [
                     accessorColumn({
+                        header: 'On Hand',
                         accessorKey: 'inventory.quantity',
                         aggregate: 'sum',
                         align: 'right',
@@ -96,21 +109,31 @@ export const columns = [
                         }
                     }),
                     accessorColumn({
+                        header: 'Min Stock',
                         accessorKey: 'inventory.minStockLevel',
                         aggregate: 'sum',
                         align: 'right'
                     }),
                     accessorColumn({
+                        header: 'Max Stock',
                         accessorKey: 'inventory.maxStockLevel',
                         aggregate: 'sum',
                         align: 'right'
                     }),
                     accessorColumn({
+                        header: 'Location',
                         accessorKey: 'inventory.location',
                         align: 'right',
                     }),
                     accessorColumn({
                         accessorKey: 'metadata.barcode',
+                        state: {
+                            size: {
+                                width: 130,
+                                minWidth: 40,
+                                maxWidth: 500
+                            }
+                        },
                     }),
 
                 ]
@@ -126,30 +149,23 @@ export const columns = [
                 accessorKey: 'price.retail',
                 formatterFn: (row) => row.price.retail + " $",
                 align: 'right',
-                state: {
-                    size: {
-                        minWidth: 150,
-                        maxWidth: 150,
-                        width: 150
-                    }
-                },
+
                 _meta: {
                     filterType: 'number',
                 }
             }),
             accessorColumn({
-                header: 'Wholesale',
+                header: 'Wholesale Price',
                 accessorKey: 'price.wholesale',
                 formatterFn: (row) => row.price.wholesale + " $",
                 align: 'right',
                 state: {
                     size: {
-                        minWidth: 150,
-                        maxWidth: 150,
-                        width: 150
+                        width: 120,
+                        minWidth: 40,
+                        maxWidth: 500
                     }
-                },
-                _meta: {
+                },_meta: {
                     filterType: 'number',
                 }
             }),
@@ -157,13 +173,6 @@ export const columns = [
                 header: 'Currency',
                 accessorKey: 'price.currency',
                 align: 'right',
-                state: {
-                    size: {
-                        minWidth: 150,
-                        maxWidth: 150,
-                        width: 150
-                    }
-                },
                 _meta: {
                     filterType: 'number',
                 }
@@ -174,7 +183,7 @@ export const columns = [
 
 
     accessorColumn({
-        header: 'Next Restock Date',
+        header: 'Restock',
         accessorKey: 'restockInfo.nextRestockDate',
         getValueFn: (row) => new Date(String(row.restockInfo.nextRestockDate)).toLocaleDateString(),
         options: { sortable: true },
@@ -194,6 +203,7 @@ export const columns = [
             calculateFacets: true,
         },
         _meta: {
+            grow: true,
             filterType: 'select',
 
         }

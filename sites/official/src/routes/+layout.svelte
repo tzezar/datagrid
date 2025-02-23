@@ -39,7 +39,7 @@
 	{@render DesktopSidebar()}
 	<div class="flex h-screen flex-1 flex-col overflow-hidden">
 		<!-- Main Content (scrollable) -->
-		<header class="bg-background sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b">
+		<header class="bg-background sticky top-0 z-20 flex h-16 shrink-0 items-center gap-2 border-b">
 			<div class="z-[100] flex items-center gap-2 px-4">
 				<AppBarMobile />
 				<Separator orientation="vertical" class="mr-2 h-4" />
