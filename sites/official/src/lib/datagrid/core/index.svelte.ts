@@ -8,7 +8,6 @@ import { HandlersManager } from "./managers/handler-manager";
 import { EventService } from "./services/event-service";
 import { isGroupColumn } from "./helpers/column-guards";
 import { flattenColumnStructureAndClearGroups, flattenColumnStructurePreservingGroups } from "./utils.svelte";
-import { DEFAULT_COLUMN_SIZE } from "./defaults";
 
 /**
  * Core class for managing the datagrid, handling state, events, processing, and features.
