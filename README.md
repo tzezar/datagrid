@@ -2,7 +2,7 @@
 
 Headless Core & Enhanced component made with [shadcn-svelte](https://next.shadcn-svelte.com/)
 
-![image](https://github.com/user-attachments/assets/3aef0878-0c9c-402b-aca1-99da79548f47)
+![datagrid-horizontal](https://github.com/user-attachments/assets/1388e9c8-b284-4d25-afab-68edbb5c2c6e)
 
 ### Complete Control
 
