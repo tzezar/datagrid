@@ -85,7 +85,7 @@ export class DatagridCore<TOriginalRow = any, TMeta = any> {
      * @param row - The row data.
      * @returns The unique identifier for the row.
      */
-    rowIdGetter: (row: TOriginalRow) => GridRowIdentifier = (row: TOriginalRow) => (row as any).id;
+    rowIdGetter: (row: TOriginalRow) => GridRowIdentifier = (row: TOriginalRow) => (row as TOriginalRow & {id: string}).id;
 
     /**
      * Function to retrieve the row index.
