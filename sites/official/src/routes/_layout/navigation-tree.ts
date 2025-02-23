@@ -1,4 +1,4 @@
-import { Github, HandHeart, HelpCircle, HelpingHand } from "lucide-svelte";
+import { Github, HandHeart, } from "lucide-svelte";
 
 export const navigationTree = {
     user: {
@@ -43,23 +43,22 @@ export const navigationTree = {
                     title: 'Reacting to events',
                     url: '/headless/guides/reacting-to-events',
                 },
+              
+                {
+                    title: 'Lifecycle hooks',
+                    url: '/headless/guides/lifecycle-hooks',
+                },
+                {
+                    title: 'Handlers / Controllers',
+                    url: '/headless/guides/handlers-controllers',
+                },
                 {
                     title: 'Cache manager',
                     url: '/headless/guides/cache-manager',
                 },
                 {
-                    title: 'Lifecycle hooks',
-                    url: '/headless/guides/lifecycle-hooks',
-                },
-
-                {
                     title: 'Data flow',
                     url: '/headless/guides/data-flow',
-                    disabled: true
-                },
-                {
-                    title: 'Controllers',
-                    url: '/headless/guides/controllers',
                     disabled: true
                 },
             ],
