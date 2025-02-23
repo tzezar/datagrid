@@ -462,6 +462,20 @@ export type InitialState = {
 }
 
 
+export type DefaultColumnSize = {
+    width: number;
+    minWidth: number;
+    maxWidth: number;
+}
+
+export type DefaultColumnConfig = {
+    size?: DefaultColumnSize
+}
+
+export type DatagridCoreConfigDefaults = {
+    column?: DefaultColumnConfig
+}
+
 export type DatagridCoreConfig<TOriginalRow, C extends ColumnDef<TOriginalRow> = ColumnDef<TOriginalRow>> = {
     columns: C[];
     data: TOriginalRow[];
@@ -488,7 +502,11 @@ export type DatagridCoreConfig<TOriginalRow, C extends ColumnDef<TOriginalRow> =
         columnPinning?: FeatureConstructor<ColumnPinningFeature>,
         columnSizing?: FeatureConstructor<ColumnSizingFeature>,
         columnVisibility?: FeatureConstructor<ColumnVisibilityFeature>,
-    }
+    },
+
+    default?: DatagridCoreConfigDefaults
+
+
 }
 
 export interface Command {

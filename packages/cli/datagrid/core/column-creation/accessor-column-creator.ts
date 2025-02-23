@@ -1,4 +1,4 @@
-import { DEFAULT_COLUMN_SIZE } from "../defaults";
+import { DEFAULT_COLUMN_SIZE, DEFAULT_NOT_DEFINED_COLUMN_SIZE } from "../defaults";
 import type { AccessorColumn } from "../types";
 import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
 import type { DotNestedKeys, CreateAccessorColumnProps } from "./types";
@@ -174,7 +174,7 @@ export function createAccessorColumn<
       resizable: options?.resizable ?? true
     },
     state: {
-      size: state?.size ?? DEFAULT_COLUMN_SIZE,
+      size: state?.size ?? DEFAULT_NOT_DEFINED_COLUMN_SIZE,
       visible: state?.visible ?? true,
       pinning: {
         position: state?.pinning?.position ?? 'none',

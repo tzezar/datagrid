@@ -1,4 +1,4 @@
-import { DEFAULT_COLUMN_SIZE } from "../defaults";
+import { DEFAULT_COLUMN_SIZE, DEFAULT_NOT_DEFINED_COLUMN_SIZE } from "../defaults";
 import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
 import type { ColumnGroup } from "../types";
 import type { CreateGroupColumnProps } from "./types";
@@ -62,7 +62,7 @@ export function createColumnGroup<TOriginalRow, TMeta>(
       resizable: false, // Group columns are not resizable by default
     },
     state: {
-      size: DEFAULT_COLUMN_SIZE, // Default column size for the group
+      size: DEFAULT_NOT_DEFINED_COLUMN_SIZE, // Default column size for the group
       visible: null, // Visibility state for the group
       pinning: {
         position: 'none', // Default pinning position is 'none'
