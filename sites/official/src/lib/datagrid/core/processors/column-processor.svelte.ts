@@ -29,7 +29,7 @@ export class ColumnProcessor<TOriginalRow> {
      * @param {ColumnDef<any>[]} columns - An array of column definitions to initialize.
      * @returns {ColumnDef<any>[]} The processed column definitions.
      */
-    initializeColumns = (columns: ColumnDef<any>[]): ColumnDef<any>[] => {
+    initializeColumns = (columns: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[] => {
         columns = this.datagrid.lifecycleHooks.executePreProcessColumns(columns);
 
         columns = this.placeGroupColumnsInFront(columns);
@@ -70,7 +70,7 @@ export class ColumnProcessor<TOriginalRow> {
      * @param {ColumnDef<any>[]} columns - The columns to reorder.
      * @returns {ColumnDef<any>[]} The columns with group columns placed at the front.
      */
-    placeGroupColumnsInFront = (columns: ColumnDef<any>[]): ColumnDef<any>[] => {
+    placeGroupColumnsInFront = (columns: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[] => {
         const groupByColumns = this.datagrid.features.grouping.activeGroups;
 
         const orderedGroupColumns = groupByColumns
@@ -89,10 +89,10 @@ export class ColumnProcessor<TOriginalRow> {
      * 
      * @param {ColumnDef<any>[]} [columns] - The columns to update pinning offsets for (defaults to all columns).
      */
-    refreshColumnPinningOffsets(columns?: ColumnDef<any>[]) {
+    refreshColumnPinningOffsets(columns?: ColumnDef<TOriginalRow>[]) {
         if (!columns) columns = flattenColumnStructureAndClearGroups(this.datagrid._columns);
 
-        const newColumns: ColumnDef<any>[] = [];
+        const newColumns: ColumnDef<TOriginalRow>[] = [];
         for (let i = 0; i < columns.length; i++) {
             const col = columns[i];
             if (col.state.pinning.position === 'none') {
