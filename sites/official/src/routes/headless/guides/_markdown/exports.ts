@@ -9,6 +9,22 @@ const offExample = `eventService.off("custom", handler);`
 
 const emitExample = `eventService.emit("custom", { message: "Hello, world!" });`
 
+const livecycleHooksExample1 = `static readonly HOOKS = {
+        PRE_PROCESS_ORIGINAL_COLUMNS: 'preProcessOriginalColumns', // works on original columns
+        POST_PROCESS_ORIGINAL_COLUMNS: 'postProcessOriginalColumns', // works on original columns
+        PRE_PROCESS_COLUMNS: 'preProcessColumns',
+        POST_PROCESS_COLUMNS: 'postProcessColumns',
+        PRE_PROCESS_DATA: 'preProcessData',
+        POST_PROCESS_DATA: 'postProcessData',
+        PRE_SORT: 'preSort',
+        POST_SORT: 'postSort',
+        PRE_GLOBAL_SEARCH: 'preGlobalSearch',
+        POST_GLOBAL_SEARCH: 'postGlobalSearch',
+        PRE_FILTER: 'preFilter',
+        POST_FILTER: 'postFilter',
+    } as const;`
+
+
 const exports = {
     components: {
         codeBlock: CodeBlock,
@@ -36,6 +52,9 @@ datagrid.cacheManager.invalidate('everything'); // Clears all cache types`
             onExample,
             offExample,
             emitExample
+        },
+        lifecycleHooks: {
+            example1: livecycleHooksExample1
         }
 
     }

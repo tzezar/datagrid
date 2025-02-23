@@ -50,7 +50,6 @@ export const navigationTree = {
                 {
                     title: 'Lifecycle hooks',
                     url: '/headless/guides/lifecycle-hooks',
-                    disabled: true
                 },
 
                 {
