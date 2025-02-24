@@ -37,7 +37,6 @@ export const navigationTree = {
                 {
                     title: 'Column creation',
                     url: '/headless/guides/column-creation',
-                    disabled: true
                 },
                 {
                     title: 'Reacting to events',
