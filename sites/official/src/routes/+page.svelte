@@ -192,14 +192,14 @@
 	<div class="container mx-auto flex flex-wrap items-center px-5 py-12 lg:py-24">
 		<div class="w-full text-center">
 			<h2 class="title-font mb-4 text-3xl font-semibold sm:text-4xl">Pricing</h2>
-			<p class="text-lg leading-relaxed">
+			<p class="text-xl leading-relaxed">
 				Just kidding, it's free! Enjoy the full power of our datagrid without any cost.
 			</p>
-			<p class="py-2 text-lg">
+			<p class="py-2 text-base">
 				Tzezar's Datagrid is open-source and free to use. Feel free to contribute if you'd like!
 			</p>
 			<div class='border-b my-4'></div>
-			<p class="text-sm">
+			<p class="text-sm max-w-xl mx-auto">
 				However, if you <span class="font-semibold text-orange-500">need immediate assistance</span>
 				with customization or have a specific request, you can
 				<a href="https://github.com/tzezar" class="font-semibold text-orange-500">hire me</a> to implement
