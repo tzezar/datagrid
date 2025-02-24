@@ -123,11 +123,12 @@
 
 .markdown :is(pre) > code {
 	/* TODO: overflow does not look good */
-	@apply flex flex-col overflow-auto;
+	@apply flex flex-col overflow-auto p-4;
 }
 
 .markdown :is(code) {
-	@apply p-4;
+	@apply text-primary;
+	/* @apply p-4; */
 	/* @apply h-full rounded bg-muted px-2 py-1 font-mono text-sm text-foreground/100; */
 }
 
