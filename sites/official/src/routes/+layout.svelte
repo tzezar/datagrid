@@ -10,10 +10,11 @@
 	import { page } from '$app/stores';
 	import AppBarMobile from './_layout/app-bar-mobile.svelte';
 	import AppBarContent from './_layout/app-bar-content.svelte';
+	import { afterNavigate } from '$app/navigation';
 
 	let { children }: { children: Snippet } = $props();
 
-	let scrollFix;
+	let scrollFix: HTMLElement
 
 	let pathSegments = $derived(
 		$page.url.pathname
@@ -25,9 +26,9 @@
 			}))
 	);
 
-	onMount(async () => {
+	afterNavigate(async () => {
 		await tick();
-		scrollTo(0, 0);
+		scrollFix.scrollTo(0, 0);
 	});
 </script>
 
