@@ -2,6 +2,7 @@ import logger from '$lib/logger';
 
 export const prerender = 'auto';
 
+//@ts-expect-error Missing types
 export async function handle({ event, resolve }) {
   const start = Date.now();
 

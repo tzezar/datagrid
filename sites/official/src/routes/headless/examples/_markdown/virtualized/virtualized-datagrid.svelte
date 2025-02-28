@@ -75,6 +75,7 @@
 	};
 
 	onMount(async () => {
+		// @ts-expect-error Argument of type
 		generateDataInBatches(generateSimpleUser, 1_000_000, 10_000, async (batch) => {
 			test.update((data) => [...data, ...batch]); // Store update for reactivity
 			await tick(); // Ensure DOM updates before continuing

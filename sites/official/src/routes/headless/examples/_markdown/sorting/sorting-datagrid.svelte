@@ -164,15 +164,7 @@
 	.pagination-controls {
 		@apply border-border flex flex-col items-center gap-4 border p-2 sm:flex-row;
 	}
-
-	.page-size-selector select {
-		@apply bg-background h-10 w-full max-w-[150px] border px-2 py-2;
-	}
-
-	.pagination-navigation button {
-		@apply h-10 border p-1 px-3 disabled:opacity-50;
-	}
-
+	
 	.page-indicator {
 		@apply border p-2;
 	}

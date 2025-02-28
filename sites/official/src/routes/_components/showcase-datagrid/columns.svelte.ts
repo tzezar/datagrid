@@ -6,6 +6,7 @@ import type { ColumnMetaEnhanced } from "$lib/datagrid-enhanced/core/types";
 import { cn } from "$lib/utils";
 import StatusCell from "./status-cell.svelte";
 import type { EnhancedDatagrid } from "$lib/datagrid-enhanced/core/index.svelte";
+import type { PreGeneratedInventoryItem } from "$lib/data/types";
 
 
 // const exampleFn = (value) => {
@@ -210,4 +211,4 @@ export const columns = [
 
     }),
 
-] satisfies ColumnDef<InventoryItem, ColumnMetaEnhanced<InventoryItem>>[]
+] satisfies ColumnDef<PreGeneratedInventoryItem, ColumnMetaEnhanced<PreGeneratedInventoryItem>>[]

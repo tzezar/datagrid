@@ -4,7 +4,7 @@ import TransferListToolbar from "./transfer-list-toolbar.svelte";
 import TransferList from "./transfer-list.svelte";
 import TransferListTitle from "./transfer-list-title.svelte";
 import TransferListItem from "./transfer-list-item.svelte";
-import { TransferListCore } from "./transfer-list-core.svelte.ts";
+import { TransferListCore } from "./transfer-list-core.svelte";
 
 export {
     TransferList as Root,

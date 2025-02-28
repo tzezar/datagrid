@@ -228,7 +228,7 @@
 	{/if}
 {/if}
 
-<style class="post-css">
+<style lang='postcss'>
 	.grid-head-row-leaf-column-filter-input {
 		@apply h-6 w-full rounded-sm px-0 py-1 text-xs;
 		color: hsl(var(--muted-foreground));

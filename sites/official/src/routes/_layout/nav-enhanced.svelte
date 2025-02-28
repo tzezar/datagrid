@@ -9,6 +9,7 @@
 		items
 	}: {
 		items: {
+			badge?: string;
 			title: string;
 			url: string;
 			// this should be `Component` after lucide-svelte updates types

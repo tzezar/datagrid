@@ -9,6 +9,7 @@
     import {columns} from './columns.svelte'
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import type { PreGeneratedInventoryItem } from '$lib/data/types';
 
 	class MySortingFeature extends SortingFeature {
 		isManual = false;
@@ -25,11 +26,7 @@
 		}
 	}
 
-
-	
-
-
-	let datagrid = new Grid.EnhancedCore<InventoryItem, Grid.EnhancedMeta<InventoryItem>>({
+	let datagrid = new Grid.EnhancedCore<PreGeneratedInventoryItem, Grid.EnhancedMeta<PreGeneratedInventoryItem>>({
 		columns,
 		data: preGeneratedInventory,
 		initialState: {

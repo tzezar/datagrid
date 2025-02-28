@@ -5,7 +5,7 @@
 <svelte:head>
 	<title>{data.meta.title}</title>
 	<meta property="og:type" content="article" />
-	<meta property="og:title" content={data.meta.title} />
+	<meta property="og:title" content={data.meta.title as string} />
 </svelte:head>
 
 {#await data}

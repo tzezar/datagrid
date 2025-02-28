@@ -164,6 +164,7 @@
 	</div>
 {/snippet}
 
+<!-- svelte-ignore css_unused_selector -->
 <style lang="postcss">
 	.th,
 	.td {

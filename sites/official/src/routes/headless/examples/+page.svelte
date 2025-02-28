@@ -6,7 +6,7 @@ import { navigationTree } from "../../_layout/navigation-tree";
 </script>
 
 <div class='flex flex-col gap-4'>
-    {#each tree.items as item}
+    {#each tree?.items || [] as item}
     <Link href={item.url}>{item.title}</Link>
 {/each}
 

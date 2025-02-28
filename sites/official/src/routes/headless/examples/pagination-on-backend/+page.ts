@@ -2,9 +2,9 @@ import { inventoryData } from "$lib/data/data-storage.svelte.js";
 import { error } from '@sveltejs/kit';
 
 // Helper function to add sleep (delay)
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const load = async ({ url, params }) => {
+export const load = async ({ url }) => {
     try {
         // Sleep for 100ms before proceeding
         await sleep(1000);
