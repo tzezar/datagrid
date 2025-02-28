@@ -4,9 +4,11 @@
 	import type { InventoryItem } from '$lib/data-generators/generate/inventory';
 	import { SortingFeature } from '$lib/datagrid/core/features';
 	import type { DatagridCore } from '$lib/datagrid';
-	import { inventoryData } from '$lib/data/data-storage.svelte';
+	import { inventoryData, preGeneratedInventory } from '$lib/data/data-storage.svelte';
 	import RowExpandedContent from './row-expanded-content.svelte';
     import {columns} from './columns.svelte'
+	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 
 	class MySortingFeature extends SortingFeature {
 		isManual = false;
@@ -23,9 +25,13 @@
 		}
 	}
 
+
+	
+
+
 	let datagrid = new Grid.EnhancedCore<InventoryItem, Grid.EnhancedMeta<InventoryItem>>({
 		columns,
-		data: inventoryData,
+		data: preGeneratedInventory,
 		initialState: {
 			sorting: {
 				sortConfigs: [{ columnId: 'name', direction: 'ascending' }]
