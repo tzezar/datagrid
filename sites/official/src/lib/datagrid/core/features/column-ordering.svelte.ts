@@ -175,7 +175,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
         }
 
         const targetColumn = parentGroup.columns[targetIndex];
-
+        if (!targetColumn) throw new Error('Target column not found');
         // Moving into adjacent group
         if (targetColumn.type === 'group') {
             return {
