@@ -75,11 +75,22 @@ export const aggregationFunctions: {
      * @returns {number} The median value.
      */
     median: (values: number[]): number => {
+        if (values.length === 0) {
+            return 0; // Or another appropriate default value
+        }
+        
         const sorted = [...values].sort((a, b) => a - b);
         const mid = Math.floor(sorted.length / 2);
-        return sorted.length % 2 !== 0
-            ? sorted[mid]
-            : (sorted[mid - 1] + sorted[mid]) / 2;
+        
+        if (sorted.length % 2 !== 0) {
+            // For odd-length arrays
+            return sorted[mid] ?? 0; // Use nullish coalescing to ensure a number
+        } else {
+            // For even-length arrays
+            const midValue = sorted[mid] ?? 0;
+            const midMinusOneValue = sorted[mid - 1] ?? 0;
+            return (midMinusOneValue + midValue) / 2;
+        }
     },
 
     /**
