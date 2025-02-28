@@ -58,14 +58,18 @@ export function applySorting<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>,
     datagrid.processors.data.metrics.measure("Sorting", () => {
         decorated.sort((a, b) => {
             for (let i = 0; i < sortConfigs.length; i++) {
+                const config = sortConfigs[i];
+                // Check if config exists before using it
+                if (!config) continue;
+                
                 const valA = a.values[i];
                 const valB = b.values[i];
-
+                
                 if (valA === valB) continue;
-                if (valA == null) return sortConfigs[i].direction === "descending" ? 1 : -1;
-                if (valB == null) return sortConfigs[i].direction === "descending" ? -1 : 1;
-
-                return sortConfigs[i].direction === "descending" ? (valB > valA ? 1 : -1) : (valA > valB ? 1 : -1);
+                if (valA == null) return config.direction === "descending" ? 1 : -1;
+                if (valB == null) return config.direction === "descending" ? -1 : 1;
+                
+                return config.direction === "descending" ? (valB > valA ? 1 : -1) : (valA > valB ? 1 : -1);
             }
             return 0;
         });

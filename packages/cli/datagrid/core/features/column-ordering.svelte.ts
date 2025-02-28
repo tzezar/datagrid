@@ -137,6 +137,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
         }
 
         const targetColumn = this.datagrid._columns[targetIndex];
+        if (!targetColumn) throw new Error('Target column not found');
 
         if (targetColumn.type === 'group') {
             return {
@@ -175,7 +176,7 @@ export class ColumnOrderingFeature<TOriginalRow = any> implements IColumnOrderin
         }
 
         const targetColumn = parentGroup.columns[targetIndex];
-
+        if (!targetColumn) throw new Error('Target column not found');
         // Moving into adjacent group
         if (targetColumn.type === 'group') {
             return {

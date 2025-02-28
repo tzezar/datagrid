@@ -354,7 +354,13 @@ export class DataDataProcessor<TOriginalRow> {
 
             if (depth >= groupCols.length) return this.createBasicRows(rows, parentPath);
 
-            const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), groupCols[depth]);
+            // Safely access the group column ID with a non-null assertion since we've checked length above
+            const groupColId = groupCols[depth];
+
+            if (!groupColId) throw new Error(`Invalid group column at depth ${depth}`);
+
+            const column = findColumnById(flattenColumnStructureAndClearGroups(this.datagrid._columns), groupColId);
+
 
             if (!column) throw new Error(`Invalid group column: ${groupCols[depth]}`);
             if (isGroupColumn(column)) throw new Error(`Cannot group by group column: ${groupCols[depth]}`);
@@ -386,13 +392,13 @@ export class DataDataProcessor<TOriginalRow> {
 
                 const identifier = depth === 0 ? key : `${parentPath}|${key}`;
 
-                return {
+                // Create the group row with the correct type
+                const groupRow: GridGroupRow<TOriginalRow> = {
                     index: parentPath ? `${parentPath}-${index + 1}` : String(index + 1),
                     identifier,
-                    groupKey: groupCols[depth],
+                    groupKey: groupColId, // Now we know this is not undefined
                     groupValue: [key],
                     depth,
-                    // isExpanded: false,
                     children: groupByLevel(groupRows, depth + 1, `${parentPath}${index + 1}`),
                     aggregations: aggregations,
                     isExpanded: () => this.datagrid.features.grouping.isGroupExpanded(identifier),
@@ -400,6 +406,8 @@ export class DataDataProcessor<TOriginalRow> {
                         return true;
                     },
                 };
+
+                return groupRow;
             });
         };
 

@@ -106,14 +106,22 @@ export function flattenColumnStructure(
     /**
      * Recursively processes columns and adds them to the flattened array.
      *
-     * @param columns The columns to process.
+     * @param cols The columns to process.
      * @param result The flattened array.
      */
-    const processColumns = (columns: ColumnDef<any>[], result: ColumnDef<any>[]) => {
-        for (let i = 0; i < columns.length; i++) {
-            const column = columns[i];
+    const processColumns = (cols: ColumnDef<any>[], result: ColumnDef<any>[]) => {
+        for (let i = 0; i < cols.length; i++) {
+            const column = cols[i];
+
+            // Skip if column is undefined
+            if (!column) continue;
+
             if (column.type === 'group') {
-                processColumns(column.columns, result);
+                // Make sure columns exists before accessing it
+                if (column.columns) {
+                    processColumns(column.columns, result);
+                }
+
                 result.push(preserveGroups ? column : { ...column, columns: [] });
             } else {
                 result.push(column);

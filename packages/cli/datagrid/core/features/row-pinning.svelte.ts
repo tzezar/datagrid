@@ -97,6 +97,7 @@ export class RowPinningFeature<TOriginalRow = any> implements IRowPinningFeature
 
         for (let i = 0; i < this.datagrid.cacheManager.rows.length; i++) {
             const row = this.datagrid.cacheManager.rows[i];
+            if (!row) continue;
             const rowIdentifier = row.identifier;
             if (this.pinnedTopRowIds.has(rowIdentifier)) {
                 pinnedTop.push(row);

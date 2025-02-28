@@ -2,7 +2,7 @@ import type { AccessorColumn, ColumnDef, CellValue, ComputedColumn } from "$lib/
 import { getCellContent } from "$lib/datagrid/core/utils.svelte";
 
 export type MetaWithClickToCopy = {
-    clickToCopy: boolean;
+    clickToCopy?: boolean;
 }
 
 export type ClickToCopyPluginConfig = {
