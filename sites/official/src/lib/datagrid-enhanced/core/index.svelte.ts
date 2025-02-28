@@ -144,6 +144,7 @@ function updateColumnPinningOffsets(columns: ColumnDef<any>[]) {
     const newColumns: ColumnDef<any>[] = [];
     for (let i = 0; i < columns.length; i++) {
         const col = columns[i];
+        if (!col) continue
         if (col.state.pinning.position === 'none') {
             col.state.pinning.offset = 0;
         } else {
