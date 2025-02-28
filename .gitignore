@@ -141,3 +141,4 @@ dist
 /.vscode
 /sites/official/docs
 /sites/official/api-reference
+sites/official/package-lock.json
