@@ -95,6 +95,8 @@ export class ColumnProcessor<TOriginalRow> {
         const newColumns: ColumnDef<TOriginalRow>[] = [];
         for (let i = 0; i < columns.length; i++) {
             const col = columns[i];
+            if (!col) continue
+
             if (col.state.pinning.position === 'none') {
                 col.state.pinning.offset = 0;
             } else {
