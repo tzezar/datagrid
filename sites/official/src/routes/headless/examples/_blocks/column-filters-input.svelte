@@ -22,12 +22,16 @@
 			valueTo: valueTo
 		});
 	};
+
+	let categoricalFacets = $derived(
+		datagrid.features.columnFaceting.getCategoricalFacet(column.columnId)?.uniqueValues
+	);
 </script>
 
 <!-- TODO - Rewrite this, I dont have time right now; this is ugly -->
 
 {#snippet FilterOperator()}
-	<span class="text-[0.5rem] text-muted-foreground">
+	<span class="text-muted-foreground text-[0.5rem]">
 		Filter mode: {datagrid.features.filtering.getConditionOperator(column.columnId)}</span
 	>
 {/snippet}
@@ -74,7 +78,7 @@
 			/>
 			<div class="flex flex-col justify-between">
 				{@render FilterOperator()}
-				<span class="text-[0.5rem] text-muted-foreground">
+				<span class="text-muted-foreground text-[0.5rem]">
 					Min: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.min}
 					Max: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max}
 				</span>
@@ -157,7 +161,7 @@
 			</div>
 			<div class="flex flex-col justify-between">
 				{@render FilterOperator()}
-				<span class="text-[0.5rem] text-muted-foreground">
+				<span class="text-muted-foreground text-[0.5rem]">
 					Min: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.min}
 					Max: {datagrid.features.columnFaceting.getNumericFacet(column.columnId)?.max}
 				</span>
@@ -220,7 +224,7 @@
 				}}
 			>
 				<option value=""></option>
-				{#each datagrid.features.columnFaceting.getCategoricalFacet(column.columnId).uniqueValues as option}
+				{#each datagrid.features.columnFaceting.getCategoricalFacet(column.columnId)?.uniqueValues ?? [] as option}
 					<option value={option}>{option}</option>
 				{/each}
 			</select>
@@ -228,7 +232,7 @@
 	{/if}
 {/if}
 
-<style lang='postcss'>
+<style lang="postcss">
 	.grid-head-row-leaf-column-filter-input {
 		@apply h-6 w-full rounded-sm px-0 py-1 text-xs;
 		color: hsl(var(--muted-foreground));
