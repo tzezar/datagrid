@@ -55,7 +55,9 @@
 	});
 </script>
 
-<select
+
+<div class="flex w-full flex-col">
+	<select
 	class="bg-background h-40 border p-4"
 	multiple
 	onchange={(event) =>
@@ -69,7 +71,6 @@
 	{/each}
 </select>
 
-<div class="flex w-full flex-col">
 	<div class="wrapper">
 		<div class="table">
 			<div class="thead">
