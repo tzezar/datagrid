@@ -52,6 +52,10 @@
 		}
 	});
 
+
+	datagrid.processors.data.executeFullDataTransformation();
+
+
 	type LoadingState = 'loading' | 'success';
 
 	let loadingState: LoadingState = $state('loading');
