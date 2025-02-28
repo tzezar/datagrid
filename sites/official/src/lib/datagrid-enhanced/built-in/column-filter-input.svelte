@@ -220,7 +220,7 @@
 				}}
 			>
 				<option value=""></option>
-				{#each datagrid.features.columnFaceting.getCategoricalFacet(column.columnId).uniqueValues as option}
+				{#each datagrid.features.columnFaceting.getCategoricalFacet(column.columnId)?.uniqueValues ?? [] as option}
 					<option value={option}>{option}</option>
 				{/each}
 			</select>
