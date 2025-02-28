@@ -22,7 +22,7 @@
 	const productsPromise = fetchProducts();
 
 	// Loading indicator dots animation
-	let dots = '';
+	let dots = $state('');
 
 	// Update dots animation
 	const dotsInterval = setInterval(() => {
