@@ -226,7 +226,7 @@ export class ColumnProcessor<TOriginalRow> {
                 }
             }
 
-            rows[level].push({
+            rows[level]!.push({
                 ...col,
                 colSpan,
                 colStart,
