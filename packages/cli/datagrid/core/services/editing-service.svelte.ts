@@ -47,7 +47,6 @@ export class EditingService extends BaseService {
         // or we can just simply refresh the datagrid invalidang everything, this will trigger internal logic
         this.datagrid.refresh(() => this.datagrid.cacheManager.invalidate('everything'), { recalculateAll: true })
 
-        this.datagrid.events.emit('onCellEdit', { newOriginalRow: row.original, prevOriginalRow, prevValue, newValue: value });
-
+        this.datagrid.events.emit('onCellEdit', { newOriginalRow: row.original, prevOriginalRow, prevValue, newValue: value, column });
     }
 }
