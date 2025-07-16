@@ -558,7 +558,7 @@ export type EventPayloadMap = {
     'onColumnPinningChange': { column: LeafColumn<any> };
     'onColumnReorder': { columnId: ColumnId, direction: ColumnMovementDirection };
 
-    'onCellEdit': { prevOriginalRow: any, newOriginalRow: any, prevValue: any, newValue: any };
+    'onCellEdit': { prevOriginalRow: any, newOriginalRow: any, prevValue: any, newValue: any, column: LeafColumn<any> };
 
 };
 
