@@ -181,6 +181,18 @@ export const navigationTree = {
             title: 'Interactive Demo',
             url: '/enhanced/interactive-demo',
         },
+
+         {
+            title: "Examples",
+            url: "/enhanced/examples",
+            isActive: true,
+            items: [
+                {
+                    title: 'Server Side Sorting',
+                    url: '/enhanced/examples/sorting-on-server',
+                },
+            ],
+        },
     ]
 
 

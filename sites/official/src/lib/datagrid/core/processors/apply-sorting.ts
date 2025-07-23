@@ -24,7 +24,7 @@ import { findColumnById, flattenColumnStructureAndClearGroups } from "../utils.s
 export function applySorting<TOriginalRow>(datagrid: DatagridCore<TOriginalRow>, data: TOriginalRow[]): TOriginalRow[] {
     data = datagrid.lifecycleHooks.executePreSort(data);
 
-    const isManualSortingEnabled = datagrid.features.globalSearch.isManual;
+    const isManualSortingEnabled = datagrid.features.globalSearch.isManual || datagrid.features.sorting.isManual;
     const noSorting = datagrid.features.sorting.sortConfigs.length === 0;
     if (isManualSortingEnabled || noSorting) return data;
 

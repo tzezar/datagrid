@@ -12,7 +12,7 @@ interface CustomizationOptions {
   cellTooltips?: boolean;
   customScrollbar?: boolean;
   stickyHeader?: boolean;
-  pagination?: boolean;
+  // pagination?: boolean; // it does nothing 
 
 
   columnFiltersVisible?: boolean
