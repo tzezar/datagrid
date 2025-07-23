@@ -60,6 +60,10 @@ export const navigationTree = {
                     url: '/headless/guides/data-flow',
                     disabled: true
                 },
+                {
+                    title: 'Row identifiers',
+                    url: '/headless/guides/row-identifiers',
+                },
             ],
         },
         {
