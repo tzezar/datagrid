@@ -65,13 +65,16 @@ export class FilteringService extends BaseService {
             });
         } else {
             // Update existing condition with the new value and operator
-            this.datagrid.features.filtering.filterConditions[conditionIndex].value = value;
-            this.datagrid.features.filtering.filterConditions[conditionIndex].operator = operator;
-            if (valueTo !== undefined) {
-                this.datagrid.features.filtering.filterConditions[conditionIndex].valueTo = valueTo;
+            const condition = this.datagrid.features.filtering.filterConditions[conditionIndex];
+            if (condition) {
+                condition.value = value;
+                condition.operator = operator;
+                if (valueTo !== undefined) {
+                    condition.valueTo = valueTo;
+                }
             }
         }
-
+    
         this.datagrid.cacheManager.invalidate('filteredData');
         this.datagrid.features.pagination.goToFirstPage();
         this.datagrid.processors.data.executeFullDataTransformation();

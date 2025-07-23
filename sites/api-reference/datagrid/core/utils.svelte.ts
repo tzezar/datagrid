@@ -1,3 +1,4 @@
+import { UnableToRenderCellError } from "./errors";
 import type { ColumnDef, ColumnId, ColumnGroup } from "./types";
 import type { CellValue, CustomCellComponentWithProps, } from "./types";
 
@@ -17,33 +18,27 @@ export function generateRandomColumnId(): string {
  * @param originalRow The original row data.
  * @returns The content of the cell.
  */
-export function getCellContent(column: ColumnDef<any>, originalRow: any): CellValue | HTMLElement {
-    switch (column.type) {
-        case 'accessor':
-            if (column.formatterFn) {
-                return column.formatterFn(originalRow);
-            } else if (column.cell) {
-                return column.cell(originalRow);
-            } else {
-                return column.getValueFn(originalRow);
-            }
-        case 'computed':
-            if (column.formatterFn) {
-                return column.formatterFn(originalRow);
-            } else if (column.cell) {
-                return column.cell(originalRow);
-            } else {
-                return column.getValueFn(originalRow);
-            }
-        case 'display':
-            if (column.cell) {
-                return column.cell(originalRow);
-            } else {
-                throw new Error('Display columns must have a cell function');
-            }
-        case 'group':
-            throw new Error('Group columns are not supported');
-    }
+export function getCellContent(column: ColumnDef<any>, originalRow: any): CellValue {
+	switch (column.type) {
+		case 'accessor':
+			if (column.formatterFn) {
+				return column.formatterFn(originalRow);
+			} else if (column.getValueFn) {
+				return column.getValueFn(originalRow);
+			}
+			throw new UnableToRenderCellError(column.columnId);
+		case 'computed':
+			if (column.formatterFn) {
+				return column.formatterFn(originalRow);
+			} else if (column.getValueFn) {
+				return column.getValueFn(originalRow);
+			}
+			throw new UnableToRenderCellError(column.columnId);
+		case 'display':
+			throw new UnableToRenderCellError(column.columnId);
+		case 'group':
+			throw new UnableToRenderCellError(column.columnId);
+	}
 }
 
 /**
@@ -106,14 +101,22 @@ export function flattenColumnStructure(
     /**
      * Recursively processes columns and adds them to the flattened array.
      *
-     * @param columns The columns to process.
+     * @param cols The columns to process.
      * @param result The flattened array.
      */
-    const processColumns = (columns: ColumnDef<any>[], result: ColumnDef<any>[]) => {
-        for (let i = 0; i < columns.length; i++) {
-            const column = columns[i];
+    const processColumns = (cols: ColumnDef<any>[], result: ColumnDef<any>[]) => {
+        for (let i = 0; i < cols.length; i++) {
+            const column = cols[i];
+
+            // Skip if column is undefined
+            if (!column) continue;
+
             if (column.type === 'group') {
-                processColumns(column.columns, result);
+                // Make sure columns exists before accessing it
+                if (column.columns) {
+                    processColumns(column.columns, result);
+                }
+
                 result.push(preserveGroups ? column : { ...column, columns: [] });
             } else {
                 result.push(column);

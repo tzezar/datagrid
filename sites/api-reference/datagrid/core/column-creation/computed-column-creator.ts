@@ -1,4 +1,4 @@
-import { DEFAULT_COLUMN_SIZE } from "../defaults";
+import { DEFAULT_COLUMN_SIZE, DEFAULT_NOT_DEFINED_COLUMN_SIZE } from "../defaults";
 import type { ComputedColumn } from "../types";
 import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
 import type { CreateComputeColumnProps } from "./types";
@@ -66,7 +66,7 @@ export function createComputedColumn<TOriginalRow extends Record<string, any>, T
       resizable: options?.resizable ?? true, // Whether the column is resizable
     },
     state: {
-      size: state?.size ?? DEFAULT_COLUMN_SIZE, // Default column size
+      size: state?.size ?? DEFAULT_NOT_DEFINED_COLUMN_SIZE, // Default column size
       visible: state?.visible ?? true, // Default visibility state for the column
       pinning: {
         position: state?.pinning?.position ?? 'none', // Default pinning position

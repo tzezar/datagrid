@@ -1,6 +1,9 @@
 import type { AccessorColumn, ColumnDef, CellValue, ComputedColumn } from "$lib/datagrid/core/types";
 import { getCellContent } from "$lib/datagrid/core/utils.svelte";
-import type { ColumnMetaEnhanced } from "../../datagrid-enhanced/core/types";
+
+export type MetaWithClickToCopy = {
+    clickToCopy?: boolean;
+}
 
 export type ClickToCopyPluginConfig = {
     enableClickToCopy?: boolean;
@@ -20,7 +23,7 @@ export class ClickToCopyPlugin {
         this.onClickToCopy = config?.onClickToCopy ?? this.onClickToCopy;
     }
 
-    shouldDisplayCopyButton(column: AccessorColumn<any, ColumnMetaEnhanced> | ComputedColumn<any, ColumnMetaEnhanced>) {
+    shouldDisplayCopyButton(column: AccessorColumn<any, MetaWithClickToCopy> | ComputedColumn<any, MetaWithClickToCopy>) {
         if (this.display === false) return false;
         if (column._meta.clickToCopy === false) return false;
         return true

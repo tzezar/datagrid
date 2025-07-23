@@ -1,8 +1,9 @@
 import { isGroupColumn } from "../helpers/column-guards";
-import type { ColumnDef, ColumnGroup } from "../types";
+import type { ColumnDef, ColumnGroup, DefaultColumnConfig } from "../types";
 import type { DatagridCore } from "../index.svelte";
 import type { ColumnId } from "../types";
 import { flattenColumnStructureAndClearGroups } from "../utils.svelte";
+import { DEFAULT_COLUMN_SIZE } from "../defaults";
 
 /**
  * A class responsible for processing and managing columns in a datagrid.
@@ -28,7 +29,7 @@ export class ColumnProcessor<TOriginalRow> {
      * @param {ColumnDef<any>[]} columns - An array of column definitions to initialize.
      * @returns {ColumnDef<any>[]} The processed column definitions.
      */
-    initializeColumns = (columns: ColumnDef<any>[]): ColumnDef<any>[] => {
+    initializeColumns = (columns: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[] => {
         columns = this.datagrid.lifecycleHooks.executePreProcessColumns(columns);
 
         columns = this.placeGroupColumnsInFront(columns);
@@ -69,7 +70,7 @@ export class ColumnProcessor<TOriginalRow> {
      * @param {ColumnDef<any>[]} columns - The columns to reorder.
      * @returns {ColumnDef<any>[]} The columns with group columns placed at the front.
      */
-    placeGroupColumnsInFront = (columns: ColumnDef<any>[]): ColumnDef<any>[] => {
+    placeGroupColumnsInFront = (columns: ColumnDef<TOriginalRow>[]): ColumnDef<TOriginalRow>[] => {
         const groupByColumns = this.datagrid.features.grouping.activeGroups;
 
         const orderedGroupColumns = groupByColumns
@@ -88,12 +89,14 @@ export class ColumnProcessor<TOriginalRow> {
      * 
      * @param {ColumnDef<any>[]} [columns] - The columns to update pinning offsets for (defaults to all columns).
      */
-    refreshColumnPinningOffsets(columns?: ColumnDef<any>[]) {
+    refreshColumnPinningOffsets(columns?: ColumnDef<TOriginalRow>[]) {
         if (!columns) columns = flattenColumnStructureAndClearGroups(this.datagrid._columns);
 
-        const newColumns: ColumnDef<any>[] = [];
+        const newColumns: ColumnDef<TOriginalRow>[] = [];
         for (let i = 0; i < columns.length; i++) {
             const col = columns[i];
+            if (!col) continue
+
             if (col.state.pinning.position === 'none') {
                 col.state.pinning.offset = 0;
             } else {
@@ -225,7 +228,7 @@ export class ColumnProcessor<TOriginalRow> {
                 }
             }
 
-            rows[level].push({
+            rows[level]!.push({
                 ...col,
                 colSpan,
                 colStart,
@@ -250,5 +253,24 @@ export class ColumnProcessor<TOriginalRow> {
         });
 
         return rows;
+    }
+
+    /**
+     * Applies default size constraints to columns where not explicitly set.
+     * @param columns - The list of columns to process.
+     * @param config - Default column configuration.
+     * @returns The updated columns with applied size constraints.
+    */
+    applyDefaultColumnSizes(
+        columns: ColumnDef<TOriginalRow>[],
+        config?: DefaultColumnConfig
+    ): ColumnDef<TOriginalRow>[] {
+        return columns.map(col => {
+            if (col.state.size.width === -1) col.state.size.width = config?.size?.width ?? DEFAULT_COLUMN_SIZE.width
+            if (col.state.size.minWidth === -1) col.state.size.minWidth = config?.size?.minWidth ?? DEFAULT_COLUMN_SIZE.minWidth
+            if (col.state.size.maxWidth === -1) col.state.size.maxWidth = config?.size?.maxWidth ?? DEFAULT_COLUMN_SIZE.maxWidth
+
+            return col;
+        });
     }
 }
