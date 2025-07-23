@@ -1,3 +1,4 @@
+import { UnableToRenderCellError } from "./errors";
 import type { ColumnDef, ColumnId, ColumnGroup } from "./types";
 import type { CellValue, CustomCellComponentWithProps, } from "./types";
 
@@ -17,33 +18,27 @@ export function generateRandomColumnId(): string {
  * @param originalRow The original row data.
  * @returns The content of the cell.
  */
-export function getCellContent(column: ColumnDef<any>, originalRow: any): CellValue | HTMLElement {
-    switch (column.type) {
-        case 'accessor':
-            if (column.formatterFn) {
-                return column.formatterFn(originalRow);
-            } else if (column.cell) {
-                return column.cell(originalRow);
-            } else {
-                return column.getValueFn(originalRow);
-            }
-        case 'computed':
-            if (column.formatterFn) {
-                return column.formatterFn(originalRow);
-            } else if (column.cell) {
-                return column.cell(originalRow);
-            } else {
-                return column.getValueFn(originalRow);
-            }
-        case 'display':
-            if (column.cell) {
-                return column.cell(originalRow);
-            } else {
-                throw new Error('Display columns must have a cell function');
-            }
-        case 'group':
-            throw new Error('Group columns are not supported');
-    }
+export function getCellContent(column: ColumnDef<any>, originalRow: any): CellValue {
+	switch (column.type) {
+		case 'accessor':
+			if (column.formatterFn) {
+				return column.formatterFn(originalRow);
+			} else if (column.getValueFn) {
+				return column.getValueFn(originalRow);
+			}
+			throw new UnableToRenderCellError(column.columnId);
+		case 'computed':
+			if (column.formatterFn) {
+				return column.formatterFn(originalRow);
+			} else if (column.getValueFn) {
+				return column.getValueFn(originalRow);
+			}
+			throw new UnableToRenderCellError(column.columnId);
+		case 'display':
+			throw new UnableToRenderCellError(column.columnId);
+		case 'group':
+			throw new UnableToRenderCellError(column.columnId);
+	}
 }
 
 /**
