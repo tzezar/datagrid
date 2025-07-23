@@ -6,6 +6,7 @@ title: Getting Started with Tzezar's Datagrid
 import BasicDatagrid from './basic-datagrid.svelte';
 import BasicDatagridFixed from './basic-datagrid-fixed.svelte';
 import { inventoryData as data } from '$lib/data/data-storage.svelte';
+import {exports} from './exports.ts'
 </script>
 
 # {title}
@@ -27,70 +28,17 @@ Let's get started!
 
 Every datagrid needs data to display. Here's a simple example:
 
-```ts
-const data = [
-	{
-		id: 1,
-		name: 'Product',
-		price: {
-			retail: 20,
-			currency: 'PLN'
-		}
-	}
-];
 
-// Define a type for better TypeScript support
-type InventoryItem = {
-	id: number;
-	name: string;
-	price: {
-		retail: number;
-		currency: string;
-	};
-};
-```
+<exports.components.codeBlock code={exports.code.example1} class="" />
+
+
 
 ## 2. Defining Columns
 
 Columns define how your data is structured and displayed:
 
-```ts
-import {
-	accessorColumn,
-	columnGroup,
-	computedColumn,
-	displayColumn,
-	type ColumnDef
-} from '$lib/datagrid/index.js';
+<exports.components.codeBlock code={exports.code.example2} class="" />
 
-export const columns = [
-	// Simple column using direct data access
-	accessorColumn({
-		accessorKey: 'id'
-	}),
-
-	// Group of related columns
-	columnGroup({
-		header: 'Product',
-		columns: [
-			accessorColumn({
-				accessorKey: 'name'
-			}),
-			computedColumn({
-				header: 'Price',
-				getValueFn: (row) => `${row.price.retail} ${row.price.currency}`
-			})
-		]
-	}),
-
-	// Custom display column (e.g., for expansion controls)
-	displayColumn({
-		columnId: 'expansion',
-		header: '',
-		cell: () => '<div>+</div>'
-	})
-] satisfies ColumnDef<InventoryItem>[];
-```
 
 ### Column Types Explained
 
@@ -105,14 +53,8 @@ export const columns = [
 
 Now that you have data and columns, create your datagrid:
 
-```ts
-import { DatagridCore } from '$lib/datagrid/index.js';
+<exports.components.codeBlock code={exports.code.example3} class="" />
 
-const datagrid = new DatagridCore({
-	columns,
-	data
-});
-```
 
 ### Customizing Your Datagrid
 
@@ -120,117 +62,29 @@ For basic needs, this configuration is sufficient. For more control, you can:
 
 1. Set an initial state:
 
-```ts
-const datagrid = new DatagridCore({
-	columns,
-	data,
-	initialState: {
-		sorting: { sortBy: 'id', sortDirection: 'asc' },
-		pagination: { page: 1, pageSize: 25 }
-	}
-});
-```
+<exports.components.codeBlock code={exports.code.example4} class="" />
 
 2. Extend built-in features:
 
-```ts
-class MySortingFeature extends SortingFeature {
-	// You can set initial state here or define additional state
-	isManual = $state(true);
-	extraState = $state('');
-
-	// You can override method to include your custom logic or extend feature with own methods
-	isColumnSorted(columnId: string, direction: 'asc' | 'desc'): boolean {
-		console.debug(`[Sorting] Checking if column "${columnId}" is sorted in "${direction}" order.`);
-		return super.isColumnSorted(columnId, direction);
-	}
-}
-
-const datagrid = new Grid.EnhancedCore({
-	columns,
-	data,
-	features: {
-		sorting: MySortingFeature
-	}
-});
-```
+<exports.components.codeBlock code={exports.code.example5} class="" />
 
 ## 4. Rendering Your Datagrid
 
 Since this is a headless library, you have complete freedom over rendering. Here's a basic implementation using `<div>` elements:
 
-```svelte
-<div class="datagrid-wrapper">
-	<div class="datagrid">
-		<!-- Header -->
-		<div class="datagrid-header">
-			<div class="datagrid-row">
-				{#each datagrid.columns.getLeafColumns() as column}
-					<div class="datagrid-cell header-cell">
-						{column.header}
-					</div>
-				{/each}
-			</div>
-		</div>
+<exports.components.codeBlock code={exports.code.example6} lang='svelte' class="" />
 
-		<!-- Body -->
-		<div class="datagrid-body">
-			{#each datagrid.rows.getVisibleBasicRows() as row}
-				<div class="datagrid-row">
-					{#each datagrid.columns.getLeafColumns() as column}
-						<div class="datagrid-cell">
-							{getCellContent(column, row.original)}
-						</div>
-					{/each}
-				</div>
-			{/each}
-		</div>
-	</div>
-</div>
-```
 
 ### Using Custom Cell Rendering
 
 For more complex cell content, you can use Svelte 5 snippets: 
 
-```svelte
-{#snippet CellRenderer(column: LeafColumn<any>, row: GridBasicRow<any>)}
-	{@const cellContent = column.cell ? column.cell({ datagrid, column, row }) : null}
-	<div class="td">
-		{#if cellContent}
-			{#if typeof cellContent === 'string'}
-				{@html cellContent}
-			{:else if isCellComponent(cellContent)}
-				<cellContent.component {datagrid} {row} {column} />
-			{/if}
-		{:else}
-			<span>
-				{@html getCellContent(column, row.original)}
-			</span>
-		{/if}
-	</div>
-{/snippet}
-```
+<exports.components.codeBlock code={exports.code.example7} lang='svelte' class="" />
+
 
 or prebuilt component:
 
-```svelte
-<script lang='ts'>
-	import RenderCell from '$lib/datagrid/prebuilt/render-cell'
-</script>
-
-<div class="datagrid-body">
-	{#each datagrid.rows.getVisibleBasicRows() as row}
-		<div class="datagrid-row">
-			{#each datagrid.columns.getLeafColumns() as column}
-				<div class="datagrid-cell">
-					<RenderCell {datagrid} {row} {column} />
-				</div>
-			{/each}
-		</div>
-	{/each}
-</div>
-```
+<exports.components.codeBlock code={exports.code.example8} lang='svelte'  class="" />
 
 Built-in `<RenderCell />` component makes rendering custom cell content straightforward.
 
@@ -256,18 +110,7 @@ Congratulations on setting up your first Tzezar's Datagrid! From here, you can:
 
 Tzezar's Datagrid Core comes with powerful features you can tap into:
 
-```ts
-// Listen to events
-datagrid.events.on('onColumnSort', ({ column }) => {
-	console.log(`Column ${column.id} was sorted`);
-});
-
-// Use lifecycle hooks for custom processing
-datagrid.hooks.registerHook('PRE_PROCESS_DATA', (data) => {
-	// Modify or filter data before processing
-	return data.filter((item) => item.active);
-});
-```
+<exports.components.codeBlock code={exports.code.example9} class="" />
 
 ---
 
