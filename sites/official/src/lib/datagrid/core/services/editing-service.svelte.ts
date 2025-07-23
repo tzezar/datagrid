@@ -46,8 +46,10 @@ export class EditingService extends BaseService {
 			recalculateAll: true
 		});
 
+		const newOriginalRow = newOriginalData.find((r) => r[rowIdentifier] === row.identifier);
+
 		this.datagrid.events.emit('onCellEdit', {
-			newOriginalRow: row.original,
+			newOriginalRow,
 			prevOriginalRow,
 			prevValue,
 			newValue: value,
