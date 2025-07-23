@@ -12,7 +12,6 @@ export const columns = [
 		accessorKey: 'name'
 	}),
 	accessorColumn({
-		columnId: 'category',
 		accessorKey: 'category'
 	})
 ] satisfies ColumnDef<InventoryItem, ColumnMetaEnhanced<InventoryItem>>[];
