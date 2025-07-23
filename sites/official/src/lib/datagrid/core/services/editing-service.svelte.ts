@@ -1,52 +1,59 @@
-import type { GridBasicRow, LeafColumn } from "../types";
-import { BaseService } from "./base-service";
-
+import { getNestedValue, setNestedValue } from '../column-creation/utils';
+import type { AccessorColumn, GridBasicRow, LeafColumn } from '../types';
+import { BaseService } from './base-service';
 
 /**
  * Service for managing cell editing in the datagrid.
- * 
+ *
  * @extends BaseService
  */
 export class EditingService extends BaseService {
-    /**
- * Updates the value of a specific cell in the grid and triggers necessary actions, such as refreshing the grid or invalidating caches.
- * 
- * @param {GridBasicRow<any>} row The row containing the cell to update.
- * @param {LeafColumn<any>} column The column containing the cell to update.
- * @param {any} value The new value to set for the cell.
- * @param {any} [rowIdentifier='id'] The identifier for the row, defaulting to 'id'.
- * 
- * @fires onCellEdit Emitted after a cell value is updated, providing the new and previous row data and the previous and new cell values.
- */
-    updateCellValue = (row: GridBasicRow<any>, column: LeafColumn<any>, value: any, rowIdentifier: any = 'id') => {
-        const prevValue = row.original[column.columnId];
-        const prevOriginalRow = { ...row.original };
+	/**
+	 * Updates the value of a specific cell in the grid and triggers necessary actions, such as refreshing the grid or invalidating caches.
+	 *
+	 * @param {GridBasicRow<any>} row The row containing the cell to update.
+	 * @param {LeafColumn<AccessorColumn>} column The column containing the cell to update.
+	 * @param {any} value The new value to set for the cell.
+	 * @param {any} [rowIdentifier='id'] The identifier for the row, defaulting to 'id'.
+	 *
+	 * @fires onCellEdit Emitted after a cell value is updated, providing the new and previous row data and the previous and new cell values.
+	 */
+	updateCellValue = (
+		row: GridBasicRow<any>,
+		column: LeafColumn<AccessorColumn<any>>,
+		value: any,
+		rowIdentifier: any = 'id'
+	) => {
+		column = column as AccessorColumn<any>; // Ensure column is typed correctly
 
+		const prevValue = getNestedValue(row.original, column.accessorKey);
+		const prevOriginalRow = { ...row.original };
 
-        const newOriginalData = [...this.datagrid.originalState.data].map(originaLRow => {
-            if (originaLRow[rowIdentifier] === row.identifier) {
-                return { ...originaLRow, [column.columnId]: value };
-            } else {
-                return originaLRow;
-            }
-        })
+		const newOriginalData = [...this.datagrid.originalState.data].map((originalRow) => {
+			if (originalRow[rowIdentifier] === row.identifier) {
+				return setNestedValue(originalRow, column.accessorKey, value);
+			} else {
+				return originalRow;
+			}
+		});
 
-        // TODO: measure performance of both solutions and pick faster one
-        // ? We can either update values directly
-        // row.original = { ...row.original, [column.columnId]: value };
-        // row.identifier = this.datagrid.rowIdGetter(row.original);
-        // row.index = this.datagrid.rowIndexGetter(row.original, row.parentIndex, 0);
-        // but then we have to write code for update each cache eg filtered, paginated...... 
-        // .. to be implemented 
+		this.datagrid.originalState = {
+			columns: this.datagrid.originalState.columns,
+			data: newOriginalData
+		};
 
-        this.datagrid.originalState = {
-            columns: this.datagrid.originalState.columns,
-            data: newOriginalData
-        }
+		this.datagrid.refresh(() => this.datagrid.cacheManager.invalidate('everything'), {
+			recalculateAll: true
+		});
 
-        // or we can just simply refresh the datagrid invalidang everything, this will trigger internal logic
-        this.datagrid.refresh(() => this.datagrid.cacheManager.invalidate('everything'), { recalculateAll: true })
+		const newOriginalRow = newOriginalData.find((r) => r[rowIdentifier] === row.identifier);
 
-        this.datagrid.events.emit('onCellEdit', { newOriginalRow: row.original, prevOriginalRow, prevValue, newValue: value, column });
-    }
+		this.datagrid.events.emit('onCellEdit', {
+			newOriginalRow,
+			prevOriginalRow,
+			prevValue,
+			newValue: value,
+			column
+		});
+	};
 }

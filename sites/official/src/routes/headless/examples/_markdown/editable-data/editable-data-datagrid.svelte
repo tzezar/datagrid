@@ -7,6 +7,7 @@
 	import Pagination from '../../_blocks/pagination.svelte';
 	import SortingIndicator from '../../_blocks/sorting-indicator.svelte';
 	import { inventoryData as data } from '$lib/data/data-storage.svelte';
+	import { getNestedValue } from '$lib/datagrid/core/column-creation/utils';
 
 	export const columns = [
 		accessorColumn({
@@ -96,7 +97,7 @@
 		{#if column._meta.dataType === 'number'}
 			<input
 				type="number"
-				value={row.original[column.accessorKey]}
+				value={getNestedValue(row.original, column.accessorKey)}
 				oninput={(e) =>
 					datagrid.handlers.editing.updateCellValue(row, column, +e.currentTarget.value)}
 				style:--width={column.state.size.width + 'px'}
@@ -110,7 +111,7 @@
 		{:else}
 			<input
 				type="text"
-				value={row.original[column.accessorKey]}
+				value={getNestedValue(row.original, column.accessorKey)}
 				oninput={(e) =>
 					datagrid.handlers.editing.updateCellValue(row, column, e.currentTarget.value)}
 				style:--width={column.state.size.width + 'px'}

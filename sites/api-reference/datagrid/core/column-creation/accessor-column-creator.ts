@@ -1,21 +1,8 @@
-import { DEFAULT_COLUMN_SIZE } from "../defaults";
+import { DEFAULT_COLUMN_SIZE, DEFAULT_NOT_DEFINED_COLUMN_SIZE } from "../defaults";
 import type { AccessorColumn } from "../types";
 import { isColumnFilterable, isColumnSortable, isColumnVisible } from "./column-methods";
 import type { DotNestedKeys, CreateAccessorColumnProps } from "./types";
-
-/**
- * Retrieves a nested value from an object using dot notation path.
- * 
- * @param {T} obj The object to retrieve the value from.
- * @param {string} path The dot notation path specifying the nested value.
- * @returns {any} The value found at the given path in the object.
- * 
- * @example
- * getNestedValue({ user: { profile: { name: 'John' } } }, 'user.profile.name'); // 'John'
- */
-function getNestedValue<T>(obj: T, path: string): any {
-  return path.split('.').reduce((acc: any, key: string) => acc?.[key], obj);
-}
+import { getNestedValue } from "./utils";
 
 /**
  * Formats an accessor key into a more human-readable string by splitting it into words
@@ -174,7 +161,7 @@ export function createAccessorColumn<
       resizable: options?.resizable ?? true
     },
     state: {
-      size: state?.size ?? DEFAULT_COLUMN_SIZE,
+      size: state?.size ?? DEFAULT_NOT_DEFINED_COLUMN_SIZE,
       visible: state?.visible ?? true,
       pinning: {
         position: state?.pinning?.position ?? 'none',

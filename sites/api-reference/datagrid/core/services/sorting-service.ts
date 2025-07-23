@@ -76,8 +76,9 @@ export class SortingService extends BaseService {
                 const isOverMaxColCount = datagrid.features.sorting.sortConfigs.length >= datagrid.features.sorting.maxMultiSortColumns;
                 if (isOverMaxColCount) {
                     // remove first sorting config
-                    console.log('removing first sorting config');
-                    datagrid.features.sorting.removeSortConfig(datagrid.features.sorting.sortConfigs[0].columnId);
+                    if (datagrid.features.sorting.sortConfigs.length > 0) {
+                        datagrid.features.sorting.removeSortConfig(datagrid.features.sorting.sortConfigs[0]!.columnId);
+                    }
                 }
 
                 datagrid.features.sorting.addSortConfig(columnId, 'ascending');
@@ -103,7 +104,7 @@ export class SortingService extends BaseService {
      */
     applyAscendingSort(column: LeafColumn<any>) {
         this.datagrid.events.emit('onColumnSort', { column });
-        
+
         const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
         if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, 'ascending');
         else this.datagrid.features.sorting.addSortConfig(column.columnId, 'ascending');
@@ -118,7 +119,7 @@ export class SortingService extends BaseService {
      */
     applyDescendingSort(column: LeafColumn<any>) {
         this.datagrid.events.emit('onColumnSort', { column });
-        
+
         const isColumnSorted = this.datagrid.features.sorting.isColumnSorted(column.columnId);
         if (isColumnSorted) this.datagrid.features.sorting.changeSortConfigDirection(column.columnId, 'descending');
         else this.datagrid.features.sorting.addSortConfig(column.columnId, 'descending');
