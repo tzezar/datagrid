@@ -274,7 +274,17 @@
 						<span>Sort descending </span>
 					</DropdownMenu.Item>
 					<DropdownMenu.Separator />
-					<DropdownMenu.Item>
+					<DropdownMenu.Item
+					    onclick={() => {
+							datagrid.features.filtering.filterConditions =
+								datagrid.features.filtering.filterConditions.filter(
+								  (c) => c.columnId !== column.columnId
+								);
+							datagrid.cacheManager.invalidate('filteredData');
+							datagrid.features.pagination.goToFirstPage();
+							datagrid.processors.data.executeFullDataTransformation();
+						}}
+					>
 						<FilterX class="mr-2 size-4" />
 						<span>Clear filter</span>
 					</DropdownMenu.Item>
