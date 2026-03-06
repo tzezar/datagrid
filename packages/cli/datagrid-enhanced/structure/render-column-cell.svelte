@@ -17,9 +17,15 @@
 	};
 
 	let { datagrid, column }: Props = $props();
+
+	function hasVisibleChildren(col: ColumnGroup<any>): boolean {
+		return (col.columns ?? []).some((child) =>
+			isGroupColumn(child) ? hasVisibleChildren(child) : child.state.visible === true,
+		);
+	}
 </script>
 
-{#if isGroupColumn(column)}
+{#if isGroupColumn(column) && hasVisibleChildren(column)}
 	{@render ColumnGroupHeaderSnippet(column)}
 {:else if column.state.visible === true}
 	{@render ColumnHeaderSnippet(column)}
