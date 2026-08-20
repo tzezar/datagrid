@@ -4,6 +4,7 @@
 	import type { Snippet } from 'svelte';
 	import type { EnhancedDatagrid } from '../core/index.svelte';
 	import type { ColumnMetaEnhanced } from '../core/types';
+	import ColumnResizeHandle from './column-resize-handle.svelte';
 
 	type Props = {
 		datagrid: EnhancedDatagrid;
@@ -19,7 +20,7 @@
 	class={cn(
 		datagrid.customization.styling.getHeadRowLeafColumnCellClasses(),
 		column._meta.grow === true && 'grow ',
-		'shrink-0',
+		'relative shrink-0',
 		_class
 	)}
 	data-pinned={column.state.pinning.position !== 'none' ? column.state.pinning.position : null}
@@ -30,4 +31,7 @@
 	style:--max-width={column.state.size.maxWidth + 'px'}
 >
 	{@render children()}
+	{#if column.options.resizable}
+		<ColumnResizeHandle {datagrid} {column} />
+	{/if}
 </div>
